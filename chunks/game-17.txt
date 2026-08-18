@@ -1,4 +1,5 @@
-，照过不同的人，也照过不同的青春。', '仍然留在球迷口中的，是他让城市觉得被认真对待。'],
+的方式，', '后来球迷谈起{姓名}，', '一名球员真正留下的，', '对{多城称谓}来说，', '当奖杯和数据慢慢被时间收进档案，'],
+    ['不只是荣誉墙上的名字，也包括很多普通夜晚的背影。', '常常不是从数据开始，而是从某个自己亲眼见过的回合开始。', '不是他有没有一直留下，而是他来过时有没有认真照看这里。', '他的意义像一盏灯，照过不同的人，也照过不同的青春。', '仍然留在球迷口中的，是他让城市觉得被认真对待。'],
     ['这比任何简介都更接近真实。', '所以离开以后，他仍然没有完全离开。', '那些被陪伴过的年份不会消失。', '这就是城市会记住他的原因。']
   );
 
@@ -4067,19 +4068,14 @@ function closeArchiveDetail() {
     ]
   };
   Object.keys(HISTORICAL_SURPRISE_DATA).forEach(function(team){
-    var roster = (typeof NBA2K_DATA !== 'undefined' && NBA2K_DATA[team]) || [];
     HISTORICAL_SURPRISE_DATA[team].forEach(function(player){
       player.isHistorical = true;
       player.legendTier = 'hall-of-fame';
-      if (!roster.some(function(p){ return p.name === player.name; })) roster.push(player);
     });
-    if (typeof NBA2K_DATA !== 'undefined') NBA2K_DATA[team] = roster;
-    if (typeof _baseLeagueRosterSnapshot !== 'undefined' && _baseLeagueRosterSnapshot && _baseLeagueRosterSnapshot[team]) {
-      HISTORICAL_SURPRISE_DATA[team].forEach(function(player){
-        if (!_baseLeagueRosterSnapshot[team].some(function(p){ return p.name === player.name; })) _baseLeagueRosterSnapshot[team].push(JSON.parse(JSON.stringify(player)));
-      });
-    }
   });
+  function getHistoricalPlayersForTeam(team){
+    return (HISTORICAL_SURPRISE_DATA[team] || []).map(function(player){ return JSON.parse(JSON.stringify(player)); });
+  }
   function __buildHistoricalSurpriseSelection(team, available, shownNames){
     var normal = available.filter(function(p){ return !p.isHistorical && shownNames.indexOf(p.name) < 0; });
     if (!normal.length) normal = available.filter(function(p){ return !p.isHistorical; });
