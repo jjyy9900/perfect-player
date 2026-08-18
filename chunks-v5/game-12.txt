@@ -1,0 +1,4341 @@
+mes: 0, mins: 0 },
+    playoffStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, games: 0, mins: 0 },
+    isUserStarter: currentStarterStatus,
+    awards: [],
+    playoffResult: null,
+    playoffEliminated: false,
+    standings: {},     // { team: { wins, losses, streak } }
+    statLeaders: {},   // { pts: { name, val }, reb: {...}, ast: {...} }
+    schedule: [],
+    day: 0,
+    isPlayoffs: false,
+    playoffBracket: null,
+    otherBracket: null,
+    _viewConf: null,
+    _gamesPlayed: {},
+    _leagueGameLog: [],
+    rankings: null,
+    events: { suspensionGamesLeft: 0, suspensionReason: '', injuryGamesLeft: 0, injuryReason: '', triggeredIds: [], storyTimeline: [], lastTriggerGameNum: null, playoffEventCount: 0, injuryRiskBonus: getNextSeasonMods().injuryRiskBonus || 0, majorInjuryThisSeason: false, playThroughPrompted: {}, regularPlayThroughPromptCount: 0 },
+  };
+  
+  initStandings();
+  buildRealSchedule();
+  // ★ 直接渲染赛季页，加载动画放在 dot-grid 内部
+  html('season-controls').innerHTML = '';
+  html('gamecast-area').innerHTML = '';
+  html('game-list').innerHTML = '';
+
+  var confName = getConference(STATE.careerTeam) === 'EAST' ? '东部' : '西部';
+  html('season-header').innerHTML =
+    '<div class="sh-top" style="margin-top:8px;">' +
+      '<div class="sh-team"><div class="sh-team-name">' + getTeamLogo(STATE.careerTeam, 24) + ' ' + getTeamName(STATE.careerTeam) + '</div><div class="sh-team-full">' + ((window.TEAM_CITY && window.TEAM_CITY[STATE.careerTeam]) || '') + '</div></div>' +
+      '<div class="sh-season">' + getCurrentSeasonLabel() + '</div>' +
+      '<div class="sh-record" id="simRecord"><span class="sh-wins">0</span><span class="sh-dash">-</span><span class="sh-losses">0</span><div class="sh-pct">—</div></div>' +
+    '</div>' +
+    '<div class="sh-info" id="simInfo">' +
+      '<span>' + SIM_CONFIG.POSITIONS[STATE.position] + ' · OVR ' + STATE.finalOVR + '</span>' +
+      '<span>场均 0分 0板 0助</span>' +
+      '<span id="simStreak"></span>' +
+    '</div>' +
+    renderEventStatus() +
+    '<div class="dot-grid" id="simDotGrid">' +
+      '<div style="display:flex;align-items:center;justify-content:center;width:100%;min-height:120px;">' +
+        '<div class="loading-balls"><span class="loading-ball"></span><span class="loading-ball"></span><span class="loading-ball"></span></div>' +
+      '</div>' +
+    '</div>' +
+    '<div style="text-align:center;padding:4px 0 8px;font-size:12px;color:var(--text-dim);" id="simStatus"></div>';
+
+  setTimeout(quickSimAllGames, 1200);
+}
+
+// ★ 逐场模拟全部 82 场常规赛，点逐个出现
+function quickSimAllGames() {
+  var schedule = STATE.season.schedule;
+  if (!schedule || schedule.length === 0) { console.error('[Sim] 赛程为空'); renderDotGrid(); return; }
+  var games = schedule.filter(function(g) { return !g.simulated; });
+  if (games.length === 0) { renderDotGrid(); return; }
+
+  // 替换加载动画为占位点阵
+  var confName = getConference(STATE.careerTeam) === 'EAST' ? '东部' : '西部';
+  var placeholderDots = '';
+  for (var di = 0; di < games.length; di++) {
+    placeholderDots += '<span class="dot dot-pending" id="gdot-' + di + '"></span>';
+    if ((di + 1) % 14 === 0) placeholderDots += '<br>';
+  }
+  html('simDotGrid').innerHTML = placeholderDots;
+  html('simStatus').innerHTML = '模拟中 0/' + games.length;
+
+  var gi = 0;
+  function simNextWithDelay() {
+    if (gi >= games.length) {
+      processAllRemainingDays();
+      reconcileStandings();
+      calcSeasonAwards();
+
+      var w2 = STATE.season.wins || 0, l2 = STATE.season.losses || 0;
+      var seed2 = getConferenceSeed(STATE.careerTeam);
+      var pct2 = w2 + l2 > 0 ? (w2 / (w2 + l2) * 100).toFixed(1) + '%' : '—';
+      var actionBtn = '';
+      actionBtn = '<button class="btn btn-secondary btn-sm" onclick="showAwardsScreen()" style="margin-bottom:6px;">📊 常规赛奖项</button>';
+      document.getElementById('simStatus').innerHTML = '';
+      document.getElementById('simRecord').innerHTML = '<span class="sh-wins">' + w2 + '</span><span class="sh-dash">-</span><span class="sh-losses">' + l2 + '</span><div class="sh-pct">' + pct2 + '</div>';
+
+      // 最后更新 sh-info
+      var psFinal = STATE.season.playerStats;
+      var gpFinal = psFinal.games || 1;
+      var fPts = Math.round(psFinal.pts / gpFinal * 10) / 10;
+      var fReb = Math.round(psFinal.reb / gpFinal * 10) / 10;
+      var fAst = Math.round(psFinal.ast / gpFinal * 10) / 10;
+      var finfo = document.getElementById('simInfo');
+      if (finfo) {
+        finfo.innerHTML = '<span>' + SIM_CONFIG.POSITIONS[STATE.position] + ' · OVR ' + STATE.finalOVR + '</span>' +
+          '<span>场均 ' + fPts + '分 ' + fReb + '板 ' + fAst + '助</span>' +
+          '<span>' + (STATE.season.standings[STATE.careerTeam]?.streakLen > 0 ? (STATE.season.standings[STATE.careerTeam]?.streak === 'W' ? 'W' : 'L') + (STATE.season.standings[STATE.careerTeam]?.streakLen || '') : '') + '</span>';
+      }
+
+      // 分区排行榜
+      var conf = getConference(STATE.careerTeam);
+      var confName2 = conf === 'EAST' ? '东部' : '西部';
+      var allTeams = (conf === 'EAST' ? SIM_CONFIG.CONFERENCE.EAST : SIM_CONFIG.CONFERENCE.WEST);
+      var sorted = allTeams.map(function(t) { return { team: t, ...STATE.season.standings[t] }; }).sort(function(a, b) { return (b.wins - b.losses) - (a.wins - a.losses) || b.wins - a.wins; });
+      var leaderW = sorted.length > 0 ? sorted[0].wins : 0, leaderL = sorted.length > 0 ? sorted[0].losses : 0;
+      var tableHtml = '<div style="margin:8px 12px 12px;"><div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);padding:4px 0 6px;">🏆 ' + confName2 + ' 排行榜</div><div class="st-hdr"><span>#</span><span>球队</span><span>胜</span><span>负</span><span>胜差</span><span>近况</span></div>';
+      var zoneLabels = ['🏀 季后赛区', '🔥 附加赛区', '📋 乐透区'];
+      var zi = 0;
+      for (var si = 0; si < sorted.length; si++) {
+        if (si === 0) {
+          tableHtml += '<div style="height:1px;background:var(--border);margin:4px 0 6px;"></div><div style="font-size:11px;color:var(--text-muted);padding:2px 6px 4px;letter-spacing:1px;font-weight:600;">' + zoneLabels[zi] + '</div>';
+          zi++;
+        }
+        if (si === 6 || si === 10) {
+          tableHtml += '<div style="height:1px;background:var(--border);margin:6px 0;"></div><div style="font-size:11px;color:var(--text-muted);padding:2px 6px 4px;letter-spacing:1px;font-weight:600;">' + zoneLabels[zi] + '</div>';
+          zi++;
+        }
+        var s = sorted[si];
+        var gb = si === 0 ? '-' : ((leaderW - s.wins + s.losses - leaderL) / 2).toFixed(1);
+        var isMy = s.team === STATE.careerTeam;
+        tableHtml += '<div class="st-row ' + (isMy ? 'st-my' : '') + '"><span>' + (si + 1) + '</span><span>' + getTeamLogo(s.team, 16) + ' ' + getTeamName(s.team) + (isMy ? ' ⭐' : '') + '</span><span class="st-w">' + (s.wins || 0) + '</span><span class="st-l">' + (s.losses || 0) + '</span><span>' + gb + '</span><span class="st-streak">' + (s.streakLen > 0 ? s.streak + s.streakLen : '-') + '</span></div>';
+      }
+      tableHtml += '</div>';
+
+      // 球员赛季数据卡
+      var ps = STATE.season.playerStats;
+      var gp = ps.games || 1;
+      var aPts = Math.round(ps.pts / gp * 10) / 10;
+      var aReb = Math.round(ps.reb / gp * 10) / 10;
+      var aAst = Math.round(ps.ast / gp * 10) / 10;
+      var aStl = Math.round(ps.stl / gp * 10) / 10;
+      var aBlk = Math.round(ps.blk / gp * 10) / 10;
+      var aTov = Math.round(ps.tov / gp * 10) / 10;
+      var playerCardHtml =
+        '<div class="bv-po-stats">' +
+          '<div class="bv-po-title">📊 常规赛场均</div>' +
+          '<div class="bv-po-grid">' +
+            '<div class="bv-po-stat"><span class="bv-po-val">' + aPts + '</span><span class="bv-po-lbl">得分</span></div>' +
+            '<div class="bv-po-stat"><span class="bv-po-val">' + aReb + '</span><span class="bv-po-lbl">篮板</span></div>' +
+            '<div class="bv-po-stat"><span class="bv-po-val">' + aAst + '</span><span class="bv-po-lbl">助攻</span></div>' +
+            '<div class="bv-po-stat"><span class="bv-po-val">' + aStl + '</span><span class="bv-po-lbl">抢断</span></div>' +
+            '<div class="bv-po-stat"><span class="bv-po-val">' + aBlk + '</span><span class="bv-po-lbl">盖帽</span></div>' +
+            '<div class="bv-po-stat"><span class="bv-po-val">' + aTov + '</span><span class="bv-po-lbl">失误</span></div>' +
+          '</div>' +
+          '<div style="text-align:center;font-size:11px;color:var(--text-dim);margin-top:4px;">' +
+            '出战 ' + gp + ' 场 · OVR ' + STATE.finalOVR + ' · ' + SIM_CONFIG.POSITIONS[STATE.position] +
+          '</div>' +
+        '</div>';
+
+      var footer = document.getElementById('simDotGrid');
+      // 最佳比赛：pts + reb + ast 最高的一场
+      var bestGame = null, bestTotal = 0;
+      var allGames = STATE.season.games || [];
+      for (var bgi = 0; bgi < allGames.length; bgi++) {
+        var bg = allGames[bgi];
+        if (!bg.stats) continue;
+        var total = (bg.stats.pts || 0) + (bg.stats.reb || 0) + (bg.stats.ast || 0);
+        if (total > bestTotal) { bestTotal = total; bestGame = bg; }
+      }
+      var bestHtml = '';
+      if (bestGame) {
+        var bs = bestGame.stats;
+        var bgName = getTeamName(bestGame.game.opponent);
+        var bWon = bestGame.result.won ? '胜' : '负';
+        var bScore = bestGame.result.scoreA + '-' + bestGame.result.scoreB;
+        bestHtml = '<div style="margin:8px 0;background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);padding:8px 16px;">' +
+          '<div style="font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--orange);margin-bottom:4px;">🔥 赛季最佳表现：对阵 ' + bgName + '</div>' +
+          '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">' +
+            '<div style="text-align:center;padding:2px 8px;background:var(--orange-bg);border-radius:6px;min-width:40px;"><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);">' + (bs.pts || 0) + '</div><div style="font-size:8px;color:var(--text-dim);">得分</div></div>' +
+            '<div style="text-align:center;padding:2px 8px;background:var(--orange-bg);border-radius:6px;min-width:40px;"><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);">' + (bs.reb || 0) + '</div><div style="font-size:8px;color:var(--text-dim);">篮板</div></div>' +
+            '<div style="text-align:center;padding:2px 8px;background:var(--orange-bg);border-radius:6px;min-width:40px;"><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);">' + (bs.ast || 0) + '</div><div style="font-size:8px;color:var(--text-dim);">助攻</div></div>' +
+            '<div style="text-align:center;padding:2px 8px;background:var(--orange-bg);border-radius:6px;min-width:40px;"><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);">' + Math.round(bs.stl || 0) + '</div><div style="font-size:8px;color:var(--text-dim);">抢断</div></div>' +
+            '<div style="text-align:center;padding:2px 8px;background:var(--orange-bg);border-radius:6px;min-width:40px;"><div style="font-family:var(--font-display);font-size:16px;font-weight:700;color:var(--text);">' + Math.round(bs.blk || 0) + '</div><div style="font-size:8px;color:var(--text-dim);">盖帽</div></div>' +
+          '</div>' +
+        '</div>';
+      }
+      if (footer) footer.insertAdjacentHTML('afterend',
+        '<div class="section-card">' + playerCardHtml + '</div>' +
+        '<div class="section-card" style="animation-delay:0.8s">' + bestHtml + '</div>' +
+        '<div class="section-card" style="animation-delay:1.6s">' + tableHtml + '</div>' +
+        '<div style="text-align:center;padding:0 12px 16px;" id="simActions">' + actionBtn + '</div>');
+      trackExposureOnce(document.getElementById('simActions'), {act:"exposure",blk:"BMC099",pos:"T1",label:"赛季结果"});
+      setTimeout(function() { maybeShowFirstSixtyWinCelebration(); }, 260);
+      return;
+    }
+
+    try {
+      var g = games[gi];
+
+      // ★ 跳过检查（禁赛优先于伤病）
+      var ev = STATE.season.events;
+      var skipReason = null; // null=不跳过, 'suspension'=禁赛, 'injury'=伤病
+      if (ev && ev.suspensionGamesLeft > 0) skipReason = 'suspension';
+      else if (ev && ev.injuryGamesLeft > 0) skipReason = 'injury';
+      if (skipReason) {
+        var runSkippedRegularGame = function() {
+          if (skipReason === 'suspension') ev.suspensionGamesLeft--;
+          else ev.injuryGamesLeft--;
+          var skipResult = simulateGameNew(STATE.careerTeam, g.opponent);
+          g.simulated = true;
+          g.result = skipResult;
+          if (skipResult.won) STATE.season.wins++; else STATE.season.losses++;
+          var ourS2 = STATE.season.standings[STATE.careerTeam];
+          if (ourS2) { if (skipResult.won) ourS2.wins++; else ourS2.losses++; }
+          var oppS2 = STATE.season.standings[g.opponent];
+          if (oppS2) { if (skipResult.won) oppS2.losses++; else oppS2.wins++; updateStreak(g.opponent, !skipResult.won); }
+          updateStreak(STATE.careerTeam, skipResult.won);
+          STATE.season.games.push({ result: skipResult, stats: null, game: g, suspended: true });
+          simDayLeagueGames(g.day);
+          var dotEl2 = document.getElementById('gdot-' + gi);
+          if (dotEl2) {
+            dotEl2.className = 'dot dot-x';
+            dotEl2.textContent = '✕';
+            dotEl2.style.animation = 'popIn .3s ease';
+            var label = skipReason === 'suspension' ? '禁赛' : '伤病';
+            dotEl2.title = 'G' + (gi + 1) + ': ' + label + ' - ' + (skipReason === 'suspension' ? (ev.suspensionReason || '联盟处罚') : (ev.injuryReason || '伤病休战'));
+          }
+          var skipIcon = skipReason === 'suspension' ? ' 🔇' : ' 🏥';
+          document.getElementById('simRecord').innerHTML = '<span class="sh-wins">' + STATE.season.wins + '</span><span class="sh-dash">-</span><span class="sh-losses">' + STATE.season.losses + '</span><div class="sh-pct">' + (STATE.season.wins + STATE.season.losses > 0 ? (STATE.season.wins / (STATE.season.wins + STATE.season.losses) * 100).toFixed(1) + '%' : '—') + '</div>';
+          document.getElementById('simStatus').textContent = '模拟中 ' + (gi + 1) + '/' + games.length + skipIcon;
+          var info3 = document.getElementById('simInfo');
+          if (info3) {
+            var ps3 = STATE.season.playerStats;
+            var gp3 = ps3.games || 1;
+            info3.innerHTML = '<span>' + SIM_CONFIG.POSITIONS[STATE.position] + ' · OVR ' + STATE.finalOVR + '</span>' +
+              '<span>场均 ' + Math.round(ps3.pts / gp3 * 10) / 10 + '分 ' + Math.round(ps3.reb / gp3 * 10) / 10 + '板 ' + Math.round(ps3.ast / gp3 * 10) / 10 + '助</span>' +
+              '<span>' + (STATE.season.standings[STATE.careerTeam]?.streakLen > 0 ? (STATE.season.standings[STATE.careerTeam]?.streak === 'W' ? 'W' : 'L') + (STATE.season.standings[STATE.careerTeam]?.streakLen || '') : '') + '</span>';
+          }
+          var esEl = document.getElementById('eventStatusBar');
+          if (esEl) esEl.outerHTML = renderEventStatus();
+          gi++;
+          setTimeout(simNextWithDelay, 120);
+        };
+        var runPlayedThroughRegularGame = function(severity) {
+          ev.injuryGamesLeft = Math.max(0, (ev.injuryGamesLeft || 0) - 1);
+          var hurtResult = simulateGameNew(STATE.careerTeam, g.opponent, 0, getInjuryPlayWinMultiplier(severity));
+          g.simulated = true;
+          g.result = hurtResult;
+          if (hurtResult.won) STATE.season.wins++; else STATE.season.losses++;
+          var ourH = STATE.season.standings[STATE.careerTeam];
+          if (ourH) { if (hurtResult.won) ourH.wins++; else ourH.losses++; }
+          var oppH = STATE.season.standings[g.opponent];
+          if (oppH) { if (hurtResult.won) oppH.losses++; else oppH.wins++; updateStreak(g.opponent, !hurtResult.won); }
+          updateStreak(STATE.careerTeam, hurtResult.won);
+          var hurtStats = scaleHurtStats(generatePlayerStatsNew(buildHurtAttrs(STATE.attrs, severity), hurtResult, false), severity);
+          var psH = STATE.season.playerStats;
+          psH.pts += hurtStats.pts; psH.reb += hurtStats.reb; psH.ast += hurtStats.ast;
+          psH.stl += hurtStats.stl; psH.blk += hurtStats.blk; psH.tov += hurtStats.tov;
+          psH.fgm += hurtStats.fgm; psH.fga += hurtStats.fga;
+          psH.ftm += hurtStats.ftm; psH.fta += hurtStats.fta;
+          psH.threeM += hurtStats.threeM; psH.threeA += hurtStats.threeA;
+          psH.mins = (psH.mins || 0) + hurtStats.mins;
+          psH.games++;
+          STATE.season.games.push({ result: hurtResult, stats: hurtStats, game: g, playedThroughInjury: true });
+          var worsenText = maybeWorsenInjuryAfterPlaying(ev, severity);
+          simDayLeagueGames(g.day);
+          var dotH = document.getElementById('gdot-' + gi);
+          if (dotH) {
+            dotH.className = 'dot ' + (hurtResult.won ? 'dot-w' : 'dot-l');
+            dotH.style.animation = 'popIn .3s ease';
+            dotH.title = 'G' + (gi + 1) + ': 带伤出战 ' + (hurtResult.won ? '胜' : '负') + ' ' + getTeamName(g.opponent) + (worsenText ? ' · 伤情加重' : '');
+          }
+          document.getElementById('simRecord').innerHTML = '<span class="sh-wins">' + STATE.season.wins + '</span><span class="sh-dash">-</span><span class="sh-losses">' + STATE.season.losses + '</span><div class="sh-pct">' + (STATE.season.wins + STATE.season.losses > 0 ? (STATE.season.wins / (STATE.season.wins + STATE.season.losses) * 100).toFixed(1) + '%' : '—') + '</div>';
+          document.getElementById('simStatus').textContent = '模拟中 ' + (gi + 1) + '/' + games.length + ' 🏥 带伤';
+          var infoH = document.getElementById('simInfo');
+          if (infoH) {
+            var gpH = psH.games || 1;
+            infoH.innerHTML = '<span>' + SIM_CONFIG.POSITIONS[STATE.position] + ' · OVR ' + STATE.finalOVR + '</span>' +
+              '<span>场均 ' + Math.round(psH.pts / gpH * 10) / 10 + '分 ' + Math.round(psH.reb / gpH * 10) / 10 + '板 ' + Math.round(psH.ast / gpH * 10) / 10 + '助</span>' +
+              '<span>' + (STATE.season.standings[STATE.careerTeam]?.streakLen > 0 ? (STATE.season.standings[STATE.careerTeam]?.streak === 'W' ? 'W' : 'L') + (STATE.season.standings[STATE.careerTeam]?.streakLen || '') : '') + '</span>';
+          }
+          var esH = document.getElementById('eventStatusBar');
+          if (esH) esH.outerHTML = renderEventStatus();
+          gi++;
+          setTimeout(simNextWithDelay, 120);
+        };
+        if (skipReason === 'injury' && isKeyInjuredRegularGame(g, gi, games.length) && shouldOfferPlayThroughInjury('reg-' + (STATE.season.games.length + 1), true)) {
+          showPlayThroughInjuryModal({
+            desc: '赛季已经进入最后阶段，' + getTeamName(STATE.careerTeam) + ' 正卡在排名边缘，下一场对阵 ' + getTeamName(g.opponent) + ' 的结果可能改变季后赛位置。'
+          }, runSkippedRegularGame, runPlayedThroughRegularGame);
+          return;
+        }
+        runSkippedRegularGame();
+        return;
+      }
+
+      var result = simulateGameNew(STATE.careerTeam, g.opponent);
+      g.simulated = true;
+      g.result = result;
+
+      if (result.won) STATE.season.wins++;
+      else STATE.season.losses++;
+
+      var ourS = STATE.season.standings[STATE.careerTeam];
+      if (ourS) { if (result.won) ourS.wins++; else ourS.losses++; }
+      var oppS = STATE.season.standings[g.opponent];
+      if (oppS) { if (result.won) oppS.losses++; else oppS.wins++; updateStreak(g.opponent, !result.won); }
+      updateStreak(STATE.careerTeam, result.won);
+
+      var stats = generatePlayerStatsNew(STATE.attrs, result, false);
+      var ps = STATE.season.playerStats;
+      ps.pts += stats.pts; ps.reb += stats.reb; ps.ast += stats.ast;
+      ps.stl += stats.stl; ps.blk += stats.blk; ps.tov += stats.tov;
+      ps.fgm += stats.fgm; ps.fga += stats.fga;
+      ps.ftm += stats.ftm; ps.fta += stats.fta;
+      ps.threeM += stats.threeM; ps.threeA += stats.threeA;
+      ps.mins = (ps.mins || 0) + stats.mins;
+      ps.games++;
+
+      STATE.season.games.push({ result: result, stats: stats, game: g });
+      simDayLeagueGames(g.day);
+
+      // ★ 赛后检测随机事件（前东家回访优先，全局只触发一次）
+      var oldTeamEv = null;
+      try { oldTeamEv = checkOldTeamReturnEvent(g, result, stats); } catch(ex) {}
+      var evData = null;
+      var branchEv = null;
+      if (!oldTeamEv) {
+        try { evData = checkRandomEvents(g, result, stats); } catch(ex) {}
+        if (evData) {
+          if (evData._consequence === 'suspension') {
+            STATE.season.events.suspensionReason = evData.desc;
+          } else if (evData._consequence === 'injury') {
+            STATE.season.events.injuryReason = evData.desc;
+          }
+        } else {
+          try { branchEv = checkSeasonBranchEvent(g, result, stats); } catch(ex) {}
+        }
+      }
+
+      // 更新当前 dot
+      var dotEl = document.getElementById('gdot-' + gi);
+      if (dotEl) {
+        dotEl.className = 'dot ' + (result.won ? 'dot-w' : 'dot-l');
+        dotEl.style.animation = 'popIn .3s ease';
+        dotEl.title = 'G' + (gi + 1) + ': ' + (result.won ? '胜' : '负') + ' ' + getTeamName(g.opponent) + ' ' + (result.scoreA || '') + '-' + (result.scoreB || '');
+      }
+
+      // 更新战绩
+      document.getElementById('simRecord').innerHTML = '<span class="sh-wins">' + STATE.season.wins + '</span><span class="sh-dash">-</span><span class="sh-losses">' + STATE.season.losses + '</span><div class="sh-pct">' + (STATE.season.wins + STATE.season.losses > 0 ? (STATE.season.wins / (STATE.season.wins + STATE.season.losses) * 100).toFixed(1) + '%' : '—') + '</div>';
+      document.getElementById('simStatus').textContent = '模拟中 ' + (gi + 1) + '/' + games.length;
+
+      // 更新场均数据
+      var ps2 = STATE.season.playerStats;
+      var gp2 = ps2.games || 1;
+      var avgPts2 = Math.round(ps2.pts / gp2 * 10) / 10;
+      var avgReb2 = Math.round(ps2.reb / gp2 * 10) / 10;
+      var avgAst2 = Math.round(ps2.ast / gp2 * 10) / 10;
+      var info = document.getElementById('simInfo');
+      if (info) {
+        info.innerHTML = '<span>' + SIM_CONFIG.POSITIONS[STATE.position] + ' · OVR ' + STATE.finalOVR + '</span>' +
+          '<span>场均 ' + avgPts2 + '分 ' + avgReb2 + '板 ' + avgAst2 + '助</span>' +
+          '<span>' + (STATE.season.standings[STATE.careerTeam]?.streakLen > 0 ? (STATE.season.standings[STATE.careerTeam]?.streak === 'W' ? 'W' : 'L') + (STATE.season.standings[STATE.careerTeam]?.streakLen || '') : '') + '</span>';
+      }
+
+      // ★ 更新事件状态栏
+      var esEl2 = document.getElementById('eventStatusBar');
+      if (esEl2) esEl2.outerHTML = renderEventStatus();
+
+      gi++;
+
+      // ★ 如果有事件弹窗，先弹窗再继续
+      if (evData && typeof showEventModal === 'function') {
+        showEventModal(evData, function() { setTimeout(simNextWithDelay, 120); });
+      } else if (branchEv) {
+        showSeasonBranchEvent(branchEv, function() { setTimeout(simNextWithDelay, 120); });
+      } else if (oldTeamEv) {
+        showOldTeamReturnFlow(function() { setTimeout(simNextWithDelay, 120); });
+      } else {
+        setTimeout(simNextWithDelay, 120);
+      }
+    } catch(e) { console.error('[Sim] 第' + (gi + 1) + '场异常:', e); gi++; setTimeout(simNextWithDelay, 120); }
+  }
+
+  simNextWithDelay();
+}
+
+/** 从所有比赛结果重新统计 standings */
+function reconcileStandings() {
+  var st = STATE.season.standings;
+  if (!st) return;
+  // 重置
+  for (var team in st) {
+    if (st.hasOwnProperty(team)) { st[team].wins = 0; st[team].losses = 0; }
+  }
+  // 统计用户已模拟的比赛
+  var allGames = STATE.season.games || [];
+  for (var i = 0; i < allGames.length; i++) {
+    var g = allGames[i];
+    if (!g.result) continue;
+    var myTeam = STATE.careerTeam;
+    var opp = g.game.opponent;
+    if (g.result.won) { if (st[myTeam]) st[myTeam].wins++; if (st[opp]) st[opp].losses++; }
+    else { if (st[myTeam]) st[myTeam].losses++; if (st[opp]) st[opp].wins++; }
+  }
+  // 统计联盟其他比赛
+  var leagueGames = STATE.season._leagueGameLog || [];
+  for (var j = 0; j < leagueGames.length; j++) {
+    var lg = leagueGames[j];
+    if (st[lg.home]) { if (lg.won) st[lg.home].wins++; else st[lg.home].losses++; }
+    if (st[lg.away]) { if (!lg.won) st[lg.away].wins++; else st[lg.away].losses++; }
+  }
+}
+
+// ★ 常规赛排名系统 ============================================
+
+/** 估算球员场均数据（基于属性 + af 系数） */
+function estimatePlayerStats(player) {
+  var f = function(v) { return af(parseInt(v) || 50); };
+  var pos = (player.pos || 'SF').split('/')[0].trim();
+  var pts = (f(player.FIN) * 0.4 + f(player.MID) * 0.3 + f(player.threePT) * 0.3) * 22 + 2;
+  var reb = f(player.REB) * (pos === 'C' ? 14 : pos === 'PF' ? 10 : 6) + 1;
+  var ast = f(player.PAS) * (pos === 'PG' ? 10 : pos === 'SG' ? 6 : 4) + 1;
+  var stl = f(player.PDEF) * 3 + 0.3;
+  var blk = f(player.BLK) * (pos === 'C' ? 4 : pos === 'PF' ? 2.5 : 0.5) + 0.2;
+  return { pts: Math.round(pts * 10) / 10, reb: Math.round(reb * 10) / 10, ast: Math.round(ast * 10) / 10, stl: Math.round(stl * 10) / 10, blk: Math.round(blk * 10) / 10, pos: pos, ovr: parseInt(player.ovr) || 50 };
+}
+
+/** 获取用户场均数据 */
+function getUserAvg() {
+  var ps = STATE.season.playerStats;
+  var gp = ps.games || 1;
+  return { pts: Math.round(ps.pts / gp * 10) / 10, reb: Math.round(ps.reb / gp * 10) / 10, ast: Math.round(ps.ast / gp * 10) / 10, stl: Math.round(ps.stl / gp * 10) / 10, blk: Math.round(ps.blk / gp * 10) / 10, pos: STATE.position, ovr: STATE.finalOVR };
+}
+
+function getPlayerAwardStreak(player, act) {
+  return player && player._awardStreak ? (player._awardStreak[act] || 0) : 0;
+}
+
+function addPlayerAwardStreak(player, act) {
+  player._awardStreak = player._awardStreak || {};
+  player._awardStreak[act] = (player._awardStreak[act] || 0) + 1;
+}
+
+function getUserPlayerObject() {
+  if (!STATE._userAwardStreak) STATE._userAwardStreak = {};
+  if (!STATE._userAwardStreak._awardStreak) STATE._userAwardStreak._awardStreak = {};
+  return STATE._userAwardStreak;
+}
+
+function getUserRankStreak(act, rank) {
+  var m = STATE._userAwardRankStreak || {};
+  var rec = m[act];
+  return rec && rec.rank === rank ? (rec.count || 0) : 0;
+}
+
+function recordUserRank(act, rank) {
+  if (!rank) return;
+  STATE._userAwardRankStreak = STATE._userAwardRankStreak || {};
+  var rec = STATE._userAwardRankStreak[act] || { rank: null, count: 0 };
+  if (rec.rank === rank) {
+    rec.count = (rec.count || 0) + 1;
+  } else {
+    rec.rank = rank;
+    rec.count = 1;
+  }
+  STATE._userAwardRankStreak[act] = rec;
+}
+
+var MVP_STAR_NAMES = [
+  'A-J-迪班萨', '达林-彼得森', '卡梅隆-布泽尔',
+  '乔丹-史密斯二世', '泰兰-斯托克斯', '斯特凡-约克西莫维奇',
+  '若阿金-布姆杰-布姆杰', '尼古拉-库斯图里卡', '马库斯-斯皮尔斯二世'
+];
+
+// 热门新秀专属最佳阵容窗口起始赛季（2026届 2029-30、2027届 2030-31、2028届 2031-32，各持续4个赛季）
+var MVP_STAR_ALLNBA_START = [2029, 2029, 2029, 2030, 2030, 2030, 2031, 2031, 2031];
+
+function isMvpStar(p) {
+  return p && MVP_STAR_NAMES.indexOf(p.cname) >= 0;
+}
+
+function getMvpStarAllNbaStart(p) {
+  if (!p) return null;
+  var idx = MVP_STAR_NAMES.indexOf(p.cname);
+  return idx >= 0 ? MVP_STAR_ALLNBA_START[idx] : null;
+}
+
+function getPlayerEnterYear(p) {
+  if (p && p._enterYear) return p._enterYear;
+  var age = p ? getLeaguePlayerAge(p) : 22;
+  var y = 2025 + ((STATE.career && STATE.career.seasonCount) || 0);
+  if (p && typeof age === 'number' && age > 0) p._enterYear = y - (age - 19);
+  return (p && p._enterYear) || y;
+}
+
+function findPlayerByIdentity(nameEN, nameCN) {
+  for (var _ft = 0; _ft < NBA2K_TEAMS.length; _ft++) {
+    var roster = (NBA2K_DATA && NBA2K_DATA[NBA2K_TEAMS[_ft]]) || [];
+    for (var _fp = 0; _fp < roster.length; _fp++) {
+      var p = roster[_fp];
+      if (nameEN && p.name === nameEN) return p;
+      if (nameCN && p.cname === nameCN) return p;
+    }
+  }
+  return null;
+}
+
+function isTeamConferenceTop3(team) {
+  var st = STATE.season && STATE.season.standings;
+  if (!st || !team) return true;
+  var conf = getConference(team);
+  var list = conf === 'EAST' ? SIM_CONFIG.CONFERENCE.EAST : SIM_CONFIG.CONFERENCE.WEST;
+  var rows = list.map(function(t) {
+    return { team: t, wins: (st[t] && st[t].wins) || 0, losses: (st[t] && st[t].losses) || 0 };
+  });
+  rows.sort(function(a, b) { return (b.wins - b.losses) - (a.wins - a.losses) || b.wins - a.wins; });
+  for (var i = 0; i < rows.length && i < 3; i++) {
+    if (rows[i].team === team) return true;
+  }
+  return false;
+}
+
+function pickLeagueDPOY() {
+  var best = null, bestTeam = '', bestScore = -1;
+  for (var _dt = 0; _dt < NBA2K_TEAMS.length; _dt++) {
+    if (!isTeamConferenceTop3(NBA2K_TEAMS[_dt])) continue;
+    var roster = (NBA2K_DATA && NBA2K_DATA[NBA2K_TEAMS[_dt]]) || [];
+    for (var _dp = 0; _dp < roster.length; _dp++) {
+      var p = roster[_dp];
+      if (p._isUser) continue;
+      if (getPlayerAwardStreak(p, 'dpoy') >= 2) continue;
+      var score = ((parseInt(p.PDEF) || 60) * 0.5) + ((parseInt(p.IDEF) || 60) * 0.5) + ((parseInt(p.BLK) || 50) * 0.8) + ((parseInt(p.ovr) || 70) * 0.3);
+      if (score > bestScore) { bestScore = score; best = p; bestTeam = NBA2K_TEAMS[_dt]; }
+    }
+  }
+  if (!best) {
+    // 兜底：只在分区前三内选防守分最高的球员，放宽连庄保护
+    for (var _dt2 = 0; _dt2 < NBA2K_TEAMS.length; _dt2++) {
+      if (!isTeamConferenceTop3(NBA2K_TEAMS[_dt2])) continue;
+      var roster2 = (NBA2K_DATA && NBA2K_DATA[NBA2K_TEAMS[_dt2]]) || [];
+      for (var _dp2 = 0; _dp2 < roster2.length; _dp2++) {
+        var p2 = roster2[_dp2];
+        if (p2._isUser) continue;
+        var score2 = ((parseInt(p2.PDEF) || 60) * 0.5) + ((parseInt(p2.IDEF) || 60) * 0.5) + ((parseInt(p2.BLK) || 50) * 0.8) + ((parseInt(p2.ovr) || 70) * 0.3);
+        if (score2 > bestScore) { bestScore = score2; best = p2; bestTeam = NBA2K_TEAMS[_dt2]; }
+      }
+    }
+  }
+  return best ? { player: best, team: bestTeam } : null;
+}
+
+function computeSixthManRank(avgPts) {
+  var scores = [];
+  for (var _st2 = 0; _st2 < NBA2K_TEAMS.length; _st2++) {
+    var t2 = NBA2K_TEAMS[_st2];
+    if (t2 === STATE.careerTeam) continue;
+    var lineup2b = calcTeamLineup(t2);
+    var bench2b = lineup2b.bench || [];
+    var best2 = 0;
+    for (var _b2 = 0; _b2 < bench2b.length; _b2++) {
+      var pb = bench2b[_b2];
+      if (pb._isUser) continue;
+      if (getPlayerAwardStreak(pb, 'sixthman') >= 2) continue;
+      var o2 = parseInt(pb.ovr) || 0;
+      if (o2 > best2) best2 = o2;
+    }
+    if (best2 > 0) scores.push(best2);
+  }
+  var userScore = Math.round((avgPts || 0) * 3 + (parseInt(STATE.finalOVR) || 0) * 0.4);
+  scores.push(userScore);
+  scores.sort(function(x, y) { return y - x; });
+  return scores.indexOf(userScore) + 1;
+}
+
+function updateAwardStreaks() {
+  var c = STATE.career;
+  var seasonKey = c && c.seasonCount;
+  if (!seasonKey || STATE._awardStreakSeason === seasonKey) return;
+  STATE._awardStreakSeason = seasonKey;
+  var acts = ['mvp', 'dpoy', 'sixthman'];
+  var userObj = getUserPlayerObject();
+  var winnerByAct = {};
+  (STATE.season.awards || []).forEach(function(a) {
+    if (!a || !a.act || acts.indexOf(a.act) < 0) return;
+    winnerByAct[a.act] = a.isUser ? userObj : findPlayerByIdentity(a.winnerEN || '', a.winner || '');
+    if (a.userRank) recordUserRank(a.act, a.userRank);
+  });
+  function nextStreak(player, act) {
+    var old = player && player._awardStreak ? (player._awardStreak[act] || 0) : 0;
+    return winnerByAct[act] === player ? old + 1 : 0;
+  }
+  for (var _st = 0; _st < NBA2K_TEAMS.length; _st++) {
+    var roster = (NBA2K_DATA && NBA2K_DATA[NBA2K_TEAMS[_st]]) || [];
+    for (var _sp = 0; _sp < roster.length; _sp++) {
+      var p = roster[_sp];
+      p._awardStreak = p._awardStreak || {};
+      for (var _sa = 0; _sa < acts.length; _sa++) p._awardStreak[acts[_sa]] = nextStreak(p, acts[_sa]);
+    }
+  }
+  for (var _ua = 0; _ua < acts.length; _ua++) userObj._awardStreak[acts[_ua]] = nextStreak(userObj, acts[_ua]);
+}
+
+/** 计算四项排名，存入 STATE.season.rankings */
+function calcSeasonAwards() {
+  try {
+  var ps = STATE.season.playerStats;
+  if (!ps || !ps.games) return;
+  var g = ps.games;
+  var avg = STATE.season.avgStats || {
+    pts: Math.round(ps.pts / g * 10) / 10,
+    reb: Math.round(ps.reb / g * 10) / 10,
+    ast: Math.round(ps.ast / g * 10) / 10,
+    stl: Math.round(ps.stl / g * 10) / 10,
+    blk: Math.round(ps.blk / g * 10) / 10,
+  };
+  STATE.season.awards = [];
+
+    function lp(name) {
+    for (var _t = 0; _t < NBA2K_TEAMS.length; _t++) {
+      var _r = NBA2K_DATA[NBA2K_TEAMS[_t]];
+      if (!_r) continue;
+      for (var _p = 0; _p < _r.length; _p++) {
+        if (_r[_p].name === name) return { team: NBA2K_TEAMS[_t], cname: _r[_p].cname || name, playerName: name };
+      }
+    }
+    return null;
+  }
+
+  function getLeagueRank(team) {
+    var rows = [];
+    for (var _lt = 0; _lt < NBA2K_TEAMS.length; _lt++) {
+      var code = NBA2K_TEAMS[_lt];
+      var st = STATE.season.standings && STATE.season.standings[code];
+      rows.push({ team: code, wins: st ? st.wins : 0, losses: st ? st.losses : 82 });
+    }
+    rows.sort(function(a, b) {
+      if (b.wins !== a.wins) return b.wins - a.wins;
+      return a.losses - b.losses;
+    });
+    for (var _lr = 0; _lr < rows.length; _lr++) {
+      if (rows[_lr].team === team) return _lr + 1;
+    }
+    return 30;
+  }
+
+  function getAllStarTeamBonus(team) {
+    var seed = getConferenceSeed(team);
+    if (seed <= 3) return 4;
+    if (seed <= 6) return 2;
+    if (seed <= 10) return 1;
+    return 0;
+  }
+
+  function calcAllStarScore(stat, ovr, team, gamesPlayed) {
+    var gp = gamesPlayed == null ? 82 : gamesPlayed;
+    if (gp < 40) return -999;
+    var score = (stat.pts || 0) * 1.0
+      + (stat.reb || 0) * 0.7
+      + (stat.ast || 0) * 0.8
+      + (stat.stl || 0) * 1.4
+      + (stat.blk || 0) * 1.4
+      + (parseInt(ovr) || 0) * 0.18
+      + getAllStarTeamBonus(team);
+    if (gp < 50) score -= 8;
+    return score;
+  }
+
+  (function() {
+    var allStarCandidates = [];
+    for (var _ast = 0; _ast < NBA2K_TEAMS.length; _ast++) {
+      var aTeam = NBA2K_TEAMS[_ast];
+      var rosterA = NBA2K_DATA[aTeam] || [];
+      for (var _asp = 0; _asp < rosterA.length; _asp++) {
+        var ap = rosterA[_asp];
+        var aOvr = parseInt(ap.ovr) || 50;
+        if (aOvr < 82) continue;
+        var aPos = (ap.pos || 'SF').split('/')[0].trim();
+        var est = {
+          pts: aOvr * 0.34 - 2 + Math.random() * 3,
+          reb: aPos === 'C' ? aOvr * 0.16 + 1.5 : aPos === 'PF' ? aOvr * 0.13 + 1 : aOvr * 0.07 + 1,
+          ast: aPos === 'PG' ? aOvr * 0.13 + 2 : aPos === 'SG' ? aOvr * 0.08 + 1 : aOvr * 0.05 + 1,
+          stl: aOvr >= 88 ? 1.1 : 0.8,
+          blk: (aPos === 'C' || aPos === 'PF') ? 1.0 : 0.35,
+        };
+        allStarCandidates.push({
+          name: ap.cname || ap.name,
+          playerName: ap.name || '',
+          team: aTeam,
+          score: calcAllStarScore(est, aOvr, aTeam, 82),
+          isUser: false,
+        });
+      }
+    }
+    var userAllStarScore = calcAllStarScore(avg, STATE.finalOVR, STATE.careerTeam, g);
+    allStarCandidates.push({
+      name: getHupuDisplayName(),
+      playerName: '',
+      team: STATE.careerTeam,
+      score: userAllStarScore,
+      isUser: true,
+    });
+    allStarCandidates.sort(function(a, b) { return b.score - a.score; });
+    var userAllStarIndex = allStarCandidates.findIndex(function(x) { return x.isUser; });
+    var userAllStarRank = userAllStarIndex >= 0 ? userAllStarIndex + 1 : 99;
+    var userAllStarSelected = false;
+    if (userAllStarScore >= 42) {
+      userAllStarSelected = true;
+    } else if (userAllStarScore >= 38 && (parseInt(STATE.finalOVR) || 0) >= 84) {
+      userAllStarSelected = userAllStarRank <= 28 || Math.random() < 0.35;
+    }
+    if (g < 40) userAllStarSelected = false;
+    var allStarUserRank = userAllStarSelected ? '⭐ 入选' : (g < 40 ? '出勤不足' : '未入围');
+    STATE.season.awards.push({
+      act:'allStar',
+      label:'全明星',
+      winner:userAllStarSelected ? getHupuDisplayName() : allStarUserRank,
+      winnerEN:'',
+      team:'',
+      isUser:userAllStarSelected,
+      userRank:allStarUserRank
+    });
+  })();
+
+  var mvpTickets = [];
+  var seasonYear = 2025 + ((STATE.career && STATE.career.seasonCount) || 0);
+  for (var _mt = 0; _mt < NBA2K_TEAMS.length; _mt++) {
+    var mTeam = NBA2K_TEAMS[_mt];
+    var rosterM = NBA2K_DATA[mTeam] || [];
+    var confSeedM = getConferenceSeed(mTeam);
+    for (var _mp = 0; _mp < rosterM.length; _mp++) {
+      var mp = rosterM[_mp];
+      var mOvr = parseInt(mp.ovr) || 0;
+      if (mOvr < 92 && !isMvpStar(mp)) continue;
+      if (isMvpStar(mp) && mOvr < 88) continue; // 热门新秀也要具备 MVP 候选资格
+      if (getPlayerAwardStreak(mp, 'mvp') >= 2) continue; // 连续两届 MVP，下赛季大幅降权
+      var mAge = getLeaguePlayerAge(mp);
+      if (mAge >= 31) continue; // 31 岁及以上视为老将，不再参与 MVP
+      var ticketCount = confSeedM <= 3 ? 2 : 1; // 分区前三的 92+ 球员才有 2 票
+      var starStart2 = getMvpStarAllNbaStart(mp);
+      if (starStart2 != null && seasonYear >= starStart2 && seasonYear <= starStart2 + 3) ticketCount += 4; // 热门新秀专属 MVP 窗口：+4
+      var cand = { cname: mp.cname || mp.name, playerName: mp.name, team: mTeam, isUser: false, rank: confSeedM };
+      for (var _mc = 0; _mc < ticketCount; _mc++) mvpTickets.push(cand);
+    }
+  }
+  if ((parseInt(STATE.finalOVR) || 0) >= 92) {
+    var userObjM = getUserPlayerObject();
+    var userMvpBlocked = userObjM && getPlayerAwardStreak(userObjM, 'mvp') >= 2;
+    if (!userMvpBlocked) {
+      var userConfSeed = getConferenceSeed(STATE.careerTeam);
+      var userTickets = userConfSeed <= 3 ? 2 : 1;
+      var userCand = { cname: getHupuDisplayName(), playerName: '', team: STATE.careerTeam, isUser: true, rank: userConfSeed };
+      for (var _um = 0; _um < userTickets; _um++) mvpTickets.push(userCand);
+    }
+  }
+  if (mvpTickets.length === 0) {
+    // 兜底：从东西部第一球队中选 OVR 最高的球员
+    var fallbackCandidates = [];
+    var fallbackConfs = ['EAST', 'WEST'];
+    for (var _fc = 0; _fc < fallbackConfs.length; _fc++) {
+      var topConfList = getConferenceSorted(fallbackConfs[_fc]);
+      var topTeam = topConfList.length > 0 ? topConfList[0].team : null;
+      if (!topTeam) continue;
+      var topRoster = (NBA2K_DATA[topTeam] || []).slice();
+      if (topTeam === STATE.careerTeam && STATE.finalOVR) {
+        topRoster.push({ name: getHupuDisplayName(), cname: getHupuDisplayName(), playerName: '', team: topTeam, ovr: STATE.finalOVR, pos: STATE.position, isUser: true });
+      }
+      topRoster.forEach(function(_fb) {
+        var _fo = parseInt(_fb.ovr) || 0;
+        if (_fo <= 0) return;
+        fallbackCandidates.push({
+          cname: _fb.cname || _fb.name,
+          playerName: _fb.playerName || _fb.name || '',
+          team: topTeam,
+          isUser: !!_fb.isUser,
+          ovr: _fo,
+          age: _fb.isUser ? (STATE.career.currentAge || 22) : getLeaguePlayerAge(_fb)
+        });
+      });
+    }
+    if (fallbackCandidates.length > 0) {
+      var bestFbOvr = -1, bestFbAge = 999;
+      fallbackCandidates.forEach(function(_f) {
+        if (_f.ovr > bestFbOvr) { bestFbOvr = _f.ovr; bestFbAge = _f.age; }
+        else if (_f.ovr === bestFbOvr && _f.age < bestFbAge) bestFbAge = _f.age;
+      });
+      var bestFallbacks = fallbackCandidates.filter(function(_f) {
+        return _f.ovr === bestFbOvr && _f.age === bestFbAge;
+      });
+      mvpTickets.push(bestFallbacks[Math.floor(Math.random() * bestFallbacks.length)]);
+    } else {
+      var fallbackMvp = lp('Nikola Jokić') || { cname:'尼古拉·约基奇', playerName:'Nikola Jokić', team:'DEN', isUser:false, rank:30 };
+      mvpTickets.push(fallbackMvp);
+    }
+  }
+  var mvpPick = mvpTickets[Math.floor(Math.random() * mvpTickets.length)];
+  var mvpUserRank = mvpPick.isUser ? '🥇 第一名' : (((parseInt(STATE.finalOVR) || 0) >= 92) ? '进入评选' : '未入围');
+  if (!mvpPick.isUser && mvpUserRank !== '未入围' && getUserRankStreak('mvp', mvpUserRank) >= 2) {
+    mvpUserRank = '未入围'; // 连续两届同奖项同名次，下一届波动
+  }
+  STATE.season.awards.push({
+    act:'mvp',
+    label:'MVP',
+    winner:mvpPick.cname,
+    winnerEN:mvpPick.playerName || '',
+    team:mvpPick.team || '',
+    isUser:!!mvpPick.isUser,
+    userRank:mvpUserRank
+  });
+
+  var defSum = avg.stl + avg.blk;
+  var userObjD = getUserPlayerObject();
+  var userDpoyStreak = userObjD ? getPlayerAwardStreak(userObjD, 'dpoy') : 0;
+  var dpoyProtected = userDpoyStreak >= 2;
+  var dpoyThreshold = dpoyProtected ? 4.2 : 3.55;
+  var dpoyUserRank = '未进入前五';
+  var dpoyTop3 = isTeamConferenceTop3(STATE.careerTeam);
+  if (dpoyProtected) {
+    dpoyUserRank = '🥈 第二名';
+  } else if (defSum >= dpoyThreshold && dpoyTop3) {
+    dpoyUserRank = '🥇 第一名';
+  } else if (defSum >= 3.0) {
+    dpoyUserRank = '🥉 第三名';
+  } else if (defSum >= 2.5) {
+    dpoyUserRank = '第四名';
+  }
+  var dpoyWin = !dpoyProtected && defSum >= dpoyThreshold && dpoyTop3;
+  if (!dpoyWin && !dpoyProtected && dpoyUserRank !== '未进入前五' && getUserRankStreak('dpoy', dpoyUserRank) >= 2) {
+    dpoyUserRank = '未进入前五'; // 连续两届同奖项同名次，下一届波动
+  }
+  if (dpoyWin) {
+    STATE.season.awards.push({ act:'dpoy', label:'DPOY', winner:getHupuDisplayName(), winnerEN:'', team:STATE.careerTeam, isUser:true, userRank:'🥇 第一名' });
+  } else {
+    var dpoyPick = pickLeagueDPOY();
+    var fallbackW = lp('Victor Wembanyama') || { team:'SAS', cname:'维克托-文班亚马', playerName:'Victor Wembanyama' };
+    var w = dpoyPick ? dpoyPick.player : fallbackW;
+    var wTeam = dpoyPick ? dpoyPick.team : (fallbackW.team || 'SAS');
+    STATE.season.awards.push({ act:'dpoy', label:'DPOY', winner:w.cname || w.name, winnerEN:w.name || w.playerName || 'Victor Wembanyama', team:wTeam, isUser:false, userRank:dpoyUserRank });
+  }
+
+  // 最佳阵容：全联盟评分 Top 5，不限位置
+  (function() {
+    var nbaOvrFloor = seasonYear >= 2035 ? 80 : 85; // 2035 年后联盟高 OVR 球员稀缺，门槛放宽到 80
+    var userAvg2 = { pts: avg.pts, reb: avg.reb, ast: avg.ast, stl: avg.stl, blk: avg.blk, pos: STATE.position, ovr: STATE.finalOVR, name:getHupuDisplayName(), team:STATE.careerTeam };
+    // 先按正常规则选，选不满 5 人时逐级放宽 OVR 门槛和分区限制，保证至少 5 人
+    function buildAllNBASelection(floor, top4Only) {
+      var cands = [];
+      for (var _ti = 0; _ti < NBA2K_TEAMS.length; _ti++) {
+        var teamCode = NBA2K_TEAMS[_ti];
+        if (top4Only && getConferenceSeed(teamCode) > 4) continue; // 只有分区前4的球队球员才有资格入选最佳阵容
+        var roster = NBA2K_DATA[teamCode] || [];
+        for (var _pi2 = 0; _pi2 < roster.length; _pi2++) {
+          var p = roster[_pi2];
+          var pos2 = (p.pos || 'SF').split('/')[0].trim();
+          var ovr2 = parseInt(p.ovr) || 50;
+          if (ovr2 < floor) continue;
+          // 估算数据与游戏内模拟同源：按真实属性 + af 递减曲线，避免 OVR 公式虚高
+          var est2 = estimatePlayerStats(p);
+          var epts = est2.pts + (Math.random() * 2 - 1) * 1.5;
+          var ereb = est2.reb + (Math.random() - 0.5);
+          var east = est2.ast + (Math.random() - 0.5);
+          var ageNow = getLeaguePlayerAge(p);
+          var score = epts * 0.4 + ereb * 0.15 + east * 0.15 + (ovr2/99) * 5;
+          var starStart = getMvpStarAllNbaStart(p);
+          var inStarWindow = starStart != null && seasonYear >= starStart && seasonYear <= starStart + 3;
+          if (inStarWindow) {
+            score += 4; // 热门新秀专属最佳阵容窗口：+4 且不叠加通用年轻加成
+          } else if (ageNow >= 22 && ageNow <= 24) {
+            score += ageNow === 22 ? 0.5 : (ageNow === 23 ? 1 : 1.5); // 22-24 岁年轻球员小幅加成
+          }
+          if (ageNow >= 31 && !inStarWindow) score -= 6; // 31 岁及以上视为老将，压制（专属窗口内豁免）
+          cands.push({ name: p.cname || p.name, playerName: p.name, team: teamCode, pos: pos2, pts: epts, reb: ereb, ast: east, ovr: ovr2, score: score, isUser: false });
+        }
+      }
+      if ((!top4Only || getConferenceSeed(STATE.careerTeam) <= 4) && (parseInt(STATE.finalOVR) || 0) >= floor) {
+        cands.push({ name: getHupuDisplayName(), playerName: '', team: STATE.careerTeam, pos: userAvg2.pos, pts: userAvg2.pts, reb: userAvg2.reb, ast: userAvg2.ast, ovr: userAvg2.ovr, score: userAvg2.pts * 0.4 + userAvg2.reb * 0.15 + userAvg2.ast * 0.15 + (userAvg2.ovr/99) * 5, isUser: true });
+      }
+      cands.sort(function(a,b) { return b.score - a.score; });
+      var sel = [];
+      var usedTeams = {};
+      for (var _si = 0; _si < cands.length && sel.length < 5; _si++) {
+        var _sc = cands[_si];
+        if (usedTeams[_sc.team]) continue;
+        usedTeams[_sc.team] = true;
+        sel.push(_sc);
+      }
+      return { candidates: cands, selected: sel };
+    }
+    var nbaTiers = [
+      { floor: nbaOvrFloor, top4Only: true },
+      { floor: 75, top4Only: true },
+      { floor: 70, top4Only: false }
+    ];
+    var allNBASelection = null;
+    for (var _tz = 0; _tz < nbaTiers.length; _tz++) {
+      allNBASelection = buildAllNBASelection(nbaTiers[_tz].floor, nbaTiers[_tz].top4Only);
+      if (allNBASelection.selected.length >= 5) break;
+    }
+    var allNBACandidates = allNBASelection.candidates;
+    var selected = allNBASelection.selected;
+
+    // MVP 保送最佳阵容：无论评分和球队分区如何，都必须出现在最佳阵容中
+    var mvpPos = STATE.position;
+    if (mvpPick && !mvpPick.isUser) {
+      mvpPos = 'C';
+      var mvpRoster = (mvpPick.team && NBA2K_DATA[mvpPick.team]) || [];
+      for (var _mpr = 0; _mpr < mvpRoster.length; _mpr++) {
+        if (mvpRoster[_mpr].name === mvpPick.playerName) {
+          mvpPos = (mvpRoster[_mpr].pos || 'SF').split('/')[0].trim();
+          break;
+        }
+      }
+    }
+    var mvpAllNBACandidate = { name: mvpPick.cname, playerName: mvpPick.playerName || '', team: mvpPick.team || '', pos: mvpPos, pts: 0, reb: 0, ast: 0, ovr: 99, score: 99, isUser: !!mvpPick.isUser };
+    var forceCandidates = [];
+    function isNameForced(name) {
+      return selected.some(function(x) { return x.name === name; }) || forceCandidates.some(function(x) { return x.name === name; });
+    }
+    if (mvpPick && !isNameForced(mvpAllNBACandidate.name)) {
+      forceCandidates.push(mvpAllNBACandidate);
+    }
+    var forcedNames = [];
+    forceCandidates.forEach(function(fc) {
+      if (selected.some(function(x) { return x.name === fc.name; })) return;
+      forcedNames.push(fc.name);
+      // 同队限1人：先移除被保送者所在球队的已入选球员
+      var sameTeamIdx = -1;
+      for (var _sti = 0; _sti < selected.length; _sti++) {
+        if (selected[_sti].team === fc.team && selected[_sti].name !== fc.name) {
+          sameTeamIdx = _sti;
+          break;
+        }
+      }
+      if (sameTeamIdx >= 0) selected.splice(sameTeamIdx, 1);
+      if (selected.length < 5) {
+        selected.push(fc);
+      } else {
+        var replaceIdx = -1;
+        var lowestScore = Infinity;
+        for (var _sr = 0; _sr < selected.length; _sr++) {
+          if (forcedNames.indexOf(selected[_sr].name) >= 0) continue;
+          var sc = selected[_sr].score || 0;
+          if (sc < lowestScore) {
+            lowestScore = sc;
+            replaceIdx = _sr;
+          }
+        }
+        if (replaceIdx >= 0) selected[replaceIdx] = fc;
+      }
+    });
+    // 被保送者挤掉同队球员后，从剩余候选人按同队限1原则补足 5 人
+    for (var _fi = 0; _fi < allNBACandidates.length && selected.length < 5; _fi++) {
+      var _fc2 = allNBACandidates[_fi];
+      if (selected.indexOf(_fc2) >= 0) continue;
+      if (selected.some(function(x) { return x.team === _fc2.team; })) continue;
+      selected.push(_fc2);
+    }
+
+    var userInNBA = false;
+    for (var _ri = 0; _ri < selected.length; _ri++) {
+      if (selected[_ri].isUser) { userInNBA = true; break; }
+    }
+    var userRankNBA = userInNBA ? '🥇 入选最佳阵容' : '未入选';
+    var winnerList = selected.map(function(x) { return x.name; }).join('、');
+    var winnerENList = selected.map(function(x) { return x.playerName || ''; }).join(',');
+    STATE.season.awards.push({ act:'allNBA', label:'最佳阵容', winner:winnerList, winnerEN:winnerENList, team:'', isUser:userInNBA, userRank:userRankNBA, isList:true });
+  })();
+
+  var isFirstCareerSeason = !STATE.career || STATE.career.seasonCount === 0;
+  if (!isFirstCareerSeason) {
+    STATE.season.awards = STATE.season.awards.filter(function(a) {
+      return !a || (a.act !== 'roty' && a.act !== 'allRookie');
+    });
+  }
+  if (isFirstCareerSeason) {
+    function draft2026Player(cn) {
+      if (typeof NBA2K_TEAMS !== 'undefined' && typeof NBA2K_DATA !== 'undefined') {
+        for (var _rt = 0; _rt < NBA2K_TEAMS.length; _rt++) {
+          var _rr = NBA2K_DATA[NBA2K_TEAMS[_rt]] || [];
+          for (var _rp2 = 0; _rp2 < _rr.length; _rp2++) {
+            if (_rr[_rp2].cname === cn) return { cname: cn, playerName: _rr[_rp2].name || '' };
+          }
+        }
+      }
+      return { cname: cn, playerName: '' };
+    }
+    function getDefault2026RookieAwardPool() {
+      var fixedRookies = ['A-J-迪班萨', '达林-彼得森', '卡梅隆-布泽尔'];
+      var randomPool = (typeof DRAFT_CLASS_2026 !== 'undefined' ? DRAFT_CLASS_2026 : [])
+        .filter(function(p) { return p && fixedRookies.indexOf(p.cn) < 0; })
+        .map(function(p) { return p.cn; });
+      var randomRookies = [];
+      while (randomPool.length && randomRookies.length < 2) {
+        var pickIdx = Math.floor(Math.random() * randomPool.length);
+        randomRookies.push(randomPool.splice(pickIdx, 1)[0]);
+      }
+      while (randomRookies.length < 2) randomRookies.push('随机26届新秀');
+      return fixedRookies.concat(randomRookies).map(draft2026Player);
+    }
+    var default2026RookieAwardPool = getDefault2026RookieAwardPool();
+    var cSeed = getConferenceSeed(STATE.careerTeam);
+    var rotyRank = '未进入前五';
+    if (STATE.finalOVR >= 88 && cSeed <= 6) { rotyRank = '🥇 第一名'; }
+    else if (STATE.finalOVR >= 85 && cSeed < 8) { rotyRank = '🥉 第三名'; }
+    else if (STATE.finalOVR >= 85 && cSeed < 10) { rotyRank = '第四名'; }
+    var rotyWin = STATE.finalOVR >= 88 && cSeed <= 6;
+    if (rotyWin) {
+      STATE.season.awards.push({ act:'roty', label:'年度最佳新秀', winner:getHupuDisplayName(), winnerEN:'', team:STATE.careerTeam, isUser:true, userRank:'🥇 第一名' });
+    } else {
+      var pool = default2026RookieAwardPool;
+      var rp = pool[Math.floor(Math.random() * pool.length)];
+      STATE.season.awards.push({ act:'roty', label:'年度最佳新秀', winner:rp.cname, winnerEN:rp.playerName || '', team:'', isUser:false, userRank:rotyRank });
+    }
+
+    // 最佳新秀阵容：仅用户新秀赛季展示
+    (function() {
+      var rookies = default2026RookieAwardPool.slice();
+      var rotyIsTop4 = rotyRank === '🥇 第一名' || rotyRank === '🥉 第三名' || rotyRank === '第四名';
+      var userInRookie = rotyIsTop4;
+      var userRookieRank = '';
+      if (rotyIsTop4) {
+        userRookieRank = '🥇 入选最佳新秀阵容';
+      } else if (STATE.finalOVR > 75) {
+        userRookieRank = '新秀二阵';
+      } else {
+        userRookieRank = '未入围';
+      }
+      var names = rookies.map(function(r) { return r.cname; });
+      if (rotyIsTop4) {
+        names[4] = getHupuDisplayName();
+      }
+      var winnerList = names.join('、');
+      STATE.season.awards.push({ act:'allRookie', label:'最佳新秀阵容', winner:winnerList, winnerEN:'', team:'', isUser:userInRookie, userRank:userRookieRank, isList:true });
+    })();
+  }
+
+  // 第六人：东西部第一的替补中最高 OVR 者获奖
+  (function() {
+    var bestBench = null, bestBOvr = 0, bestBTeam = '';
+    var confs2 = ['EAST', 'WEST'];
+    for (var _ci2 = 0; _ci2 < confs2.length; _ci2++) {
+      var sorted2 = getConferenceSorted(confs2[_ci2]);
+      if (!sorted2.length) continue;
+      var topT2 = sorted2[0].team;
+      var lineup2 = calcTeamLineup(topT2);
+      var bench2 = lineup2.bench || [];
+      for (var _bi2 = 0; _bi2 < bench2.length; _bi2++) {
+        var p2 = bench2[_bi2];
+        if (p2._isUser) continue;
+        if (getPlayerAwardStreak(p2, 'sixthman') >= 2) continue; // 连续两届第六人，下赛季大幅降权
+        var ovr2 = parseInt(p2.ovr) || 0;
+        if (ovr2 > bestBOvr) { bestBOvr = ovr2; bestBench = p2; bestBTeam = topT2; }
+      }
+    }
+    var bCN2 = '未知';
+    if (bestBench) {
+      bCN2 = bestBench.cname || bestBench.name;
+    }
+    // 判断用户排名：评奖前按当前阵容重新同步，避免休赛期后状态过期
+    syncUserStarterStatus();
+    var userIsBench = !STATE.season.isUserStarter;
+    var userSixthRank = '首发球员不参与评选';
+    var sixthUserObj = getUserPlayerObject();
+    var sixthThreshold = (sixthUserObj && getPlayerAwardStreak(sixthUserObj, 'sixthman') >= 2) ? 22 : 18;
+    if (userIsBench && avg.pts >= sixthThreshold) {
+      userSixthRank = '🥇 第一名';
+    } else if (userIsBench) {
+      var sr = computeSixthManRank(avg.pts);
+      if (sr === 1) userSixthRank = '进入评选';
+      else if (sr === 2) userSixthRank = '🥈 第二名';
+      else if (sr === 3) userSixthRank = '🥉 第三名';
+      else if (sr === 4) userSixthRank = '第四名';
+      else if (sr === 5) userSixthRank = '第五名';
+      else userSixthRank = '未进入前五';
+    }
+    var sixthWin = userIsBench && avg.pts >= sixthThreshold;
+    if (!sixthWin && userSixthRank !== '未进入前五' && userSixthRank !== '首发球员不参与评选' && getUserRankStreak('sixthman', userSixthRank) >= 2) {
+      userSixthRank = '未进入前五';
+    }
+    if (sixthWin) {
+      STATE.season.awards.push({ act:'sixthman', label:'最佳第六人', winner:getHupuDisplayName(), winnerEN:'', team:STATE.careerTeam, isUser:true, userRank:'🥇 第一名' });
+    } else {
+      STATE.season.awards.push({ act:'sixthman', label:'最佳第六人', winner:bCN2, winnerEN:bestBench?.name || '', team:bestBTeam, isUser:false, userRank:userSixthRank });
+    }
+  })();
+  updateAwardStreaks();
+  } catch(e) { STATE.season.awards = STATE.season.awards || []; }
+}
+
+/** 奖项页：每个奖项一行，头像 + 获奖者 + 排名 */
+function showAwardsScreen() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC16",label:"常规赛奖项"});
+  if (!STATE._skipSixtyWinBeforeAwards && maybeShowFirstSixtyWinCelebration(function() {
+    STATE._skipSixtyWinBeforeAwards = true;
+    showAwardsScreen();
+    STATE._skipSixtyWinBeforeAwards = false;
+  })) {
+    return;
+  }
+  if (!STATE.season.awards || STATE.season.awards.length === 0) calcSeasonAwards();
+  var awards = STATE.season.awards;
+  if (!awards || awards.length === 0) return;
+
+  showScreen('screen-awards');
+  html('awards-content').innerHTML =
+    '<div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100dvh - 120px);">' +
+      '<div class="loading-balls"><span class="loading-ball"></span><span class="loading-ball"></span><span class="loading-ball"></span></div>' +
+      '<div style="margin-top:16px;font-size:13px;color:var(--text-muted);font-family:var(--font-display);letter-spacing:1px;">统计选票中</div>' +
+    '</div>';
+
+  setTimeout(function() {
+  var seed = getConferenceSeed(STATE.careerTeam);
+  var emojiMap = { mvp:'🏆', dpoy:'🔒', allStar:'⭐', allNBA:'🌟', roty:'🌱', allRookie:'🌱', sixthman:'🔥' };
+  var catMap = { mvp:'最有价值球员', dpoy:'最佳防守球员', allStar:'全明星', allNBA:'最佳阵容', roty:'最佳新秀', allRookie:'最佳新秀阵容', sixthman:'最佳第六人' };
+
+  function getHs(enName) {
+    if (!enName) return '';
+    var s = getPlayerHeadshotStyle(enName, 40);
+    return s ? s.replace(/width:\d+px;height:\d+px;?/, '') : '';
+  }
+
+  var rowsHtml = '';
+  var order = ['mvp', 'dpoy', 'allStar', 'roty', 'sixthman', 'allNBA', 'allRookie'];
+  var isFirstAwardSeason = !STATE.career || STATE.career.seasonCount === 0;
+  var rowsRendered = 0;
+  for (var oi = 0; oi < order.length; oi++) {
+    var a = null;
+    for (var ai = 0; ai < awards.length; ai++) { if (awards[ai].act === order[oi]) { a = awards[ai]; break; } }
+    if (!a) continue;
+    if (!isFirstAwardSeason && (a.act === 'roty' || a.act === 'allRookie')) continue;
+    var idx = rowsRendered++;
+    var emoji = emojiMap[a.act] || '🏅';
+    var cat = catMap[a.act] || a.label;
+    var rankCls = 'dim';
+    if (a.userRank.indexOf('🥇') >= 0) rankCls = 'gold';
+    else if (a.userRank.indexOf('🥉') >= 0) rankCls = 'orange';
+
+    // 头像（列表奖项留空占位，保证对齐）
+    var headshotHtml = '';
+    var TEAM_ICON = 'https://i4.hoopchina.com.cn/colorbox/6bd73a77ab165f7791ef4a650965e797.png';
+    if (a.isList) {
+      headshotHtml = '<div style="width:44px;height:44px;flex-shrink:0;border-radius:50%;background-image:url(' + TEAM_ICON + ');background-size:cover;background-position:center;border:2px solid var(--orange);"></div>';
+    } else {
+      var hsStyle = '';
+      if (a.isUser) {
+        var avatarUrl = getHupuAvatarUrl();
+        if (avatarUrl) hsStyle = 'background-image:url(' + avatarUrl + ');background-size:cover;background-position:center;';
+      } else if (a.winnerEN) {
+        hsStyle = getHs(a.winnerEN);
+      }
+      if (hsStyle) {
+        headshotHtml = '<div style="width:44px;height:44px;border-radius:50%;flex-shrink:0;border:2px solid var(--orange);background-size:cover;background-position:center;' + hsStyle + '"></div>';
+      } else {
+        headshotHtml = '<div style="width:44px;height:44px;border-radius:50%;flex-shrink:0;background:var(--orange-dim);display:flex;align-items:center;justify-content:center;font-size:18px;">' + emoji + '</div>';
+      }
+    }
+
+    var leftContent = '';
+    if (a.isList) {
+      var names = a.winner.split('、');
+      leftContent = '<div style="padding:2px 0 0;">';
+      for (var ni = 0; ni < names.length; ni++) {
+        var isMy = names[ni] === getHupuDisplayName();
+        leftContent += '<div style="font-size:11px;' + (isMy ? 'color:var(--orange);font-weight:700;' : 'color:var(--text);font-weight:500;') + ';line-height:1.5;">' + (isMy ? '⭐ ' : '') + names[ni].replace(/·/g, '-') + '</div>';
+      }
+      leftContent += '</div>';
+    } else {
+      leftContent = '<div style="font-size:13px;font-weight:600;' + (a.isUser ? 'color:var(--orange);' : 'color:var(--text);') + 'margin:1px 0 1px;">' + (a.isUser ? '⭐ ' : '') + a.winner.replace(/·/g, '-') + '</div>';
+    }
+
+    rowsHtml +=
+      '<div class="award-row" data-track-pos="T' + (idx + 2) + '" data-track-label="' + cat + '" style="display:flex;align-items:center;background:var(--bg-card);border:1px solid var(--border);border-radius:12px;overflow:hidden;' + (idx < rowsRendered - 1 ? 'margin-bottom:5px;' : '') + 'animation-delay:' + (idx * 1.0) + 's;">' +
+        // 头像区
+        '<div style="padding:0 0 0 12px;flex-shrink:0;">' + headshotHtml + '</div>' +
+        // 获奖信息
+        '<div style="flex:1;padding:8px 12px;">' +
+          '<div class="award-label">' + emoji + ' ' + cat + '</div>' +
+          leftContent +
+        '</div>' +
+        // 排名
+        '<div style="width:110px;flex-shrink:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:6px;border-left:1px solid var(--border-light);">' +
+          '<div style="font-size:10px;color:var(--text-muted);letter-spacing:1px;margin-bottom:2px;font-weight:600;">你的排名</div>' +
+          '<div class="award-rank ' + rankCls + '">' + a.userRank + '</div>' +
+        '</div>' +
+      '</div>';
+  }
+
+  var actionBtns = '';
+  if (seed <= 6) actionBtns = '<button class="btn btn-gold" onclick="renderPlayoffs()">🏀 进入季后赛（' + seed + '号种子）</button>';
+  else if (seed <= 10) actionBtns = '<button class="btn btn-gold" onclick="renderPlayoffs()">🔥 附加赛（' + seed + '号种子）</button>';
+  else actionBtns = '<button class="btn btn-secondary" onclick="showSeasonResults()">📊 查看赛季总结</button>';
+
+  html('awards-content').innerHTML =
+    rowsHtml +
+    '<div style="text-align:center;padding:8px 0 0;">' + actionBtns + '</div>';
+  document.querySelectorAll('#awards-content .award-row').forEach(function(row) {
+    trackExposureOnce(row, {act:"exposure",blk:"BMC099",pos:row.getAttribute('data-track-pos'),label:row.getAttribute('data-track-label')});
+  });
+  }, 1500);
+}
+
+// ★ 实验性：82 场赛果点阵图
+function renderDotGrid() {
+  try {
+  showScreen('screen-season');
+  var rec = STATE.season;
+  var w = rec.wins || 0, l = rec.losses || 0;
+  var pct = w + l > 0 ? (w / (w + l) * 100).toFixed(1) + '%' : '—';
+  var seed = getConferenceSeed(STATE.careerTeam);
+  var confName = getConference(STATE.careerTeam) === 'EAST' ? '东部' : '西部';
+
+  var actionBtn = '';
+  if (seed <= 6) actionBtn = '<button class="btn btn-gold btn-sm" onclick="renderPlayoffs()" style="margin-top:6px;">🏀 进入季后赛（' + seed + '号种子）</button>';
+  else if (seed <= 10) actionBtn = '<button class="btn btn-gold btn-sm" onclick="renderPlayoffs()" style="margin-top:6px;">🔥 附加赛（' + seed + '号种子）</button>';
+  else actionBtn = '<button class="btn btn-secondary btn-sm" onclick="showSeasonResults()" style="margin-top:6px;">📊 查看赛季总结</button>';
+
+  var dotsHtml = '';
+  if (rec.games && rec.games.length > 0) {
+    rec.games.forEach(function(g, i) {
+      if (g.suspended) {
+        dotsHtml += '<span class="dot dot-x" title="G' + (i + 1) + ': 禁赛">✕</span>';
+      } else {
+        dotsHtml += '<span class="dot ' + (g.result.won ? 'dot-w' : 'dot-l') + '" title="G' + (i + 1) + ': ' + (g.result.won ? '胜' : '负') + ' ' + getTeamName(g.game.opponent) + ' ' + (g.result.scoreA || '') + '-' + (g.result.scoreB || '') + '"></span>';
+      }
+      if ((i + 1) % 14 === 0) dotsHtml += '<br>';
+    });
+  }
+
+  // 清空旧内容
+  html('season-controls').innerHTML = '';
+  html('gamecast-area').innerHTML = '';
+  html('game-list').innerHTML = '';
+
+  html('season-header').innerHTML =
+    '<div class="sh-top" style="margin-top:8px;">' +
+      '<div class="sh-team"><div class="sh-team-name">' + getTeamLogo(STATE.careerTeam, 24) + ' ' + getTeamName(STATE.careerTeam) + '</div><div class="sh-team-full">' + ((window.TEAM_CITY && window.TEAM_CITY[STATE.careerTeam]) || '') + '</div></div>' +
+      '<div class="sh-season">' + getCurrentSeasonLabel() + '</div>' +
+      '<div class="sh-record"><span class="sh-wins">' + w + '</span><span class="sh-dash">-</span><span class="sh-losses">' + l + '</span><div class="sh-pct">' + pct + '</div></div>' +
+    '</div>' +
+    '<div class="sh-info" id="simInfo2">' +
+      '<span>' + SIM_CONFIG.POSITIONS[STATE.position] + ' · OVR ' + STATE.finalOVR + '</span>' +
+      '<span>' + (function(){ var ps=STATE.season.playerStats,g=ps.games||1; return '场均 ' + Math.round(ps.pts/g*10)/10 + '分 ' + Math.round(ps.reb/g*10)/10 + '板 ' + Math.round(ps.ast/g*10)/10 + '助'; })() + '</span>' +
+    '</div>' +
+    renderEventStatus() +
+    '<div class="dot-grid">' + dotsHtml + '</div>' +
+    '<div style="text-align:center;padding:0 12px 16px;">' + actionBtn + '</div>';
+  } catch(e) { console.error('[Grid] renderDotGrid 异常:', e); }
+}
+
+// ==================== 联盟排名初始化 ====================
+function initStandings() {
+  NBA2K_TEAMS.forEach(t => {
+    STATE.season.standings[t] = { wins: 0, losses: 0, streak: '', streakLen: 0 };
+  });
+}
+
+// ==================== 赛程生成（真实NBA赛程）====================
+function buildRealSchedule() {
+  const myTeam = STATE.careerTeam;
+  const rawSchedule = NBA2K_SCHEDULE[myTeam];
+  if (!rawSchedule) {
+    console.error('No schedule for', myTeam);
+    return;
+  }
+  
+  const schedule = rawSchedule.map(g => ({
+    opponent: g.opponent,
+    home: g.home,
+    gameNum: g.gameNum,
+    day: g.day,
+    simulated: false,
+    result: null,
+  }));
+  
+  STATE.season.schedule = schedule;
+  
+  // ★ 构建每日比赛映射（去重）
+  const dayMap = {};
+  // 遍历所有球队的赛程，每场比赛只记一次（用home team的entry）
+  const seen = new Set();
+  Object.keys(NBA2K_SCHEDULE).forEach(team => {
+    NBA2K_SCHEDULE[team].forEach(g => {
+      if (!g.home) return; // 只记主队entry（避免重复）
+      const gameKey = `${g.day}-${team}-${g.opponent}`;
+      if (seen.has(gameKey)) return;
+      seen.add(gameKey);
+      if (!dayMap[g.day]) dayMap[g.day] = [];
+      dayMap[g.day].push({ home: team, away: g.opponent });
+    });
+  });
+  STATE.season._dayMap = dayMap;
+  STATE.season._processedDays = new Set();
+  STATE.season._leagueGameLog = [];
+  
+  // renderGameList();  // 日历模式已注释
+}
+
+/** 模拟到目前为止所有未处理的比赛日 */
+function simDayLeagueGames(day) {
+  const dayMap = STATE.season._dayMap;
+  if (!dayMap) return;
+  const processed = STATE.season._processedDays || new Set();
+  
+  // 找到所有 <= day 且未处理的比赛日，一次性处理
+  const daysToProcess = Object.keys(dayMap)
+    .map(Number)
+    .filter(d => d <= day && !processed.has(d))
+    .sort((a, b) => a - b);
+  
+  if (daysToProcess.length === 0) return;
+  
+  const standings = STATE.season.standings;
+  
+  daysToProcess.forEach(d => {
+    processed.add(d);
+    const games = dayMap[d];
+    if (!games) return;
+    
+    games.forEach(g => {
+      // 跳过包含我方球队的比赛（这些已经通过我们的比赛模拟过了）
+      if (g.home === STATE.careerTeam || g.away === STATE.careerTeam) return;
+      
+      const p1 = calcTeamPowerWithPlayer(g.home);
+      const p2 = calcTeamPowerWithPlayer(g.away);
+      // ★ 用差值法计算胜率，与 simulateGameNew 一致
+      const netRating1 = (p1.offense - p2.offense) * 0.4 + (p1.defense - p2.defense) * 0.4 + (p1.depth - p2.depth) * 0.2;
+      const winProb = 0.5 + netRating1 / 25;  // 强弱队胜率拉开，最强vs最弱≈84%
+      const clampedProb = Math.max(0.15, Math.min(0.85, winProb));
+      
+      if (Math.random() < clampedProb) {
+        standings[g.home].wins++; standings[g.away].losses++;
+        updateStreak(g.home, true); updateStreak(g.away, false);
+        if (STATE.season._leagueGameLog) STATE.season._leagueGameLog.push({ home: g.home, away: g.away, won: true });
+      } else {
+        standings[g.away].wins++; standings[g.home].losses++;
+        updateStreak(g.away, true); updateStreak(g.home, false);
+        if (STATE.season._leagueGameLog) STATE.season._leagueGameLog.push({ home: g.home, away: g.away, won: false });
+      }
+    });
+  });
+  
+  STATE.season._processedDays = processed;
+}
+
+// ==================== 新比赛引擎 ====================
+/** 解析位置：返回该球员能打的所有位置 */
+function getPlayerPositions(posStr) {
+  if (!posStr) return [];
+  return String(posStr).split(/\s*\/\s*/).map(s => s.trim()).filter(Boolean);
+}
+
+/** 判断球员是否能打某位置 */
+function canPlayPosition(playerPos, targetPos) {
+  return getPlayerPositions(playerPos).includes(targetPos);
+}
+
+/** 获取球员显示位置（给UI用） */
+function getPositionDisplay(posStr) {
+  if (!posStr) return '—';
+  return posStr;
+}
+
+/** 按位置计算球队首发+轮换（用户参与规划；未首发则第六人） */
+function calcTeamLineup(team) {
+  const allPlayers = (NBA2K_DATA[team] || []).slice();
+  let userPlayer = null;
+  var rosterSig = allPlayers.map(function(p) {
+    return [p.name, p.pos, p.ovr, p.contract || ''].join(':');
+  }).join('|');
+  var lineupCacheKey = [
+    team,
+    rosterSig,
+    STATE.careerTeam || '',
+    STATE.position || '',
+    STATE.finalOVR || '',
+    STATE.season?.isPlayoffs ? 'po' : 'rs'
+  ].join('||');
+  STATE._lineupCache = STATE._lineupCache || {};
+  if (STATE._lineupCache[lineupCacheKey]) return STATE._lineupCache[lineupCacheKey];
+  
+  // 如果是你的球队，把你加入阵容
+  if (team === STATE.careerTeam && STATE.finalOVR) {
+    const playoffDebuff = 0;
+    var _displayName = getHupuDisplayName();
+    userPlayer = {
+      name: _displayName,
+      cname: _displayName,
+      ovr: Math.max(60, parseInt(STATE.finalOVR) - playoffDebuff),
+      pos: STATE.position,
+      ...STATE.attrs,
+      _isUser: true,
+      _playoffDebuff: playoffDebuff,
+    };
+    allPlayers.push(userPlayer);
+  }
+  
+  const POS_ORDER = ['PG', 'SG', 'SF', 'PF', 'C'];
+  const starters = {};
+  const assigned = new Set();
+
+  function fillBestSmall(posList, posIdx, curStarters, curAssigned, curScore, best) {
+    if (posIdx >= posList.length) {
+      if (curScore > best.score) {
+        best.score = curScore;
+        best.starters = Object.assign({}, curStarters);
+        best.assigned = new Set(Array.from(curAssigned));
+      }
+      return best;
+    }
+    const pos = posList[posIdx];
+    const candidates = allPlayers
+      .map((p, i) => ({ player: p, idx: i, ovr: parseInt(p.ovr) || 0 }))
+      .filter(({ idx }) => !curAssigned.has(idx))
+      .filter(({ player }) => canPlayPosition(player.pos || '', pos))
+      .sort((a, b) => b.ovr - a.ovr)
+      .slice(0, 4);
+
+    if (candidates.length === 0) {
+      return fillBestSmall(posList, posIdx + 1, curStarters, curAssigned, curScore, best);
+    }
+
+    candidates.forEach(({ player, idx, ovr }) => {
+      const nextStarters = Object.assign({}, curStarters);
+      const nextAssigned = new Set(Array.from(curAssigned));
+      nextStarters[pos] = player;
+      nextAssigned.add(idx);
+      fillBestSmall(posList, posIdx + 1, nextStarters, nextAssigned, curScore + ovr, best);
+    });
+    return best;
+  }
+
+  const best = fillBestSmall(POS_ORDER, 0, starters, assigned, 0, {
+    score: -1,
+    starters: Object.assign({}, starters),
+    assigned: new Set(Array.from(assigned))
+  });
+  POS_ORDER.forEach(pos => {
+    if (best.starters[pos]) {
+      const idx = allPlayers.indexOf(best.starters[pos]);
+      starters[pos] = best.starters[pos];
+      if (idx >= 0) assigned.add(idx);
+    }
+  });
+  
+  // 替补：剩余球员按OVR排序
+  let bench = allPlayers
+    .map((p, i) => ({ player: p, idx: i }))
+    .filter(({ idx }) => !assigned.has(idx))
+    .sort((a, b) => b.player.ovr - a.player.ovr)
+    .map(e => e.player);
+  
+  // 如果用户没进首发，固定放第六人
+  if (userPlayer && Object.values(starters).indexOf(userPlayer) < 0 && !bench.includes(userPlayer)) {
+    bench.unshift(userPlayer);
+  } else if (userPlayer && Object.values(starters).indexOf(userPlayer) < 0) {
+    bench = bench.filter(function(p) { return p !== userPlayer; });
+    bench.unshift(userPlayer);
+  } else {
+    bench.sort((a, b) => b.ovr - a.ovr);
+  }
+  if (userPlayer && Object.values(starters).indexOf(userPlayer) < 0) {
+    bench = bench.filter(function(p, idx) { return p === userPlayer ? idx === 0 : true; });
+  } else {
+    bench.sort((a, b) => b.ovr - a.ovr);
+  }
+  
+  var result = { starters, bench, allPlayers, isUserStarter: !!(userPlayer && Object.values(starters).indexOf(userPlayer) >= 0) };
+  STATE._lineupCache[lineupCacheKey] = result;
+  return result;
+}
+
+function clearLineupCache() {
+  STATE._lineupCache = {};
+}
+
+function syncUserStarterStatus() {
+  if (!STATE.careerTeam || !STATE.finalOVR || !STATE.season) return false;
+  clearLineupCache();
+  var lineup = calcTeamLineup(STATE.careerTeam);
+  var starter = !!lineup.isUserStarter;
+  if (STATE.career && STATE.career.flags && STATE.career.flags.startBench) starter = false;
+  STATE.season.isUserStarter = starter;
+  return starter;
+}
+
+/** 按位置计算球队实力（首发5人 + 2重要轮换） */
+function calcTeamPowerWithPlayer(team) {
+  const lineup = calcTeamLineup(team);
+  const cfg = SIM_CONFIG.TEAM_POWER;
+  
+  const starters = Object.values(lineup.starters);
+  const bench = lineup.bench.slice(0, 2);  // 只取前2名轮换
+  const roster = starters.concat(bench);
+  
+  if (roster.length === 0) return { offense: 50, defense: 50, athletic: 50, clutch: 50, depth: 50 };
+  
+  // 首发5人总权重85%，按OVR比例分配（球星影响力更大）
+  const totalStarterOVR = starters.reduce((s, p) => s + (parseInt(p.ovr) || 50), 0);
+  const benchWeight = 0.15 / bench.length;
+  
+  const weightedRoster = roster.map((p, i) => ({
+    player: p,
+    weight: i < starters.length
+      ? 0.85 * ((parseInt(p.ovr) || 50) / totalStarterOVR)
+      : benchWeight,
+  }));
+  
+  function calcDim(weights) {
+    let sum = 0, totalW = 0;
+    Object.entries(weights).forEach(([attr, w]) => {
+      const weightedAvg = weightedRoster.reduce((s, { player, weight }) => 
+        s + (parseInt(player[attr]) || 50) * weight, 0);
+      sum += weightedAvg * w;
+      totalW += w;
+    });
+    return totalW > 0 ? sum / totalW : 50;
+  }
+  
+  const overall = weightedRoster.reduce((s, { player, weight }) => 
+    s + (parseInt(player.ovr) || 50) * weight, 0);
+  
+  return {
+    offense: calcDim(cfg.offense),
+    defense: calcDim(cfg.defense),
+    athletic: calcDim(cfg.athletic),
+    clutch: calcDim(cfg.clutch),
+    depth: overall,
+  };
+}
+
+/** 比赛模拟 — 使用统一胜率公式 + 详细比分生成 */
+function simulateGameNew(teamA, teamB, seedBonus, probMultiplier) {
+  const powerA = calcTeamPowerWithPlayer(teamA);
+  const powerB = calcTeamPowerWithPlayer(teamB);
+  const config = SIM_CONFIG;
+  
+  // ★ 第一步：用统一胜率公式决定胜负
+  const netRatingA = (powerA.offense - powerB.offense) * 0.4 
+                   + (powerA.defense - powerB.defense) * 0.4 
+                   + (powerA.depth - powerB.depth) * 0.2
+                   + (seedBonus || 0);  // 季后赛种子保护：高顺位概率加成
+  const winProb = 0.5 + netRatingA / 25;
+  const clampedProb = Math.max(0.15, Math.min(0.85, winProb));
+  // ★ 概率乘数（用于季后赛用户 debuff）
+  const finalProb = probMultiplier != null ? Math.max(0.10, clampedProb * probMultiplier) : clampedProb;
+  const predeterminedWinner = Math.random() < finalProb ? teamA : teamB;
+  
+  // ★ 第二步：生成展示用比分（不影响胜负结果）
+  // 计算节奏
+  const paceA = config.PACE.base + (Math.random() - 0.5) * config.PACE.teamRange;
+  const paceB = config.PACE.base + (Math.random() - 0.5) * config.PACE.teamRange;
+  const gamePace = (paceA + paceB) / 2;
+  const possPerQ = Math.round(gamePace / 4);
+  
+  let scoreA = 0, scoreB = 0;
+  let highlight = false;
+  let keyEvents = [];
+  let momentum = 1.0;
+  let qScoresA = [], qScoresB = [];
+  
+  // 查找赛程，确认主客场
+  const schedule = STATE.season.schedule || [];
+  const gameIdx = schedule.findIndex(g => !g.simulated);
+  const isHome = gameIdx >= 0 ? schedule[gameIdx]?.home : true;
+  const isB2B = gameIdx > 0 && schedule[gameIdx-1]?.isB2B;
+  
+  // ★ 根据预定胜者设置倾向
+  const desiredWinner = predeterminedWinner;
+  
+  for (let q = 0; q < 4; q++) {
+    const baseQ = possPerQ;
+    
+    // 实力差值影响比分展示（小幅度，不决定胜负）
+    const offDefDiffA = (powerA.offense - powerB.defense) / 120;
+    const offDefDiffB = (powerB.offense - powerA.defense) / 120;
+    
+    // 主场加成
+    const homeBonusQ = isHome ? 1.0 : 0;
+    
+    // 每节得分 = 基准 + 实力展示 + 主场 + 大随机
+    let ptsA = baseQ + offDefDiffA * 3 + homeBonusQ + (momentum - 1) * 1.5;
+    let ptsB = baseQ + offDefDiffB * 3;
+    
+    // 确保预定胜者适度领先
+    const currentDiff = (scoreA + ptsA) - (scoreB + ptsB);
+    const targetLead = desiredWinner === teamA ? 1 : -1;
+    if ((desiredWinner === teamA && currentDiff < targetLead) ||
+        (desiredWinner === teamB && currentDiff > targetLead)) {
+      if (desiredWinner === teamA) ptsA += 2;
+      else ptsB += 2;
+    }
+    
+    // 背靠背
+    if (isB2B) { ptsA *= 0.96; ptsB *= 0.96; }
+    
+    // ★ 大随机波动 ±25%
+    ptsA *= (0.75 + Math.random() * 0.50);
+    ptsB *= (0.75 + Math.random() * 0.50);
+    
+    // 落后方反扑
+    if (Math.abs(currentDiff) > 10) {
+      const comeback = 1 + Math.abs(currentDiff) * 0.003;
+      if (currentDiff > 0) ptsB *= comeback; else ptsA *= comeback;
+    }
+    
+    const qA = Math.max(8, Math.round(ptsA));
+    const qB = Math.max(8, Math.round(ptsB));
+    
+    scoreA += qA;
+    scoreB += qB;
+    qScoresA.push(qA);
+    qScoresB.push(qB);
+    
+    // 随机事件
+    if (Math.random() < 0.08) {
+      const bonus = 3 + Math.round(Math.random() * 8);
+      if (Math.random() > 0.5) { scoreA += bonus; keyEvents.push(`🔥 ${getTeamName(teamA)} 单节爆发 +${bonus}`); }
+      else { scoreB += bonus; keyEvents.push(`🔥 ${getTeamName(teamB)} 单节爆发 +${bonus}`); }
+      highlight = true;
+    }
+    
+    momentum = momentum * 0.7 + 0.3;
+  }
+  
+  // 关键球/绝杀
+  if (Math.abs(scoreA - scoreB) < 6 && Math.random() < 0.35) {
+    highlight = true;
+    if (Math.random() > 0.5) { scoreA += 3; keyEvents.push('⚡ 关键三分！'); }
+    else { scoreB += 3; keyEvents.push('⚡ 关键三分！'); }
+  }
+  if (Math.abs(scoreA - scoreB) <= 3 && Math.random() < 0.12) {
+    highlight = true;
+    if (Math.random() > 0.5) { scoreA += 3; keyEvents.push('🏆 压哨绝杀！'); }
+    else { scoreB += 3; keyEvents.push('💔 被压哨绝杀...'); }
+  }
+  
+  // 加时
+  let ot = 0;
+  while (Math.abs(scoreA - scoreB) < 3 && ot < 3) {
+    ot++;
+    scoreA += Math.round(4 + Math.random() * 8);
+    scoreB += Math.round(4 + Math.random() * 8);
+    keyEvents.push(`⏱ 加时赛 #${ot}`);
+    highlight = true;
+  }
+  
+  // ★ 最终结果由预定胜者决定
+  const won = predeterminedWinner === teamA;
+  // 确保比分方向正确：胜者必须领先
+  if (won && scoreB >= scoreA) {
+    const add = scoreB - scoreA + 1;
+    scoreA += add;
+    if (qScoresA.length) qScoresA[qScoresA.length - 1] += add;
+  } else if (!won && scoreA >= scoreB) {
+    const add = scoreA - scoreB + 1;
+    scoreB += add;
+    if (qScoresB.length) qScoresB[qScoresB.length - 1] += add;
+  }
+  
+  // 冷门检测
+  const avgA = (powerA.offense + powerA.defense) / 2;
+  const avgB = (powerB.offense + powerB.defense) / 2;
+  if (won !== (avgA > avgB) && Math.abs(avgA - avgB) > 3) {
+    highlight = true;
+    keyEvents.push('💥 爆冷！');
+  }
+  
+  return {
+    won, scoreA, scoreB,
+    qScoresA, qScoresB,
+    highlight, keyEvents, ot,
+    teamA: { power: powerA },
+    teamB: { power: powerB },
+    pace: gamePace,
+    possPerQ,
+    boxScore: generateBoxScore(teamA, teamB, scoreA, scoreB),
+  };
+}
+
+/** 生成两队全队数据（确保总分=比分） */
+function generateBoxScore(teamA, teamB, totalA, totalB) {
+  function getLineupStats(team, totalPts) {
+    const lineup = calcTeamLineup(team);
+    // 展示所有轮换球员（首发5人 + 替补前5 = 10人）
+    const players = Object.values(lineup.starters).concat(lineup.bench.slice(0, 5));
+    if (players.length === 0) return [];
+    
+    // 按OVR从高到低排序（替补排最后）
+    players.sort((a, b) => (parseInt(b.ovr)||0) - (parseInt(a.ovr)||0));
+    
+    // 计算得分权重：OVR为主（指数放大差距），进攻技能微调
+    const minOvr = Math.min(...players.map(p => parseInt(p.ovr)||50));
+    const maxOvr = Math.max(...players.map(p => parseInt(p.ovr)||50));
+    const weights = players.map((p, idx) => {
+      const ovr = parseInt(p.ovr) || 50;
+      // OVR指数放大：55以下几乎不得分，越高差距越大
+      const ovrFactor = Math.pow(Math.max(0, (ovr - 55) / 44), 2.0);
+      // 进攻技能微调（±20%）
+      const offBonus = (af(parseInt(p.threePT)||50) + af(parseInt(p.FIN)||50) + af(parseInt(p.MID)||50)) / 3;
+      // 得分手加成：前几得分点获得额外权重
+      const starBonus = Math.max(0.6, 1.3 - idx * 0.15);
+      return Math.max(0.05, ovrFactor * (0.7 + 0.3 * offBonus) * starBonus);
+    });
+    const totalW = weights.reduce((a, b) => a + b, 0);
+    
+    // 分配得分（确保总和=totalPts）
+    let allocated = weights.map((w, i) => Math.round(totalPts * w / totalW));
+    let diff = totalPts - allocated.reduce((a, b) => a + b, 0);
+    if (diff !== 0) {
+      const best = weights.indexOf(Math.max(...weights));
+      allocated[best] = Math.max(0, allocated[best] + diff);
+    }
+    
+    // 确保每人至少1分（只要他上场）
+    allocated = allocated.map(v => Math.max(1, v));
+    // 如有差额从得分王扣/补
+    let sum = allocated.reduce((a, b) => a + b, 0);
+    const bestIdx = weights.indexOf(Math.max(...weights));
+    if (sum > totalPts) {
+      allocated[bestIdx] -= (sum - totalPts);
+      if (allocated[bestIdx] < 0) allocated[bestIdx] = 0;
+    } else if (sum < totalPts) {
+      allocated[bestIdx] += (totalPts - sum);
+    }
+    
+    return players.map((p, i) => {
+      const pos = (p.pos || 'SF').split('/')[0].trim();
+      const ovr = parseInt(p.ovr) || 50;
+      const ath = af(parseInt(p.ATH)||50);
+      const reb = af(parseInt(p.REB)||50);
+      const pas = af(parseInt(p.PAS)||50) * 0.5 + af(parseInt(p.HAN)||50) * 0.3 + af(parseInt(p.CLU)||50) * 0.2;
+      const pdef = af(parseInt(p.PDEF)||50);
+      const blk = af(parseInt(p.BLK)||50) * 0.5 + af(parseInt(p.IDEF)||50) * 0.5;
+      const han = af(parseInt(p.HAN)||50) * 0.5 + af(parseInt(p.CLU)||50) * 0.5;
+      
+      const pts = allocated[i];
+      // 上场时间：核心主力>角色球员
+      const mins = i < 5
+        ? 26 + Math.round((1 - i * 0.15) * 12 + Math.random() * 4)
+        : 8 + Math.round(Math.random() * 8);
+      const fga = Math.round(Math.max(2, pts * 0.7 + Math.random() * 4));
+      const fgm = Math.min(fga, Math.max(0, Math.round(fga * (0.32 + Math.random() * 0.28))));
+      
+      return {
+        name: p.cname || p.name,
+        pos, pts,
+        reb: Math.round(reb * 4 + Math.random() * 3 + 1),
+        ast: Math.round(pas * 5 + Math.random() * 2),
+        stl: Math.round(pdef * 1.2 + Math.random() * 1),
+        blk: Math.round(blk * 1.2 + Math.random() * 1),
+        tov: Math.round(1 + (1 - Math.min(1, han)) * 2.5 + Math.random() * 1),
+        fgm, fga,
+        mins,
+        isUser: p._isUser || false,
+      };
+    });
+  }
+  
+  return {
+    [teamA]: getLineupStats(teamA, totalA),
+    [teamB]: getLineupStats(teamB, totalB),
+  };
+}
+
+/** 属性→效率系数：递减曲线
+ *  低属性几乎没用，高属性才有显著收益
+ *  35→0.18  50→0.39  65→0.57  75→0.69  85→0.82  95→0.94  99→1.00
+ */
+function attrFactor(val) {
+  const v = Math.max(25, Math.min(99, val || 50));
+  return Math.pow((v - 25) / 74, 0.85);
+}
+
+/** 严格版：只有顶尖属性才能展现顶尖数据（attrFactor^1.5）
+ *  35→0.08  50→0.24  65→0.43  78→0.65  90→0.83  99→1.00
+ *  用在所有数据计算上，拉开一般和顶级的差距
+ */
+function af(val) { return Math.pow(attrFactor(val), 1.5); }
+
+function getSeasonUsageBias() {
+  if (!STATE.season) return 1;
+  if (STATE.season._usageBias == null) {
+    var age = STATE.career && STATE.career.currentAge ? STATE.career.currentAge : 22;
+    var ageBase = 1;
+    if (age <= 23) ageBase = 0.90;
+    else if (age <= 25) ageBase = 0.98;
+    else if (age <= 29) ageBase = 1.06;
+    else if (age <= 32) ageBase = 1.02;
+    else if (age <= 35) ageBase = 0.94;
+    else if (age <= 39) ageBase = 0.78;
+    else ageBase = 0.68;
+    STATE.season._usageBias = ageBase * (0.92 + Math.random() * 0.16);
+  }
+  return STATE.season._usageBias;
+}
+
+/** 生成你的球员数据 — 由单项属性决定，不是总评 */
+function generatePlayerStatsNew(attrs, gameResult, isPlayoff) {
+  const cfg = SIM_CONFIG.PLAYER_STATS;
+  const pos = STATE.position || 'PG';
+  const posScale = cfg.POS_SCALE[pos] || cfg.POS_SCALE.PG;
+  
+  // 节奏和出场时间
+  const totalScore = gameResult.scoreA + gameResult.scoreB;
+  const paceFactor = Math.min(totalScore / 210, 1.4);
+  const seasonUsageBias = getSeasonUsageBias();
+  const baseMins = isPlayoff ? 38 : (30 + Math.round(Math.random() * 8));
+  const mins = Math.max(8, Math.round(baseMins * Math.sqrt(seasonUsageBias)));
+  const minsFactor = mins / 48;
+  const statMinsFactor = Math.max(0.75, Math.min(1.15, mins / (isPlayoff ? 38 : 34)));
+  
+  // 球队总投篮数
+  const teamFGA = Math.round((totalScore / 2) * 0.85);
+  
+  // ★ 球权/使用率由进攻属性决定 — 按位置选择核心进攻属性
+  const posOffAttrs = {
+    'PG': ['threePT','MID','HAN','PAS'],
+    'SG': ['threePT','MID','FIN','HAN'],
+    'SF': ['threePT','MID','FIN','DNK','ATH'],
+    'PF': ['MID','FIN','DNK','STR','REB'],
+    'C':  ['FIN','DNK','STR','MID'],
+  };
+  const offAttrList = posOffAttrs[pos] || posOffAttrs['SF'];
+  const offAttrs = offAttrList.map(k => parseInt(attrs[k]) || 50);
+  const offAvg = offAttrs.reduce((a, b) => a + b, 0) / offAttrs.length;
+  const offFactor = af(offAvg);
+  const baseUsage = cfg.USAGE[pos] || 0.20;
+  // ★ 根据总评梯度调整使用率：≤75用原系数，>75每多点提升
+  const myOVR = STATE.finalOVR || 75;
+  const usageScale = myOVR > 75 ? 1 + (myOVR - 75) * 0.018 : 1.0;
+  const scaledUsage = baseUsage * Math.min(1.8, usageScale);
+  
+  // ★ 出手数 = 球队投篮 × 使用率 × (保底+严格天赋) × 时间
+  // ★ 方案A：出手数温和波动 ±55%（0.45~1.55），保留上限封顶
+  let fga = Math.round(teamFGA * scaledUsage * seasonUsageBias * (0.1 + offFactor * 0.9) * minsFactor * (0.45 + Math.random() * 1.1));
+  const maxFga = Math.round((1 + offFactor * 24) * Math.max(0.7, Math.min(1.5, usageScale)));
+  fga = Math.max(2, Math.min(maxFga, fga));
+  
+  // 投篮分布 — 按属性动态调整 (Experimental)
+  const baseDist = SIM_CONFIG.SHOT_DIST[pos] || SIM_CONFIG.SHOT_DIST.PG;
+  const threePtAttr = parseInt(attrs.threePT) || 50;
+  const finAttr = ((parseInt(attrs.FIN)||50) + (parseInt(attrs.DNK)||50)) / 2;
+  const midAttr = parseInt(attrs.MID) || 50;
+  let dynDist = { threePT: baseDist.threePT, MID: baseDist.MID, FIN: baseDist.FIN };
+  // 三分属性每高/低于50 1点，三分占比调整0.3%
+  dynDist.threePT = Math.max(0.05, Math.min(0.55, dynDist.threePT + (threePtAttr - 50) * 0.003));
+  // 终结属性调整内线占比
+  dynDist.FIN = Math.max(0.05, Math.min(0.55, dynDist.FIN + (finAttr - 50) * 0.002));
+  // 中投属性调整中投占比  
+  dynDist.MID = Math.max(0.05, Math.min(0.55, dynDist.MID + (midAttr - 50) * 0.002));
+  const totalDist = dynDist.threePT + dynDist.MID + dynDist.FIN;
+  const threeA = Math.round(fga * (dynDist.threePT / totalDist));
+  const midA = Math.round(fga * (dynDist.MID / totalDist));
+  const finA = fga - threeA - midA;
+  
+  // ★ 命中率由对应属性决定
+  // 三分只看threePT，中投只看MID，终结看FIN+DNK平均
+  const threePct = calcShotPct('threePT', attrs.threePT || 50, totalScore);
+  const midPct = calcShotPct('MID', attrs.MID || 50, totalScore);
+  const finAvg = ((attrs.FIN||50) + (attrs.DNK||50)) / 2;
+  const finPct = calcShotPct('FIN', finAvg, totalScore);
+  
+  const threeM = Math.round(Math.max(0, threeA * threePct));
+  const midM = Math.round(Math.max(0, midA * midPct));
+  const finM = Math.round(Math.max(0, finA * finPct));
+  const fgm = threeM + midM + finM;
+  
+  // ★ 罚球由FIN和CLU决定
+  const ftRate = Math.min(0.30, 0.10 + (attrs.FIN || 50) / 500);
+  const fta = Math.round(fga * ftRate * (0.6 + Math.random() * 0.8));
+  const ftPct = calcShotPct('FT', attrs.CLU || 50, totalScore);
+  const ftm = Math.round(fta * ftPct);
+  
+  const pts = threeM * 3 + midM * 2 + finM * 2 + ftm;
+  
+  // ★ 篮板 = REB属性 × 严格递减曲线
+  const rebScale = posScale.reb || 0.35;
+  // ★ 篮板 ±30% 波动 (原±60%)
+  const rebVal = af(attrs.REB) * (totalScore / 200) * rebScale * 12 * statMinsFactor * (0.7 + Math.random() * 0.6);
+  const reb = Math.round(Math.max(0, rebVal));
+  
+  // ★ 助攻 = 手感 + 传球 + 关键 共同决定
+  const astScale = posScale.ast || 0.4;
+  const pasAvg = ((attrs.PAS||50) + (attrs.HAN||50) + (attrs.CLU||50)) / 3;
+  // ★ 助攻 ±30% 波动 (原±60%)
+  const astVal = af(pasAvg) * (totalScore / 200) * astScale * 9 * statMinsFactor * (0.7 + Math.random() * 0.6);
+  const ast = Math.round(Math.max(0, astVal));
+  
+  // ★ 抢断 = PDEF主导 + ATH/HAN辅助（按位置权重）
+  const stlF = SIM_CONFIG.PLAYER_STATS.FACTORS[pos].stl;
+  const stlSum = stlF.PDEF + (stlF.ATH || 0) + (stlF.HAN || 0);
+  const stlAvg = (af(attrs.PDEF||50) * stlF.PDEF + af(attrs.ATH||50) * (stlF.ATH || 0) + af(attrs.HAN||50) * (stlF.HAN || 0)) / stlSum;
+  // ★ 抢断 ±30% 波动 (原±60%)
+  const stlVal = stlAvg * (totalScore / 200) * 2.0 * statMinsFactor * (0.7 + Math.random() * 0.6);
+  const stl = Math.round(Math.max(0, stlVal));
+  
+  // ★ 盖帽 = BLK主导 + IDEF辅助 + ATH微调（按位置权重）
+  const blkF = SIM_CONFIG.PLAYER_STATS.FACTORS[pos].blk;
+  const blkSum = blkF.BLK + (blkF.IDEF || 0) + (blkF.ATH || 0);
+  const blkAvg = (af(attrs.BLK||50) * blkF.BLK + af(attrs.IDEF||50) * (blkF.IDEF || 0) + af(attrs.ATH||50) * (blkF.ATH || 0)) / blkSum;
+  // ★ 盖帽 ±30% 波动 (原±60%)
+  const blkVal = blkAvg * (totalScore / 200) * 2.0 * statMinsFactor * (0.7 + Math.random() * 0.6);
+  const blk = Math.round(Math.max(0, blkVal));
+  
+  // ★ 失误 = (HAN+CLU)/2 × 严格递减曲线（越高失误越少）(Experimental: 上调上限)
+  const hanCluAvg = ((attrs.HAN||50) + (attrs.CLU||50)) / 2;
+  const tovVal = fga * 0.2 * (1.0 - af(hanCluAvg) * 0.4);
+  const tov = Math.round(Math.max(0.5, tovVal));
+  
+  return { pts, reb, ast, stl, blk, tov, fgm, fga, ftm, fta, threeM, threeA, mins };
+}
+
+function calcShotPct(type, attrVal, totalScore) {
+  const cfg = SIM_CONFIG.SHOOTING[type];
+  if (!cfg) return 0.40;
+  
+  let pct = cfg.base + (attrVal - 50) * cfg.attrFactor;
+  
+  // 防守压力
+  if (totalScore) {
+    if (totalScore > 220) pct += 0.015;
+    if (totalScore < 180) pct -= 0.015;
+  }
+  
+  // 低属性额外惩罚：属性低于60时命中率明显下降
+  if (attrVal < 60) {
+    pct -= (60 - attrVal) * 0.005;
+  }
+  
+  // 随机波动 (Experimental: 从 ±20% 缩减到 ±8%)
+  pct *= (0.92 + Math.random() * 0.16);
+  
+  return Math.max(cfg.min || 0.25, Math.min(cfg.max || 0.70, pct));
+}
+
+// ==================== 联盟其他比赛模拟 ====================
+function simLeagueDay(daySchedule) {
+  // 只模拟非你参与的比赛
+  daySchedule.forEach(g => {
+    if (g.opponent === undefined) return; // 是你的比赛，已经模拟过了
+    
+    const powerA = calcTeamPowerWithPlayer(g.opponent._team || g.opponent);
+    const powerB = calcTeamPowerWithPlayer(g.opponent === STATE.careerTeam ? g.opponent : null);
+    
+    // 简化模拟：基于实力随机
+    const avgA = (powerA.offense + powerA.defense + powerA.depth) / 3;
+    const avgB = (powerB.offense + powerB.defense + powerB.depth) / 3;
+    const winProb = avgA / (avgA + avgB);
+    
+    // 还需要补充...
+  });
+}
+
+// ==================== 赛季进行 ====================
+// ★ [实验性] 以下函数已被 quickSimAllGames 替代，保留作参考
+/*
+function simNextGame() {
+  // ★ 批量进行中时禁止单场点击，防止重复计数
+  if (STATE._batchInProgress) return;
+  const schedule = STATE.season.schedule;
+  const next = schedule.find(g => !g.simulated);
+  if (!next) { showEndOfSeason(); return; }
+  
+  const result = simulateGameNew(STATE.careerTeam, next.opponent);
+  next.simulated = true;
+  next.result = result;
+  
+  if (result.won) STATE.season.wins++;
+  else STATE.season.losses++;
+  
+  // 更新联盟排名（包括我们自己！）
+  const ourStanding = STATE.season.standings[STATE.careerTeam];
+  const oppStanding = STATE.season.standings[next.opponent];
+  if (ourStanding) {
+    if (result.won) ourStanding.wins++; else ourStanding.losses++;
+  }
+  if (oppStanding) {
+    if (result.won) oppStanding.losses++; else oppStanding.wins++;
+    updateStreak(next.opponent, !result.won);
+  }
+  updateStreak(STATE.careerTeam, result.won);
+  
+  // 你的数据
+  const stats = generatePlayerStatsNew(STATE.attrs, result, false);
+  const ps = STATE.season.playerStats;
+  ps.pts += stats.pts; ps.reb += stats.reb; ps.ast += stats.ast;
+  ps.stl += stats.stl; ps.blk += stats.blk; ps.tov += stats.tov;
+  ps.fgm += stats.fgm; ps.fga += stats.fga;
+  ps.ftm += stats.ftm; ps.fta += stats.fta;
+  ps.threeM += stats.threeM; ps.threeA += stats.threeA;
+  ps.mins = (ps.mins || 0) + stats.mins;
+  ps.games++;
+  
+  STATE.season.games.push({ result, stats, game: next });
+  
+  // ★ 同步所有未处理比赛到当前日期
+  simDayLeagueGames(next.day);
+  
+  // 自动翻到下一场所在月份
+  const nextUnplayed = schedule.find(g => !g.simulated);
+  if (nextUnplayed) {
+    for (let m = 0; m < SEASON_MONTHS.length; m++) {
+      if (nextUnplayed.day >= SEASON_MONTHS[m].start && nextUnplayed.day <= SEASON_MONTHS[m].end) {
+        STATE._calendarMonth = m;
+        break;
+      }
+    }
+  }
+  
+  // renderSeasonUI();
+  // renderGameList();
+}
+*/
+
+function updateStreak(team, won) {
+  const s = STATE.season.standings[team];
+  if (!s) return;
+  if (s.streakLen > 0 && won === (s.streak === 'W')) {
+    s.streakLen++;
+  } else {
+    s.streak = won ? 'W' : 'L';
+    s.streakLen = 1;
+  }
+}
+
+// ★ [实验性] 以下函数已被 quickSimAllGames 替代，保留作参考
+/*
+function simBatch(count) {
+  if (STATE._batchInProgress) return;
+  STATE._batchInProgress = true;
+  
+  const schedule = STATE.season.schedule;
+  const gamesToSim = schedule.filter(g => !g.simulated).slice(0, count);
+  if (gamesToSim.length === 0) { STATE._batchInProgress = false; return; }
+  
+  // 显示进度指示
+  const controls = document.getElementById('season-controls');
+  if (controls) controls.innerHTML = '<div style="text-align:center;padding:8px;font-family:var(--font-display);font-size:13px;color:var(--orange);">⏳ 模拟中 <span id="sim-progress">0/' + gamesToSim.length + '</span></div>';
+  
+  let gameIdx = 0;
+  
+  function simNextGameInBatch() {
+    if (gameIdx >= gamesToSim.length) {
+      STATE._batchInProgress = false;
+      if (!schedule.find(h => !h.simulated)) {
+        showEndOfSeason();
+      } else {
+        renderSeasonUI();
+      }
+      return;
+    }
+    
+    const g = gamesToSim[gameIdx++];
+    
+    const result = simulateGameNew(STATE.careerTeam, g.opponent);
+    g.simulated = true;
+    g.result = result;
+    
+    if (result.won) STATE.season.wins++;
+    else STATE.season.losses++;
+    
+    const ourStanding = STATE.season.standings[STATE.careerTeam];
+    const oppStanding = STATE.season.standings[g.opponent];
+    if (ourStanding) {
+      if (result.won) ourStanding.wins++; else ourStanding.losses++;
+    }
+    if (oppStanding) {
+      if (result.won) oppStanding.losses++; else oppStanding.wins++;
+      updateStreak(g.opponent, !result.won);
+    }
+    updateStreak(STATE.careerTeam, result.won);
+    
+    const stats = generatePlayerStatsNew(STATE.attrs, result, false);
+    const ps = STATE.season.playerStats;
+    ps.pts += stats.pts; ps.reb += stats.reb; ps.ast += stats.ast;
+    ps.stl += stats.stl; ps.blk += stats.blk; ps.tov += stats.tov;
+    ps.fgm += stats.fgm; ps.fga += stats.fga;
+    ps.ftm += stats.ftm; ps.fta += stats.fta;
+    ps.threeM += stats.threeM; ps.threeA += stats.threeA;
+    ps.mins = (ps.mins || 0) + stats.mins;
+    ps.games++;
+    
+    STATE.season.games.push({ result, stats, game: g });
+    simDayLeagueGames(g.day);
+    
+    const curMonthIdx = SEASON_MONTHS.findIndex(m => g.day >= m.start && g.day <= m.end);
+    if (curMonthIdx >= 0) STATE._calendarMonth = curMonthIdx;
+    renderSeasonUI();
+    
+    const prog = document.getElementById('sim-progress');
+    if (prog) prog.textContent = gameIdx + '/' + gamesToSim.length;
+    
+    setTimeout(simNextGameInBatch, 40);
+  }
+  
+*/
+
+/** 处理所有剩余比赛日（赛季结束时调用） */
+function processAllRemainingDays() {
+  const dayMap = STATE.season._dayMap;
+  if (!dayMap) return;
+  var keys = Object.keys(dayMap);
+  if (keys.length === 0) return;
+  const maxDay = Math.max(...keys.map(Number));
+  simDayLeagueGames(maxDay);
+}
+
+/** 赛季结束 — 停留在赛季页面，让用户选择下一步 */
+function showEndOfSeason() {
+  processAllRemainingDays();
+  // 隐藏 sh-top，只显示 eos-container
+  html('season-header').innerHTML = '';
+  const seed = getConferenceSeed(STATE.careerTeam);
+  
+  let actionBtn = '';
+  let emoji = '';
+  if (seed <= 6) {
+    emoji = '🏀';
+    actionBtn = `<button class="btn btn-gold btn-sm" onclick="renderPlayoffs()" style="flex:1;">🏀 进入季后赛（${seed}号种子）</button>`;
+  } else if (seed <= 10) {
+    emoji = '🔥';
+    actionBtn = `<button class="btn btn-gold btn-sm" onclick="renderPlayoffs()" style="flex:1;">🔥 附加赛（${seed}号种子）</button>`;
+  } else {
+    emoji = '📊';
+    actionBtn = `<button class="btn btn-gold btn-sm" onclick="showSeasonResults()" style="flex:1;">📊 查看赛季总结</button>`;
+  }
+  
+  const conf = getConference(STATE.careerTeam);
+  const confName = conf === 'EAST' ? '东部' : '西部';
+  
+  html('season-controls').innerHTML = `
+    <div class="eos-container">
+      <div class="eos-emoji">${emoji}</div>
+      <div class="eos-title">常规赛结束</div>
+      <div class="eos-record">${STATE.season.wins}-${STATE.season.losses}</div>
+      <div class="eos-detail">${confName} 第 ${seed} 名</div>
+      <div class="eos-actions">
+        ${actionBtn}
+      </div>
+    </div>
+  `;
+  // 滚动到顶部
+  document.querySelector('.sim-header')?.scrollIntoView({ behavior: 'smooth' });
+  setTimeout(function() { maybeShowFirstSixtyWinCelebration(); }, 260);
+}
+
+// ==================== 新 GameCast ====================
+function renderGameCastNew(game, result, stats) {
+  const container = html('gamecast-area');
+  let castHtml = `<div class="gamecast">`;
+  
+  const qLabels = ['第一节', '第二节', '第三节', '第四节'];
+  const teamName = getTeamName(STATE.careerTeam);
+  const oppName = getTeamName(game.opponent);
+  
+  for (let q = 0; q < 4; q++) {
+    const qA = result.qScoresA?.[q] || Math.round(result.scoreA / 4);
+    const qB = result.qScoresB?.[q] || Math.round(result.scoreB / 4);
+    const cumA = result.qScoresA?.slice(0, q+1).reduce((a,b)=>a+b, 0) || Math.round(result.scoreA * (q+1) / 4);
+    const cumB = result.qScoresB?.slice(0, q+1).reduce((a,b)=>a+b, 0) || Math.round(result.scoreB * (q+1) / 4);
+    
+    castHtml += `<div class="gc-row ${q === 3 ? 'gc-final' : ''}">
+      <span class="gc-q">${qLabels[q]}</span>
+      <span class="gc-score ${cumA > cumB ? 'gc-winning' : 'gc-losing'}">${qA}-${qB}</span>
+      <span class="gc-total">(${cumA}-${cumB})</span>
+      ${q === 3 && stats ? `<span class="gc-stats">📊 ${stats.pts}分 ${stats.reb}板 ${stats.ast}助</span>` : ''}
+    </div>`;
+  }
+  
+  if (result.ot) {
+    castHtml += `<div class="gc-row gc-ot">
+      <span class="gc-q">加时</span>
+      <span class="gc-score">${result.scoreA - (result.qScoresA?.reduce((a,b)=>a+b,0) || 0)}-${result.scoreB - (result.qScoresB?.reduce((a,b)=>a+b,0) || 0)}</span>
+    </div>`;
+  }
+  
+  if (result.keyEvents && result.keyEvents.length > 0) {
+    castHtml += `<div class="gc-events">`;
+    result.keyEvents.forEach(e => {
+      castHtml += `<div class="gc-event">⚡ ${e}</div>`;
+    });
+    castHtml += `</div>`;
+  }
+  
+  // 你的球员表现
+  if (stats) {
+    const pct = stats.fga > 0 ? Math.round(stats.fgm / stats.fga * 100) : 0;
+    const threePct = stats.threeA > 0 ? Math.round(stats.threeM / stats.threeA * 100) : 0;
+    castHtml += `<div class="gc-player-line">
+      <span class="gc-player-name">我的球员</span>
+      <span>${stats.pts}分 / ${stats.reb}板 / ${stats.ast}助</span>
+      <span style="color:var(--text-dim);font-size:11px;">${stats.fgm}-${stats.fga} (${pct}%) / ${stats.threeM}-${stats.threeA} (${threePct}%) / ${stats.ftm}-${stats.fta}</span>
+    </div>`;
+  }
+  
+  castHtml += `<div class="gc-result ${result.won ? 'result-win' : 'result-loss'}">
+    ${result.won ? '✅ 胜利' : '❌ 失利'} · ${result.scoreA}-${result.scoreB}
+    <span style="font-size:12px;color:var(--text-dim);">${teamName} vs ${oppName}</span>
+  </div>`;
+  
+  castHtml += `</div>`;
+  container.innerHTML = castHtml;
+  container.scrollTop = container.scrollHeight;
+}
+
+// ==================== 赛季UI ====================
+// ★ [实验性] 以下函数已被 quickSimAllGames + renderDotGrid 替代，保留作参考
+/*
+function renderSeasonUI() {
+  const rec = STATE.season;
+  if (!rec || !rec.playerStats) return;
+  
+  // 最近5场
+  const recentGames = STATE.season.games.slice(-5);
+  let last5Html = recentGames.map(g => 
+    `<span class="wl-dot ${g.result.won ? 'wl-w' : 'wl-l'}">${g.result.won ? 'W' : 'L'}</span>`
+  ).join('');
+  
+  // 场均数据
+  const gp = rec.playerStats.games || 1;
+  const avg = {
+    pts: Math.round(rec.playerStats.pts / gp * 10) / 10,
+    reb: Math.round(rec.playerStats.reb / gp * 10) / 10,
+    ast: Math.round(rec.playerStats.ast / gp * 10) / 10,
+  };
+  
+  // 连胜/连败
+  const streak = STATE.season.standings[STATE.careerTeam]?.streak || '';
+  const streakLen = STATE.season.standings[STATE.careerTeam]?.streakLen || 0;
+  const streakStr = streakLen > 0 ? `${streak}${streakLen}` : '';
+  
+  html('season-header').innerHTML = `
+    <div class="sh-top">
+      <div class="sh-team">
+        <div class="sh-team-name">${getTeamLogo(STATE.careerTeam, 24)} ${getTeamName(STATE.careerTeam)}</div>
+        <div class="sh-team-full">${(window.TEAM_CITY && window.TEAM_CITY[STATE.careerTeam]) || ''}</div>
+      </div>
+      <div class="sh-season">${getCurrentSeasonLabel()}</div>
+      <div class="sh-record">
+        <span class="sh-wins">${rec.wins}</span><span class="sh-dash">-</span><span class="sh-losses">${rec.losses}</span>
+        <div class="sh-pct">${rec.wins + rec.losses > 0 ? (rec.wins / (rec.wins + rec.losses) * 100).toFixed(1) + '%' : '—'}</div>
+      </div>
+    </div>
+    <div class="sh-info">
+      <span>${SIM_CONFIG.POSITIONS[STATE.position]} · OVR ${STATE.finalOVR}</span>
+      <span>场均 ${avg.pts}分 ${avg.reb}板 ${avg.ast}助</span>
+      <span>${last5Html ? '最近: ' + last5Html : ''} ${streakStr}</span>
+    </div>
+  `;
+  
+  // 判断所有比赛是否已打完
+  const allDone = STATE.season.schedule && !STATE.season.schedule.find(g => !g.simulated);
+  const seed = getConferenceSeed(STATE.careerTeam);
+  let nextBtn = '';
+  if (allDone) {
+    if (seed <= 10) {
+      nextBtn = `<button class="btn btn-gold btn-sm" onclick="renderPlayoffs()" style="flex:1;">🏀 进入季后赛</button>`;
+    } else {
+      nextBtn = `<button class="btn btn-secondary btn-sm" onclick="showSeasonResults()" style="flex:1;">📊 查看赛季总结</button>`;
+    }
+  } else {
+    const nextGame = STATE.season.schedule?.find(g => !g.simulated);
+    const oppName = nextGame ? getTeamName(nextGame.opponent) : '';
+    const prefix = nextGame ? (nextGame.home ? 'vs' : '@') : '';
+    nextBtn = `
+      <button class="btn btn-gold btn-sm" onclick="simNextGame()" style="flex:1;">进行下一场</button>
+      <button class="btn btn-gold btn-sm" onclick="simBatch(10)" style="flex:1;">⏩ 进行下十场</button>
+    `;
+  }
+  html('season-controls').innerHTML = `
+    ${nextBtn}
+    <button class="btn btn-secondary btn-sm" onclick="showMyCard()">📊 我的数据</button>
+  `;
+  
+  // renderCalendar();  // 日历模式已注释
+}
+*/
+/*
+function renderGameList() {
+  // renderCalendar();  // 日历模式已注释
+}
+*/
+
+// ==================== 日历赛程 ====================
+/** 月份→day区间（day 0 = 2025年10月21日 赛季首日） */
+const SEASON_MONTHS = [
+  { name: '10月', start: 0, end: 10, firstDate: 21, days: 31, firstWday: 3 },
+  { name: '11月', start: 11, end: 40, firstDate: 1, days: 30, firstWday: 6 },
+  { name: '12月', start: 41, end: 71, firstDate: 1, days: 31, firstWday: 1 },
+  { name: '1月', start: 72, end: 102, firstDate: 1, days: 31, firstWday: 4 },
+  { name: '2月', start: 103, end: 130, firstDate: 1, days: 28, firstWday: 0 },
+  { name: '3月', start: 131, end: 161, firstDate: 1, days: 31, firstWday: 0 },
+  { name: '4月', start: 162, end: 191, firstDate: 1, days: 30, firstWday: 3 },
+];
+
+function renderCalendar() {
+  if (!STATE._calendarMonth) STATE._calendarMonth = 0;
+  const monthIdx = STATE._calendarMonth;
+  const month = SEASON_MONTHS[monthIdx];
+  if (!month) return;
+  
+  const schedule = STATE.season.schedule || [];
+  const games = STATE.season.games || [];
+  const nextGameIdx = schedule.findIndex(g => !g.simulated);
+  const nextGame = nextGameIdx >= 0 ? schedule[nextGameIdx] : null;
+  
+  // 构建比赛查找表: seasonDay → info
+  const dayMap = {};
+  schedule.forEach(g => {
+    if (g.day >= month.start && g.day <= month.end) {
+      const result = g.simulated ? (games.find(gg => gg.game.gameNum === g.gameNum)?.result || null) : null;
+      dayMap[g.day] = {
+        opponent: g.opponent, home: g.home,
+        simulated: g.simulated, result,
+        isNext: nextGame && g.day === nextGame.day,
+      };
+    }
+  });
+  
+  // 该月天数 & 第一天星期几
+  const totalDays = month.days;
+  const firstWday = month.firstWday; // 0=日 1=一 ... 6=六
+  
+  // 顶部：月份标题 + 排行榜按钮
+  let htmlStr = `<div class="cal-wrap">
+    <div class="cal-header">
+      <button class="cal-nav" onclick="switchCalendar(${monthIdx - 1})" ${monthIdx === 0 ? 'disabled' : ''}>◀</button>
+      <span class="cal-title">${month.name}</span>
+      <button class="cal-nav" onclick="switchCalendar(${monthIdx + 1})" ${monthIdx >= SEASON_MONTHS.length - 1 ? 'disabled' : ''}>▶</button>
+      <button class="cal-standings-btn" onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC15',label:'排行榜'});showStandingsModal()">🏆 排行榜</button>
+    </div>`;
+  
+  // 星期头
+  const weekdays = ['日', '一', '二', '三', '四', '五', '六'];
+  htmlStr += `<div class="cal-weekdays">${weekdays.map(d => `<span>${d}</span>`).join('')}</div>`;
+  
+  // 日历网格
+  let cells = '';
+  
+  // 月首空白
+  for (let i = 0; i < firstWday; i++) {
+    cells += '<div class="cal-cell cal-empty"></div>';
+  }
+  
+  // 该月每一天
+  for (let date = 1; date <= totalDays; date++) {
+    const seasonDay = month.start + (date - month.firstDate);
+    const info = dayMap[seasonDay];
+    const isGameDay = !!info;
+    const isToday = info?.isNext;
+    const isPast = info?.simulated;
+    
+    let cls = 'cal-cell';
+    let content = '';
+    let onclick = '';
+    
+    if (!isGameDay) {
+      cls += ' cal-rest';
+      content = `<span class="cal-date">${date}</span>`;
+    } else if (isPast && info.result) {
+      const won = info.result.won;
+      cls += won ? ' cal-w' : ' cal-l';
+      cls += ' cal-played';
+      content = `<span class="cal-date">${date}</span>
+        <span class="cal-opp">${info.home ? 'vs' : '@'}${getTeamLogo(info.opponent, 16)}</span>
+        <span class="cal-score">${info.result.scoreA}-${info.result.scoreB}</span>`;
+      onclick = `onclick="showGamePopup(${seasonDay})"`;
+    } else if (isToday) {
+      cls += ' cal-today';
+      content = `<span class="cal-date">${date}</span>
+        <span class="cal-opp">${info.home ? 'vs' : '@'}${getTeamLogo(info.opponent, 16)}</span>`;
+      onclick = `onclick="simToDay(${seasonDay})"`;
+    } else {
+      cls += ' cal-future';
+      content = `<span class="cal-date">${date}</span>
+        <span class="cal-opp">${info.home ? 'vs' : '@'}${getTeamLogo(info.opponent, 16)}</span>`;
+      onclick = `onclick="simToDay(${seasonDay})"`;
+    }
+    
+    cells += `<div class="${cls}" ${onclick}>${content}</div>`;
+  }
+  
+  htmlStr += `<div class="cal-grid">${cells}</div>`;
+  
+  // 底部 — 只保留进度文字
+  htmlStr += `<div class="cal-footer">
+    <span style="font-size:10px;color:var(--text-muted);flex:1;text-align:left;">💡 点击赛程表中任意一场比赛，可直接模拟至该场比赛</span>
+    <span class="cal-progress">${schedule.filter(g => g.simulated).length} / ${schedule.length} 场</span>
+  </div>`;
+  
+  htmlStr += '</div>';
+  document.getElementById('game-list').innerHTML = htmlStr;
+}
+
+function switchCalendar(idx) {
+  
+  if (idx < 0 || idx >= SEASON_MONTHS.length) return;
+  STATE._calendarMonth = idx;
+  renderCalendar();
+}
+
+/** 点击已赛场次 → 弹窗显示比分 + 你的表现 */
+function showGamePopup(seasonDay) {
+  
+  const gameData = STATE.season.games.find(gg => gg.game.day === seasonDay);
+  if (!gameData) return;
+  const { result, stats, game } = gameData;
+  
+  const teamName = getTeamName(STATE.careerTeam);
+  const oppName = getTeamName(game.opponent);
+  const qLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+  
+  // 各节比分
+  let quartersHtml = '';
+  for (let q = 0; q < 4; q++) {
+    const qA = result.qScoresA?.[q] || 0;
+    const qB = result.qScoresB?.[q] || 0;
+    quartersHtml += `<div style="display:flex;gap:4px;padding:2px 0;font-family:var(--font-display);font-size:12px;border-bottom:1px solid var(--border);">
+      <span style="width:28px;color:var(--text-muted);">${qLabels[q]}</span>
+      <span style="flex:1;text-align:center;font-weight:${qA > qB ? 700 : 400};color:${qA > qB ? 'var(--green)' : 'var(--text-dim)'};">${qA}</span>
+      <span style="flex:1;text-align:center;font-weight:${qB > qA ? 700 : 400};color:${qB > qA ? 'var(--green)' : 'var(--text-dim)'};">${qB}</span>
+    </div>`;
+  }
+  
+  // 使用你的实际比赛数据（与场均统计同源）
+  const myPts = stats?.pts ?? 0;
+  const myReb = stats?.reb ?? 0;
+  const myAst = stats?.ast ?? 0;
+  const myStl = Math.round(stats?.stl ?? 0);
+  const myBlk = Math.round(stats?.blk ?? 0);
+  const myTov = Math.round(stats?.tov ?? 0);
+  const myFgm = stats?.fgm ?? 0;
+  const myFga = stats?.fga ?? 0;
+  const myMin = stats?.mins ?? 0;
+  const myThreeM = stats?.threeM ?? 0;
+  const myThreeA = stats?.threeA ?? 0;
+  const myFtm = stats?.ftm ?? 0;
+  const myFta = stats?.fta ?? 0;
+  const myTwoM = myFgm - myThreeM;
+  const myTwoA = myFga - myThreeA;
+  
+  const myTeamTotal = result.scoreA;
+  const oppTotal = result.scoreB;
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width:310px;">
+      <div class="modal-header" style="padding:8px 12px;">
+        <span style="font-family:var(--font-display);font-size:15px;">${result.won ? '✅' : '❌'} ${myTeamTotal}-${oppTotal}</span>
+        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      </div>
+      <div style="text-align:center;padding:3px 10px 6px;font-family:var(--font-display);font-size:11px;color:var(--text-dim);border-bottom:1px solid var(--border);">
+        ${teamName} vs ${oppName} · ${game.home ? '主场' : '客场'} ${result.ot ? '· ' + (result.ot > 1 ? result.ot + 'OT' : 'OT') : ''}
+      </div>
+      
+      <!-- 各节 -->
+      <div style="padding:4px 12px 3px;">
+        ${quartersHtml}
+      </div>
+      
+      <!-- 你的数据 -->
+      <div style="padding:6px 12px 10px;">
+        <div style="font-family:var(--font-display);font-size:12px;color:var(--orange);margin-bottom:4px;">📊 我的表现</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;font-family:var(--font-display);">
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:44px;">
+            <div style="font-size:16px;font-weight:700;color:var(--orange);">${myPts}</div>
+            <div style="font-size:8px;color:var(--text-muted);">得分</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:44px;">
+            <div style="font-size:16px;font-weight:700;">${myReb}</div>
+            <div style="font-size:8px;color:var(--text-muted);">篮板</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:44px;">
+            <div style="font-size:16px;font-weight:700;">${myAst}</div>
+            <div style="font-size:8px;color:var(--text-muted);">助攻</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 6px;border-radius:6px;text-align:center;min-width:36px;">
+            <div style="font-size:14px;font-weight:700;">${myStl}</div>
+            <div style="font-size:8px;color:var(--text-muted);">断</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 6px;border-radius:6px;text-align:center;min-width:36px;">
+            <div style="font-size:14px;font-weight:700;">${myBlk}</div>
+            <div style="font-size:8px;color:var(--text-muted);">帽</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 6px;border-radius:6px;text-align:center;min-width:36px;">
+            <div style="font-size:14px;font-weight:700;">${myTov}</div>
+            <div style="font-size:8px;color:var(--text-muted);">误</div>
+          </span>
+        </div>
+        <div style="margin-top:6px;font-family:var(--font-display);font-size:10px;color:var(--text-dim);text-align:center;">
+          两分 ${myTwoM}-${myTwoA} · 三分 ${myThreeM}-${myThreeA} · 罚球 ${myFtm}-${myFta}<br>
+          投篮 ${myFgm}-${myFga} (${myFga > 0 ? Math.round(myFgm/myFga*100) : 0}%)
+        </div>
+
+      </div>
+      
+    </div>`;
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+  document.body.appendChild(modal);
+}
+
+// ==================== 排行榜弹窗 ====================
+function showStandingsModal() {
+  const standings = STATE.season.standings;
+  if (!standings) return;
+  
+  if (!STATE._standingsTab) {
+    STATE._standingsTab = getConference(STATE.careerTeam) === 'EAST' ? 'EAST' : 'WEST';
+  }
+  
+  function renderConf(teams) {
+    const sorted = teams
+      .map(t => ({ team: t, ...standings[t] }))
+      .sort((a, b) => (b.wins - b.losses) - (a.wins - a.losses) || b.wins - a.wins);
+    
+    let html = '<div class="st-hdr"><span>#</span><span>球队</span><span>胜</span><span>负</span><span>胜差</span><span>近况</span></div>';
+    let leaderWins = 0, leaderLosses = 0;
+    sorted.forEach((s, i) => {
+      if (i === 0) { leaderWins = s.wins; leaderLosses = s.losses; }
+      const gb = i === 0 ? '-' : ((leaderWins - s.wins + s.losses - leaderLosses) / 2).toFixed(1);
+      const isMyTeam = s.team === STATE.careerTeam;
+      html += `<div class="st-row ${isMyTeam ? 'st-my' : ''}">
+        <span>${i + 1}</span>
+        <span>${getTeamLogo(s.team, 16)} ${getTeamName(s.team)} ${isMyTeam ? '⭐' : ''}</span>
+        <span class="st-w">${s.wins}</span>
+        <span class="st-l">${s.losses}</span>
+        <span>${gb}</span>
+        <span class="st-streak">${s.streakLen > 0 ? s.streak + s.streakLen : '-'}</span>
+      </div>`;
+    });
+    return html;
+  }
+  
+  const active = STATE._standingsTab;
+  const tabsHtml = `
+    <div class="modal-tabs">
+      <button onclick="switchStandingsTab('EAST')" class="${active === 'EAST' ? 'active' : ''}">东部</button>
+      <button onclick="switchStandingsTab('WEST')" class="${active === 'WEST' ? 'active' : ''}">西部</button>
+    </div>`;
+  
+  const teams = active === 'EAST' ? SIM_CONFIG.CONFERENCE.EAST : SIM_CONFIG.CONFERENCE.WEST;
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.id = 'standings-modal';
+  modal.innerHTML = `
+    <div class="modal-content">
+      <div class="modal-header">
+        <span style="font-family:var(--font-display);font-size:20px;">🏆 排行榜</span>
+        <button class="modal-close" onclick="closeStandingsModal()">✕</button>
+      </div>
+      ${tabsHtml}
+      <div class="modal-body">${renderConf(teams)}</div>
+    </div>`;
+  modal.onclick = (e) => { if (e.target === modal) closeStandingsModal(); };
+  document.body.appendChild(modal);
+}
+
+function switchStandingsTab(conf) {
+  STATE._standingsTab = conf;
+  const modal = document.getElementById('standings-modal');
+  if (modal) modal.remove();
+  showStandingsModal();
+}
+
+function closeStandingsModal() {
+  
+  const modal = document.getElementById('standings-modal');
+  if (modal) modal.remove();
+}
+
+// ★ [实验性] 以下函数已被 quickSimAllGames 替代，保留作参考
+/*
+function simToDay(targetDay) {
+  const month = SEASON_MONTHS.find(m => targetDay >= m.start && targetDay <= m.end);
+  const dateStr = month ? `${month.name}${targetDay - month.start + month.firstDate}日` : `第${targetDay + 1}天`;
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width:300px;text-align:center;">
+      <div class="modal-header" style="justify-content:center;border:none;padding:20px 16px 8px;">
+        <span style="font-family:var(--font-display);font-size:20px;">⏩ 模拟到 ${dateStr}？</span>
+      </div>
+      <div style="padding:4px 16px 20px;font-size:13px;color:var(--text-dim);">
+        将模拟从今天到 ${dateStr} 的所有比赛
+      </div>
+      <div style="display:flex;gap:8px;padding:0 16px 16px;">
+        <button class="btn btn-sm" style="flex:1;background:var(--bg-card);color:var(--text);border:2px solid var(--border);border-radius:10px;" onclick="this.closest('.modal-overlay').remove()">取消</button>
+        <button class="btn btn-primary btn-sm" style="flex:1;border-radius:10px;" onclick="this.closest('.modal-overlay').remove();_simToDay(${targetDay})">确定</button>
+      </div>
+    </div>`;
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+  document.body.appendChild(modal);
+}
+
+function _simToDay(targetDay) {
+  // ★ 批量进行中时禁止点击，防止重复计数
+  if (STATE._batchInProgress) return;
+  STATE._batchInProgress = true;
+  
+  const schedule = STATE.season.schedule;
+  const gamesToSim = schedule.filter(g => !g.simulated && g.day <= targetDay);
+  if (gamesToSim.length === 0) { STATE._batchInProgress = false; renderSeasonUI(); renderCalendar(); return; }
+  
+  // 显示进度指示
+  const controls = document.getElementById('season-controls');
+  if (controls) controls.innerHTML = '<div style="text-align:center;padding:8px;font-family:var(--font-display);font-size:13px;color:var(--orange);">⏳ 模拟中 <span id="sim-progress">0/' + gamesToSim.length + '</span></div>';
+  
+  let gameIdx = 0;
+  
+  function simNextGameInBatch() {
+    if (gameIdx >= gamesToSim.length) {
+      STATE._batchInProgress = false;
+      // 全部完成
+      if (!schedule.find(h => !h.simulated)) {
+        showEndOfSeason();
+      } else {
+        renderSeasonUI(); // 内含 renderCalendar()
+      }
+      return;
+    }
+    
+    const g = gamesToSim[gameIdx++];
+    
+    const result = simulateGameNew(STATE.careerTeam, g.opponent);
+    g.simulated = true;
+    g.result = result;
+    
+    if (result.won) STATE.season.wins++;
+    else STATE.season.losses++;
+    
+    const ourStanding = STATE.season.standings[STATE.careerTeam];
+    const oppStanding = STATE.season.standings[g.opponent];
+    if (ourStanding) {
+      if (result.won) ourStanding.wins++; else ourStanding.losses++;
+    }
+    if (oppStanding) {
+      if (result.won) oppStanding.losses++; else oppStanding.wins++;
+      updateStreak(g.opponent, !result.won);
+    }
+    updateStreak(STATE.careerTeam, result.won);
+    
+    const stats = generatePlayerStatsNew(STATE.attrs, result, false);
+    const ps = STATE.season.playerStats;
+    ps.pts += stats.pts; ps.reb += stats.reb; ps.ast += stats.ast;
+    ps.stl += stats.stl; ps.blk += stats.blk; ps.tov += stats.tov;
+    ps.fgm += stats.fgm; ps.fga += stats.fga;
+    ps.ftm += stats.ftm; ps.fta += stats.fta;
+    ps.threeM += stats.threeM; ps.threeA += stats.threeA;
+    ps.mins = (ps.mins || 0) + stats.mins;
+    ps.games++;
+    
+    STATE.season.games.push({ result, stats, game: g });
+    simDayLeagueGames(g.day);
+    
+    // ★ 实时更新：赛程表 + 进度
+    // 自动切换到当前比赛对应的月份
+    const curMonthIdx = SEASON_MONTHS.findIndex(m => g.day >= m.start && g.day <= m.end);
+    if (curMonthIdx >= 0) STATE._calendarMonth = curMonthIdx;
+    renderSeasonUI(); // 更新header + calendar
+    
+    const prog = document.getElementById('sim-progress');
+    if (prog) prog.textContent = gameIdx + '/' + gamesToSim.length;
+    
+    // 继续下一场（40ms延迟让UI能刷新）
+    setTimeout(simNextGameInBatch, 40);
+  }
+  
+  // simNextGameInBatch();
+}
+*/
+
+// ==================== Play-In 附加赛 ====================
+function renderPlayIn() {
+  showScreen('screen-playoffs');
+  
+  const conf = getConference(STATE.careerTeam);
+  const sorted = getConferenceSorted(conf);
+  const mySeed = getConferenceSeed(STATE.careerTeam);
+  
+  // 提取附加赛球队 (7-10)
+  const playInTeams = sorted.filter(t => {
+    const s = getConferenceSeed(t.team);
+    return s >= 7 && s <= 10;
+  });
+  
+  // 确定各队角色
+  const seed7 = playInTeams.find(t => getConferenceSeed(t.team) === 7);
+  const seed8 = playInTeams.find(t => getConferenceSeed(t.team) === 8);
+  const seed9 = playInTeams.find(t => getConferenceSeed(t.team) === 9);
+  const seed10 = playInTeams.find(t => getConferenceSeed(t.team) === 10);
+  
+  STATE.season.playInState = {
+    seed7, seed8, seed9, seed10,
+    gameAResult: null,  // 7v8
+    gameBResult: null,  // 9v10
+    gameCResult: null,  // 败7/8 vs 胜9/10
+    isEliminated: false,
+    playoffSeed: null,  // 最终进入季后赛的种子 (7 or 8)
+  };
+  
+  renderPlayInUI();
+}
+
+function renderPlayInUI() {
+  const pi = STATE.season.playInState;
+  if (!pi) return;
+  
+  const isMyTeam = (team) => team === STATE.careerTeam;
+  const myTeam = STATE.careerTeam;
+  
+  let h = `<div class="playin-container" style="padding:8px 0;">`;
+  h += `<div style="text-align:center;margin-bottom:12px;">
+    <div style="font-size:14px;color:var(--text-dim);">🔥 附加赛</div>
+    <div style="font-size:20px;font-weight:800;">${getConference(STATE.careerTeam) === 'EAST' ? '东部' : '西部'} Play-In</div>
+  </div>`;
+  
+  // Game A: 7 vs 8
+  const gA = pi.gameAResult;
+  const myInA = isMyTeam(pi.seed7?.team) || isMyTeam(pi.seed8?.team);
+  h += `<div class="playin-game" style="background:var(--bg-card);border-radius:var(--radius);padding:12px;margin-bottom:10px;border:1px solid var(--border);">`;
+  h += `<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">🏀 第7vs8种子 · 胜者晋级季后赛（7号种子）</div>`;
+  if (!gA) {
+      h += `<div style="display:flex;justify-content:space-around;align-items:center;padding:8px 0;">
+        <div style="text-align:center;flex:1;">${getTeamName(pi.seed7?.team) || '?'}<br><span style="font-size:11px;color:var(--text-dim);">${pi.seed7?.wins || 0}胜</span></div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent);padding:0 12px;">VS</div>
+        <div style="text-align:center;flex:1;">${getTeamName(pi.seed8?.team) || '?'}<br><span style="font-size:11px;color:var(--text-dim);">${pi.seed8?.wins || 0}胜</span></div>
+      </div>`;
+    if (myInA) {
+      h += `<button class="btn btn-gold btn-sm" onclick="simPlayInGame('A')" style="margin-top:6px;">▶ 模拟附加赛第7vs8</button>`;
+    }
+  } else {
+    const winTeam = gA.winner;
+    h += `<div style="text-align:center;padding:4px 0;">
+      <span style="color:var(--green);font-weight:700;">✅ ${getTeamName(winTeam)}</span> 晋级（7号种子）
+      <span style="color:var(--red);margin-left:8px;">❌ ${getTeamName(gA.loser)}</span> 落入败者组
+    </div>`;
+    if (isMyTeam(gA.winner)) {
+      h += `<div style="text-align:center;color:var(--gold);font-weight:700;margin-top:4px;">🎉 你赢了！以7号种子进入季后赛！</div>`;
+    }
+  }
+  h += `</div>`;
+  
+  // Game B: 9 vs 10
+  const gB = pi.gameBResult;
+  const myInB = isMyTeam(pi.seed9?.team) || isMyTeam(pi.seed10?.team);
+  h += `<div class="playin-game" style="background:var(--bg-card);border-radius:var(--radius);padding:12px;margin-bottom:10px;border:1px solid var(--border);">`;
+  h += `<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">🏀 第9vs10种子 · 败者淘汰</div>`;
+  if (!gB) {
+      h += `<div style="display:flex;justify-content:space-around;align-items:center;padding:8px 0;">
+        <div style="text-align:center;flex:1;">${getTeamName(pi.seed9?.team) || '?'}<br><span style="font-size:11px;color:var(--text-dim);">${pi.seed9?.wins || 0}胜</span></div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent);padding:0 12px;">VS</div>
+        <div style="text-align:center;flex:1;">${getTeamName(pi.seed10?.team) || '?'}<br><span style="font-size:11px;color:var(--text-dim);">${pi.seed10?.wins || 0}胜</span></div>
+      </div>`;
+    if (myInB) {
+      h += `<button class="btn btn-gold btn-sm" onclick="simPlayInGame('B')" style="margin-top:6px;">▶ 模拟附加赛第9vs10</button>`;
+    }
+  } else {
+    const winTeam = gB.winner;
+    h += `<div style="text-align:center;padding:4px 0;">
+      <span style="color:var(--green);font-weight:700;">✅ ${getTeamName(winTeam)}</span> 进入败者组决赛
+      <span style="color:var(--red);margin-left:8px;">❌ ${getTeamName(gB.loser)}</span> 淘汰
+    </div>`;
+    if (isMyTeam(gB.loser)) {
+      h += `<div style="text-align:center;color:var(--text-dim);margin-top:4px;">😢 被淘汰了</div>`;
+    }
+  }
+  h += `</div>`;
+  
+  // Game C: 败7/8 vs 胜9/10
+  if (gA && gB) {
+    const gC = pi.gameCResult;
+    const teamA = gA.loser;
+    const teamB = gB.winner;
+    const myInC = isMyTeam(teamA) || isMyTeam(teamB);
+    
+    h += `<div class="playin-game" style="background:var(--bg-card);border-radius:var(--radius);padding:12px;margin-bottom:10px;border:1px solid var(--border);">`;
+    h += `<div style="font-size:12px;color:var(--text-dim);margin-bottom:6px;">🏀 败者组决赛 · 胜者晋级季后赛（8号种子）</div>`;
+    if (!gC) {
+      h += `<div style="display:flex;justify-content:space-around;align-items:center;padding:8px 0;">
+        <div style="text-align:center;flex:1;">${getTeamName(teamA)}<br><span style="font-size:11px;color:var(--text-dim);">${pi.seed8?.wins || 0}胜</span></div>
+        <div style="font-size:18px;font-weight:700;color:var(--accent);padding:0 12px;">VS</div>
+        <div style="text-align:center;flex:1;">${getTeamName(teamB)}<br><span style="font-size:11px;color:var(--text-dim);">${pi.seed9?.wins || 0}胜</span></div>
+      </div>`;
+      if (myInC) {
+        h += `<button class="btn btn-gold btn-sm" onclick="simPlayInGame('C')" style="margin-top:6px;">▶ 模拟附加赛败者组决赛</button>`;
+      }
+    } else {
+      const winTeam = gC.winner;
+      h += `<div style="text-align:center;padding:4px 0;">
+        <span style="color:var(--green);font-weight:700;">✅ ${getTeamName(winTeam)}</span> 晋级（8号种子）
+        <span style="color:var(--red);margin-left:8px;">❌ ${getTeamName(gC.loser)}</span> 淘汰
+      </div>`;
+      if (isMyTeam(gC.winner)) {
+        h += `<div style="text-align:center;color:var(--gold);font-weight:700;margin-top:4px;">🎉 你赢了！以8号种子进入季后赛！</div>`;
+      }
+    }
+    h += `</div>`;
+  }
+  
+  // 检查是否晋级季后赛
+  if (checkPlayInComplete()) {
+    const ps = STATE.season.playInState.playoffSeed;
+    h += `<button class="btn btn-gold" onclick="renderPlayoffs()" style="margin-top:8px;">🏀 进入季后赛（${ps}号种子）</button>`;
+  } else if (pi.isEliminated) {
+    h += `<button class="btn btn-secondary" onclick="showSeasonResults()" style="margin-top:8px;">📊 查看赛季总结</button>`;
+  }
+  
+  h += `</div>`;
+  document.getElementById('playoffs-area').innerHTML = h;
+  
+  // ★ 自动模拟不涉及玩家的附加赛比赛
+  setTimeout(autoSimNonUserPlayInGames, 100);
+}
+
+/** 自动模拟不涉及玩家的附加赛比赛 */
+function autoSimNonUserPlayInGames() {
+  const pi = STATE.season.playInState;
+  if (!pi || pi.isEliminated || pi.playoffSeed) return;
+  
+  const myTeam = STATE.careerTeam;
+  const inA = pi.seed7 && (pi.seed7.team === myTeam || pi.seed8.team === myTeam);
+  const inB = pi.seed9 && (pi.seed9.team === myTeam || pi.seed10.team === myTeam);
+  
+  // 玩家在 Game A → 自动模拟 Game B（9vs10）
+  if (inA && !pi.gameBResult && pi.seed9 && pi.seed10) {
+    simPlayInGame('B');
+    return;
+  }
+  
+  // 玩家在 Game B → 自动模拟 Game A（7vs8）
+  if (inB && !pi.gameAResult && pi.seed7 && pi.seed8) {
+    simPlayInGame('A');
+    return;
+  }
+  
+  // Game A 已打完且玩家输了 → 玩家进入Game C, 需要 Game B 完成
+  if (pi.gameAResult && !pi.gameBResult && pi.seed9 && pi.seed10 && pi.gameAResult.loser === myTeam) {
+    simPlayInGame('B');
+    return;
+  }
+  
+  // Game B 已打完且玩家赢了 → 需要 Game A 完成才能进行 Game C
+  if (pi.gameBResult && !pi.gameAResult && pi.seed7 && pi.seed8 && pi.gameBResult.winner) {
+    simPlayInGame('A');
+    return;
+  }
+}
+
+function simPlayInGame(gameId) {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC11",label:"模拟附加赛"});
+  const pi = STATE.season.playInState;
+  if (!pi) return;
+  
+  let teamA, teamB, resultKey, label;
+  
+  if (gameId === 'A') {
+    teamA = pi.seed7.team;
+    teamB = pi.seed8.team;
+    resultKey = 'gameAResult';
+    label = '第7vs8种子';
+  } else if (gameId === 'B') {
+    teamA = pi.seed9.team;
+    teamB = pi.seed10.team;
+    resultKey = 'gameBResult';
+    label = '第9vs10种子';
+  } else if (gameId === 'C') {
+    teamA = pi.gameAResult.loser;
+    teamB = pi.gameBResult.winner;
+    resultKey = 'gameCResult';
+    label = '败者组决赛';
+  }
+  
+  // 模拟单场
+  const powerA = calcTeamPowerWithPlayer(teamA);
+  const powerB = calcTeamPowerWithPlayer(teamB);
+  const avgA = (powerA.offense + powerA.defense + powerA.depth) / 3;
+  const avgB = (powerB.offense + powerB.defense + powerB.depth) / 3;
+  
+  // 增加随机性，让附加赛更刺激
+  const rand = Math.random();
+  const winProb = avgA / (avgA + avgB + 0.01);
+  const adjustedProb = winProb * 0.6 + 0.2 + rand * 0.2; // 40-80%范围，增加变数
+  const aWins = Math.random() < adjustedProb;
+  
+  const winner = aWins ? teamA : teamB;
+  const loser = aWins ? teamB : teamA;
+  
+  const result = {
+    winner, loser,
+    teamAScore: Math.round(avgA * (0.8 + Math.random() * 0.4)),
+    teamBScore: Math.round(avgB * (0.8 + Math.random() * 0.4)),
+    label,
+  };
+  
+  pi[resultKey] = result;
+  
+  // 检测是否涉及玩家
+  const myTeam = STATE.careerTeam;
+  if (winner === myTeam) {
+    if (gameId === 'A') {
+      pi.playoffSeed = 7;
+    } else if (gameId === 'C') {
+      pi.playoffSeed = 8;
+    }
+  }
+  if (loser === myTeam && gameId === 'B') {
+    pi.isEliminated = true;
+  }
+  if (loser === myTeam && gameId === 'C') {
+    pi.isEliminated = true;
+  }
+  
+  renderPlayInUI();
+  
+  // ★ 附加赛晋级后，用户通过UI按钮手动进入季后赛
+  if (checkPlayInComplete()) {
+    STATE.season._playoffRound = 1;
+  }
+}
+
+function checkPlayInComplete() {
+  const pi = STATE.season.playInState;
+  if (!pi) return false;
+  if (pi.isEliminated) return false;
+  
+  // 已经通过Game A直接晋级
+  if (pi.playoffSeed === 7) return true;
+  
+  // Game A + Game B完成后，Game C也完成则晋级
+  if (pi.gameAResult && pi.gameBResult && pi.gameCResult) {
+    if (pi.playoffSeed === 8) return true;
+  }
+  
+  return false;
+}
+
+// ==================== 赛季结束 ====================
+function endSeason() {
+  const ps = STATE.season.playerStats;
+  const games = ps.games || 1;
+  
+  STATE.season.avgStats = {
+    pts: Math.round(ps.pts / games * 10) / 10,
+    reb: Math.round(ps.reb / games * 10) / 10,
+    ast: Math.round(ps.ast / games * 10) / 10,
+    stl: Math.round(ps.stl / games * 10) / 10,
+    blk: Math.round(ps.blk / games * 10) / 10,
+    tov: Math.round(ps.tov / games * 10) / 10,
+    fgm: Math.round(ps.fgm / games * 10) / 10,
+    fga: Math.round(ps.fga / games * 10) / 10,
+    ftm: Math.round(ps.ftm / games * 10) / 10,
+    fta: Math.round(ps.fta / games * 10) / 10,
+    threeM: Math.round(ps.threeM / games * 10) / 10,
+    threeA: Math.round(ps.threeA / games * 10) / 10,
+    mins: Math.round(ps.mins / games),
+  };
+  
+  calcSeasonAwards();
+  
+  // 赛季结束，转到 MyCard
+  renderMyCard(true);
+}
+
+// ==================== 季后赛系统（真实排名版）====================
+/** 为指定分区构建季后赛对阵数据结构 */
+function buildPlayoffBracket(conf, playInState) {
+  const sorted = getConferenceSorted(conf);
+  const teams = sorted.slice(0, 8);
+  
+  // ★ 附加赛结果替换7/8号种子
+  if (playInState && !playInState.isEliminated) {
+    // Game A winner → 7号种子
+    if (playInState.gameAResult?.winner) {
+      teams[6] = { team: playInState.gameAResult.winner, ovr: calcTeamPowerWithPlayer(playInState.gameAResult.winner) };
+    }
+    // Game C winner → 8号种子（只有C打完才确定）
+    if (playInState.gameCResult?.winner) {
+      teams[7] = { team: playInState.gameCResult.winner, ovr: calcTeamPowerWithPlayer(playInState.gameCResult.winner) };
+    }
+  }
+  return {
+    conf: conf,
+    teams: teams,
+    rounds: [
+      [
+        { high: teams[0], low: teams[7], winner: null },
+        { high: teams[1], low: teams[6], winner: null },
+        { high: teams[2], low: teams[5], winner: null },
+        { high: teams[3], low: teams[4], winner: null },
+      ],
+      [null, null],
+      [null],
+      [null],  // 总决赛 (第3轮)
+    ],
+    currentRound: 0,
+    results: [],
+    confChampion: null,
+  };
+}
+
+/** 自动模拟整个分区的季后赛（用于另一分区） */
+function autoSimConferenceBracket(confBracket) {
+  if (!confBracket) return;
+  const bracketOrder = [0, 7, 1, 6, 2, 5, 3, 4];
+  let roundTeams = bracketOrder.map(i => confBracket.teams[i]?.team).filter(Boolean);
+  
+  for (let r = 0; r < 3; r++) {
+    const pairs = [];
+    for (let i = 0; i < roundTeams.length; i += 2) {
+      if (i + 1 >= roundTeams.length) { pairs.push([roundTeams[i], null]); break; }
+      pairs.push([roundTeams[i], roundTeams[i + 1]]);
+    }
+    const winners = [];
+    pairs.forEach(([tA, tB], idx) => {
+      if (!tB) { winners.push(tA); return; }
+      const pA = calcTeamPowerWithPlayer(tA);
+      const pB = calcTeamPowerWithPlayer(tB);
+      let wA = 0, wB = 0;
+      const sGames = [];
+      // ★ 首轮根据种子排名计算 seedBonus
+      let sb = 0;
+      if (r === 0) {
+        const seedIdxA = bracketOrder[idx * 2];
+        const seedIdxB = bracketOrder[idx * 2 + 1];
+        const gapSeed = Math.abs(seedIdxA - seedIdxB);
+        sb = 0.4 * gapSeed;
+        sb = seedIdxA < seedIdxB ? sb : -sb;
+      }
+      for (let g = 0; g < 7 && wA < 4 && wB < 4; g++) {
+        const gr = simulateGameNew(tA, tB, sb);
+        if (gr.won) wA++; else wB++;
+        sGames.push({ myScore: gr.scoreA, oppScore: gr.scoreB, won: gr.won, home: g < 4, qScoresA: gr.qScoresA, qScoresB: gr.qScoresB, boxScore: gr.boxScore });
+      }
+      const sWinner = wA >= 4 ? tA : tB;
+      winners.push(sWinner);
+      
+      // 存储结果
+      if (confBracket.rounds[r]) {
+        const seriesIdx = idx;
+        if (!confBracket.rounds[r][seriesIdx]) {
+          confBracket.rounds[r][seriesIdx] = { high: null, low: null, winner: null };
+        }
+        const s = confBracket.rounds[r][seriesIdx];
+        if (r === 0) {
+          const orderIdx = idx * 2;
+          s.high = confBracket.teams[bracketOrder[orderIdx]];
+          s.low = confBracket.teams[bracketOrder[orderIdx + 1]];
+        } else {
+          s.high = { team: tA };
+          s.low = { team: tB };
+        }
+        s.winner = sWinner;
+      }
+      
+      confBracket.results.push({
+        round: r, seriesIdx: idx,
+        roundName: ['首轮', '分区半决赛', '分区决赛'][r],
+        teamA: tA, teamB: tB,
+        winner: sWinner,
+        winnerWins: wA >= 4 ? wA : wB,
+        loserWins: wA >= 4 ? wB : wA,
+        aWon: wA >= 4,
+        seriesGames: sGames,
+        isMySeries: false,
+      });
+      
+      // 更新下一轮槽位（NBA标准：1v8胜者vs4v5胜者，2v7胜者vs3v6胜者）
+      if (r < 2) {
+        const nr = confBracket.rounds[r + 1];
+        if (nr) {
+          var ni, isHigh;
+          if (r === 0) {
+            ni = (idx === 0 || idx === 3) ? 0 : 1;
+            isHigh = (idx === 0 || idx === 1);
+          } else {
+            ni = 0;
+            isHigh = idx === 0;
+          }
+          if (!nr[ni]) nr[ni] = { high: null, low: null, winner: null };
+          if (isHigh) nr[ni].high = { team: sWinner };
+          else nr[ni].low = { team: sWinner };
+        }
+      }
+    });
+    roundTeams = winners;
+  }
+  confBracket.confChampion = roundTeams[0] || null;
+  confBracket.currentRound = 3;
+}
+
+function renderPlayoffs() {
+  STATE.season.isPlayoffs = true;
+  trackEvent({act:"click",blk:"BMC098",pos:"TC10",label:"进入季后赛"});
+  showScreen('screen-playoffs');
+  
+  // 安全检查
+  if (!STATE.season || !STATE.careerTeam) {
+    showScreen('screen-season');
+    return;
+  }
+  
+  // ★ 附加赛检测：种子7-10且附加赛未完成 → 初始化附加赛
+  const seed = getConferenceSeed(STATE.careerTeam);
+  let pi = STATE.season.playInState;
+  const playInNeeded = seed >= 7 && seed <= 10;
+  const playInComplete = pi?.playoffSeed != null && !pi?.isEliminated;
+  const playInEliminated = pi?.isEliminated;
+  
+  if (playInNeeded && !playInComplete && !playInEliminated && (!pi || !pi.seed7)) {
+    // 初始化附加赛状态
+    const conf = getConference(STATE.careerTeam);
+    const sorted = getConferenceSorted(conf);
+    const playInTeams = sorted.filter(t => {
+      const s = getConferenceSeed(t.team);
+      return s >= 7 && s <= 10;
+    });
+    const seed7 = playInTeams.find(t => getConferenceSeed(t.team) === 7);
+    const seed8 = playInTeams.find(t => getConferenceSeed(t.team) === 8);
+    const seed9 = playInTeams.find(t => getConferenceSeed(t.team) === 9);
+    const seed10 = playInTeams.find(t => getConferenceSeed(t.team) === 10);
+    
+    STATE.season.playInState = {
+      seed7, seed8, seed9, seed10,
+      gameAResult: null, gameBResult: null, gameCResult: null,
+      isEliminated: false, playoffSeed: null,
+    };
+    pi = STATE.season.playInState;
+  }
+  
+  // 季后赛流程
+  const pi2 = STATE.season.playInState;
+  const mySeed = pi2?.playoffSeed || seed;
+  const conf = getConference(STATE.careerTeam);
+  
+  // ★ 附加赛结果修正种子：用附加赛晋级者替换原7/8号种子
+  const bracket = buildPlayoffBracket(conf, pi2);
+  const otherConf = conf === 'EAST' ? 'WEST' : 'EAST';
+  const otherBracket = buildPlayoffBracket(otherConf);
+  
+  // 自动模拟另一分区的季后赛（用户不能操作）
+  autoSimConferenceBracket(otherBracket);
+  
+  STATE.season.playoffBracket = bracket;
+  STATE.season.otherBracket = otherBracket;
+  STATE.season.playoffSeed = mySeed;
+  STATE.season._viewConf = conf;
+  
+  renderPlayoffBracketUI();
+}
+
+function renderPlayoffBracketUI() {
+  const bracket = STATE.season?.playoffBracket;
+  if (!bracket) { renderPlayoffs(); return; }
+  
+  const mySeed = STATE.season.playoffSeed || getConferenceSeed(STATE.careerTeam);
+  const viewConf = STATE.season._viewConf || bracket.conf;
+  const isViewingOther = viewConf !== bracket.conf;
+  
+  if (STATE.season.isChampion) return;
+  
+  // 选择要显示的分区对阵数据
+  const activeBracket = isViewingOther ? STATE.season.otherBracket : bracket;
+  if (!activeBracket) return;
+  const confName = activeBracket.conf === 'EAST' ? '东部' : '西部';
+  
+  // 收集所有轮次数据（含总决赛作为第4轮，附加赛作为第0轮）
+  const allRoundData = [];
+  const roundNames = [];
+  
+  // ★ 附加赛作为第0轮（如果经历过附加赛）
+  const pi = STATE.season.playInState;
+  const hasPlayIn = pi && pi.seed7 && !isViewingOther;
+  const piCompleted = pi?.playoffSeed != null && !pi?.isEliminated;
+  if (hasPlayIn) {
+    const playInEntries = [];
+    const myTeam = STATE.careerTeam;
+    
+    // Game A: 7 vs 8
+    if (pi.seed7 && pi.seed8) {
+      const gA = pi.gameAResult;
+      playInEntries.push({
+        series: {
+          high: { team: pi.seed7.team, seed: 7 },
+          low: { team: pi.seed8.team, seed: 8 },
+          winner: gA?.winner || null,
+        },
+        idx: 0, isMySeries: myTeam === pi.seed7.team || myTeam === pi.seed8.team,
+        isComplete: !!gA, res: gA ? { winnerWins: 1, loserWins: 0, winner: gA.winner, loser: gA.loser } : null,
+        r: -1, isPlayIn: true, label: '7vs8',
+      });
+    }
+    
+    // Game B: 9 vs 10
+    if (pi.seed9 && pi.seed10) {
+      const gB = pi.gameBResult;
+      playInEntries.push({
+        series: {
+          high: { team: pi.seed9.team, seed: 9 },
+          low: { team: pi.seed10.team, seed: 10 },
+          winner: gB?.winner || null,
+        },
+        idx: 1, isMySeries: myTeam === pi.seed9.team || myTeam === pi.seed10.team,
+        isComplete: !!gB, res: gB ? { winnerWins: 1, loserWins: 0, winner: gB.winner, loser: gB.loser } : null,
+        r: -1, isPlayIn: true, label: '9vs10',
+      });
+    }
+    
+    // Game C: 败者组决赛
+    if (pi.gameAResult && pi.gameBResult) {
+      const gC = pi.gameCResult;
+      const teamA = pi.gameAResult.loser;
+      const teamB = pi.gameBResult.winner;
+      playInEntries.push({
+        series: {
+          high: { team: teamA, seed: 0 },
+          low: { team: teamB, seed: 0 },
+          winner: gC?.winner || null,
+        },
+        idx: 2, isMySeries: myTeam === teamA || myTeam === teamB,
+        isComplete: !!gC, res: gC ? { winnerWins: 1, loserWins: 0, winner: gC.winner, loser: gC.loser } : null,
+        r: -1, isPlayIn: true, label: '败者组',
+      });
+    }
+    
+    if (playInEntries.length > 0) {
+      allRoundData.push(playInEntries);
+      roundNames.push('附加赛');
+    }
+  }
+  
+  roundNames.push('首轮', '分区半决赛', '分区决赛', '总决赛');
+  
+  for (let r = 0; r <= 3; r++) {
+    const seriesList = activeBracket.rounds[r];
+    if (!seriesList) break;
+    const entries = [];
+    let hasAny = false;
+    seriesList.forEach((series, idx) => {
+      if (!series) { entries.push(null); return; }
+      hasAny = true;
+      const isMySeries = series.high?.team === STATE.careerTeam || series.low?.team === STATE.careerTeam;
+      const isComplete = !!series.winner;
+      const res = activeBracket.results.find(rr => rr.round === r && rr.seriesIdx === idx);
+      entries.push({ series, idx, isMySeries, isComplete, res, r });
+    });
+    if (!hasAny) break;
+    allRoundData.push(entries);
+  }
+  
+  // 当前轮次（默认为第一轮或最近未完成的轮次）
+  if (STATE.season._playoffRound === undefined) {
+    STATE.season._playoffRound = 0;
+    // 附加赛已晋级 → 直接跳到第一轮
+    if (piCompleted) STATE.season._playoffRound = allRoundData.length > 1 ? 1 : 0;
+    else {
+      // 找到第一个有未完成系列赛的轮次
+      for (let i = 0; i < allRoundData.length; i++) {
+        const hasActive = allRoundData[i].some(e => e && !e.isComplete && e.isMySeries);
+        if (hasActive) { STATE.season._playoffRound = i; break; }
+      }
+    }
+  }
+  // ★ 附加赛刚打完 → 自动跳到首轮
+  if (STATE.season._playoffRound === 0 && hasPlayIn && piCompleted && allRoundData.length > 1) {
+    const piRoundAllDone = allRoundData[0].every(e => e && e.isComplete);
+    if (piRoundAllDone) STATE.season._playoffRound = 1;
+  }
+  const curRound = Math.min(STATE.season._playoffRound, allRoundData.length - 1);
+  
+  let h = `<div class="bv-wrap">`;
+  
+  // ===== 分区切换标签 =====
+  const myConfName = bracket.conf === 'EAST' ? '东部' : '西部';
+  const otherConfName = bracket.conf === 'EAST' ? '西部' : '东部';
+  h += `<div class="bv-conf-tabs">
+    <button class="bv-conf-tab ${!isViewingOther ? 'bv-conf-tab-active' : ''}" onclick="switchPlayoffConf('${bracket.conf}')">🏀 ${myConfName}</button>
+    <button class="bv-conf-tab ${isViewingOther ? 'bv-conf-tab-active' : ''}" onclick="switchPlayoffConf('${bracket.conf === 'EAST' ? 'WEST' : 'EAST'}')">🏀 ${otherConfName}</button>
+  </div>`;
+  
+  // ===== 轮次导航 =====
+  h += `<div class="bv-round-nav">
+    <button class="bv-round-arrow" onclick="navigatePlayoffRound(-1)" ${curRound <= 0 ? 'disabled' : ''}>◀</button>
+    <div class="bv-round-title">${roundNames[curRound] || '第'+(curRound+1)+'轮'}</div>
+    <button class="bv-round-arrow" onclick="navigatePlayoffRound(1)" ${curRound >= allRoundData.length - 1 ? 'disabled' : ''}>▶</button>
+  </div>`;
+  
+  // 头部信息
+  var isFinals = roundNames[curRound] === '总决赛';
+  h += `<div class="bv-header">
+    <div class="bv-header-title">${isFinals ? '🏆 NBA总决赛' : (confName + ' 季后赛')}</div>
+    <div class="bv-header-sub">${!isViewingOther ? (isFinals ? '总决赛' : `${getTeamName(STATE.careerTeam)} · 第${mySeed}种子`) : ''}</div>
+  </div>`;
+  
+  // ===== 当前轮次内容 =====
+  const entries = allRoundData[curRound] || [];
+  const isPlayInRound = entries[0]?.isPlayIn;
+  
+  if (isPlayInRound) {
+    // 附加赛单场渲染
+    h += `<div class="bv-round-content" style="gap:10px;">`;
+    entries.forEach((entry) => {
+      if (!entry) return;
+      const { series, isComplete, res, label } = entry;
+      const highTeam = series.high?.team;
+      const lowTeam = series.low?.team;
+      const wTeam = series.winner;
+      
+      h += `<div class="bv-series">
+        <div style="font-size:11px;color:var(--text-dim);padding:4px 0 2px;text-align:center;letter-spacing:0.5px;">🏀 ${label}</div>`;
+      
+      if (isComplete && res) {
+        h += `<div class="bv-s-matchup" style="cursor:default;">
+          <div class="bv-s-team ${wTeam === highTeam ? 'bv-winner' : 'bv-loser'}${highTeam === STATE.careerTeam ? ' bv-s-gold' : ''}"><span class="bv-s-name">${getTeamLogo(highTeam, 16)} ${getTeamName(highTeam)}</span>${wTeam === highTeam ? '<span style="font-size:11px;color:var(--green);margin-left:4px;">W</span>' : ''}</div>
+          <div class="bv-s-team ${wTeam === lowTeam ? 'bv-winner' : 'bv-loser'}${lowTeam === STATE.careerTeam ? ' bv-s-gold' : ''}"><span class="bv-s-name">${getTeamLogo(lowTeam, 16)} ${getTeamName(lowTeam)}</span>${wTeam === lowTeam ? '<span style="font-size:11px;color:var(--green);margin-left:4px;">W</span>' : ''}</div>
+        </div>`;
+        if (highTeam === STATE.careerTeam && wTeam === highTeam) {
+          h += `<div style="text-align:center;font-size:12px;color:var(--gold);font-weight:700;padding:2px 0;">🎉 晋级！</div>`;
+        } else if (lowTeam === STATE.careerTeam && wTeam === lowTeam) {
+          h += `<div style="text-align:center;font-size:12px;color:var(--gold);font-weight:700;padding:2px 0;">🎉 晋级！</div>`;
+        } else if (highTeam === STATE.careerTeam || lowTeam === STATE.careerTeam) {
+          h += `<div style="text-align:center;font-size:12px;color:var(--red);padding:2px 0;">❌ 淘汰</div>`;
+        }
+      } else {
+        h += `<div class="bv-s-matchup" style="cursor:default;">
+          <div class="bv-s-team ${highTeam === STATE.careerTeam ? 'bv-s-gold' : ''}"><span class="bv-s-name">${getTeamLogo(highTeam, 16)} ${getTeamName(highTeam)}</span></div>
+          <div style="text-align:center;font-size:13px;font-weight:700;color:var(--text-dim);padding:4px 0;">VS</div>
+          <div class="bv-s-team ${lowTeam === STATE.careerTeam ? 'bv-s-gold' : ''}"><span class="bv-s-name">${getTeamLogo(lowTeam, 16)} ${getTeamName(lowTeam)}</span></div>
+        </div>`;
+        // 根据label决定模拟哪场
+        const gameId = label === '7vs8' ? 'A' : (label === '9vs10' ? 'B' : 'C');
+        h += `<button class="bv-s-btn" onclick="simPlayInGame('${gameId}')" style="margin-top:6px;">▶ 模拟${label}</button>`;
+      }
+      
+      h += `</div>`;
+    });
+    h += `</div>`;
+  } else {
+    // 常规轮次渲染（单轮）
+    h += `<div class="bv-round-content">`;
+    entries.forEach((entry) => {
+      if (!entry) { h += `<div class="bv-spacer"></div>`; return; }
+      const { series, idx, isMySeries, isComplete, res, r } = entry;
+      const teamA = series.high?.team;
+      const teamB = series.low?.team;
+      const wTeam = series.winner;
+      
+      // 按种子排序：小种子（更优）在上面
+      const seedA = getSeedOf(activeBracket.teams, teamA);
+      const seedB = getSeedOf(activeBracket.teams, teamB);
+      const topTeam = seedA <= seedB ? teamA : teamB;
+      const botTeam = seedA <= seedB ? teamB : teamA;
+      const topSeed = seedA <= seedB ? seedA : seedB;
+      const botSeed = seedA <= seedB ? seedB : seedA;
+      const topIsWinner = wTeam === topTeam;
+      const botIsWinner = wTeam === botTeam;
+      
+      const isOtherConf = isViewingOther;
+      const sClass = isOtherConf ? ' bv-series-other' : '';
+      h += `<div class="bv-series${sClass}">`;
+      
+      if (isComplete && res) {
+        const tScore = topIsWinner ? res.winnerWins : res.loserWins;
+        const bScore = topIsWinner ? res.loserWins : res.winnerWins;
+        h += `<div class="bv-s-matchup" style="cursor:default;">
+          <div class="bv-s-team ${topIsWinner ? 'bv-winner' : 'bv-loser'}${topTeam === STATE.careerTeam ? ' bv-s-gold' : ''}"><span class="bv-seed ${topIsWinner ? 'bv-seed-w' : ''}">${topSeed}</span><span class="bv-s-name">${getTeamLogo(topTeam, 16)} ${getTeamName(topTeam)}</span><span class="bv-s-score ${topIsWinner ? 'bv-sc-w' : ''}">${tScore}</span></div>
+          <div class="bv-s-team ${topIsWinner ? 'bv-loser' : 'bv-winner'}${botTeam === STATE.careerTeam ? ' bv-s-gold' : ''}"><span class="bv-seed ${topIsWinner ? '' : 'bv-seed-w'}">${botSeed}</span><span class="bv-s-name">${getTeamLogo(botTeam, 16)} ${getTeamName(botTeam)}</span><span class="bv-s-score ${topIsWinner ? '' : 'bv-sc-w'}">${bScore}</span></div>
+        </div>`;
+      } else if (isMySeries && !isOtherConf) {
+        const opp = STATE.careerTeam === topTeam ? botTeam : topTeam;
+        h += `<div class="bv-s-matchup" style="cursor:default;">
+          <div class="bv-s-team bv-w bv-s-user bv-s-gold"><span class="bv-seed bv-seed-my">${getSeedOf(activeBracket.teams, STATE.careerTeam)}</span><span class="bv-s-name">${getTeamLogo(STATE.careerTeam, 16)} ${getTeamName(STATE.careerTeam)}</span><span class="bv-s-badge">你</span></div>
+          <div class="bv-s-team bv-l"><span class="bv-seed">${getSeedOf(activeBracket.teams, opp)}</span><span class="bv-s-name">${getTeamLogo(opp, 16)} ${getTeamName(opp)}</span></div>
+        </div>`;
+        h += `<button class="bv-s-btn" onclick="this.disabled=true;simPlayoffSeries(${r}, ${idx})">${r === 2 ? '🏆 开始分区决赛' : r === 3 ? '🏆 开始总决赛' : '▶ 开始系列赛'}</button>`;
+      } else {
+        h += `<div class="bv-s-matchup" style="cursor:default;">
+          <div class="bv-s-team ${isComplete ? (topIsWinner ? 'bv-winner' : 'bv-loser') : ''}${topTeam === STATE.careerTeam ? ' bv-s-gold' : ''}"><span class="bv-seed ${isComplete ? (topIsWinner ? 'bv-seed-w' : '') : ''}">${topSeed}</span><span class="bv-s-name">${getTeamLogo(topTeam, 16)} ${getTeamName(topTeam)}</span>${isComplete ? `<span class="bv-s-score ${topIsWinner ? 'bv-sc-w' : ''}">${res ? (topIsWinner ? res.winnerWins : res.loserWins) : ''}</span>` : ''}</div>
+          <div class="bv-s-team bv-l ${isComplete ? (topIsWinner ? 'bv-loser' : 'bv-winner') : ''}${botTeam === STATE.careerTeam ? ' bv-s-gold' : ''}"><span class="bv-seed ${isComplete ? (topIsWinner ? '' : 'bv-seed-w') : ''}">${botSeed}</span><span class="bv-s-name">${getTeamLogo(botTeam, 16)} ${getTeamName(botTeam)}</span>${isComplete ? `<span class="bv-s-score ${topIsWinner ? '' : 'bv-sc-w'}">${res ? (topIsWinner ? res.loserWins : res.winnerWins) : ''}</span>` : ''}</div>
+        </div>`;
+      }
+      h += `</div>`;
+    });
+    h += `</div>`;
+  }
+  
+  // 底部按钮
+  h += `<div class="bv-actions">
+    ${!isViewingOther && (STATE.season.playoffEliminated || pi?.isEliminated) ? `<button class="btn btn-primary btn-sm" onclick="showSeasonResults()">📊 查看赛季总结</button>` : ''}
+  </div>`;
+  
+  // gamecast（放在 bv-po-stats 上方）
+  h += `<div id="playoff-gamecast" style="display:none;padding:0 12px 8px;"></div>`;
+
+  // 季后赛场均数据
+  if (!isViewingOther) {
+    const po = STATE.season.playoffStats;
+    if (po.games > 0) {
+      const poG = po.games;
+      h += `<div class="bv-po-stats">
+        <div class="bv-po-title">📊 季后赛场均</div>
+        <div class="bv-po-grid">
+          <div class="bv-po-stat"><span class="bv-po-val">${Math.round(po.pts/poG*10)/10}</span><span class="bv-po-lbl">得分</span></div>
+          <div class="bv-po-stat"><span class="bv-po-val">${Math.round(po.reb/poG*10)/10}</span><span class="bv-po-lbl">篮板</span></div>
+          <div class="bv-po-stat"><span class="bv-po-val">${Math.round(po.ast/poG*10)/10}</span><span class="bv-po-lbl">助攻</span></div>
+          <div class="bv-po-stat"><span class="bv-po-val">${Math.round(po.stl/poG*10)/10}</span><span class="bv-po-lbl">抢断</span></div>
+          <div class="bv-po-stat"><span class="bv-po-val">${Math.round(po.blk/poG*10)/10}</span><span class="bv-po-lbl">盖帽</span></div>
+          <div class="bv-po-stat"><span class="bv-po-val">${Math.round(po.tov/poG*10)/10}</span><span class="bv-po-lbl">失误</span></div>
+        </div>
+        <div style="text-align:center;font-size:11px;color:var(--text-dim);margin-top:4px;">
+          出战 ${poG} 场 · 命中 ${Math.round(po.fgm/poG*10)/10}-${Math.round(po.fga/poG*10)/10} (${po.fga>0?Math.round(po.fgm/po.fga*100):0}%)
+        </div>
+      </div>`;
+    }
+  }
+  
+  h += `</div>`;
+  document.getElementById('playoffs-area').innerHTML = h;
+}
+
+/** 切换轮次 */
+function navigatePlayoffRound(dir) {
+  
+  // 动态计算总轮数（含附加赛）
+  const pi = STATE.season.playInState;
+  const viewConf = STATE.season._viewConf;
+  const myConf = STATE.season.playoffBracket?.conf;
+  const isViewingOther = viewConf && viewConf !== myConf;
+  const hasPlayIn = !!(pi && pi.seed7 && !isViewingOther);
+  const totalRounds = 4 + (hasPlayIn ? 1 : 0);
+  const next = (STATE.season._playoffRound || 0) + dir;
+  if (next < 0 || next >= totalRounds) return;
+  STATE.season._playoffRound = next;
+  renderPlayoffBracketUI();
+}
+
+/** 切换查看的分区 */
+function switchPlayoffConf(conf) {
+  
+  STATE.season._viewConf = conf;
+  renderPlayoffBracketUI();
+}
+
+/** 通过索引查找系列赛结果并弹窗 */
+function showSeriesResultByIdx(round, seriesIdx, source) {
+  // 已取消弹窗，改用页面刷新
+  renderPlayoffBracketUI();
+}
+
+/** 获取球队在季后赛球队数组中的种子号 */
+function getSeedOf(teams, team) {
+  if (!teams || !team) return '?';
+  const idx = teams.findIndex(t => t.team === team);
+  return idx >= 0 ? (idx + 1) : '?';
+}
+
+/** 比赛单场简报卡片（用于一场一场弹） */
+function renderPlayoffGameBrief(gameEntry, teamA, teamB, isMySeries, roundName, gameNum, totalNum, round, seriesIdx) {
+  const gcContainer = document.getElementById('playoff-gamecast');
+  if (!gcContainer) return;
+  
+  gcContainer.style.display = 'block';
+  const isUserA = teamA === STATE.careerTeam;
+  const myScore = isUserA ? gameEntry.myScore : gameEntry.oppScore;
+  const oppScore = isUserA ? gameEntry.oppScore : gameEntry.myScore;
+  const oppName = isUserA ? teamB : teamA;
+  const stats = gameEntry.myStats;
+  
+  let statsLine = '';
+  if (stats) {
+    const pct = stats.fga > 0 ? Math.round(stats.fgm / stats.fga * 100) : 0;
+    statsLine = `<div style="font-size:9px;color:var(--text-dim);margin-top:2px;">${stats.pts}分 ${stats.reb}板 ${stats.ast}助 · ${stats.fgm}-${stats.fga} (${pct}%)</div>`;
+  }
+  
+  const brief = document.createElement('div');
+  brief.style.cssText = `
+    display:flex;align-items:center;gap:8px;
+    padding:8px 12px;margin-bottom:6px;
+    background:var(--bg-card);border:1.5px solid ${gameEntry.suspended ? '#000' : (gameEntry.won ? 'var(--green)' : 'var(--red)')};
+    border-radius:10px;animation:slideUp 0.2s ease;cursor:pointer;
+  `;
+  brief.innerHTML = `
+    <span style="font-size:13px;">${gameEntry.won ? '✅' : '❌'}</span>
+    <span style="font-family:var(--font-display);font-size:12px;font-weight:700;min-width:36px;">G${gameEntry.game}</span>
+    <span style="font-family:var(--font-display);font-size:14px;font-weight:700;color:${gameEntry.suspended ? '#000' : (gameEntry.won ? 'var(--green)' : 'var(--red)')};">${myScore}-${oppScore}</span>
+    <span style="font-size:10px;color:var(--text-dim);flex:1;">G${gameEntry.game} vs ${getTeamName(oppName)}${gameEntry.ot ? ' · '+(gameEntry.ot>1?gameEntry.ot+'OT':'OT') : ''}${gameEntry.suspended ? (gameEntry.skipReason === 'injury' ? ' · 🏥 伤病' : ' · 🔇 禁赛') : ''}${gameEntry.playedThroughInjury ? ' · 🏥 带伤出战' : ''}</span>
+    ${gameEntry.suspended ? '' : statsLine}
+    <span style="font-size:16px;color:var(--text-muted);">›</span>
+  `;
+  // 点击查看详情
+  brief.onclick = () => showPlayoffGamePopup(round, seriesIdx, gameEntry.game - 1);
+  
+  gcContainer.prepend(brief);
+  
+  // 最多保留5条简报
+  while (gcContainer.children.length > 5) {
+    gcContainer.removeChild(gcContainer.lastChild);
+  }
+}
+
+/** 清空季后赛比赛简报 */
+function clearPlayoffGamecast() {
+  const gc = document.getElementById('playoff-gamecast');
+  if (gc) { gc.innerHTML = ''; gc.style.display = 'none'; }
+}
+
+/** 单场模拟并更新简报（递归，一场一场模拟） */
+function simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, gameNum, winsA, winsB, seriesGames, userGameStats, roundName, onDone) {
+  if (winsA >= 4 || winsB >= 4 || gameNum >= 7) {
+    onDone(winsA, winsB, seriesGames, userGameStats);
+    return;
+  }
+  
+  // ★ 种子保护（概率层面）：高顺位种子获得 netRating 加成
+  const bracket = STATE.season.playoffBracket;
+  const series = bracket?.rounds[round]?.[seriesIdx];
+  const highSeed = series?.high?.team;
+  const isHighA = highSeed && teamA === highSeed;
+  
+  let seedBonus = 0;
+  // ★ 用户系列赛同样保留高顺位种子保护
+  if (highSeed) {
+    const conf = getConference(highSeed);
+    const sorted = getConferenceSorted(conf);
+    const highRank = sorted.findIndex(t => t.team === highSeed);
+    const lowTeam = isHighA ? teamB : teamA;
+    const lowRank = sorted.findIndex(t => t.team === lowTeam);
+    const gap = Math.max(1, Math.min(8, Math.abs(highRank - lowRank)));
+    seedBonus = 0.4 * gap; // gap 1→+0.4, gap 8→+3.2
+    seedBonus = isHighA ? seedBonus : -seedBonus;
+  }
+  
+  const userDebuff = 1.0;
+  
+  // ★ 跳过检查（禁赛优先于伤病）
+  const skipEv = STATE.season.events;
+  var skipReason = null;
+  if (skipEv && skipEv.suspensionGamesLeft > 0) skipReason = 'suspension';
+  else if (skipEv && skipEv.injuryGamesLeft > 0) skipReason = 'injury';
+  if (skipReason) {
+    var runSkippedPlayoffGame = function() {
+      if (skipReason === 'suspension') skipEv.suspensionGamesLeft--;
+      else skipEv.injuryGamesLeft--;
+      var skipResult = simulateGameNew(teamA, teamB, seedBonus, userDebuff);
+      const skipWon = skipResult.won;
+      const skipNewWinsA = winsA + (skipWon ? 1 : 0);
+      const skipNewWinsB = winsB + (skipWon ? 0 : 1);
+      const skipEntry = {
+        game: gameNum + 1, myScore: skipResult.scoreA, oppScore: skipResult.scoreB,
+        won: skipWon, home: gameNum < 4,
+        qScoresA: skipResult.qScoresA, qScoresB: skipResult.qScoresB,
+        keyEvents: skipResult.keyEvents, ot: skipResult.ot,
+        boxScore: skipResult.boxScore,
+        suspended: true,
+        skipReason: skipReason,
+      };
+      if (isMySeries) {
+        renderPlayoffGameBrief(skipEntry, teamA, teamB, true, roundName, gameNum + 1, 7, round, seriesIdx);
+      }
+      seriesGames.push(skipEntry);
+      setTimeout(function() {
+        simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, gameNum + 1, skipNewWinsA, skipNewWinsB, seriesGames, userGameStats, roundName, onDone);
+      }, isMySeries ? 600 : 50);
+    };
+    var runPlayedThroughPlayoffGame = function(severity) {
+      skipEv.injuryGamesLeft = Math.max(0, (skipEv.injuryGamesLeft || 0) - 1);
+      var hurtResult = simulateGameNew(teamA, teamB, seedBonus, getInjuryPlayWinMultiplier(severity));
+      const hurtWon = hurtResult.won;
+      const hurtNewWinsA = winsA + (hurtWon ? 1 : 0);
+      const hurtNewWinsB = winsB + (hurtWon ? 0 : 1);
+      const hurtStats = scaleHurtStats(generatePlayerStatsNew(buildHurtAttrs(STATE.attrs, severity), hurtResult, true), severity);
+      userGameStats.push(hurtStats);
+      const poH = STATE.season.playoffStats;
+      poH.pts += hurtStats.pts; poH.reb += hurtStats.reb; poH.ast += hurtStats.ast;
+      poH.stl += hurtStats.stl; poH.blk += hurtStats.blk; poH.tov += hurtStats.tov;
+      poH.fgm += hurtStats.fgm; poH.fga += hurtStats.fga;
+      poH.ftm += hurtStats.ftm; poH.fta += hurtStats.fta;
+      poH.threeM += hurtStats.threeM; poH.threeA += hurtStats.threeA;
+      poH.mins = (poH.mins || 0) + hurtStats.mins;
+      poH.games++;
+      const hurtEntry = {
+        game: gameNum + 1, myScore: hurtResult.scoreA, oppScore: hurtResult.scoreB,
+        won: hurtWon, home: gameNum < 4,
+        qScoresA: hurtResult.qScoresA, qScoresB: hurtResult.qScoresB,
+        keyEvents: hurtResult.keyEvents, ot: hurtResult.ot,
+        boxScore: hurtResult.boxScore,
+        myStats: hurtStats,
+        playedThroughInjury: true,
+        injuryReason: skipEv.injuryReason || '伤病',
+      };
+      seriesGames.push(hurtEntry);
+      renderPlayoffGameBrief(hurtEntry, teamA, teamB, true, roundName, gameNum + 1, 7, round, seriesIdx);
+      maybeWorsenInjuryAfterPlaying(skipEv, severity);
+      setTimeout(function() {
+        simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, gameNum + 1, hurtNewWinsA, hurtNewWinsB, seriesGames, userGameStats, roundName, onDone);
+      }, 600);
+    };
+    if (isMySeries && skipReason === 'injury' && shouldOfferPlayThroughInjury('po-season', false)) {
+      showPlayThroughInjuryModal({
+        desc: roundName + ' G' + (gameNum + 1) + ' 前，你仍在伤病名单里，系列赛比分是 ' + winsA + '-' + winsB + '。教练组把最终决定交给你。'
+      }, runSkippedPlayoffGame, runPlayedThroughPlayoffGame);
+      return;
+    }
+    runSkippedPlayoffGame();
+    return;
+  }
+  
+  const gameResult = simulateGameNew(teamA, teamB, seedBonus, userDebuff);
+  const finalA = gameResult.scoreA;
+  const finalB = gameResult.scoreB;
+  const won = gameResult.won;
+  const newWinsA = winsA + (won ? 1 : 0);
+  const newWinsB = winsB + (won ? 0 : 1);
+  
+  const isHome = gameNum < 4;
+  const gameEntry = {
+    game: gameNum + 1, myScore: finalA, oppScore: finalB,
+    won, home: isHome,
+    qScoresA: gameResult.qScoresA, qScoresB: gameResult.qScoresB,
+    keyEvents: gameResult.keyEvents, ot: gameResult.ot,
+    boxScore: gameResult.boxScore,
+  };
+  
+  if (isMySeries) {
+    const stats = generatePlayerStatsNew(STATE.attrs, gameResult, true);
+    gameEntry.myStats = stats;
+    userGameStats.push(stats);
+    
+    const po = STATE.season.playoffStats;
+    po.pts += stats.pts; po.reb += stats.reb; po.ast += stats.ast;
+    po.stl += stats.stl; po.blk += stats.blk; po.tov += stats.tov;
+    po.fgm += stats.fgm; po.fga += stats.fga;
+    po.ftm += stats.ftm; po.fta += stats.fta;
+    po.threeM += stats.threeM; po.threeA += stats.threeA;
+    po.mins = (po.mins || 0) + stats.mins;
+    po.games++;
+    
+    // 🎯 一场一场弹：显示本场简报
+    renderPlayoffGameBrief(gameEntry, teamA, teamB, true, roundName, gameNum + 1, 7, round, seriesIdx);
+  }
+  
+  seriesGames.push(gameEntry);
+  
+  // 下一场（延迟600ms让用户看到简报动画，然后检测随机事件）
+  setTimeout(function() {
+    // ★ 赛后检测随机事件（仅限用户系列赛，简报显示完后才触发）
+    if (isMySeries) {
+      try {
+        var poOldTeamEv = checkOldTeamReturnEvent({ opponent: teamB, isWin: won, day: 0, simulated: true, isPlayoffs: true }, { won: won, scoreA: finalA, scoreB: finalB }, gameEntry.myStats || null);
+        if (poOldTeamEv) {
+          showOldTeamReturnFlow(function() {
+            setTimeout(function() {
+              simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, gameNum + 1, newWinsA, newWinsB, seriesGames, userGameStats, roundName, onDone);
+            }, 600);
+          });
+          return;
+        }
+        var poEvData = checkRandomEvents({ opponent: teamB, isWin: won, day: 0, simulated: true }, { won: won, scoreA: finalA, scoreB: finalB }, gameEntry.myStats || null);
+        if (poEvData) {
+          if (poEvData._consequence === 'suspension') {
+            STATE.season.events.suspensionReason = poEvData.desc;
+          } else if (poEvData._consequence === 'injury') {
+            STATE.season.events.injuryReason = poEvData.desc;
+          }
+          if (typeof showEventModal === 'function') {
+            showEventModal(poEvData, function() {
+              setTimeout(function() {
+                simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, gameNum + 1, newWinsA, newWinsB, seriesGames, userGameStats, roundName, onDone);
+              }, 600);
+            });
+            return;
+          }
+        }
+      } catch(ex) {}
+    }
+    simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, gameNum + 1, newWinsA, newWinsB, seriesGames, userGameStats, roundName, onDone);
+  }, isMySeries ? 600 : 50);
+}
+
+/** 主要入口：模拟季后赛系列赛（用户系列赛一场一场弹） */
+function simPlayoffSeries(round, seriesIdx) {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC12",label:"开始系列赛"});
+  const bracket = STATE.season.playoffBracket;
+  if (!bracket) return;
+  
+  const series = bracket.rounds[round]?.[seriesIdx];
+  if (!series || series.winner) return;
+  
+  const isMySeries = series.high?.team === STATE.careerTeam || series.low?.team === STATE.careerTeam;
+  
+  let teamA, teamB;
+  if (isMySeries) {
+    teamA = STATE.careerTeam;
+    teamB = series.high?.team === teamA ? series.low?.team : series.high?.team;
+  } else {
+    teamA = series.high?.team;
+    teamB = series.low?.team;
+  }
+  
+  const roundName = ['首轮', '分区半决赛', '分区决赛'][round] || '第'+(round+1)+'轮';
+  
+  // 清空旧简报，开始新的系列赛
+  clearPlayoffGamecast();
+  
+  if (isMySeries) {
+    // 显示"开始"提示
+    const gc = document.getElementById('playoff-gamecast');
+    if (gc) {
+      gc.style.display = 'block';
+      gc.innerHTML = `<div style="font-size:11px;color:var(--orange);padding:4px 0;font-family:var(--font-display);">🏀 ${roundName} · ${getTeamName(teamA)} vs ${getTeamName(teamB)} 开始</div>`;
+    }
+  }
+  
+  // 用递归一场一场模拟
+  simOnePlayoffGame(round, seriesIdx, teamA, teamB, isMySeries, 0, 0, 0, [], [], roundName, (winsA, winsB, seriesGames, userGameStats) => {
+    // ===== 系列赛结束 =====
+    const aWon = winsA >= 4;
+    const winner = aWon ? teamA : teamB;
+    const winnerWins = aWon ? winsA : winsB;
+    const loserWins = aWon ? winsB : winsA;
+    series.winner = winner;
+    
+    const result = {
+      round, seriesIdx, roundName,
+      teamA, teamB, winner, winnerWins, loserWins,
+      winsA, winsB, aWon, seriesGames, isMySeries,
+    };
+    bracket.results.push(result);
+    
+    // 更新下一轮对阵（NBA标准：1v8胜者vs4v5胜者，2v7胜者vs3v6胜者）
+    if (round < 2) {
+      const nextRound = bracket.rounds[round + 1];
+      if (nextRound) {
+        var nextIdx, isHigh;
+        if (round === 0) {
+          nextIdx = (seriesIdx === 0 || seriesIdx === 3) ? 0 : 1;
+          isHigh = (seriesIdx === 0 || seriesIdx === 1);
+        } else {
+          nextIdx = 0;
+          isHigh = seriesIdx === 0;
+        }
+        if (nextRound[nextIdx] === null) nextRound[nextIdx] = { high: null, low: null, winner: null };
+        if (isHigh) nextRound[nextIdx].high = { team: winner };
+        else nextRound[nextIdx].low = { team: winner };
+      }
+    } else if (round === 2) {
+      bracket.confChampion = winner;
+    }
+    
+    // ★ 自动模拟同轮其他系列赛（使用完整引擎，快速）
+    const mySeriesIdx = seriesIdx;
+    const otherSeries = bracket.rounds[round]
+      .map((s, i) => ({ series: s, idx: i }))
+      .filter(({ series: s, idx }) => s && !s.winner && idx !== mySeriesIdx);
+    
+    for (const { series: s, idx } of otherSeries) {
+      const sTeamA = s.high?.team;
+      const sTeamB = s.low?.team;
+      if (!sTeamA || !sTeamB) continue;
+      
+      // ★ 首轮根据种子排名计算 seedBonus
+      let sb = 0;
+      if (round === 0) {
+        const highIdx = bracket.teams.findIndex(t => t.team === sTeamA);
+        const lowIdx = bracket.teams.findIndex(t => t.team === sTeamB);
+        if (highIdx >= 0 && lowIdx >= 0) {
+          const gapSeed = Math.abs(highIdx - lowIdx);
+          sb = 0.4 * gapSeed;
+          sb = highIdx < lowIdx ? sb : -sb;
+        }
+      }
+      
+      let sWA = 0, sWB = 0;
+      const sGames = [];
+      for (let g = 0; g < 7 && sWA < 4 && sWB < 4; g++) {
+        const gr = simulateGameNew(sTeamA, sTeamB, sb);
+        if (gr.won) sWA++; else sWB++;
+        sGames.push({ myScore: gr.scoreA, oppScore: gr.scoreB, won: gr.won, home: g < 4, qScoresA: gr.qScoresA, qScoresB: gr.qScoresB, boxScore: gr.boxScore });
+      }
+      const sWinner = sWA >= 4 ? sTeamA : sTeamB;
+      s.winner = sWinner;
+      bracket.results.push({
+        round, seriesIdx: idx, roundName,
+        teamA: sTeamA, teamB: sTeamB, winner: sWinner,
+        winnerWins: sWA >= 4 ? sWA : sWB, loserWins: sWA >= 4 ? sWB : sWA,
+        winsA: sWA, winsB: sWB, aWon: sWA >= 4, seriesGames: sGames, isMySeries: false,
+      });
+      if (round < 2) {
+        const nr = bracket.rounds[round + 1];
+        if (nr) {
+          var ni2, isHigh2;
+          if (round === 0) {
+            ni2 = (idx === 0 || idx === 3) ? 0 : 1;
+            isHigh2 = (idx === 0 || idx === 1);
+          } else {
+            ni2 = 0;
+            isHigh2 = idx === 0;
+          }
+          if (nr[ni2] === null) nr[ni2] = { high: null, low: null, winner: null };
+          if (isHigh2) nr[ni2].high = { team: sWinner };
+          else nr[ni2].low = { team: sWinner };
+        }
+      } else if (round === 2) bracket.confChampion = sWinner;
+    }
+    
+    // 检查是否所有同轮系列赛都完成了
+    const allDone = bracket.rounds[round].every(s => s?.winner);
+    if (allDone && round < 2) bracket.currentRound = round + 1;
+    
+    // ★ 先设置淘汰标志，确保后续所有渲染都能看到
+    const userWonSeries = isMySeries ? (teamA === STATE.careerTeam ? aWon : !aWon) : false;
+    if (isMySeries && !userWonSeries) STATE.season.playoffEliminated = true;
+    if (isMySeries && !userWonSeries) STATE.season.playoffsDone = true;
+    
+    // ★ 分区决赛完成 → 先设置总决赛 (第3轮) 对阵（在用户跳转前执行）
+    if (round === 2 && allDone) {
+      const otherBracket = STATE.season.otherBracket;
+      bracket.otherConfChampion = otherBracket?.confChampion || simOtherConference(bracket.conf === 'EAST' ? 'WEST' : 'EAST');
+      const finalsRound = bracket.rounds[3];
+      if (finalsRound && finalsRound[0] === null) {
+        finalsRound[0] = {
+          high: { team: bracket.confChampion },
+          low: { team: bracket.otherConfChampion },
+          winner: null,
+        };
+        bracket.currentRound = 3;
+      }
+    }
+    
+    // 如果是用户的系列赛，直接刷新页面
+    if (isMySeries) {
+      // ★ 用户获胜后自动切换到下一轮tab
+      if (userWonSeries) {
+        STATE.season._playoffRound = (STATE.season._playoffRound || 0) + 1;
+        // ★ 总决赛夺冠标记
+        if (round === 3) {
+          STATE.season.isChampion = true;
+          STATE.season.playoffsDone = true;
+          STATE.season.awards = STATE.season.awards || [];
+          STATE.season.awards.push({ act: 'champion', label: '🏆 总冠军', winner: getHupuDisplayName(), winnerEN: '', team: STATE.careerTeam, isUser: true });
+          var poStats = STATE.season.playoffStats || {};
+          if (poStats.games > 0 && (poStats.pts || 0) / poStats.games >= 20) {
+            STATE.season.awards.push({ act: 'fmvp', label: '👑 总决赛MVP', winner: getHupuDisplayName(), winnerEN: '', team: STATE.careerTeam, isUser: true });
+          }
+          // ★ 成就系统：记录夺冠
+          if (window.CONQUEST_API) {
+            setTimeout(function() { CONQUEST_API.recordChampionship(); }, 100);
+          }
+          setTimeout(function() { showChampionshipCelebration(showSeasonResults); }, 300);
+          return;
+        }
+      }
+      if (!userWonSeries) {
+        clearPlayoffGamecast();
+        renderPlayoffBracketUI();
+        showSeriesResult(result);
+        return;
+      }
+      clearPlayoffGamecast();
+      renderPlayoffBracketUI();
+      return;
+    }
+    
+    renderPlayoffBracketUI();
+  });
+}
+/** 模拟另一分区的季后赛，返回冠军球队（使用NBA标准对阵：1v8/4v5/2v7/3v6） */
+function simOtherConference(conf) {
+  const sorted = getConferenceSorted(conf);
+  const teams = sorted.slice(0, 8).map(t => t.team);
+  if (teams.length < 8) return teams[0] || '';
+  
+  // NBA标准对阵：1v8, 2v7, 3v6, 4v5（种子顺序）
+  const bracketOrder = [0, 7, 1, 6, 2, 5, 3, 4];
+  let roundTeams = bracketOrder.map(i => teams[i]);
+  
+  // 3轮7场4胜
+  const simSeries = (tA, tB) => {
+    const pA = calcTeamPowerWithPlayer(tA);
+    const pB = calcTeamPowerWithPlayer(tB);
+    let wA = 0, wB = 0;
+    for (let g = 0; g < 7 && wA < 4 && wB < 4; g++) {
+      const sA = Math.round(pA.offense * (0.5 + Math.random() * 0.5) + pA.defense * 0.3);
+      const sB = Math.round(pB.offense * (0.5 + Math.random() * 0.5) + pB.defense * 0.3);
+      if ((g < 4 ? sA + 3 : sA) >= (g < 4 ? sB : sB + 3)) wA++; else wB++;
+    }
+    return wA >= 4 ? tA : tB;
+  };
+  
+  for (let r = 0; r < 3; r++) {
+    const winners = [];
+    for (let i = 0; i < roundTeams.length; i += 2) {
+      if (i + 1 >= roundTeams.length) { winners.push(roundTeams[i]); break; }
+      winners.push(simSeries(roundTeams[i], roundTeams[i + 1]));
+    }
+    roundTeams = winners;
+  }
+  return roundTeams[0];
+}
+
+function getPlayoffExitRoundLabel(round) {
+  return ['首轮', '次轮', '分区决赛', '总决赛'][round] || '季后赛';
+}
+
+function getSeriesWinsForTeam(result, team) {
+  if (!result || !team) return 0;
+  if (team === result.teamA) {
+    if (typeof result.teamAWins === 'number') return result.teamAWins;
+    if (typeof result.winsA === 'number') return result.winsA;
+    return result.aWon ? result.winnerWins : result.loserWins;
+  }
+  if (team === result.teamB) {
+    if (typeof result.teamBWins === 'number') return result.teamBWins;
+    if (typeof result.winsB === 'number') return result.winsB;
+    return result.aWon ? result.loserWins : result.winnerWins;
+  }
+  return 0;
+}
+
+var CHAMPION_CELEBRATION_COPY = [
+  '{team}站上联盟之巅。彩带落下时，{player}终于听见这个赛季所有疲惫都有了回声。',
+  '终场哨响，{team}成为最后站着的球队。{player}看着记分牌，知道这不是运气，是整整一个赛季的答案。',
+  '{player}举起奖杯的那一刻，{team}的更衣室像被点亮。那些训练、伤痛和沉默，终于都有了归处。',
+  '这一夜属于{team}。人群在身后翻涌，{player}站在彩带中间，像站在自己一路坚持的尽头。',
+  '{team}把总冠军带回了城市。{player}没有急着庆祝，只是低头看了看手里的奖杯，像确认这一切是真的。',
+  '冠军不是突然来的。它藏在{team}每一次防守、每一次补位、每一次没有放弃的回合里，今晚终于落到{player}手上。',
+  '{team}赢下了最后一场。灯光照下来时，{player}知道，有些夜晚会被一座城市讲很多年。',
+  '彩带从球馆上空落下，{team}的替补席冲进场内。{player}被队友抱住，整个赛季都在这一刻变轻。',
+  '{team}终于抵达终点。{player}站在人群里笑了很久，因为这一路没有捷径，只有一步一步打出来的相信。',
+  '总冠军属于{team}。{player}听见球迷喊着自己的名字，也听见那些没人看见的训练日终于给出了回答。',
+  '{team}的冠军夜没有多余解释。比分已经定格，奖杯已经到手，{player}把所有质疑都留在了身后。',
+  '这一刻，{team}不是热门、不是黑马、不是故事线，而是冠军。{player}把奖杯抱紧，像抱住整个赛季。',
+  '从常规赛到最后一战，{team}把答案写完整了。{player}站在领奖台上，终于可以把所有辛苦说成值得。',
+  '{team}登顶联盟。香槟还没打开，{player}已经先看向队友，因为这座奖杯从来不是一个人的。',
+  '冠军彩带落在{player}肩上，也落在{team}每个人的鞋边。这个赛季走到这里，终于没有遗憾。',
+  '{team}赢到了最后。{player}在喧闹中闭了一下眼，像把这一刻认真存进职业生涯。',
+  '奖杯被递到{player}手里时，{team}的球迷已经沸腾。很多年后，他们还会记得今晚的声音。',
+  '{team}把季后赛的每一道门都推开了。最后一扇门后面，是{player}和队友等了太久的金色。',
+  '这一晚，{team}的名字被写在冠军旁边。{player}知道，从此以后，这个赛季不会再只是回忆。',
+  '总冠军到手，{team}的更衣室彻底失控。{player}站在中间笑着，被彩带、队友和整座城市一起包围。'
+];
+
+function pickChampionCelebrationCopy() {
+  var c = STATE.career || {};
+  c.flags = c.flags || {};
+  var used = Array.isArray(c.flags.usedChampionCopies) ? c.flags.usedChampionCopies : [];
+  var available = CHAMPION_CELEBRATION_COPY.map(function(text, idx) {
+    return { text: text, idx: idx };
+  }).filter(function(item) {
+    return used.indexOf(item.idx) < 0;
+  });
+  if (!available.length) {
+    used = [];
+    available = CHAMPION_CELEBRATION_COPY.map(function(text, idx) {
+      return { text: text, idx: idx };
+    });
+  }
+  var picked = available[Math.floor(Math.random() * available.length)];
+  used.push(picked.idx);
+  c.flags.usedChampionCopies = used;
+  return picked.text
+    .replace(/\{team\}/g, getTeamName(STATE.careerTeam))
+    .replace(/\{player\}/g, getHupuDisplayName());
+}
+
+function showChampionshipCelebration(onDone) {
+  var existing = document.querySelector('.champion-celebration-overlay');
+  if (existing) existing.remove();
+  var overlay = document.createElement('div');
+  overlay.className = 'champion-celebration-overlay';
+  var sparks = '';
+  for (var i = 0; i < 48; i++) {
+    var angle = Math.round(i * 7.5);
+    var dist = 90 + Math.floor(Math.random() * 170);
+    var left = 18 + Math.floor(Math.random() * 64);
+    var top = 16 + Math.floor(Math.random() * 58);
+    var delay = (Math.random() * 0.9).toFixed(2);
+    sparks += '<span class="fw-dot" style="--a:' + angle + 'deg;--d:' + dist + 'px;left:' + left + '%;top:' + top + '%;animation-delay:' + delay + 's;"></span>';
+  }
+  overlay.innerHTML =
+    sparks +
+    '<div class="champion-card">' +
+      '<div class="champion-cup">🏆</div>' +
+      '<div class="champion-title">总冠军</div>' +
+      '<div class="champion-sub">' + pickChampionCelebrationCopy() + '</div>' +
+      '<button class="awards-next" id="championContinueBtn">查看赛季总结</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  document.getElementById('championContinueBtn').onclick = function() {
+    overlay.remove();
+    if (typeof onDone === 'function') onDone();
+  };
+}
+
+function maybeShowFirstSixtyWinCelebration(onDone) {
+  var c = STATE.career;
+  if (!c || !STATE.season) {
+    if (typeof onDone === 'function') onDone();
+    return false;
+  }
+  c.flags = c.flags || {};
+  if (c.flags.firstSixtyWinCelebrated) {
+    if (typeof onDone === 'function') onDone();
+    return false;
+  }
+  var wins = STATE.season.wins || 0;
+  if (wins < 60) {
+    if (typeof onDone === 'function') onDone();
+    return false;
+  }
+  c.flags.firstSixtyWinCelebrated = true;
+  showSixtyWinCelebration(wins, onDone);
+  return true;
+}
+
+function showSixtyWinCelebration(wins, onDone) {
+  var existing = document.querySelector('.sixty-win-overlay');
+  if (existing) existing.remove();
+  var overlay = document.createElement('div');
+  overlay.className = 'sixty-win-overlay';
+  var pieces = '';
+  for (var i = 0; i < 70; i++) {
+    var left = Math.floor(Math.random() * 100);
+    var delay = (Math.random() * 1.8).toFixed(2);
+    var dur = (2.1 + Math.random() * 1.1).toFixed(2);
+    var rot = Math.floor(Math.random() * 360);
+    pieces += '<span class="confetti-piece" style="left:' + left + '%;animation-delay:' + delay + 's;animation-duration:' + dur + 's;--r:' + rot + 'deg;"></span>';
+  }
+  overlay.innerHTML =
+    pieces +
+    '<div class="sixty-win-card">' +
+      '<div style="font-size:42px;line-height:1;margin-bottom:8px;">🎊</div>' +
+      '<div class="sixty-win-title">60胜赛季</div>' +
+      '<div class="sixty-win-sub">' + getTeamName(STATE.careerTeam) + '拿下' + wins + '胜。这是你生涯第一次把常规赛带到联盟顶级强队的高度，彩带先替这座城市落一次。</div>' +
+      '<button class="awards-next" id="sixtyWinContinueBtn">继续</button>' +
+    '</div>';
+  document.body.appendChild(overlay);
+  document.getElementById('sixtyWinContinueBtn').onclick = function() {
+    overlay.remove();
+    if (typeof onDone === 'function') onDone();
+  };
+}
+
+function showSeriesResult(result) {
+  const isUserA = result.teamA === STATE.careerTeam;
+  const oppName = isUserA ? result.teamB : result.teamA;
+  const userWins = getSeriesWinsForTeam(result, STATE.careerTeam);
+  const oppWins = getSeriesWinsForTeam(result, oppName);
+  const userWon = isUserA ? result.aWon : !result.aWon;
+  const exitRoundLabel = getPlayoffExitRoundLabel(result.round);
+  
+  // 每场比分（落幕弹窗内仅展示，不再打开单场详情）
+  const gamesHtml = result.seriesGames.map((g, idx) =>
+    `<div class="sr-game-row" style="display:flex;align-items:center;gap:4px;padding:3px 0;border-bottom:1px solid var(--border-light);">
+      <span style="width:22px;font-size:9px;color:var(--text-muted);">G${g.game}</span>
+      <span style="flex:1;font-size:12px;font-weight:600;${g.won ? 'color:var(--green)' : 'color:var(--red)'}">
+        ${isUserA ? g.myScore : g.oppScore}-${isUserA ? g.oppScore : g.myScore}
+      </span>
+      <span style="font-size:9px;color:var(--text-dim);">G${g.game} ${g.won ? '✅' : '❌'}</span>
+      ${g.ot ? `<span style="font-size:8px;color:var(--accent);">${g.ot>1?g.ot+'OT':'OT'}</span>` : ''}
+    </div>`
+  ).join('');
+  
+  // 季后赛场均数据
+  const po = STATE.season.playoffStats;
+  const poG = po.games || 1;
+  const poAvgHtml = poG > 0 ? `
+    <div style="font-size:10px;color:var(--text-dim);padding:4px 0;border-top:1px solid var(--border);margin-top:4px;">
+      季后赛场均: ${Math.round(po.pts/poG*10)/10}分 ${Math.round(po.reb/poG*10)/10}板 ${Math.round(po.ast/poG*10)/10}助
+    </div>` : '';
+  
+  const existing = document.querySelector('.series-result-overlay');
+  if (existing) existing.remove();
+  
+  const overlay = document.createElement('div');
+  overlay.className = 'series-result-overlay';
+  overlay.innerHTML = `
+    <div class="sr-modal">
+      <div class="sr-modal-header">
+        <div style="font-size:12px;color:var(--text-dim);">${result.roundName}</div>
+        <button class="modal-close" onclick="this.closest('.series-result-overlay').remove()">✕</button>
+      </div>
+      <div class="sr-modal-body">
+        <div style="text-align:center;margin-bottom:8px;">
+          <div style="font-size:18px;font-weight:700;">
+            ${userWon ? '✅' : '❌'} ${getTeamName(STATE.careerTeam)} ${userWins}-${oppWins} ${getTeamName(oppName)}
+          </div>
+          <div style="font-size:12px;color:${userWon ? 'var(--green)' : 'var(--red)'};margin-top:4px;">
+            ${userWon ? '🎉 晋级下一轮！' : '您的球队本赛季遗憾止步' + exitRoundLabel}
+          </div>
+        </div>
+        <div style="font-size:11px;color:var(--text-dim);margin-bottom:4px;">📋 系列赛比分</div>
+        ${gamesHtml}
+        ${poAvgHtml}
+      </div>
+      <div class="sr-modal-footer">
+        ${userWon ?
+          `<button class="btn btn-primary btn-sm" onclick="this.closest('.series-result-overlay').remove()">继续</button>` :
+          `<button class="btn btn-secondary btn-sm" onclick="this.closest('.series-result-overlay').remove();showSeasonResults()">📊 查看赛季总结</button>`
+        }
+      </div>
+    </div>
+  `;
+  document.body.appendChild(overlay);
+}
+
+/** 季后赛比赛详情弹窗（各节比分 + 你的数据 + 全队BoxScore） */
+function showPlayoffGamePopup(round, seriesIdx, gameIdx) {
+  const bracket = STATE.season.playoffBracket;
+  if (!bracket) return;
+  const result = bracket.results.find(r => r.round === round && r.seriesIdx === seriesIdx);
+  if (!result || !result.seriesGames || !result.seriesGames[gameIdx]) return;
+  
+  const g = result.seriesGames[gameIdx];
+  const isUserA = result.teamA === STATE.careerTeam;
+  const myTeam = STATE.careerTeam;
+  const myScore = isUserA ? g.myScore : g.oppScore;
+  const oppScore = isUserA ? g.oppScore : g.myScore;
+  const oppName = isUserA ? result.teamB : result.teamA;
+  const myTeamTag = isUserA ? result.teamA : result.teamB;
+  const oppTeamTag = isUserA ? result.teamB : result.teamA;
+  const qLabels = ['Q1', 'Q2', 'Q3', 'Q4'];
+  
+  // 四节比分
+  let quartersHtml = '';
+  if (g.qScoresA && g.qScoresB) {
+    for (let q = 0; q < 4; q++) {
+      const qA = g.qScoresA[q] || 0;
+      const qB = g.qScoresB[q] || 0;
+      const myQ = isUserA ? qA : qB;
+      const oppQ = isUserA ? qB : qA;
+      quartersHtml += `<div style="display:flex;gap:4px;padding:3px 0;font-size:12px;border-bottom:1px solid var(--border);">
+        <span style="width:28px;color:var(--text-muted);font-size:10px;">${qLabels[q]}</span>
+        <span style="flex:1;text-align:center;font-weight:${myQ > oppQ ? 700 : 400};color:${myQ > oppQ ? 'var(--green)' : 'var(--text-dim)'};">${myQ}</span>
+        <span style="flex:1;text-align:center;font-weight:${oppQ > myQ ? 700 : 400};color:${oppQ > myQ ? 'var(--green)' : 'var(--text-dim)'};">${oppQ}</span>
+      </div>`;
+    }
+  }
+  
+  // 本场你的球员数据（精确到每场！）
+  let myStatsHtml = '';
+  if (g.myStats) {
+    const s = g.myStats;
+    const pct = s.fga > 0 ? Math.round(s.fgm / s.fga * 100) : 0;
+    const threePct = s.threeA > 0 ? Math.round(s.threeM / s.threeA * 100) : 0;
+    myStatsHtml = `
+      <div style="padding:8px 14px 4px;">
+        <div style="font-size:12px;color:var(--orange);margin-bottom:4px;">📊 我的球员 · 本场数据</div>
+        <div style="display:flex;gap:4px;flex-wrap:wrap;">
+          <span style="background:var(--orange-bg);padding:4px 8px;border-radius:6px;text-align:center;min-width:44px;">
+            <div style="font-size:16px;font-weight:700;color:var(--orange);">${s.pts}</div>
+            <div style="font-size:8px;color:var(--text-muted);">得分</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:44px;">
+            <div style="font-size:16px;font-weight:700;">${s.reb}</div>
+            <div style="font-size:8px;color:var(--text-muted);">篮板</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:44px;">
+            <div style="font-size:16px;font-weight:700;">${s.ast}</div>
+            <div style="font-size:8px;color:var(--text-muted);">助攻</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:36px;">
+            <div style="font-size:14px;font-weight:700;">${Math.round(s.stl)}</div>
+            <div style="font-size:8px;color:var(--text-muted);">断</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:36px;">
+            <div style="font-size:14px;font-weight:700;">${Math.round(s.blk)}</div>
+            <div style="font-size:8px;color:var(--text-muted);">帽</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 8px;border-radius:6px;text-align:center;min-width:36px;">
+            <div style="font-size:14px;font-weight:700;">${Math.round(s.tov)}</div>
+            <div style="font-size:8px;color:var(--text-muted);">误</div>
+          </span>
+        </div>
+        <div style="margin-top:4px;font-size:10px;color:var(--text-dim);text-align:center;">
+          投篮 ${s.fgm}-${s.fga} (${pct}%) · 三分 ${s.threeM}-${s.threeA} (${threePct}%)
+        </div>
+      </div>`;
+  } else {
+    // 没有本场数据时显示季后赛场均
+    const po = STATE.season.playoffStats;
+    const poG = po.games || 1;
+    myStatsHtml = `
+      <div style="padding:8px 14px 4px;">
+        <div style="font-size:12px;color:var(--orange);margin-bottom:4px;">📊 我的季后赛场均</div>
+        <div style="display:flex;gap:6px;flex-wrap:wrap;">
+          <span style="background:var(--orange-bg);padding:4px 10px;border-radius:6px;text-align:center;min-width:50px;">
+            <div style="font-size:16px;font-weight:700;color:var(--orange);">${Math.round(po.pts/poG*10)/10}</div>
+            <div style="font-size:9px;color:var(--text-muted);">得分</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 10px;border-radius:6px;text-align:center;min-width:50px;">
+            <div style="font-size:16px;font-weight:700;">${Math.round(po.reb/poG*10)/10}</div>
+            <div style="font-size:9px;color:var(--text-muted);">篮板</div>
+          </span>
+          <span style="background:var(--bg-card);padding:4px 10px;border-radius:6px;text-align:center;min-width:50px;">
+            <div style="font-size:16px;font-weight:700;">${Math.round(po.ast/poG*10)/10}</div>
+            <div style="font-size:9px;color:var(--text-muted);">助攻</div>
+          </span>
+        </div>
+      </div>`;
+  }
+  
+  // 全队BoxScore — 各队得分前5的球员
+  let boxHtml = '';
+  if (g.boxScore) {
+    const homeBox = g.boxScore[myTeamTag] || [];
+    const awayBox = g.boxScore[oppTeamTag] || [];
+    
+    // 按得分排序取前5
+    const topHome = [...homeBox].sort((a, b) => b.pts - a.pts).slice(0, 5);
+    const topAway = [...awayBox].sort((a, b) => b.pts - a.pts).slice(0, 5);
+    
+    function renderBoxRows(players, label, isHome) {
+      let h = `<div style="margin-top:6px;">
+        <div style="font-size:10px;color:var(--text-dim);margin-bottom:2px;font-weight:600;">${label}</div>`;
+      players.forEach(p => {
+        const isU = p.isUser;
+        h += `<div style="display:flex;gap:2px;padding:2px 0;font-size:9px;border-bottom:1px solid var(--border-light);${isU ? 'background:var(--orange-dim);border-radius:4px;padding:2px 4px;' : ''}">
+          <span style="width:14px;font-size:8px;color:var(--text-muted);">${p.pos || '—'}</span>
+          <span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:${isU ? 700 : 400};${isU ? 'color:var(--orange);' : ''}">${p.name}</span>
+          <span style="width:18px;text-align:right;font-weight:600;">${p.pts}</span>
+          <span style="width:14px;text-align:right;">${p.reb}</span>
+          <span style="width:14px;text-align:right;">${p.ast}</span>
+          <span style="width:22px;text-align:right;font-size:8px;">${p.fgm}-${p.fga}</span>
+        </div>`;
+      });
+      h += `</div>`;
+      return h;
+    }
+    
+    boxHtml = '';
+  }
+  
+  // 关键事件
+  
+  const modal = document.createElement('div');
+  modal.className = 'modal-overlay';
+  modal.innerHTML = `
+    <div class="modal-content" style="max-width:310px;">
+      <div class="modal-header" style="padding:8px 12px;">
+        <span style="font-family:var(--font-display);font-size:14px;">
+          ${g.won ? '✅' : '❌'} G${g.game}: ${myScore}-${oppScore}
+        </span>
+        <button class="modal-close" onclick="this.closest('.modal-overlay').remove()">✕</button>
+      </div>
+      <div style="text-align:center;padding:3px 10px 6px;font-size:11px;color:var(--text-dim);border-bottom:1px solid var(--border);">
+        ${result.roundName} · ${getTeamName(myTeam)} vs ${getTeamName(oppName)} · ${g.home ? '主场' : '客场'} ${g.ot ? '· ' + (g.ot > 1 ? g.ot+'OT' : 'OT') : ''}
+      </div>
+      
+      ${quartersHtml ? `<div style="padding:4px 12px 3px;">${quartersHtml}</div>` : 
+        `<div style="padding:8px 12px;text-align:center;font-size:12px;font-weight:700;">全场 ${myScore} - ${oppScore}</div>`
+      }
+      
+      ${myStatsHtml}
+      ${boxHtml}
+    </div>`;
+  modal.onclick = (e) => { if (e.target === modal) modal.remove(); };
+  document.body.appendChild(modal);
+}
+
+// ==================== 赛季统一结果页 ====================
+function showSeasonResults() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC13",label:"查看赛季总结"});
+  // 安全检查：防止赛季未初始化时访问异常
+  if (!STATE.season || !STATE.season.playerStats) {
+    showScreen('screen-menu');
+    return;
+  }
+  showScreen('screen-results');
+  const ps = STATE.season.playerStats;
+  const gp = Math.max((ps?.games) || 0, 1);
+  const avg = {
+    pts: Math.round(ps.pts / gp * 10) / 10,
+    reb: Math.round(ps.reb / gp * 10) / 10,
+    ast: Math.round(ps.ast / gp * 10) / 10,
+    stl: Math.round(ps.stl / gp),
+    blk: Math.round(ps.blk / gp),
+    tov: Math.round(ps.tov / gp * 10) / 10,
+    fgm: Math.round(ps.fgm / gp * 10) / 10,
+    fga: Math.round(ps.fga / gp * 10) / 10,
+    ftm: Math.round(ps.ftm / gp * 10) / 10,
+    fta: Math.round(ps.fta / gp * 10) / 10,
+    threeM: Math.round(ps.threeM / gp * 10) / 10,
+    threeA: Math.round(ps.threeA / gp * 10) / 10,
+    mins: Math.round(ps.mins / gp),
+  };
+  const pct = avg.fga > 0 ? (avg.fgm / avg.fga * 100).toFixed(1) : '—';
+  const threePct = avg.threeA > 0 ? (avg.threeM / avg.threeA * 100).toFixed(1) : '—';
+  const ftPct = avg.fta > 0 ? (avg.ftm / avg.fta * 100).toFixed(1) : '—';
+  const ovrGrade = getOvrGrade(STATE.finalOVR);
+
+  // 季后赛信息
+  const bracket = STATE.season.playoffBracket;
+  const seed = getConferenceSeed(STATE.careerTeam);
+  let playoffResult = '';
+  let playoffStatsHtml = '';
+  
+  if (STATE.season.isChampion) {
+    playoffResult = '🏆 总冠军';
+  } else if (bracket?.confChampion && bracket.confChampion === STATE.careerTeam) {
+    const lastR3 = bracket.results?.find(r => r.round === 3);
+    if (lastR3) {
+      const userWonF = lastR3.teamA === STATE.careerTeam ? lastR3.aWon : !lastR3.aWon;
+      playoffResult = userWonF ? '🏆 总冠军' : '🏀 总决赛 亚军';
+    } else {
+      playoffResult = '🏀 总决赛';
+    }
+  } else if (bracket?.confChampion) {
+    // 已进季后赛但未夺冠
+    const lastResult = bracket.results?.slice(-1)?.[0];
+    const roundNames = ['首轮', '分区半决赛', '分区决赛'];
+    if (lastResult) {
+      const rn = roundNames[lastResult.round] || '季后赛';
+      playoffResult = `🏀 ${rn} · ${STATE.season.playoffEliminated ? '淘汰' : lastResult.winner === STATE.careerTeam ? '晋级' : '淘汰'}`;
+    } else {
+      playoffResult = `🏀 第${seed}种子 · 季后赛`;
+    }
+  } else if (seed <= 10) {
+    const pi = STATE.season.playInState;
+    if (pi?.isEliminated) playoffResult = '🔥 附加赛 · 淘汰';
+    else if (pi?.playoffSeed) playoffResult = `🔥 附加赛晋级（${pi.playoffSeed}号种子）`;
+    else playoffResult = '🔥 附加赛';
+  } else {
+    playoffResult = '😢 未进季后赛';
+  }
+  
+  // 季后赛数据（独立跟踪）
+  const po = STATE.season.playoffStats;
+  if (po.games > 0) {
+    const poG = po.games;
+    const poAvg = {
+      pts: Math.round(po.pts / poG * 10) / 10,
+      reb: Math.round(po.reb / poG * 10) / 10,
+      ast: Math.round(po.ast / poG * 10) / 10,
+      stl: Math.round(po.stl / poG),
+      blk: Math.round(po.blk / poG),
+      tov: Math.round(po.tov / poG * 10) / 10,
+      fgm: Math.round(po.fgm / poG * 10) / 10,
+      fga: Math.round(po.fga / poG * 10) / 10,
+      threeM: Math.round(po.threeM / poG * 10) / 10,
+      threeA: Math.round(po.threeA / poG * 10) / 10,
+      ftm: Math.round(po.ftm / poG * 10) / 10,
+      fta: Math.round(po.fta / poG * 10) / 10,
+    };
+    const poPct = poAvg.fga > 0 ? (poAvg.fgm / poAvg.fga * 100).toFixed(1) : '—';
+    const poThreePct = poAvg.threeA > 0 ? (poAvg.threeM / poAvg.threeA * 100).toFixed(1) : '—';
+    
+    playoffStatsHtml = `<div class="sr-section">
+      <div class="sr-section-title">🏀 季后赛数据 · ${poG}场</div>
+      <div class="sr-stats-grid">
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.pts}</span><span class="sr-stat-lbl">得分</span></div>
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.reb}</span><span class="sr-stat-lbl">篮板</span></div>
+        <div class="sr-stat"><spa
