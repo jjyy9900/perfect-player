@@ -1,0 +1,3904 @@
+layoffStatsHtml = `<div class="sr-section">
+      <div class="sr-section-title">🏀 季后赛数据 · ${poG}场</div>
+      <div class="sr-stats-grid">
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.pts}</span><span class="sr-stat-lbl">得分</span></div>
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.reb}</span><span class="sr-stat-lbl">篮板</span></div>
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.ast}</span><span class="sr-stat-lbl">助攻</span></div>
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.stl}</span><span class="sr-stat-lbl">抢断</span></div>
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.blk}</span><span class="sr-stat-lbl">盖帽</span></div>
+        <div class="sr-stat"><span class="sr-stat-val">${poAvg.tov}</span><span class="sr-stat-lbl">失误</span></div>
+      </div>
+      <div class="sr-pct-line">投篮 ${poAvg.fgm}-${poAvg.fga} (${poPct}%) · 三分 ${poAvg.threeM}-${poAvg.threeA} (${poThreePct}%)</div>
+    </div>`;
+  }
+  
+  // 属性HTML (字母评级)
+  let attrsHtml = '';
+  ATTR_KEYS.forEach(k => {
+    const val = STATE.attrs[k] || 50;
+    const g = getGrade(val);
+    attrsHtml += `<div class="mc-attr">
+      <span class="mc-alabel">${attrCN(k)}</span>
+      <span class="mc-aval" style="color:${g.color}">${g.letter}</span>
+    </div>`;
+  });
+  
+  // 构建页面
+  const hasPlayoffs = bracket && bracket.results?.length > 0;
+  
+  html('results-content').innerHTML = `
+    <div class="sr-page">
+      <!-- 头部 -->
+      <div class="sr-header">
+        <div class="sr-team">${getTeamName(STATE.careerTeam)}</div>
+        <div class="sr-record">${STATE.season.wins}-${STATE.season.losses}</div>
+        <div class="sr-result">${playoffResult === '🔥 附加赛' ? '' : playoffResult}</div>
+      </div>
+
+      <!-- 基础信息 -->
+      <div class="sr-section">
+        <div class="sr-section-title">👤 我的球员信息</div>
+        <div class="sr-info-row">
+          <span>位置</span><span>${SIM_CONFIG.POSITIONS[STATE.position]}</span>
+        </div>
+        <div class="sr-info-row">
+          <span>总评</span><span class="sr-ovr">${STATE.finalOVR}</span>
+        </div>
+        <div class="sr-info-row">
+          <span>球队</span><span>${getTeamLogo(STATE.careerTeam, 20)} ${getTeamName(STATE.careerTeam)}</span>
+        </div>
+      </div>
+
+      <!-- 常规赛数据 -->
+      <div class="sr-section">
+        <div class="sr-section-title">📊 常规赛 · ${gp}场</div>
+        <div class="sr-stats-grid">
+          <div class="sr-stat"><span class="sr-stat-val">${avg.pts}</span><span class="sr-stat-lbl">得分</span></div>
+          <div class="sr-stat"><span class="sr-stat-val">${avg.reb}</span><span class="sr-stat-lbl">篮板</span></div>
+          <div class="sr-stat"><span class="sr-stat-val">${avg.ast}</span><span class="sr-stat-lbl">助攻</span></div>
+          <div class="sr-stat"><span class="sr-stat-val">${avg.stl}</span><span class="sr-stat-lbl">抢断</span></div>
+          <div class="sr-stat"><span class="sr-stat-val">${avg.blk}</span><span class="sr-stat-lbl">盖帽</span></div>
+          <div class="sr-stat"><span class="sr-stat-val">${avg.tov}</span><span class="sr-stat-lbl">失误</span></div>
+        </div>
+        <div class="sr-pct-line">投篮 ${avg.fgm}-${avg.fga} (${pct}%) · 三分 ${avg.threeM}-${avg.threeA} (${threePct}%) · 罚球 ${avg.ftm}-${avg.fta} (${ftPct}%)</div>
+      </div>
+
+      ${playoffStatsHtml}
+
+      <!-- 最终属性 -->
+      <div class="sr-section">
+        <div class="sr-section-title">🏷️ 最终属性</div>
+        <div class="mc-attrs">${attrsHtml}</div>
+      </div>
+
+      <!-- 按钮 -->
+      <div class="sr-actions">
+        <button class="btn btn-primary" onclick="showMyCard()" style="display:flex;align-items:center;justify-content:center;gap:4px;">📊 生涯数据 · 进入休赛期</button>
+      </div>
+    </div>
+  `;
+}
+
+// ==================== My Card（实时数据面板）====================
+function showMyCard() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC8",label:"我的数据"});
+  showScreen('screen-mycard');
+  const isFinal = !STATE.season.schedule?.find(g => !g.simulated);
+  renderMyCard(isFinal);
+}
+
+function renderMyCard(isFinal) {
+  const ps = STATE.season.playerStats;
+  const gp = ps.games || 1;
+  const avg = {
+    pts: Math.round(ps.pts / gp * 10) / 10,
+    reb: Math.round(ps.reb / gp * 10) / 10,
+    ast: Math.round(ps.ast / gp * 10) / 10,
+    stl: Math.round(ps.stl / gp),
+    blk: Math.round(ps.blk / gp),
+    tov: Math.round(ps.tov / gp * 10) / 10,
+    fgm: Math.round(ps.fgm / gp * 10) / 10,
+    fga: Math.round(ps.fga / gp * 10) / 10,
+    ftm: Math.round(ps.ftm / gp * 10) / 10,
+    fta: Math.round(ps.fta / gp * 10) / 10,
+    threeM: Math.round(ps.threeM / gp * 10) / 10,
+    threeA: Math.round(ps.threeA / gp * 10) / 10,
+    mins: Math.round(ps.mins / gp),
+  };
+  const awards = STATE.season.awards || [];
+  const ovrGrade = getOvrGrade(STATE.finalOVR);
+  
+  const pct = avg.fga > 0 ? (avg.fgm / avg.fga * 100).toFixed(1) : '—';
+  const threePct = avg.threeA > 0 ? (avg.threeM / avg.threeA * 100).toFixed(1) : '—';
+  const ftPct = avg.fta > 0 ? (avg.ftm / avg.fta * 100).toFixed(1) : '—';
+  const gamesPlayed = STATE.season.schedule?.filter(g => g.simulated).length || 0;
+  
+  // 属性紧凑网格
+  let attrHtml = '';
+  ATTR_KEYS.forEach(k => {
+    const val = STATE.attrs[k] || 50;
+    const g = getGrade(val);
+    attrHtml += `<div class="mc-attr">
+      <span class="mc-alabel">${attrCN(k)}</span>
+      <span class="mc-aval" style="color:${g.color}">${g.letter}</span>
+    </div>`;
+  });
+  
+  let awardsHtml = '';
+  awards.forEach(a => {
+    if (typeof a === 'object' && !a.isUser) return;
+    var l = a.label || (typeof a === 'string' ? a : '');
+    if (!l) return;
+    if (STATE.career && STATE.career.seasonCount > 0 && l.indexOf('最佳新秀') >= 0) return;
+    var emoji = '🏅';
+    if (l.indexOf('总冠军') >= 0) emoji = '🏆';
+    else if (l.indexOf('MVP') >= 0 || l.indexOf('FMVP') >= 0) emoji = '👑';
+    else if (l.indexOf('DPOY') >= 0) emoji = '🔒';
+    else if (l.indexOf('全明星') >= 0) emoji = '⭐';
+    else if (l.indexOf('最佳阵容') >= 0) emoji = '🌟';
+    else if (l.indexOf('最佳新秀') >= 0) emoji = '🌱';
+    var cls = 'ch-badge';
+    if (l.indexOf('总冠军') >= 0 || l.indexOf('MVP') >= 0 || l.indexOf('FMVP') >= 0) cls += ' gold';
+    awardsHtml += renderHonorBadge(l, emoji, cls);
+  });
+  
+  let playoffInfo = '';
+  if (isFinal) {
+    const seed = getConferenceSeed(STATE.careerTeam);
+    function hasSeasonAward(key) {
+      return (STATE.season.awards || []).some(function(a) {
+        var l = typeof a === 'string' ? a : (a && a.label) || '';
+        return l.indexOf(key) >= 0;
+      });
+    }
+    if (hasSeasonAward('总冠军')) {
+      playoffInfo = '<div class="mc-chip mc-chip-gold">🏆 总冠军</div>';
+    } else if (hasSeasonAward('总决赛MVP')) {
+      playoffInfo = '<div class="mc-chip mc-chip-gold">👑 总决赛MVP</div>';
+    } else {
+      const pi = STATE.season.playInState;
+      const bracket = STATE.season.playoffBracket;
+      const lastResult = bracket?.results?.slice(-1)?.[0];
+      const roundNames = ['首轮', '分区半决赛', '分区决赛', '总决赛'];
+      const playoffSeed = STATE.season.playoffSeed || (seed <= 6 ? seed : null);
+      
+      if (seed <= 6) {
+        // 直接晋级季后赛
+        if (lastResult) {
+          const rn = roundNames[lastResult.round] || '季后赛';
+          const isFinals = lastResult.round === 3;
+          if (isFinals) {
+            playoffInfo = `<div class="mc-chip mc-chip-gold">🏆 总决赛</div>`;
+          } else {
+            const userWon = lastResult.teamA === STATE.careerTeam ? lastResult.aWon : !lastResult.aWon;
+            playoffInfo = `<div class="mc-chip">🏀 ${rn} · ${userWon ? '晋级' : '淘汰'}</div>`;
+          }
+        } else {
+          playoffInfo = `<div class="mc-chip">🏀 季后赛（${playoffSeed}号种子）</div>`;
+        }
+      } else if (seed <= 10) {
+        // 附加赛
+        if (pi?.isEliminated) {
+          playoffInfo = '<div class="mc-chip" style="color:var(--text-dim);">🔥 附加赛 · 淘汰</div>';
+        } else if (pi?.playoffSeed) {
+          playoffInfo = `<div class="mc-chip" style="color:var(--gold);">🔥 附加赛晋级 · ${pi.playoffSeed}号种子</div>`;
+        } else {
+          playoffInfo = '<div class="mc-chip" style="color:var(--accent);">🔥 附加赛</div>';
+        }
+      } else {
+        playoffInfo = '<div class="mc-chip" style="color:var(--text-dim);">😢 未进季后赛</div>';
+      }
+    }
+  }
+  
+  const retired = !!(STATE.career && STATE.career.retired);
+  const btnHtml = isFinal ? (retired ? `
+    <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px;">
+      <button class="btn btn-primary" onclick="showCareerStats(1)" style="display:flex;align-items:center;justify-content:center;gap:4px;">🏆 查看退役总结</button>
+      <div style="text-align:center;font-size:11px;color:var(--text-dim);">生涯已结束</div>
+    </div>` : `
+    <div style="display:flex;flex-direction:column;gap:6px;padding-top:4px;">
+      <button class="btn btn-primary" onclick="showCareerStats()" style="display:flex;align-items:center;justify-content:center;gap:4px;">📊 生涯数据</button>
+      <button class="btn btn-gold" onclick="beginOffseason()" style="display:flex;align-items:center;justify-content:center;gap:4px;">🏋️ 进入休赛期</button>
+    </div>`) : `
+    <div style="display:flex;gap:8px;">
+      <button class="btn btn-primary" onclick="backToSeason()" style="flex:1;">◀ 关闭</button>
+    </div>`;
+  
+  html('mycard-content').innerHTML = `
+    <div class="mycard">
+      <div class="mc-header">
+        <div class="mc-pos">${SIM_CONFIG.POSITIONS[STATE.position]}</div>
+        <div class="mc-name">${getHupuDisplayName()}</div>
+        <div class="mc-ovr-row">
+          <span class="mc-ovr">${STATE.finalOVR}</span>
+
+        </div>
+        <div class="mc-team-line">${getTeamName(STATE.careerTeam)} · ${STATE.season.wins}-${STATE.season.losses}</div>
+        ${playoffInfo}
+      </div>
+      
+      <div class="mc-section">
+        <div class="mc-section-title">📊 场均数据 · 已赛 ${gamesPlayed}${isFinal ? '' : '/82'} 场</div>
+        <div class="mc-stats-grid">
+          <div class="mc-stat"><span class="mc-stat-val">${avg.pts}</span><span class="mc-stat-lbl">得分</span></div>
+          <div class="mc-stat"><span class="mc-stat-val">${avg.reb}</span><span class="mc-stat-lbl">篮板</span></div>
+          <div class="mc-stat"><span class="mc-stat-val">${avg.ast}</span><span class="mc-stat-lbl">助攻</span></div>
+          <div class="mc-stat"><span class="mc-stat-val">${avg.stl}</span><span class="mc-stat-lbl">抢断</span></div>
+          <div class="mc-stat"><span class="mc-stat-val">${avg.blk}</span><span class="mc-stat-lbl">盖帽</span></div>
+          <div class="mc-stat"><span class="mc-stat-val">${avg.tov}</span><span class="mc-stat-lbl">失误</span></div>
+        </div>
+        <div class="mc-pct-line">投篮 ${avg.fgm}-${avg.fga} (${pct}%) · 三分 ${avg.threeM}-${avg.threeA} (${threePct}%) · 罚球 ${avg.ftm}-${avg.fta} (${ftPct}%)</div>
+      </div>
+      
+      <div class="mc-section">
+        <div class="mc-section-title">🏷️ 最终属性</div>
+        <div class="mc-attrs">${attrHtml}</div>
+      </div>
+      
+      ${awardsHtml ? `<div class="mc-section"><div class="mc-awards">${awardsHtml}</div></div>` : ''}
+      
+      <div style="padding:4px 16px 16px;">${btnHtml}</div>
+    </div>
+  `;
+}
+
+// ==================== 生涯数据页面 ====================
+function showCareerStats(tab) {
+  showScreen('screen-career-stats');
+  saveCurrentSeasonToCareer();
+  var c = STATE.career;
+  tab = tab || 0;
+  var subText = tab === 0 ? (getCurrentSeasonLabel() + ' · ' + STATE.finalPosition + ' · OVR ' + STATE.finalOVR) : (tab === 1 ? ('生涯共 ' + c.honors.length + ' 项荣誉') : ('休赛期纪事 ' + ((c.offseasonHistory || []).length) + ' 条'));
+  document.getElementById('career-stats-sub').textContent = subText;
+
+  var html = '';
+  // Tabs
+  html += '<div class="modal-tabs" style="margin:0 0 10px;">';
+  html += '<button class="' + (tab === 0 ? 'active' : '') + '" onclick="showCareerStats(0)">📊 生涯数据</button>';
+  html += '<button class="' + (tab === 1 ? 'active' : '') + '" onclick="showCareerStats(1)">🏆 荣誉墙</button>';
+  html += '<button class="' + (tab === 2 ? 'active' : '') + '" onclick="showCareerStats(2)">📖 休赛期</button>';
+  html += '</div>';
+
+  if (tab === 0) {
+    html += renderCareerStatsTab();
+  } else if (tab === 1) {
+    html += renderCareerHonorsTab();
+  } else {
+    html += renderOffseasonHistoryTab();
+  }
+
+  html += '<div style="display:flex;flex-direction:column;gap:6px;align-items:center;margin-top:6px;">';
+  if (STATE.career && STATE.career.retired) {
+    html += '<div style="text-align:center;font-size:12px;color:var(--text-dim);padding:4px 0;">🏁 生涯已结束，感谢你带来的每一个赛季</div>';
+    html += '<div style="display:flex;gap:8px;justify-content:center;flex-wrap:wrap;">';
+    if (!(STATE.career.flags && STATE.career.flags.postCareerDone)) {
+      html += '<button class="btn btn-primary btn-sm" onclick="startPostCareerFlow()">🏁 继续退役后篇章</button>';
+    }
+    html += '<button class="btn btn-secondary btn-sm" onclick="exitToHomepage()">🚪 回到主页</button>';
+    html += '</div>';
+  } else {
+    html += '<button class="btn btn-primary btn-sm" onclick="showScreen(\'screen-mycard\')">📋 返回休赛期面板</button>';
+  }
+  html += '</div>';
+
+  document.getElementById('career-stats-content').innerHTML = html;
+}
+
+function exitToHomepage() {
+  initGame();
+}
+
+function renderCareerStatsTab() {
+  var c = STATE.career;
+  var ps = c.totalStats;
+  var gp = ps.games || 1;
+  var avg = {
+    pts: Math.round(ps.pts / gp * 10) / 10,
+    reb: Math.round(ps.reb / gp * 10) / 10,
+    ast: Math.round(ps.ast / gp * 10) / 10,
+    stl: Math.round(ps.stl / gp),
+    blk: Math.round(ps.blk / gp),
+    tov: Math.round(ps.tov / gp * 10) / 10,
+    fgm: Math.round(ps.fgm / gp * 10) / 10,
+    fga: Math.round(ps.fga / gp * 10) / 10,
+    ftm: Math.round(ps.ftm / gp * 10) / 10,
+    fta: Math.round(ps.fta / gp * 10) / 10,
+    threeM: Math.round(ps.threeM / gp * 10) / 10,
+    threeA: Math.round(ps.threeA / gp * 10) / 10,
+  };
+  var pct = avg.fga > 0 ? (avg.fgm / avg.fga * 100).toFixed(1) : '—';
+  var threePct = avg.threeA > 0 ? (avg.threeM / avg.threeA * 100).toFixed(1) : '—';
+  var ftPct = avg.fta > 0 ? (avg.ftm / avg.fta * 100).toFixed(1) : '—';
+  var h = '';
+  h += '<div class="sr-section cs-section">';
+  h += '<div class="sr-section-title">📊 生涯累计</div>';
+  h += '<div class="cs-grid">';
+  var cStats = [
+    { val: ps.pts, lbl: '总得分' }, { val: ps.reb, lbl: '总篮板' }, { val: ps.ast, lbl: '总助攻' },
+    { val: Math.round(ps.stl), lbl: '总抢断' }, { val: Math.round(ps.blk), lbl: '总盖帽' }, { val: ps.games, lbl: '出场数' },
+  ];
+  cStats.forEach(function(s) {
+    h += '<div class="cs-stat"><div class="cs-stat-val">' + s.val + '</div><div class="cs-stat-lbl">' + s.lbl + '</div></div>';
+  });
+  h += '</div></div>';
+  h += '<div class="sr-section cs-section">';
+  h += '<div class="sr-section-title">📈 生涯场均</div>';
+  h += '<div class="cs-grid">';
+  var aStats = [
+    { val: avg.pts, lbl: '得分' }, { val: avg.reb, lbl: '篮板' }, { val: avg.ast, lbl: '助攻' },
+    { val: avg.stl, lbl: '抢断' }, { val: avg.blk, lbl: '盖帽' }, { val: avg.tov, lbl: '失误' },
+  ];
+  aStats.forEach(function(s) {
+    h += '<div class="cs-stat"><div class="cs-stat-val">' + s.val + '</div><div class="cs-stat-lbl">' + s.lbl + '</div></div>';
+  });
+  h += '</div>';
+  h += '<div class="sr-pct-line">命中率 ' + avg.fgm + '-' + avg.fga + ' (' + pct + '%) · 三分 ' + avg.threeM + '-' + avg.threeA + ' (' + threePct + '%) · 罚球 ' + avg.ftm + '-' + avg.fta + ' (' + ftPct + '%)</div>';
+  h += '</div>';
+  h += '<div class="sr-section cs-section">';
+  h += '<div class="sr-section-title">📋 每赛季</div>';
+  if (c.seasons.length === 0) {
+    h += '<div style="text-align:center;padding:20px;color:var(--text-muted);font-size:13px;">暂无赛季数据</div>';
+  } else {
+    for (var i = c.seasons.length - 1; i >= 0; i--) {
+      var s = c.seasons[i];
+      var sp = s.playerStats || {};
+      var sg = sp.games || 1;
+      var sa = Math.round((sp.pts || 0) / sg * 10) / 10;
+      var tn = getTeamName ? getTeamName(s.team) : s.team;
+      var record = (s.wins || 0) + '-' + (s.losses || 0);
+      h += '<div class="cs-season-row" onclick="showSeasonDetail(' + i + ')">';
+      h += '<span class="cs-season-num">' + getSeasonLabel(s.seasonNum) + '</span>';
+      h += '<span class="cs-season-team">' + tn + '</span>';
+      h += '<span class="cs-season-record">' + record + '</span>';
+      h += '<span class="cs-season-pts">' + sa + '分</span>';
+      h += '<span class="cs-season-arrow">›</span>';
+      h += '</div>';
+    }
+  }
+  h += '</div>';
+  return h;
+}
+
+function isRookieHonorForLaterSeason(h) {
+  var label = (h && h.label) || '';
+  return label.indexOf('最佳新秀') >= 0 && (parseInt(h.seasonNum, 10) || 0) !== 1;
+}
+
+function renderHonorBadge(label, emoji, cls) {
+  label = label || '';
+  emoji = emoji || '';
+  var prefix = (emoji && label.indexOf(emoji) !== 0) ? emoji + ' ' : '';
+  return '<span class="' + (cls || '') + '">' + prefix + label + '</span>';
+}
+
+function renderCareerHonorsTab() {
+  var c = STATE.career;
+  var h = '';
+  if (c.seasons.length === 0) {
+    h += '<div class="ch-empty">🏀 还没有荣誉，快去打比赛吧</div>';
+  } else {
+    for (var i = c.seasons.length - 1; i >= 0; i--) {
+      var s = c.seasons[i];
+      var tn = getTeamName ? getTeamName(s.team) : s.team;
+      var seasHonors = c.honors.filter(function(hh) { return hh.seasonNum === s.seasonNum && !isRookieHonorForLaterSeason(hh); });
+      h += '<div class="ch-season">';
+      h += '<div class="ch-season-header">🏀 ' + getSeasonLabel(s.seasonNum) + ' <span class="ch-team">' + tn + '</span></div>';
+      if (seasHonors.length === 0) {
+        h += '<div style="font-size:12px;color:var(--text-muted);">暂无荣誉</div>';
+      } else {
+        seasHonors.forEach(function(hh) {
+          var cls = 'ch-badge';
+          if (hh.label.indexOf('总冠军') >= 0 || hh.label.indexOf('MVP') >= 0 || hh.label.indexOf('FMVP') >= 0) cls += ' gold';
+          h += renderHonorBadge(hh.label, hh.emoji, cls);
+        });
+      }
+      h += '</div>';
+    }
+  }
+  var counts = {};
+  c.honors.forEach(function(hh) {
+    if (isRookieHonorForLaterSeason(hh)) return;
+    counts[hh.label] = (counts[hh.label] || 0) + 1;
+  });
+  var sumParts = [];
+  for (var k in counts) {
+    sumParts.push(counts[k] + '×' + k);
+  }
+  if (sumParts.length > 0) {
+    h += '<div class="ch-summary">📊 生涯总计：' + sumParts.join(' · ') + '</div>';
+  }
+  return h;
+}
+
+function renderOffseasonHistoryTab() {
+  var c = STATE.career;
+  var list = (c.offseasonHistory || []).slice().reverse();
+  var h = '';
+  if (list.length === 0) {
+    h += '<div class="ch-empty">📖 还没有休赛期故事</div>';
+    return h;
+  }
+  h += '<div class="sr-section cs-section">';
+  h += '<div class="sr-section-title">📖 休赛期纪事</div>';
+  list.forEach(function(item) {
+    h += '<div class="ch-season">';
+    h += '<div class="ch-season-header">' + getSeasonLabel((item.seasonNum || 1) + 1) + ' 夏天 <span class="ch-team">' + (item.event || '') + '</span></div>';
+    h += '<div style="font-size:12px;color:var(--orange);font-weight:700;margin-bottom:5px;">选择：' + (item.choice || '') + '</div>';
+    h += '<div style="font-size:12px;color:var(--text-dim);line-height:1.6;">' + (item.result || '').replace(/<br><br>/g, '<br>') + '</div>';
+    h += '</div>';
+  });
+  h += '</div>';
+  return h;
+}
+
+function saveCurrentSeasonToCareer() {
+  var c = STATE.career;
+  if (!STATE.season || !STATE.season.playerStats) return;
+  if (STATE._careerSaved) return;
+  if (STATE.season.schedule && STATE.season.schedule.some(function(g) { return !g.simulated; })) return;
+  // 季后赛没打完不允许提前存赛季，否则总冠军荣誉会丢失或错位
+  if (STATE.season.isPlayoffs && !STATE.season.playoffsDone) return;
+
+  var sp = STATE.season.playerStats || {};
+  var awards = STATE.season.awards || [];
+  var honorList = [];
+  awards.forEach(function(a) {
+    if (typeof a === 'string') {
+      // 字符串类奖项：属于玩家
+      var l = a;
+      if (!l) return;
+      if (c.seasonCount > 0 && l.indexOf('最佳新秀') >= 0) return;
+      var emoji = '🏅';
+      if (l.indexOf('总冠军') >= 0) emoji = '🏆';
+      else if (l.indexOf('MVP') >= 0 || l.indexOf('FMVP') >= 0) emoji = '👑';
+      else if (l.indexOf('DPOY') >= 0) emoji = '🔒';
+      else if (l.indexOf('全明星') >= 0) emoji = '⭐';
+      else if (l.indexOf('最佳阵容') >= 0) emoji = '🌟';
+      else if (l.indexOf('最佳新秀') >= 0) emoji = '🌱';
+      honorList.push({ seasonNum: c.seasonCount + 1, label: l, emoji: emoji });
+    } else if (a.isUser) {
+      // 结构化奖项：只取 isUser 为 true 的
+      var l = a.label || '';
+      if (!l) return;
+      if (c.seasonCount > 0 && l.indexOf('最佳新秀') >= 0) return;
+      var emoji = '🏅';
+      if (l.indexOf('总冠军') >= 0) emoji = '🏆';
+      else if (l.indexOf('MVP') >= 0 || l.indexOf('FMVP') >= 0) emoji = '👑';
+      else if (l.indexOf('DPOY') >= 0) emoji = '🔒';
+      else if (l.indexOf('全明星') >= 0) emoji = '⭐';
+      else if (l.indexOf('最佳阵容') >= 0) emoji = '🌟';
+      else if (l.indexOf('最佳新秀') >= 0) emoji = '🌱';
+      honorList.push({ seasonNum: c.seasonCount + 1, label: l, emoji: emoji });
+    }
+  });
+
+  var playoffResult = '';
+  if (STATE.season.playoffBracket && STATE.season.playoffBracket.results) {
+    var myResults = STATE.season.playoffBracket.results.filter(function(r) { return r.isMySeries; });
+    if (myResults.length > 0) {
+      var last = myResults[myResults.length - 1];
+      var rn = ['首轮','分区半决赛','分区决赛','总决赛'][last.round] || '';
+      var userWon = last.teamA === STATE.careerTeam ? last.aWon : !last.aWon;
+      playoffResult = rn + (last.round === 3 && userWon ? '·总冠军' : '');
+    }
+  }
+
+  c.seasonCount++;
+  if (typeof updateSeasonBadge === 'function') updateSeasonBadge();
+  var seasonRecord = {
+    seasonNum: c.seasonCount, team: STATE.careerTeam, ovr: STATE.finalOVR,
+    wins: STATE.season.wins || 0, losses: STATE.season.losses || 0,
+    playerStats: JSON.parse(JSON.stringify(sp)),
+    playoffResult: playoffResult || (STATE.season.playoffBracket ? '季后赛' : '未晋级'),
+    awards: honorList,
+  };
+  c.seasons.push(seasonRecord);
+  c.lastCompletedSeasonSnapshot = JSON.parse(JSON.stringify(seasonRecord));
+
+  var ts = c.totalStats;
+  ['pts','reb','ast','stl','blk','tov','fgm','fga','ftm','fta','threeM','threeA','mins'].forEach(function(f) {
+    ts[f] = (ts[f] || 0) + (sp[f] || 0);
+  });
+  ts.games = (ts.games || 0) + (sp.games || 0);
+
+  var po = STATE.season.playoffStats || {};
+  var cpo = c.playoffStats;
+  ['pts','reb','ast','stl','blk','tov','fgm','fga','ftm','fta','threeM','threeA','mins'].forEach(function(f) {
+    cpo[f] = (cpo[f] || 0) + (po[f] || 0);
+  });
+  cpo.games = (cpo.games || 0) + (po.games || 0);
+
+  honorList.forEach(function(h) { c.honors.push(h); });
+  STATE._careerSaved = true;
+}
+
+function showSeasonDetail(idx) {
+  var s = STATE.career.seasons[idx];
+  if (!s) return;
+  var sp = s.playerStats || {};
+  var sg = sp.games || 1;
+  var avg = {
+    pts: Math.round((sp.pts || 0) / sg * 10) / 10,
+    reb: Math.round((sp.reb || 0) / sg * 10) / 10,
+    ast: Math.round((sp.ast || 0) / sg * 10) / 10,
+    stl: Math.round((sp.stl || 0) / sg),
+    blk: Math.round((sp.blk || 0) / sg),
+  };
+  var tn = getTeamName ? getTeamName(s.team) : s.team;
+  var record = (s.wins || 0) + '-' + (s.losses || 0);
+  var awardsHtml = '';
+  if (s.awards && s.awards.length) {
+    s.awards.forEach(function(a) {
+      var label = (a && a.label) || a || '';
+      if ((parseInt(s.seasonNum, 10) || 0) !== 1 && label.indexOf('最佳新秀') >= 0) return;
+      awardsHtml += '<span class="ch-badge">' + label + '</span>';
+    });
+  }
+  var ovr = s.ovr || '—';
+
+  var html = '<div class="cs-season-detail-overlay" onclick="closeSeasonDetail(event)">';
+  html += '<div class="cs-season-detail-modal">';
+  html += '<div class="cs-detail-header"><span style="font-family:var(--font-display);font-size:16px;font-weight:700;">' + getSeasonLabel(s.seasonNum) + ' · ' + tn + '</span><button class="cs-detail-close" onclick="closeSeasonDetail()">✕</button></div>';
+  html += '<div class="cs-detail-body">';
+  html += '<div class="sr-info-row"><span>战绩</span><span>' + record + ' · OVR ' + ovr + '</span></div>';
+  html += '<div class="sr-info-row"><span>场均</span><span style="font-weight:600;">' + avg.pts + '分 ' + avg.reb + '板 ' + avg.ast + '助 ' + avg.stl + '断 ' + avg.blk + '帽</span></div>';
+  html += '<div style="margin:8px 0 4px;font-size:12px;color:var(--text-dim);">季后赛：' + (s.playoffResult || '未晋级') + '</div>';
+  if (awardsHtml) {
+    html += '<div style="margin-top:6px;">' + awardsHtml + '</div>';
+  }
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function closeSeasonDetail(e) {
+  if (e && e.target !== e.currentTarget) return;
+  var el = document.querySelector('.cs-season-detail-overlay');
+  if (el) el.remove();
+}
+
+// ==================== 荣誉墙 ====================
+function showCareerHonors() {
+  showScreen('screen-career-honors');
+  var c = STATE.career;
+  document.getElementById('career-honors-sub').textContent = '生涯共 ' + c.honors.length + ' 项荣誉 · ' + c.seasonCount + ' 个赛季';
+
+  var html = '';
+  if (c.seasons.length === 0) {
+    html += '<div class="ch-empty">🏀 还没有荣誉，快去打比赛吧</div>';
+  } else {
+    for (var i = c.seasons.length - 1; i >= 0; i--) {
+      var s = c.seasons[i];
+      var tn = getTeamName ? getTeamName(s.team) : s.team;
+      var seasHonors = c.honors.filter(function(h) { return h.seasonNum === s.seasonNum && !isRookieHonorForLaterSeason(h); });
+      html += '<div class="ch-season">';
+      html += '<div class="ch-season-header">🏀 ' + getSeasonLabel(s.seasonNum) + ' <span class="ch-team">' + tn + '</span></div>';
+      if (seasHonors.length === 0) {
+        html += '<div style="font-size:12px;color:var(--text-muted);">暂无荣誉</div>';
+      } else {
+        seasHonors.forEach(function(h) {
+          var cls = 'ch-badge';
+          if (h.label.indexOf('总冠军') >= 0 || h.label.indexOf('MVP') >= 0 || h.label.indexOf('FMVP') >= 0) cls += ' gold';
+          html += renderHonorBadge(h.label, h.emoji, cls);
+        });
+      }
+      html += '</div>';
+    }
+  }
+
+  var counts = {};
+  c.honors.forEach(function(h) {
+    if (isRookieHonorForLaterSeason(h)) return;
+    counts[h.label] = (counts[h.label] || 0) + 1;
+  });
+  var sumParts = [];
+  for (var k in counts) {
+    sumParts.push(counts[k] + '×' + k);
+  }
+  if (sumParts.length > 0) {
+    html += '<div class="ch-summary">📊 生涯总计：' + sumParts.join(' · ') + '</div>';
+  }
+
+  html += '<div style="display:flex;gap:8px;justify-content:center;margin-top:6px;">';
+  html += '<button class="btn btn-primary btn-sm" onclick="showCareerStats()">📊 生涯数据</button>';
+  html += '<button class="btn btn-secondary btn-sm" onclick="showScreen(\'screen-mycard\')">📋 My Card</button>';
+  html += '</div>';
+
+  document.getElementById('career-honors-content').innerHTML = html;
+}
+
+// ==================== 训练营 ====================
+function clampAttrVal(v) {
+  return Math.max(25, Math.min(99, Math.round(v)));
+}
+
+function addAttrDelta(key, delta) {
+  if (!ATTR_KEYS.includes(key)) return;
+  STATE.attrs[key] = clampAttrVal((STATE.attrs[key] || 50) + delta);
+}
+
+function applyAnnualAttributeDrift() {
+  var c = STATE.career;
+  if (!c) return [];
+  var seasonKey = c.seasonCount || 0;
+  if (c.annualChangeSeason === seasonKey) return c.lastAnnualChanges || [];
+  var age = c.currentAge || 22;
+  var changes = [];
+  var fastDecline = ['ATH', 'DNK', 'PDEF', 'BLK', 'IDEF', 'REB'];
+  var midDecline = ['FIN', 'STR'];
+  var slowTech = ['threePT', 'MID', 'HAN', 'PAS', 'CLU'];
+
+  function applyList(list, minDelta, maxDelta, label) {
+    list.forEach(function(k) {
+      var delta = minDelta + Math.floor(Math.random() * (maxDelta - minDelta + 1));
+      if (delta !== 0) {
+        addAttrDelta(k, delta);
+        changes.push((delta > 0 ? '+' : '') + delta + ' ' + attrCN(k) + (label ? '（' + label + '）' : ''));
+      }
+    });
+  }
+
+  if (age <= 25) {
+    applyList(slowTech.concat(['FIN', 'ATH']), 0, 1, '成长');
+  } else if (age <= 30) {
+    ATTR_KEYS.forEach(function(k) {
+      if (Math.random() < 0.3) {
+        var d = Math.random() < 0.45 ? 1 : -1;
+        addAttrDelta(k, d);
+        changes.push((d > 0 ? '+' : '') + d + ' ' + attrCN(k) + '（状态波动）');
+      }
+    });
+  } else if (age <= 33) {
+    applyList(fastDecline, -2, -1, '明显下滑');
+    applyList(slowTech, 0, 0, '技术维持');
+  } else if (age <= 36) {
+    applyList(fastDecline, -4, -3, '年龄下滑');
+    applyList(midDecline, -3, -2, '年龄影响');
+    applyList(slowTech, -3, -2, '技术衰减');
+  } else if (age <= 39) {
+    applyList(fastDecline, -6, -4, '老将下滑');
+    applyList(midDecline, -5, -3, '老将下滑');
+    applyList(slowTech, -5, -3, '老将下滑');
+  } else {
+    applyList(fastDecline, -8, -6, '生涯末期');
+    applyList(midDecline, -7, -5, '生涯末期');
+    applyList(slowTech, -6, -4, '生涯末期');
+  }
+
+  STATE.finalOVR = calcOVR(STATE.attrs);
+  c.annualChangeSeason = seasonKey;
+  c.lastAnnualChanges = changes;
+  return changes;
+}
+
+function beginOffseason() {
+  if (STATE.career && STATE.career.retired) {
+    showCareerStats(1);
+    return;
+  }
+  saveCurrentSeasonToCareer();
+  if (STATE.career && STATE.career.flags && (STATE.career.flags.countdownDone || STATE.career.flags.playOneMore)) {
+    showPlayerRetirementChoice();
+    return;
+  }
+  var cdNode = getBranchNode('retirement_countdown');
+  if (cdNode === 'final_show' || cdNode === 'final_pass' || cdNode === 'final_enjoy' || cdNode === 'final_hurt') {
+    startCountdownLegacyFlow();
+    return;
+  }
+  applyAnnualAttributeDrift();
+  var c = STATE.career;
+  c.flags = c.flags || {};
+  c.relationships = c.relationships || {};
+  c.branchHistory = c.branchHistory || [];
+  c.branches = c.branches || {};
+  var seasonKey = c.seasonCount || 0;
+  if (c.offseasonEventSeason === seasonKey) {
+    renderTrainingCamp();
+    return;
+  }
+  c.offseasonEventSeason = seasonKey;
+  STATE._offseasonQueue = buildBranchEventQueue('offseason');
+  STATE._offseasonEventIdx = 0;
+  showNextOffseasonEvent();
+}
+
+function buildOffseasonEventQueue() {
+  return buildBranchEventQueue('offseason');
+}
+
+function getBranchEventSource() {
+  return (typeof STAGED_BRANCH_EVENTS !== 'undefined') ? STAGED_BRANCH_EVENTS : BRANCH_EVENTS;
+}
+
+function getEventPhases(ev) {
+  return ev.phases || [ev.phase || 'offseason'];
+}
+
+var DAG_PENDING_WEIGHT_BOOST = 40;
+
+function isDagEventPending(ev) {
+  if (!ev || !ev.branch || typeof ev.requires !== 'function') return false;
+  var node = getBranchNode(ev.branch);
+  if (!node || node === 'start') return false;
+  try {
+    return !!ev.requires();
+  } catch(e) {
+    return false;
+  }
+}
+
+function getBranchEventWeight(ev) {
+  var base = ev.weight || 10;
+  return isDagEventPending(ev) ? base + DAG_PENDING_WEIGHT_BOOST : base;
+}
+
+function buildBranchEventQueue(phase, maxCount) {
+  var source = getBranchEventSource();
+  var pool = source.filter(function(ev) {
+    return getEventPhases(ev).indexOf(phase) >= 0 && (!ev.requires || ev.requires());
+  });
+  if (phase === 'offseason') {
+    return buildOffseasonBranchQueue(pool);
+  }
+  var queue = [];
+  while (pool.length && queue.length < (maxCount || 1)) {
+    var total = pool.reduce(function(sum, ev) { return sum + getBranchEventWeight(ev); }, 0);
+    var roll = Math.random() * total;
+    var pickedIdx = 0;
+    for (var i = 0; i < pool.length; i++) {
+      roll -= getBranchEventWeight(pool[i]);
+      if (roll <= 0) { pickedIdx = i; break; }
+    }
+    queue.push(pool.splice(pickedIdx, 1)[0]);
+  }
+  return queue;
+}
+
+var OFFSEASON_MAX_MAIN_EVENTS = 2;
+var OFFSEASON_MAX_TRAINING_EVENTS = 2;
+
+function pickBranchEvents(pool, preferOngoing, count) {
+  var picked = [];
+  var remaining = (pool || []).slice();
+  var usedBranches = {};
+  while (remaining.length && picked.length < (count || 1)) {
+    var candidates = remaining.filter(function(ev) { return !usedBranches[ev.branch]; });
+    if (!candidates.length) break;
+    var ev = pickBranchEvent(candidates, preferOngoing);
+    if (!ev) break;
+    picked.push(ev);
+    usedBranches[ev.branch] = true;
+    remaining.splice(remaining.indexOf(ev), 1);
+  }
+  return picked;
+}
+
+function buildOffseasonBranchQueue(pool) {
+  var mainPool = pool.filter(function(ev) { return (ev.slot || 'main') === 'main'; });
+  var trainingPool = pool.filter(function(ev) { return (ev.slot || 'main') === 'training'; });
+  var queue = [];
+  var relationshipForced = false;
+  var relationshipStepForced = false;
+  var countdownPool = mainPool.filter(function(ev) { return ev.branch === 'retirement_countdown'; });
+  if (countdownPool.length > 0) {
+    var forced = pickBranchEvent(countdownPool, true);
+    if (forced) queue.push(forced);
+  }
+  // 恋爱兜底：前两个夏天未触发，第三个夏天必触发
+  if (getBranchNode('relationship') === 'start' && (STATE.career.seasonCount || 0) >= 3) {
+    var firstDate = mainPool.filter(function(ev) { return ev.id === 'relationship_first_date'; })[0];
+    if (firstDate && (!firstDate.requires || firstDate.requires())) {
+      queue.push(firstDate);
+      relationshipForced = true;
+    }
+  }
+  // 恋爱线一旦开启，每年休赛期都强制推进一个下个节点
+  if (getBranchNode('relationship') !== 'start') {
+    var relPool = mainPool.filter(function(ev) {
+      return ev.branch === 'relationship' && (!ev.requires || ev.requires());
+    });
+    if (relPool.length > 0) {
+      var relStep = pickBranchEvent(relPool, true);
+      if (relStep) {
+        queue.push(relStep);
+        relationshipStepForced = true;
+      }
+    }
+  }
+  // 揽佬《中国人能飞》支线：一旦开启，每年夏天强制推进下一节点
+  var crossoverStepForced = false;
+  if (getBranchNode('crossover') !== 'start') {
+    var crPool = mainPool.filter(function(ev) {
+      return ev.branch === 'crossover' && (!ev.requires || ev.requires());
+    });
+    if (crPool.length > 0) {
+      var crStep = pickBranchEvent(crPool, true);
+      if (crStep) {
+        queue.push(crStep);
+        crossoverStepForced = true;
+      }
+    }
+  }
+  var forcedMainCount = (relationshipForced ? 1 : 0) + (relationshipStepForced ? 1 : 0) + (crossoverStepForced ? 1 : 0);
+  var restMain = mainPool.filter(function(ev) {
+    if (ev.branch === 'retirement_countdown') return false;
+    if (relationshipForced && ev.id === 'relationship_first_date') return false;
+    if (relationshipStepForced && ev.branch === 'relationship') return false;
+    if (crossoverStepForced && ev.branch === 'crossover') return false;
+    return true;
+  });
+  return queue
+    .concat(pickBranchEvents(restMain, false, Math.max(0, OFFSEASON_MAX_MAIN_EVENTS - forcedMainCount)))
+    .concat(pickBranchEvents(trainingPool, false, OFFSEASON_MAX_TRAINING_EVENTS));
+}
+
+function pickBranchEvent(pool, preferOngoing) {
+  if (!pool || pool.length === 0) return null;
+  var candidates = pool;
+  if (preferOngoing) {
+    var ongoing = pool.filter(function(ev) { return isBranchOngoing(ev.branch); });
+    if (ongoing.length > 0) candidates = ongoing;
+  }
+  var total = candidates.reduce(function(sum, ev) { return sum + getBranchEventWeight(ev); }, 0);
+  var roll = Math.random() * total;
+  for (var i = 0; i < candidates.length; i++) {
+    roll -= getBranchEventWeight(candidates[i]);
+    if (roll <= 0) return candidates[i];
+  }
+  return candidates[candidates.length - 1];
+}
+
+function getBranchState(branchId) {
+  var c = STATE.career;
+  c.branches = c.branches || {};
+  if (!c.branches[branchId]) c.branches[branchId] = { stage: 0, points: 0 };
+  var b = c.branches[branchId];
+  if (branchId === 'relationship' && !b.node && (b.stage || 0) > 0) {
+    if (b.stage === 1) b.node = b.status === 'declined' ? 'declined' : 'dating';
+    else if (b.stage === 2) b.node = b.status === 'volatile' ? 'volatile' : 'stable';
+    else if (b.stage === 3) b.node = b.status === 'crisis' ? 'crisis' : (b.status === 'public' ? 'public' : 'private');
+  }
+  if (branchId === 'family' && !b.node && (b.stage || 0) > 0) {
+    b.node = b.status === 'delayed' ? 'career_priority' : 'family_plan';
+  }
+  if (branchId === 'china_market' && !b.node && (b.stage || 0) > 0) {
+    b.node = b.status === 'grassroots' ? 'market_grassroots' : 'market_tour';
+  }
+  if (branchId === 'network' && !b.node && (b.stage || 0) > 0) {
+    if (b.stage === 1) b.node = b.status === 'training' ? 'training_focus' : 'golf_meet';
+    else if (b.stage === 2) b.node = b.status === 'private_circle' ? 'private_circle' : 'career_map_meeting';
+    else if (b.stage === 3) b.node = b.identity === 'training_resource' ? 'training_resource' : 'business_circle';
+  }
+  if (branchId === 'rich_paul' && !b.node && (b.stage || 0) > 0) {
+    b.node = b.status === 'stable_team' ? 'rich_paul_stable' : 'rich_paul_mapped';
+  }
+  if (branchId === 'team_practice' && !b.node && (b.stage || 0) > 0) {
+    if (b.stage === 1) b.node = 'practice_start';
+    else if (b.stage === 2) b.node = 'practice_response';
+    else if (b.stage === 3) b.node = 'practice_identity';
+  }
+  if (branchId === 'teammate_bond' && !b.node && (b.stage || 0) > 0) {
+    b.node = b.status === 'protected' ? 'bond_protected' : 'bond_extra';
+  }
+  if (branchId === 'mentor' && !b.node && (b.stage || 0) > 0) {
+    var tb = getBranchState('training');
+    if (!tb.node || tb.node === 'start') tb.node = b.stage === 1 ? 'mentor_first' : (b.stage === 2 ? 'mentor_deep' : 'training_identity');
+  }
+  if (branchId === 'skill_training' && !b.node && (b.stage || 0) > 0) {
+    var tb2 = getBranchState('training');
+    if (!tb2.node || tb2.node === 'start') tb2.node = b.stage === 1 ? 'skill_first' : (b.stage === 2 ? 'skill_deep' : 'training_identity');
+  }
+  return b;
+}
+
+function getCareerProfile() {
+  var c = STATE.career;
+  c.profile = c.profile || {};
+  var defaults = { fame: 0, businessValue: 0, mediaTrust: 0, controversy: 0, chinaPopularity: 0, loyalty: 0, leadership: 0, coachTrust: 0, lockerRoomTrust: 0, fanSupport: 0, legacyBonus: 0 };
+  Object.keys(defaults).forEach(function(k) {
+    if (c.profile[k] == null) c.profile[k] = defaults[k];
+  });
+  return c.profile;
+}
+
+function addProfileDelta(key, delta) {
+  var p = getCareerProfile();
+  p[key] = Math.max(-20, Math.min(99, (p[key] || 0) + (delta || 0)));
+  return p[key];
+}
+
+function addSeasonMod(key, delta, minVal, maxVal) {
+  var mods = getNextSeasonMods();
+  if (mods[key] == null) mods[key] = 0;
+  var min = minVal == null ? -10 : minVal;
+  var max = maxVal == null ? 10 : maxVal;
+  mods[key] = Math.max(min, Math.min(max, mods[key] + (delta || 0)));
+  return mods[key];
+}
+
+function getBranchStage(branchId) {
+  return getBranchState(branchId).stage || 0;
+}
+
+function getBranchNode(branchId) {
+  var b = getBranchState(branchId);
+  return b.node || 'start';
+}
+
+function isBranchOngoing(branchId) {
+  if (!branchId || !STATE.career || !STATE.career.branches) return false;
+  var b = STATE.career.branches[branchId];
+  return !!(b && (b.stage > 0 || b.status || (b.node && b.node !== 'start')));
+}
+
+function bindBondedTeammate() {
+  if (!STATE.career || !STATE.careerTeam || !NBA2K_DATA) return null;
+  var roster = NBA2K_DATA[STATE.careerTeam] || [];
+  var candidates = roster.filter(function(p) { return p && !p._isUser; });
+  if (!candidates.length) return null;
+  var pick = candidates[Math.floor(Math.random() * candidates.length)];
+  STATE.career.flags = STATE.career.flags || {};
+  STATE.career.flags.bondedTeammate = {
+    name: pick.name,
+    cname: pick.cname || pick.name,
+    pos: pick.pos,
+    ovr: pick.ovr,
+    team: STATE.careerTeam,
+    sinceSeason: STATE.career.seasonCount
+  };
+  return STATE.career.flags.bondedTeammate;
+}
+
+function getBondedTeammateStatus() {
+  var t = STATE.career && STATE.career.flags && STATE.career.flags.bondedTeammate;
+  if (!t || !t.name) return null;
+  var found = null;
+  NBA2K_TEAMS.forEach(function(team) {
+    if (found) return;
+    (NBA2K_DATA[team] || []).forEach(function(p) {
+      if (p && p.name === t.name) found = team;
+    });
+  });
+  if (!found) return 'retired_released';
+  return found === STATE.careerTeam ? 'same_team' : 'traded';
+}
+
+function getBondedTeammateName() {
+  var t = STATE.career && STATE.career.flags && STATE.career.flags.bondedTeammate;
+  return (t && (t.cname || t.name)) || '那位队友';
+}
+
+function fillBranchEventText(str) {
+  var flags = STATE.career && STATE.career.flags ? STATE.career.flags : {};
+  var recruiter = flags.superstarRecruiterName || '那位巨星';
+  var recruitTeam = flags.superstarRecruitTargetTeam ? (getTeamName ? getTeamName(flags.superstarRecruitTargetTeam) : flags.superstarRecruitTargetTeam) : '他的球队';
+  return String(str || '')
+    .replace(/\{队友\}/g, getBondedTeammateName())
+    .replace(/\{招募者\}/g, recruiter)
+    .replace(/\{招募球队\}/g, recruitTeam)
+    .replace(/\{挑衅词\}/g, getViolenceInsultText());
+}
+
+function getSuperstarRecruitPool() {
+  return [
+    { aliases: ['卢卡·东契奇','卢卡-东契奇','Luka Dončić','Luka Doncic'], weight: 2 },
+    { aliases: ['扬尼斯·阿德托昆博','扬尼斯-阿德托昆博','Giannis Antetokounmpo'], weight: 2 },
+    { aliases: ['谢伊·吉尔杰斯-亚历山大','谢伊-吉尔杰斯-亚历山大','Shai Gilgeous-Alexander'], weight: 2 },
+    { aliases: ['杰森·塔图姆','杰森-塔图姆','Jayson Tatum'], weight: 1.6 },
+    { aliases: ['安东尼·爱德华兹','安东尼-爱德华兹','Anthony Edwards'], weight: 1.8 },
+    { aliases: ['维克托·文班亚马','维克托-文班亚马','Victor Wembanyama'], weight: 6 }
+  ];
+}
+
+function getSuperstarRecruitMatch(cn, en) {
+  var pool = getSuperstarRecruitPool();
+  for (var i = 0; i < pool.length; i++) {
+    var aliases = pool[i].aliases || [];
+    if (aliases.indexOf(cn) >= 0 || aliases.indexOf(en) >= 0) return pool[i];
+  }
+  return null;
+}
+
+function pickWeightedRecruitCandidate(candidates) {
+  var total = candidates.reduce(function(sum, c) {
+    var ovrBonus = 1 + Math.max(0, (c.ovr || 0) - 88) * 0.04;
+    return sum + (c.recruitWeight || 1) * ovrBonus;
+  }, 0);
+  if (total <= 0) return candidates[0] || null;
+  var roll = Math.random() * total;
+  for (var i = 0; i < candidates.length; i++) {
+    var weight = (candidates[i].recruitWeight || 1) * (1 + Math.max(0, (candidates[i].ovr || 0) - 88) * 0.04);
+    roll -= weight;
+    if (roll <= 0) return candidates[i];
+  }
+  return candidates[candidates.length - 1] || null;
+}
+
+function findRecruitingSuperstar() {
+  if (!NBA2K_TEAMS || !NBA2K_DATA) return null;
+  var candidates = [];
+  NBA2K_TEAMS.forEach(function(t) {
+    if (t === STATE.careerTeam) return;
+    var roster = NBA2K_DATA[t] || [];
+    roster.forEach(function(p) {
+      var cn = p.cname || p.name || '';
+      var en = p.name || '';
+      var match = getSuperstarRecruitMatch(cn, en);
+      if (!match) return;
+      var ovr = parseInt(p.ovr) || 0;
+      if (ovr < 88) return;
+      candidates.push({ name: cn, nameEN: p.name || '', team: t, ovr: ovr, recruitWeight: match.weight || 1 });
+    });
+  });
+  if (!candidates.length) return null;
+  return pickWeightedRecruitCandidate(candidates);
+}
+
+function prepareSuperstarRecruitment() {
+  var c = STATE.career;
+  if (!c) return null;
+  c.flags = c.flags || {};
+  if (c.flags.superstarRecruiterName && c.flags.superstarRecruitTargetTeam) {
+    return { name: c.flags.superstarRecruiterName, team: c.flags.superstarRecruitTargetTeam };
+  }
+  var star = findRecruitingSuperstar();
+  if (!star) return null;
+  c.flags.superstarRecruiterName = star.name;
+  c.flags.superstarRecruiterEN = star.nameEN || '';
+  c.flags.superstarRecruitTargetTeam = star.team;
+  return star;
+}
+
+function getRelationshipPartnerType() {
+  var p = STATE.career && STATE.career.relationships && STATE.career.relationships.partner;
+  return (p && p.type) || 'actress';
+}
+
+function isBranchChoiceLocked(ch) {
+  if (!ch || typeof ch.requires !== 'function') return false;
+  try { return !ch.requires(); } catch(e) { return true; }
+}
+
+function applyChoiceBonus(ch, msg) {
+  if (!ch || typeof ch.bonus !== 'function') return msg;
+  var bonus = null;
+  try { bonus = ch.bonus(); } catch(e) { return msg; }
+  if (bonus && bonus.text) msg = (msg || '') + '<br><br>强化：' + bonus.text;
+  return msg;
+}
+
+function getMentalPressure() {
+  if (!STATE.career) return 0;
+  var mods = getNextSeasonMods();
+  var profile = STATE.career.profile || {};
+  var rl = getBranchNode('relationship');
+  var fm = getBranchNode('family');
+  var md = getBranchNode('media');
+  var fc = getBranchNode('fan_culture');
+  var tp = getBranchNode('team_practice');
+  var score = 0;
+  score += (mods.mediaPressure || 0) * 1.5;
+  score += (profile.controversy || 0);
+  score += (mods.formVariance || 0) * 1.5;
+  score += (mods.injuryRiskBonus || 0);
+  if (rl === 'hurt_scar' || rl === 'hurt_guard' || rl === 'hurt_moved_on') score += 6;
+  if (fm === 'family_regret' || fm === 'family_pressure') score += 4;
+  if (md === 'persona_controversial') score += 4;
+  if (fc === 'fan_controversial') score += 4;
+  if (tp === 'practice_identity' && getBranchState('team_practice').identity === 'locker_room_leader') score += 2;
+  return score;
+}
+
+function isCityTransfer() {
+  var city = getBranchState('city_culture');
+  if (!city.team || !STATE.careerTeam) return false;
+  var node = getBranchNode('city_culture');
+  if (node === 'start') return false;
+  return city.team !== STATE.careerTeam;
+}
+
+function advanceBranch(branchId, delta, data) {
+  var b = getBranchState(branchId);
+  b.stage = Math.max(0, (b.stage || 0) + (delta || 1));
+  if (data) {
+    Object.keys(data).forEach(function(k) { b[k] = data[k]; });
+  }
+  return b;
+}
+
+function setBranchStage(branchId, stage, data) {
+  var b = getBranchState(branchId);
+  b.stage = Math.max(0, stage || 0);
+  if (data) {
+    Object.keys(data).forEach(function(k) { b[k] = data[k]; });
+  }
+  return b;
+}
+
+function setBranchNode(branchId, node, data) {
+  var b = getBranchState(branchId);
+  b.node = node || 'start';
+  if (data) {
+    Object.keys(data).forEach(function(k) { b[k] = data[k]; });
+  }
+  return b;
+}
+
+function recordBranchChoice(ev, ch, msg, phase) {
+  var c = STATE.career;
+  var playerMsg = sanitizePlayerFacingText(msg);
+  c.branchHistory = c.branchHistory || [];
+  c.branchHistory.push({
+    seasonNum: c.seasonCount,
+    phase: phase || ev.phase || 'offseason',
+    branch: ev.branch || ev.id,
+    eventId: ev.id,
+    event: getPlayerFacingBranchTitle(ev.title),
+    choice: ch.label,
+    result: playerMsg
+  });
+  if ((phase || ev.phase || 'offseason') === 'offseason') {
+    c.offseasonHistory = c.offseasonHistory || [];
+    c.offseasonHistory.push({ seasonNum: c.seasonCount, eventId: ev.id, event: getPlayerFacingBranchTitle(ev.title), choice: ch.label, result: playerMsg });
+  }
+}
+
+function checkSeasonBranchEvent(game, result, stats) {
+  if (!STATE.career || !STATE.season || STATE.season.isPlayoffs) return null;
+  var c = STATE.career;
+  c.branchHistory = c.branchHistory || [];
+  c.branchSeasonEvents = c.branchSeasonEvents || {};
+  var seasonKey = c.seasonCount || 0;
+  if (c.branchSeasonEvents._season !== seasonKey) {
+    c.branchSeasonEvents = { _season: seasonKey, _count: 0 };
+  }
+  // 退役倒计时：按赛程均等分布触发，赛季内独占
+  var gamesPlayed = (STATE.season.games || []).length;
+  var totalGames = (STATE.season.schedule || []).length;
+  var countdownActive = getBranchNode('retirement_countdown') !== 'start';
+  if (totalGames > 0 && gamesPlayed >= 1) {
+    var countdownSteps = [
+      { id: 'countdown_trigger', slot: 0 },
+      { id: 'countdown_reflect', slot: 1 },
+      { id: 'countdown_close', slot: 2 }
+    ];
+    var countdownPool = [];
+    countdownSteps.forEach(function(st) {
+      var ev = getBranchEventById(st.id);
+      if (!ev) return;
+      if (getEventPhases(ev).indexOf('season') < 0) return;
+      try {
+        if (ev.requires && !ev.requires({ game: game, result: result, stats: stats })) return;
+      } catch(e) { return; }
+      var target = 1 + Math.round((totalGames - 1) * (st.slot / 2));
+      if (gamesPlayed >= target) countdownPool.push(ev);
+    });
+    if (countdownPool.length > 0) {
+      var forced = pickBranchEvent(countdownPool, true);
+      if (forced) {
+        c._lastSeasonBranchGame = (STATE.season.games || []).length;
+        return forced;
+      }
+    }
+  }
+  // 倒计时赛季不弹其它赛季事件
+  if (countdownActive) return null;
+  // 读书回响：读书完成后 10-20 场，按强制节点推进一次
+  var readingFlags = STATE.career.flags || {};
+  if (readingFlags.readingDone && !readingFlags.readingEchoDone) {
+    var echoReady = (STATE.career.seasonCount || 0) > (readingFlags.readingDoneSeason || 0)
+      ? true
+      : gamesPlayed >= (readingFlags.readingEchoAt || 0);
+    if (echoReady) {
+      var readingEchoEv = getBranchEventById('reading_echo');
+      if (readingEchoEv) {
+        readingFlags.readingEchoDone = true;
+        c._lastSeasonBranchGame = (STATE.season.games || []).length;
+        return readingEchoEv;
+      }
+    }
+  }
+  // 轩尼诗广告回响：广告上线后的下赛季 10-20 场，按强制节点推进一次
+  var henFlags = STATE.career.flags || {};
+  if (henFlags.hennessyAd && !henFlags.hennessyEchoDone) {
+    var henCurrent = (STATE.career.seasonCount || 0) + 1;
+    var henReady = henCurrent > (henFlags.hennessyEchoSeason || 0)
+      || (henCurrent === (henFlags.hennessyEchoSeason || 0) && gamesPlayed >= (henFlags.hennessyEchoAt || 999));
+    if (henReady) {
+      var henEchoEv = getBranchEventById('brand_echo');
+      if (henEchoEv) {
+        henFlags.hennessyEchoDone = true;
+        henFlags.hennessyDone = true;
+        c._lastSeasonBranchGame = (STATE.season.games || []).length;
+        return henEchoEv;
+      }
+    }
+  }
+  var sinceLast = null;
+  if (c._lastSeasonBranchGame != null) {
+    sinceLast = (STATE.season.games || []).length - c._lastSeasonBranchGame;
+    if (sinceLast < 12) return null;
+  }
+  // 恋爱线一旦开启，每年赛季中都保证推进一次下个节点
+  var romanceStepPool = [];
+  if (!c.branchSeasonEvents.relationship && totalGames > 0) {
+    romanceStepPool = getBranchEventSource().filter(function(ev) {
+      if (ev.branch !== 'relationship') return false;
+      if (getEventPhases(ev).indexOf('season') < 0) return false;
+      return !ev.requires || ev.requires({ game: game, result: result, stats: stats });
+    });
+  }
+  if (romanceStepPool.length > 0) {
+    var romanceMinGame = Math.max(10, Math.round(totalGames * 0.25));
+    if (gamesPlayed >= romanceMinGame && (sinceLast == null || sinceLast >= 10)) {
+      var forcedRomance = pickBranchEvent(romanceStepPool, true);
+      if (forcedRomance) {
+        c._lastSeasonBranchGame = (STATE.season.games || []).length;
+        c.branchSeasonEvents.relationship = true;
+        c.branchSeasonEvents._count = (c.branchSeasonEvents._count || 0) + 1;
+        return forcedRomance;
+      }
+    }
+  }
+  if (Math.random() * 100 >= 5) return null;
+  var maxRandomEvents = romanceStepPool.length > 0 ? 1 : 2;
+  if ((c.branchSeasonEvents._count || 0) >= maxRandomEvents) return null;
+  var pool = getBranchEventSource().filter(function(ev) {
+    if (getEventPhases(ev).indexOf('season') < 0) return false;
+    if (c.branchSeasonEvents[ev.branch]) return false;
+    return !ev.requires || ev.requires({ game: game, result: result, stats: stats });
+  });
+  if (pool.length === 0) return null;
+  var picked = pickBranchEvent(pool, false);
+  if (!picked) return null;
+  c._lastSeasonBranchGame = (STATE.season.games || []).length;
+  c.branchSeasonEvents[picked.branch] = true;
+  c.branchSeasonEvents._count = (c.branchSeasonEvents._count || 0) + 1;
+  return picked;
+}
+
+function showSeasonBranchEvent(ev, done) {
+  if (!ev) return;
+  STATE._seasonBranchEvent = ev;
+  STATE._seasonBranchDone = typeof done === 'function' ? done : null;
+  STATE._seasonBranchScenePage = 0;
+  showSeasonBranchEventModal();
+}
+
+function showSeasonBranchEventModal() {
+  var ev = STATE._seasonBranchEvent;
+  if (!ev) return;
+  var existing = document.getElementById('season-branch-modal');
+  if (existing) existing.remove();
+  var scenes = ev.scenes || [];
+  var sceneIdx = STATE._seasonBranchScenePage || 0;
+  var title = getPlayerFacingBranchTitle(ev.title);
+  var html = '<div class="team-picker-overlay" id="season-branch-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + title + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  if (scenes.length && sceneIdx < scenes.length) {
+    html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">剧情</div>';
+    html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px;">' + fillBranchEventText(scenes[sceneIdx]) + '</div>';
+    html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="continueSeasonBranchScene()">继续</button>';
+    html += '</div></div></div>';
+    document.body.insertAdjacentHTML('beforeend', html);
+    return;
+  }
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">重点</div>';
+  html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.55;margin-bottom:12px;">' + sanitizePlayerFacingText(fillBranchEventText(ev.body)) + '</div>';
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">选择</div>';
+  ev.choices.forEach(function(ch, ci) {
+    var locked = isBranchChoiceLocked(ch);
+    var lockHint = locked ? (ch.lockHint || '需要其它线路结果') : '';
+    var btnStyle = 'width:100%;margin-bottom:8px;justify-content:flex-start;text-align:left;' + (locked ? 'opacity:.45;cursor:not-allowed;' : '');
+    var onclick = locked ? '' : 'onclick="chooseSeasonBranchEvent(' + ci + ')"';
+    html += '<button class="btn btn-secondary btn-sm" style="' + btnStyle + '" ' + onclick + (locked ? ' disabled' : '') + '>' + ch.label + '<span style="display:block;font-size:11px;font-family:var(--font-body);font-weight:400;opacity:.75;margin-left:4px;">' + sanitizePlayerFacingText(fillBranchEventText(locked ? lockHint : (ch.hint || ''))) + '</span></button>';
+  });
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function continueSeasonBranchScene() {
+  STATE._seasonBranchScenePage = (STATE._seasonBranchScenePage || 0) + 1;
+  showSeasonBranchEventModal();
+}
+
+function chooseSeasonBranchEvent(choiceIdx) {
+  var ev = STATE._seasonBranchEvent;
+  if (!ev) return;
+  var ch = ev.choices[choiceIdx];
+  if (!ch || isBranchChoiceLocked(ch)) return;
+  var msg = ch && ch.apply ? ch.apply() : '';
+  msg = applyChoiceBonus(ch, msg);
+  recordBranchChoice(ev, ch, msg, 'season');
+  if (ch._chain) {
+    _violenceChainDone = STATE._seasonBranchDone;
+    STATE._violenceChain = {
+      level: ch._chain.level || 1,
+      feudLevel: ch._chain.feudLevel || 0,
+      step: ch._chain.startStep || 'locker'
+    };
+  }
+  var modal = document.getElementById('season-branch-modal');
+  if (modal) modal.remove();
+  STATE._seasonBranchEvent = null;
+  STATE._seasonBranchScenePage = 0;
+  if (msg) showSeasonBranchResultModal(ev.title, msg);
+  else finishSeasonBranchEvent();
+}
+
+function showSeasonBranchResultModal(title, msg) {
+  var existing = document.getElementById('season-branch-result-modal');
+  if (existing) existing.remove();
+  var html = '<div class="team-picker-overlay" id="season-branch-result-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + getPlayerFacingBranchTitle(title) + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  html += formatBranchResultText(fillBranchEventText(msg));
+  html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="finishSeasonBranchEvent()">继续</button>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function finishSeasonBranchEvent() {
+  var modal = document.getElementById('season-branch-result-modal');
+  if (modal) modal.remove();
+  if (STATE._violenceChain) {
+    STATE._seasonBranchDone = null;
+    showViolenceChainStep();
+    return;
+  }
+  var done = STATE._seasonBranchDone;
+  STATE._seasonBranchDone = null;
+  if (typeof done === 'function') done();
+}
+
+function showNextOffseasonEvent() {
+  var queue = STATE._offseasonQueue || [];
+  var idx = STATE._offseasonEventIdx || 0;
+  if (idx >= queue.length) {
+    renderTrainingCamp();
+    return;
+  }
+  STATE._branchScenePage = 0;
+  showOffseasonEventModal(queue[idx], idx + 1, queue.length);
+}
+
+function showOffseasonEventModal(ev, idx, total) {
+  var existing = document.getElementById('offseason-event-modal');
+  if (existing) existing.remove();
+  var scenes = ev.scenes || [];
+  var sceneIdx = STATE._branchScenePage || 0;
+  var title = getPlayerFacingBranchTitle(ev.title);
+  var html = '<div class="team-picker-overlay" id="offseason-event-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + title + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  if (scenes.length && sceneIdx < scenes.length) {
+    html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">剧情</div>';
+    html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px;">' + fillBranchEventText(scenes[sceneIdx]) + '</div>';
+    html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="continueOffseasonScene()">继续</button>';
+    html += '</div></div></div>';
+    document.body.insertAdjacentHTML('beforeend', html);
+    return;
+  }
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">重点</div>';
+  html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.55;margin-bottom:12px;">' + sanitizePlayerFacingText(fillBranchEventText(ev.body)) + '</div>';
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">选择</div>';
+  ev.choices.forEach(function(ch, ci) {
+    var locked = isBranchChoiceLocked(ch);
+    var lockHint = locked ? (ch.lockHint || '需要其它线路结果') : '';
+    var btnStyle = 'width:100%;margin-bottom:8px;justify-content:flex-start;text-align:left;' + (locked ? 'opacity:.45;cursor:not-allowed;' : '');
+    var onclick = locked ? '' : 'onclick="chooseOffseasonEvent(' + ci + ')"';
+    html += '<button class="btn btn-secondary btn-sm" style="' + btnStyle + '" ' + onclick + (locked ? ' disabled' : '') + '>' + ch.label + '<span style="display:block;font-size:11px;font-family:var(--font-body);font-weight:400;opacity:.75;margin-left:4px;">' + sanitizePlayerFacingText(fillBranchEventText(locked ? lockHint : (ch.hint || ''))) + '</span></button>';
+  });
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function continueOffseasonScene() {
+  var queue = STATE._offseasonQueue || [];
+  var idx = STATE._offseasonEventIdx || 0;
+  var ev = queue[idx];
+  if (!ev) return;
+  STATE._branchScenePage = (STATE._branchScenePage || 0) + 1;
+  showOffseasonEventModal(ev, idx + 1, queue.length);
+}
+
+function chooseOffseasonEvent(choiceIdx) {
+  var queue = STATE._offseasonQueue || [];
+  var idx = STATE._offseasonEventIdx || 0;
+  var ev = queue[idx];
+  if (!ev) return;
+  var ch = ev.choices[choiceIdx];
+  if (!ch || isBranchChoiceLocked(ch)) return;
+  var msg = ch && ch.apply ? ch.apply() : '';
+  msg = applyChoiceBonus(ch, msg);
+  msg = fillBranchEventText(msg);
+  recordBranchChoice(ev, ch, msg, 'offseason');
+  var modal = document.getElementById('offseason-event-modal');
+  if (modal) modal.remove();
+  STATE._branchScenePage = 0;
+  STATE._offseasonEventIdx = idx + 1;
+  if (msg) showOffseasonResultModal(ev.title, msg);
+  else showNextOffseasonEvent();
+}
+
+function showOffseasonResultModal(title, msg, done) {
+  var existing = document.getElementById('offseason-result-modal');
+  if (existing) existing.remove();
+  STATE._offseasonResultDone = typeof done === 'function' ? done : null;
+  var html = '<div class="team-picker-overlay" id="offseason-result-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + getPlayerFacingBranchTitle(title) + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  html += formatBranchResultText(fillBranchEventText(msg));
+  html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="' + (STATE._offseasonResultDone ? 'continueOffseasonResultWithCallback()' : 'continueOffseasonEvent()') + '">继续</button>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function continueOffseasonResultWithCallback() {
+  var modal = document.getElementById('offseason-result-modal');
+  if (modal) modal.remove();
+  var done = STATE._offseasonResultDone;
+  STATE._offseasonResultDone = null;
+  if (typeof done === 'function') done();
+}
+
+function getPlayerFacingBranchTitle(title) {
+  return (title || '')
+    .replace(/^恋爱线：/, '恋爱：')
+    .replace(/^人脉线：/, '人脉：')
+    .replace(/^导师线：/, '巨星导师：')
+    .replace(/^专项线：/, '专项训练：')
+    .replace(/^球队线：/, '球队合练：');
+}
+
+function restoreBranchKeptSegment(seg) {
+  return (seg || '')
+    .replace(/恋爱线进入长期稳定，家庭线解锁。/g, '这段关系进入长期稳定，家人也真正走进你的生活。')
+    .replace(/恋爱线进入长期陪伴，家庭线解锁。/g, '这段关系进入长期陪伴，家人也真正走进你的生活。')
+    .replace(/恋爱线/g, '恋爱')
+    .replace(/人脉线/g, '人脉')
+    .replace(/导师线/g, '巨星导师')
+    .replace(/专项线/g, '专项训练')
+    .replace(/球队线/g, '球队合练')
+    .replace(/家庭线解锁。/g, '家人也真正走进你的生活。');
+}
+
+function sanitizePlayerFacingText(text) {
+  if (!text) return '';
+  var keptSegments = [];
+  var s = String(text);
+  // 重点/影响段落先整体保护，清理内部术语时不会误删玩家可见内容
+  s = s.replace(/(?:额外)?(?:重点|影响)：[\s\S]*?(?=<br><br>|$)/g, function(m) {
+    keptSegments.push(m);
+    return '\u0001' + (keptSegments.length - 1) + '\u0002';
+  });
+  s = s
+    .replace(/；中国男篮支线进入[^；。<]*/g, '')
+    .replace(/；恋爱线[^；。<]*/g, '')
+    .replace(/；人脉线[^；。<]*/g, '')
+    .replace(/；导师线[^；。<]*/g, '')
+    .replace(/；专项线[^；。<]*/g, '')
+    .replace(/；球队线[^；。<]*/g, '')
+    .replace(/；?获得“([^”]+)”(?:长期)?标签/g, '；人们开始用“$1”形容你')
+    .replace(/；?记录 Rich Paul 接触/g, '')
+    .replace(/；?记录库里圈子/g, '')
+    .replace(/；?未来可联动[^；。<]*/g, '')
+    .replace(/；?未来自由市场\/品牌线获得伏笔/g, '')
+    .replace(/；?下次将进入[^；。<]*/g, '')
+    .replace(/；?进入“[^”]+”阶段/g, '')
+    .replace(/；?进入二阶段/g, '')
+    .replace(/；?进入传承阶段/g, '')
+    .replace(/；线进入[^；。<]*/g, '')
+    .replace(/；线记录为[^；。<]*/g, '')
+    .replace(/；?导师线完成/g, '')
+    .replace(/；?专项线完成/g, '')
+    .replace(/；?队史分倾向提升/g, '')
+    .replace(/结果：恋爱线开启；/g, '结果：你开始了一段关系；')
+    .replace(/结果：恋爱线结束；/g, '结果：这段关系结束了；')
+    .replace(/开启恋爱线/g, '开始一段关系')
+    .replace(/开启人脉线/g, '进入这个圈子')
+    .replace(/开启领袖线/g, '承担更多队内责任')
+    .replace(/开启长期专项训练线/g, '投入一个长期训练方向')
+    .replace(/选择你希望留下的打法标签/g, '选择你希望稳定下来的打法方向')
+    .replace(/选择你希望形成的长期打法标签/g, '选择你希望稳定下来的打法方向')
+    .replace(/球队线收束。/g, '')
+    .replace(/导师线收束。/g, '')
+    .replace(/人脉线进入正式会面。/g, '')
+    .replace(/恋爱线进入公开节点。/g, '')
+    .replace(/专项线/g, '专项训练')
+    .replace(/导师线/g, '巨星导师')
+    .replace(/球队线/g, '球队合练')
+    .replace(/恋爱线/g, '恋爱')
+    .replace(/人脉线/g, '人脉')
+    .replace(/支线/g, '')
+    .replace(/标签/g, '印象')
+    .replace(/\s*flag\s+[A-Za-z0-9_\-/]+(?:\s*=\s*(?:true|false|'[^']*'|"[^"]*"))?/g, '')
+    .replace(/[（(]\s*[）)]/g, '')
+    .replace(/；[。]/g, '。')
+    .replace(/；\s*；/g, '；')
+    .replace(/：\s*；/g, '：')
+    .replace(/<br><br>\s*$/g, '')
+    .replace(/^[；。]\s*/g, '')
+    .replace(/\s+$/g, '');
+  return s.replace(/\u0001(\d+)\u0002/g, function(m, n) {
+    return restoreBranchKeptSegment(keptSegments[parseInt(n, 10)]);
+  });
+}
+
+function formatBranchResultText(msg) {
+  var clean = sanitizePlayerFacingText(msg);
+  var parts = clean.split('<br><br>');
+  var story = parts[0] || '';
+  var focus = '';
+  var effect = '';
+  for (var i = 1; i < parts.length; i++) {
+    var p = parts[i] || '';
+    if (/^(效果|结果|基础效果|额外效果|额外影响)：/.test(p)) {
+      effect = p.replace(/^(效果|结果|基础效果|额外效果|额外影响)：/, '');
+    } else if (!focus) {
+      focus = p.replace(/^重点：/, '');
+    } else {
+      effect += (effect ? '<br>' : '') + p;
+    }
+  }
+  effect = effect.replace(/^[；。，、\s]+|[；。，、\s]+$/g, '');
+  focus = focus.replace(/^[；。，、\s]+|[；。，、\s]+$/g, '');
+  var html = '';
+  if (story) {
+    html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">剧情</div>';
+    html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:12px;">' + story + '</div>';
+  }
+  if (focus) {
+    html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">重点</div>';
+    html += '<div style="font-size:13px;color:var(--text);line-height:1.6;margin-bottom:12px;">' + focus + '</div>';
+  }
+  if (effect) {
+    html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">影响</div>';
+    html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.6;margin-bottom:14px;">' + effect + '</div>';
+  }
+  return html || '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px;">' + clean + '</div>';
+}
+
+function continueOffseasonEvent() {
+  var modal = document.getElementById('offseason-result-modal');
+  if (modal) modal.remove();
+  STATE._offseasonResultDone = null;
+  if (STATE.career && STATE.career.flags && STATE.career.flags.countdownDone) {
+    announcePlayerRetirement(); // 放下球衣的那天：退役休赛期直接进入退役结算
+    return;
+  }
+  showNextOffseasonEvent();
+}
+
+function maybeShowCityFarewell(callback) {
+  if (!isCityTransfer()) return false;
+  var ev = getBranchEventById('city_farewell');
+  if (!ev) return false;
+  STATE._cityFarewellEv = ev;
+  STATE._cityFarewellDone = typeof callback === 'function' ? callback : null;
+  STATE._branchScenePage = 0;
+  showCityFarewellModal();
+  return true;
+}
+
+function showCityFarewellModal() {
+  var ev = STATE._cityFarewellEv;
+  if (!ev) return;
+  var existing = document.getElementById('city-farewell-modal');
+  if (existing) existing.remove();
+  var scenes = ev.scenes || [];
+  var sceneIdx = STATE._branchScenePage || 0;
+  var title = getPlayerFacingBranchTitle(ev.title);
+  var html = '<div class="team-picker-overlay" id="city-farewell-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + title + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  if (scenes.length && sceneIdx < scenes.length) {
+    html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">剧情</div>';
+    html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px;">' + fillBranchEventText(scenes[sceneIdx]) + '</div>';
+    html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="continueCityFarewellScene()">继续</button>';
+    html += '</div></div></div>';
+    document.body.insertAdjacentHTML('beforeend', html);
+    return;
+  }
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">重点</div>';
+  html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.55;margin-bottom:12px;">' + sanitizePlayerFacingText(fillBranchEventText(ev.body)) + '</div>';
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">选择</div>';
+  ev.choices.forEach(function(ch, ci) {
+    var locked = isBranchChoiceLocked(ch);
+    var lockHint = locked ? (ch.lockHint || '需要其它线路结果') : '';
+    var btnStyle = 'width:100%;margin-bottom:8px;justify-content:flex-start;text-align:left;' + (locked ? 'opacity:.45;cursor:not-allowed;' : '');
+    var onclick = locked ? '' : 'onclick="chooseCityFarewell(' + ci + ')"';
+    html += '<button class="btn btn-secondary btn-sm" style="' + btnStyle + '" ' + onclick + (locked ? ' disabled' : '') + '>' + ch.label + '<span style="display:block;font-size:11px;font-family:var(--font-body);font-weight:400;opacity:.75;margin-left:4px;">' + sanitizePlayerFacingText(fillBranchEventText(locked ? lockHint : (ch.hint || ''))) + '</span></button>';
+  });
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function continueCityFarewellScene() {
+  STATE._branchScenePage = (STATE._branchScenePage || 0) + 1;
+  showCityFarewellModal();
+}
+
+function chooseCityFarewell(choiceIdx) {
+  var ev = STATE._cityFarewellEv;
+  if (!ev) return;
+  var ch = ev.choices[choiceIdx];
+  if (!ch || isBranchChoiceLocked(ch)) return;
+  var msg = ch && ch.apply ? ch.apply() : '';
+  msg = applyChoiceBonus(ch, msg);
+  recordBranchChoice(ev, ch, msg, 'offseason');
+  var modal = document.getElementById('city-farewell-modal');
+  if (modal) modal.remove();
+  STATE._branchScenePage = 0;
+  function finishCityFarewell() {
+    var done = STATE._cityFarewellDone;
+    STATE._cityFarewellEv = null;
+    STATE._cityFarewellDone = null;
+    if (typeof done === 'function') done();
+  }
+  if (msg) {
+    showOffseasonResultModal(ev.title, msg, finishCityFarewell);
+  } else {
+    finishCityFarewell();
+  }
+}
+
+function pickOffseasonText(list) {
+  return list[Math.floor(Math.random() * list.length)];
+}
+
+function getOffseasonSeasonStartYear() {
+  var n = STATE.career && STATE.career.seasonCount ? STATE.career.seasonCount : 1;
+  return 2025 + n;
+}
+
+function getChinaTournamentName() {
+  var y = getOffseasonSeasonStartYear();
+  if (y % 4 === 0) return '奥运会';
+  if (y % 4 === 3) return '男篮世界杯';
+  return pickOffseasonText(['亚洲杯', '世预赛', '亚运会', '奥运落选赛']);
+}
+
+function countCareerHonor(label) {
+  var honors = (STATE.career && STATE.career.honors) || [];
+  return honors.filter(function(h) { return (h.label || '').indexOf(label) >= 0 && !isRookieHonorForLaterSeason(h); }).length;
+}
+
+function hasCareerHonor(label) {
+  return countCareerHonor(label) > 0;
+}
+
+function addFlagCount(key, n) {
+  var c = STATE.career;
+  c.flags = c.flags || {};
+  c.flags[key] = (c.flags[key] || 0) + (n || 1);
+  return c.flags[key];
+}
+
+function getBreakthroughChance(key, base) {
+  var flags = (STATE.career && STATE.career.flags) || {};
+  return Math.min(0.55, base + (flags[key] || 0) * 0.08);
+}
+
+function applyTrainingOutcome(primary, secondary, pityKey, sceneList, labels) {
+  var mods = getNextSeasonMods();
+  var roll = Math.random();
+  var boomChance = getBreakthroughChance(pityKey, 0.16);
+  var scene = pickOffseasonText(sceneList);
+  if (roll < boomChance) {
+    STATE.career.flags[pityKey] = 0;
+    addAttrDelta(primary, 5);
+    if (secondary) addAttrDelta(secondary, 3);
+    STATE.finalOVR = calcOVR(STATE.attrs);
+    return scene + '<br><br>突飞猛进：连续几天，训练馆里的数据都不像正常成长曲线。教练组把你的训练片段单独剪出来，认为这不是手感，而是技术动作真的换了一层。<br><br>效果：' + labels.primary + '+5' + (secondary ? '，' + labels.secondary + '+3' : '') + '。';
+  }
+  if (roll < 0.72) {
+    addAttrDelta(primary, 2);
+    if (secondary) addAttrDelta(secondary, 1);
+    STATE.finalOVR = calcOVR(STATE.attrs);
+    return scene + '<br><br>稳定进步：这个夏天没有奇迹，但每天都能看到一点点更稳的自己。<br><br>效果：' + labels.primary + '+2' + (secondary ? '，' + labels.secondary + '+1' : '') + '。';
+  }
+  if (roll < 0.9) {
+    var stack = addFlagCount(pityKey, 1);
+    return scene + '<br><br>瓶颈期：你练得很狠，但身体像是暂时拒绝吸收新的动作。训练师建议你别急，下次继续冲这个专项时，突破概率会提高。<br><br>效果：本次无属性变化；该专项突破保底层数+' + stack + '。';
+  }
+  addAttrDelta(primary, 2);
+  mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 2);
+  STATE.finalOVR = calcOVR(STATE.attrs);
+  return scene + '<br><br>过度训练：你咬牙把训练量顶了上去，技术确实进了，但膝盖和脚踝的反馈也变得刺耳。<br><br>效果：' + labels.primary + '+2；下赛季伤病/疲劳事件风险上升。';
+}
+
+const BRANCH_BIBLE = {
+  china_team: { name: '中国男篮', layer: 'identity', unlocks: ['china_market', 'legacy'] },
+  relationship: { name: '恋爱', layer: 'life', unlocks: ['family', 'brand', 'controversy'] },
+  family: { name: '家庭', layer: 'late_career', unlocks: ['retirement_choice', 'post_career'] },
+  network: { name: '高尔夫 / 人脉', layer: 'career_power', unlocks: ['rich_paul', 'brand'] },
+  rich_paul: { name: 'Rich Paul / 经纪团队', layer: 'career_power', unlocks: ['transfer'] },
+  mentor: { name: '巨星导师', layer: 'growth', unlocks: ['rich_paul', 'signature_style'] },
+  training: { name: '夏日训练', layer: 'growth', unlocks: ['signature_style', 'rich_paul'] },
+  skill_training: { name: '专项训练', layer: 'growth', unlocks: ['signature_style', 'playoff_moment'] },
+  team_practice: { name: '球队合练 / 队内领袖', layer: 'team', unlocks: ['teammate_bond', 'legacy'] },
+  teammate_bond: { name: '队友羁绊', layer: 'team', unlocks: ['playoff_moment'] },
+  china_market: { name: '中国市场', layer: 'business', unlocks: ['shoe_brand', 'legacy'] },
+  brand: { name: '商业 / 品牌', layer: 'business', unlocks: ['shoe_brand', 'controversy'] },
+  shoe_brand: { name: '球鞋品牌', layer: 'business', unlocks: ['legacy'] },
+  media: { name: '媒体形象', layer: 'identity', unlocks: ['brand', 'controversy'] },
+  fan_culture: { name: '球迷文化', layer: 'identity', unlocks: ['brand', 'legacy'] },
+  crossover: { name: '揽佬 · 中国人能飞', layer: 'season_texture', unlocks: ['fame', 'fan_culture'] },
+  mental_health: { name: '心理健康', layer: 'risk', unlocks: ['retirement_choice', 'legacy'] },
+  city_culture: { name: '城市文化', layer: 'team', unlocks: ['legacy', 'retirement_choice'] },
+  family_children: { name: '家人孩子', layer: 'late_career', unlocks: ['retirement_choice', 'post_career'] },
+  training_camp: { name: '训练营', layer: 'legacy_seed', unlocks: ['post_career', 'legacy'] },
+  charity: { name: '公益', layer: 'identity', unlocks: ['legacy', 'post_career'] },
+  retirement_countdown: { name: '退役倒计时', layer: 'late_career', unlocks: ['retirement_choice', 'legacy'] },
+  controversy: { name: '道德 / 争议', layer: 'risk', unlocks: ['legacy'] },
+  coach_role: { name: '教练关系 / 队内地位', layer: 'team', unlocks: ['team_practice'] },
+  transfer: { name: '转会风波', layer: 'career_power', unlocks: ['contender_window', 'legacy'] },
+  contender_window: { name: '争冠窗口', layer: 'championship', unlocks: ['dynasty'] },
+  dynasty: { name: '王朝', layer: 'championship', unlocks: ['legacy'] },
+  all_star_weekend: { name: '全明星周末', layer: 'season_texture', unlocks: ['brand', 'fame'] },
+  playoff_moment: { name: '季后赛名场面', layer: 'championship', unlocks: ['legacy'] },
+  milestone: { name: '数据里程碑', layer: 'legacy_seed', unlocks: ['legacy', 'brand'] },
+  retirement_choice: { name: '晚年退役倾向', layer: 'late_career', unlocks: ['legacy', 'post_career'] },
+  legacy: { name: '历史地位', layer: 'ending', unlocks: ['jersey_retirement', 'hall_of_fame', 'top100'] },
+  old_team: { name: '前东家', layer: 'identity', unlocks: ['legacy'] },
+  reading: { name: '读书疗愈', layer: 'risk', unlocks: ['mental_health', 'legacy'] },
+  violence_conflict: { name: '暴力冲突', layer: 'risk', unlocks: ['controversy', 'legacy'] },
+  post_career: { name: '退役后身份', layer: 'ending', unlocks: [] }
+};
+
+// ==================== 读书疗愈：书池与抽书 ====================
+const READING_BOOKS = [
+  { key: 'godfather', title: '《教父》', weight: 5, scene: '你翻开第一页，看见那句“一个人只有一个命运”。窗外新闻还在吵，你忽然想明白：舆论只负责制造声音，不负责替你决定人生。', effects: ['领导力+1', '媒体压力-1'], apply: function() { addProfileDelta('leadership', 1); addSeasonMod('mediaPressure', -1, -10, 10); } },
+  { key: 'public_opinion', title: '《舆论的力量》', weight: 14, scene: '这本书把“被所有人注视”写得比球场更累。读到一半，你关掉了手机推送，第一次觉得那些解说词只是背景音。', effects: ['媒体好感+1', '媒体压力-2'], apply: function() { addProfileDelta('mediaTrust', 1); addSeasonMod('mediaPressure', -2, -10, 10); } },
+  { key: 'alive', title: '《活着》', weight: 9, scene: '福贵的一生比任何一场失利都沉。合上书时你愣了很久，然后给家里打了个电话：我很好，只是突然想听听你的声音。', effects: ['媒体压力-2', '忠诚+1', '状态波动-1'], apply: function() { addSeasonMod('mediaPressure', -2, -10, 10); addProfileDelta('loyalty', 1); addSeasonMod('formVariance', -1, -10, 10); } },
+  { key: 'old_man_and_sea', title: '《老人与海》', weight: 9, scene: '圣地亚哥和那条大鱼搏斗了三天三夜。你想起自己上一次加时赛，也是这样一个人扛着，没有放弃。', effects: ['关键球+1', '状态波动-1'], apply: function() { addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs); addSeasonMod('formVariance', -1, -10, 10); } },
+  { key: 'thinking_fast_slow', title: '《思考，快与慢》', weight: 13, scene: '书里说，人在疲惫时更容易相信第一个跳出来的答案。你开始复盘自己的每一次勉强出手，发现很多球根本不该投。', effects: ['传球+1', '媒体好感+1'], apply: function() { addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs); addProfileDelta('mediaTrust', 1); } },
+  { key: 'silent_majority', title: '《沉默的大多数》', weight: 13, scene: '王小波说，沉默不是没有态度，是不想和噪音共用一套语言。你合上书，把发布会要说的话删到只剩两句。', effects: ['媒体压力-2', '媒体好感+1'], apply: function() { addSeasonMod('mediaPressure', -2, -10, 10); addProfileDelta('mediaTrust', 1); } },
+  { key: 'three_body', title: '《三体》', weight: 5, scene: '你读到“降维打击”时笑了。第二天训练，你把对手的战术想象成二维平面，忽然觉得一切都没那么可怕。', effects: ['关键球+1', '人气+1'], apply: function() { addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs); addProfileDelta('fame', 1); } },
+  { key: 'dragon_hero', title: '《天龙八部》', weight: 8, scene: '你最喜欢扫地僧。他不出手，不是因为不会，而是因为没必要。你决定下一场也试着少说、多做、深藏不露。', effects: ['状态波动-1', '更衣室信任+1', '媒体压力-1'], apply: function() { addSeasonMod('formVariance', -1, -10, 10); addProfileDelta('lockerRoomTrust', 1); addSeasonMod('mediaPressure', -1, -10, 10); } }
+];
+
+function isReadingPressureEligible() {
+  var mods = STATE.career.nextSeasonMods || {};
+  var profile = STATE.career.profile || {};
+  if ((mods.mediaPressure || 0) >= 2) return true;
+  if ((profile.controversy || 0) >= 3) return true;
+  if ((mods.formVariance || 0) >= 2) return true;
+  try { return getMentalPressure() >= 6; } catch(e) { return false; }
+}
+
+function pickReadingBook() {
+  var mods = STATE.career.nextSeasonMods || {};
+  var profile = STATE.career.profile || {};
+  var pool = READING_BOOKS.map(function(b) {
+    var w = b.weight || 10;
+    if ((b.key === 'public_opinion' || b.key === 'silent_majority' || b.key === 'alive') && ((mods.mediaPressure || 0) >= 2 || (profile.controversy || 0) >= 3)) w += 4;
+    if ((b.key === 'alive' || b.key === 'dragon_hero' || b.key === 'old_man_and_sea') && (mods.formVariance || 0) >= 2) w += 3;
+    return { book: b, weight: w };
+  });
+  var total = 0;
+  pool.forEach(function(p) { total += p.weight; });
+  var roll = Math.random() * total;
+  for (var i = 0; i < pool.length; i++) {
+    roll -= pool[i].weight;
+    if (roll <= 0) return pool[i].book;
+  }
+  return pool[pool.length - 1].book;
+}
+
+function applyReadingBookEffects(book) {
+  if (!book || !book.apply) return;
+  try { book.apply(); } catch(e) {}
+}
+
+// ==================== 暴力冲突：对手与文案 ====================
+function getViolenceOpponentNameFor(team) {
+  if (!team) return '他';
+  var top = null;
+  try { top = getTeamTopPlayer(team); } catch(e) {}
+  return (top && (top.cname || top.name)) || '那个刺头';
+}
+
+function fillViolenceText(str) {
+  var opp = STATE._violenceOpponent || {};
+  var pName = opp.name || '他';
+  var tName = opp.team ? (getTeamName ? getTeamName(opp.team) : opp.team) : '对手球队';
+  return String(str || '')
+    .replace(/\{对手球员\}/g, pName)
+    .replace(/\{对手球队\}/g, tName);
+}
+
+function getViolenceInsultText() {
+  var c = STATE.career;
+  if (c && c.relationships && c.relationships.partner) return '你的老婆比我们家的沙发还软';
+  if (c && c.branches && c.branches.family && c.branches.family.node && c.branches.family.node !== 'start') return '你的家人连训练馆的灯都不如';
+  return '你在这座城市一无所有';
+}
+
+function isHennessyEligible() {
+  var p = STATE.career.profile || {};
+  return (p.fame || 0) >= 60 && (p.businessValue || 0) >= 40 && (p.mediaTrust || 0) >= 35 && (p.controversy || 0) <= 25;
+}
+
+const BRANCH_EVENTS = [
+  {
+    id: 'national_team',
+    branch: 'china_team',
+    phase: 'offseason',
+    slot: 'main',
+    weight: 12,
+    title: '中国男篮征召',
+    body: '中国男篮向你发来正式征召。这个夏天，国家队需要一个真正能扛球权的人。经纪团队提醒你：这是荣誉，也是压力，回到新赛季时身体负担会更重。',
+    choices: [
+      { label: '接受中国男篮征召', hint: '获得国家队历练和舆论声望，但新赛季伤病/疲劳风险提高', apply: function() {
+        var mods = getNextSeasonMods();
+        var tournament = getChinaTournamentName();
+        var branch = advanceBranch('china_team', 1, { status: 'accepted', lastTournament: tournament });
+        branch.reputation = (branch.reputation || 0) + 2;
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 3);
+        addAttrDelta('CLU', 1); addAttrDelta('PAS', 1);
+        STATE.finalOVR = calcOVR(STATE.attrs);
+        var scene = pickOffseasonText([
+          '你抵达中国男篮训练基地的第一天，教练组就把' + tournament + '最后五分钟的战术板交到你手里。队友们看着你，没人说话，但所有人都知道这个夏天的球权会从你这里开始。',
+          tournament + '热身赛最后一攻，你在高位叫挡拆，吸引包夹后把球塞到底角。三分命中后，替补席全部站了起来，国内媒体第二天把标题写成了：中国队终于有了自己的核心。',
+          tournament + '小组赛面对强硬防守，你连续几个回合被撞倒。你没有抱怨，下一回合直接顶着对抗杀进内线。那一晚之后，中国男篮更衣室默认你是关键时刻的第一选择。'
+        ]);
+        var roll = Math.random();
+        var result = '';
+        if (roll < 0.18) {
+          addAttrDelta('CLU', 1);
+          result = '带队爆发：淘汰赛里你连续命中关键球，中国队打出了近年最振奋的一段国际赛事。赛后你没有庆祝太久，只在采访里说：这不是终点。额外效果：关键球+1。';
+        } else if (roll < 0.42) {
+          addAttrDelta('PAS', 1);
+          result = '血战晋级：你们每一场都打到最后两分钟，身体消耗巨大，但你学会了在更小的空间里找到队友。额外效果：传球+1。';
+        } else if (roll < 0.7) {
+          mods.formVariance = Math.min(3, (mods.formVariance || 0) + 1);
+          result = '遗憾出局：最后一场赛后，你在替补席坐了很久。网上的争论铺天盖地，有人夸你扛起球队，也有人把失败全压到你肩上。额外影响：下赛季状态波动略升。';
+        } else {
+          mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 2);
+          result = '受伤隐患：密集赛程让你的腿部疲劳一直没有完全消下去。队医没有给出严重诊断，但新赛季开始前，训练师明显更谨慎。额外影响：下赛季伤病/疲劳风险继续上升。';
+        }
+        return scene + '<br><br>' + result + '<br><br>基础效果：关键球+1，传球+1；下赛季伤病/疲劳事件风险上升。';
+      }},
+      { label: '婉拒征召，专注恢复', hint: '降低开季波动，但可能承受外界议论', apply: function() {
+        var mods = getNextSeasonMods();
+        var branch = advanceBranch('china_team', 1, { status: 'declined' });
+        branch.controversy = (branch.controversy || 0) + 1;
+        mods.formVariance = Math.max(-2, (mods.formVariance || 0) - 1);
+        var scene = pickOffseasonText([
+          '你给国家队回了一通很长的电话。你说自己尊重这身球衣，但这个夏天必须把身体彻底修好。电话那头沉默了几秒，最后只说：希望下次还能等到你。',
+          '拒绝征召的消息出来后，舆论很快分成两派。有人理解你的身体管理，也有人质疑你的责任感。你没有回应，只是在训练馆里把手机调成静音。',
+          '经纪团队建议你发一份声明，你删掉了所有漂亮话，只留下几句简单的感谢。接下来的几周，你把每天的恢复课排得比常规训练还满。'
+        ]);
+        return scene + '<br><br>效果：你保留了完整休整周期；下赛季状态波动略微降低。';
+      }}
+    ]
+  },
+  {
+    id: 'superstar_camp',
+    branch: 'mentor',
+    phase: 'offseason',
+    slot: 'main',
+    weight: 13,
+    title: '巨星训练营邀请',
+    body: '休赛期你收到几个私人训练营邀请。它们不只是训练课，更像一次路线选择：你要从谁身上偷走一部分比赛理解？',
+    choices: [
+      { label: '奥拉朱旺脚步训练', hint: '内线、防守、篮板提升', apply: function() {
+        advanceBranch('mentor', 1, { lastMentor: 'hakeem' });
+        var great = Math.random() < 0.28;
+        var rough = !great && Math.random() < 0.18;
+        addAttrDelta('FIN', great ? 3 : 2); addAttrDelta('IDEF', 1); addAttrDelta('REB', rough ? 0 : 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        var scene = pickOffseasonText([
+          '奥拉朱旺没有急着教动作，他先让你在低位连续转身二十分钟。每次你以为找到了节奏，他都会轻轻摇头：脚先骗过人，球只是最后的证明。',
+          '训练馆很安静，只有鞋底摩擦地板的声音。奥拉朱旺把防守人想象成一扇门，告诉你不要撞门，要让门自己打开。',
+          '你在录像室看了一整晚低位脚步。第二天训练时，你第一次发现，背身不是慢下来，而是把防守者拖进你的时间里。'
+        ]);
+        if (great) return scene + '<br><br>特殊结果：你突然理解了假动作的节奏，连续几次把陪练晃到失位。奥拉朱旺笑着拍了拍你的肩。<br><br>效果：终结+3，内防+1，篮板+1。';
+        if (rough) return scene + '<br><br>负面结果：低位细节比你想象中折磨人，脚踝和腰背承受了不少压力。你学到了东西，但没有完全吃透篮板卡位部分。<br><br>效果：终结+2，内防+1。';
+        return scene + '<br><br>普通结果：你的低位脚步更稳，面对错位时多了一个可靠惩罚手段。<br><br>效果：终结+2，内防+1，篮板+1。';
+      }},
+      { label: '杜兰特投射训练', hint: '中投和三分提升', apply: function() {
+        advanceBranch('mentor', 1, { lastMentor: 'durant' });
+        var great = Math.random() < 0.3;
+        var rough = !great && Math.random() < 0.16;
+        addAttrDelta('MID', great ? 3 : 2); addAttrDelta('threePT', rough ? 0 : (great ? 2 : 1)); STATE.finalOVR = calcOVR(STATE.attrs);
+        var scene = pickOffseasonText([
+          '杜兰特看了你两组投篮，只说了一句：别急着摆脱，先学会在防守人面前舒服。之后整堂课，他都让你在贴身干扰下出手。',
+          '训练内容简单到残酷：同一个肘区，同一个防守角度，连续投到手臂发麻。杜兰特告诉你，伟大的投篮不是空位准，而是被看穿后依然能进。',
+          '你问杜兰特怎么判断该不该拔起来。他指了指地板：当你相信这个点属于你，防守人就已经晚了。'
+        ]);
+        if (great) return scene + '<br><br>特殊结果：某个下午，你连续命中十几记高难度干拔，训练馆里的人开始停下来看。你的出手点变得更高，也更不讲理。<br><br>效果：中投+3，三分+2。';
+        if (rough) return scene + '<br><br>负面结果：你试图复制太多高难度节奏，三分线外短暂失准。好消息是，中距离单打脚步明显干净了。<br><br>效果：中投+2。';
+        return scene + '<br><br>普通结果：你的急停和面框节奏更稳定，尤其在中距离区域开始有了自己的甜点位。<br><br>效果：中投+2，三分+1。';
+      }},
+      { label: '詹姆斯身体训练', hint: '运动能力、力量、终结提升', apply: function() {
+        advanceBranch('mentor', 1, { lastMentor: 'lebron' });
+        var great = Math.random() < 0.25;
+        var agency = Math.random() < 0.22;
+        addAttrDelta('ATH', great ? 2 : 1); addAttrDelta('STR', 1); addAttrDelta('FIN', 1); if (agency) addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        var scene = pickOffseasonText([
+          '詹姆斯的训练不是单纯上重量。他会在冲刺、对抗、传球阅读之间来回切换，让你在最累的时候做最清醒的决定。',
+          '凌晨的力量房里，詹姆斯一边训练一边和你聊如何照顾一个漫长职业生涯。他说天赋让人进联盟，习惯才决定你能待多久。',
+          '你以为这是身体课，结果一半时间都在看录像。詹姆斯反复暂停同一个回合，问你：如果你是持球人，第三个选择在哪里？'
+        ]);
+        var extra = agency ? '<br><br>隐藏结果：训练结束后，Rich Paul 的团队主动和你聊了几句。他们没有立刻谈合作，但你能感觉到，这条线以后可能会再出现。额外效果：传球+1。' : '';
+        if (great) return scene + '<br><br>特殊结果：你的身体适应速度超出预期，对抗后的起跳和二次发力都有提升。<br><br>效果：运动+2，力量+1，终结+1。' + extra;
+        return scene + '<br><br>普通结果：你的核心力量和冲击篮筐稳定性提升，长赛季身体管理意识也更强。<br><br>效果：运动+1，力量+1，终结+1。' + extra;
+      }},
+      { label: '保罗控场训练', hint: '控球、传球、关键球提升', apply: function() {
+        advanceBranch('mentor', 1, { lastMentor: 'paul' });
+        var great = Math.random() < 0.28;
+        var rough = !great && Math.random() < 0.14;
+        addAttrDelta('HAN', 1); addAttrDelta('PAS', great ? 3 : 2); addAttrDelta('CLU', rough ? 0 : 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        var scene = pickOffseasonText([
+          '保罗训练你的方式很烦人：每个回合都要你先说出弱侧第二个防守人的站位。你答慢半秒，他就把球拿走重来。',
+          '你们花了一下午练挡拆，但真正练的不是传球，而是等待。保罗说，控卫最值钱的能力，是让九个人都先暴露答案。',
+          '保罗把训练赛切成无数个最后两分钟。他不断提醒你，关键球不是英雄球，而是让对手在最紧张的时候做选择题。'
+        ]);
+        if (great) return scene + '<br><br>特殊结果：你开始能提前一拍读到协防，几次传球让防守完全来不及轮转。保罗说：现在你不是在运球，你是在调度。<br><br>效果：控球+1，传球+3，关键球+1。';
+        if (rough) return scene + '<br><br>负面结果：你学了太多节奏控制，短期内出手欲望被压低，关键球侵略性没有同步提升。<br><br>效果：控球+1，传球+2。';
+        return scene + '<br><br>普通结果：你的挡拆阅读更稳，开始学会用停顿和眼神制造传球角度。<br><br>效果：控球+1，传球+2，关键球+1。';
+      }}
+    ]
+  },
+  {
+    id: 'skill_breakthrough',
+    branch: 'skill_training',
+    phase: 'offseason',
+    slot: 'main',
+    weight: 11,
+    title: '专项技术突破',
+    body: '训练师建议你把整个夏天押在一项技术上。高投入有机会换来突飞猛进，也可能遇到瓶颈，甚至因为过度训练把风险带进新赛季。',
+    choices: [
+      { label: '冲击投射突破', hint: '大概率小涨，小概率大涨', apply: function() {
+        advanceBranch('skill_training', 1, { lastFocus: 'shooting' });
+        return applyTrainingOutcome('threePT', 'MID', 'shootingPity', [
+          '你把整个夏天拆成无数个投篮点：底角、45度、弧顶、肘区。训练师不再数命中，只记录你在疲劳后的出手是否还保持同一个轨迹。',
+          '每天训练结束后，你都会留下来多投一百个接球三分。灯光关掉一半，球馆里只剩篮网被刷动的声音。',
+          '投篮教练把你的出手慢放到每一帧，指出手肘、脚尖和落地位置。你第一次意识到，稳定不是感觉，是重复。'
+        ], { primary: '三分', secondary: '中投' });
+      }},
+      { label: '冲击持球突破', hint: '提升控球与终结', apply: function() {
+        advanceBranch('skill_training', 1, { lastFocus: 'handle' });
+        return applyTrainingOutcome('HAN', 'FIN', 'handlePity', [
+          '训练师在半场摆满障碍物，让你每次突破前都必须先读出协防位置。你不只是练运球，也是在练怎么让防守提前犯错。',
+          '你连续几天只练第一步和最后一步。第一步要骗过人，最后一步要扛住人，中间所有花活都被训练师删掉。',
+          '陪练不断换成更高、更壮、更快的防守者。你被断、被撞、被盖，但慢慢开始知道该用哪个角度进入身体。'
+        ], { primary: '控球', secondary: '终结' });
+      }},
+      { label: '冲击防守突破', hint: '提升外防与抢断', apply: function() {
+        advanceBranch('skill_training', 1, { lastFocus: 'defense' });
+        return applyTrainingOutcome('PDEF', 'STL', 'defensePity', [
+          '你花了一周只练横移和追防。教练不让你赌博式抢断，只要求你每次都把持球人赶到最难受的位置。',
+          '录像课里，你反复看联盟顶级侧翼如何提前半步卡住路线。第二天训练，你开始在对手启动前就移动脚步。',
+          '防守训练没有漂亮镜头，只有一次次被过后的重来。你慢慢学会用身体角度，而不是手，去夺走对手的舒服空间。'
+        ], { primary: '外防', secondary: '抢断' });
+      }},
+      { label: '冲击身体终结', hint: '提升力量与终结', apply: function() {
+        advanceBranch('skill_training', 1, { lastFocus: 'strength' });
+        return applyTrainingOutcome('STR', 'FIN', 'strengthPity', [
+          '力量房和禁区训练被排在同一天。你先把身体练到发沉，再去篮下完成对抗终结，训练师说这才像第四节的真实比赛。',
+          '每一次上篮都有陪练撞你的肩膀和腰。你开始学会不是躲开对抗，而是借着对抗把球送到更高的位置。',
+          '这个夏天你几乎不练轻松的扣篮，只练失衡、被拉拽、被延误后的终结。难看，但有用。'
+        ], { primary: '力量', secondary: '终结' });
+      }},
+      { label: '冲击组织突破', hint: '提升传球与关键球', apply: function() {
+        advanceBranch('skill_training', 1, { lastFocus: 'playmaking' });
+        return applyTrainingOutcome('PAS', 'CLU', 'playmakingPity', [
+          '你和助教把每套战术拆成三层选择：第一选择被锁死，第二选择被延误，第三选择才是真正能赢季后赛的球。',
+          '训练赛里，教练要求你每次叫挡拆前先喊出弱侧两个队友的位置。你开始发现，传球不是看见人，而是提前知道人会到哪里。',
+          '你被禁止连续两回合用同一种方式发起进攻。这个限制很别扭，却逼你把比赛读得更完整。'
+        ], { primary: '传球', secondary: '关键球' });
+      }}
+    ]
+  },
+  {
+    id: 'team_practice',
+    branch: 'team_practice',
+    phase: 'offseason',
+    slot: 'main',
+    weight: 9,
+    title: '球队合练',
+    body: '队友们约你提前回到训练馆合练。教练组认为这能让球队更快进入状态。',
+    choices: [
+      { label: '组织球队合练', hint: '提升球队默契，降低开季波动', apply: function() {
+        advanceBranch('team_practice', 1, { status: 'organized' });
+        var mods = getNextSeasonMods();
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 2);
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '球队合练完成：传球+1，球队默契提升';
+      }},
+      { label: '个人恢复优先', hint: '减少身体负担', apply: function() {
+        advanceBranch('team_practice', 1, { status: 'recovery' });
+        var mods = getNextSeasonMods();
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        return '你选择恢复：新赛季伤病风险略降';
+      }}
+    ]
+  },
+  {
+    id: 'dating_star',
+    branch: 'relationship',
+    phase: 'offseason',
+    slot: 'main',
+    weight: 8,
+    title: '约会邀请',
+    body: '休赛期刚开始，一位很有名的女明星通过共同朋友给你发来邀请。经纪团队提醒你：这可能是轻松的夏天，也可能把你的名字送上娱乐版头条。',
+    requires: function() {
+      var c = STATE.career || {};
+      return (c.currentAge || 22) >= 22 && ((STATE.finalOVR || 0) >= 82 || hasCareerHonor('全明星') || hasCareerHonor('最佳阵容'));
+    },
+    choices: [
+      { label: '接受女明星邀约', hint: '可能状态火热，也可能陷入感情纠纷', apply: function() {
+        var c = STATE.career;
+        c.relationships = c.relationships || {};
+        advanceBranch('relationship', 1, { status: 'dating' });
+        var mods = getNextSeasonMods();
+        var roll = Math.random();
+        var intro = pickOffseasonText([
+          '你们第一次见面是在一个很低调的私人餐厅。她没有问你数据，也没有问合同，只问你赢球后为什么总是先低头。你突然发现，这个夏天可能不会只属于训练馆。',
+          '她在演唱会后台给你留了一张通行证。灯光、尖叫和舞台烟雾把夜晚变得不真实，你坐在角落里，第一次感觉自己像是闯进了另一个联盟。',
+          '她约你去海边散步，身边没有镜头，也没有队友。你们聊到凌晨，话题从电影到伤病，从孤独到总冠军，最后谁也没提明天的训练。'
+        ]);
+        if (roll < 0.25) {
+          c.relationships.partner = { type: 'actress', status: 'stable', sinceSeason: c.seasonCount, volatility: 1 };
+          mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+          addAttrDelta('CLU', 1);
+          STATE.finalOVR = calcOVR(STATE.attrs);
+          return intro + '<br><br>状态火热：这段关系没有打乱你，反而让你在训练和比赛里更想证明自己。朋友说你整个人轻了一点，关键时刻却更硬。<br><br>效果：关键球+1；下赛季状态波动略降。';
+        }
+        if (roll < 0.5) {
+          c.relationships.partner = { type: 'singer', status: 'distraction', sinceSeason: c.seasonCount, volatility: 3 };
+          mods.formVariance = Math.min(4, (mods.formVariance || 0) + 2);
+          return intro + '<br><br>乐不思蜀：你开始频繁改训练时间，只为了配合她的行程。训练师没有明说，但白板上你的缺席记录越来越显眼。<br><br>效果：下赛季状态波动上升。';
+        }
+        if (roll < 0.72) {
+          c.relationships.partner = { type: 'athlete', status: 'rumor', sinceSeason: c.seasonCount, volatility: 4 };
+          mods.formVariance = Math.min(5, (mods.formVariance || 0) + 3);
+          mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 1);
+          return intro + '<br><br>感情纠纷：几张模糊照片被放到网上，猜测和争吵迅速发酵。你不得不在训练后处理电话和声明，身体也没恢复得那么干净。<br><br>效果：下赛季状态波动明显上升；伤病/疲劳风险略升。';
+        }
+        c.relationships.partner = { type: 'actress', status: 'private', sinceSeason: c.seasonCount, volatility: 0 };
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1);
+        return intro + '<br><br>低调陪伴：你们决定不公开，也不把这件事变成新闻。队友偶尔调侃你，但更衣室气氛反而轻松了不少。<br><br>效果：球队默契略升。';
+      }},
+      { label: '礼貌拒绝，专注训练', hint: '放弃社交剧情，换取更稳定的夏天', apply: function() {
+        advanceBranch('relationship', 1, { status: 'declined' });
+        var roll = Math.random();
+        if (roll < 0.55) {
+          addAttrDelta('STA', 1);
+          STATE.finalOVR = calcOVR(STATE.attrs);
+          return '你回了一条很短但体面的消息，然后把手机交给训练师保管。整个夏天，你的作息准得像比赛计时器。<br><br>效果：耐力+1。';
+        }
+        return '你选择不让这个夏天偏离训练计划。媒体没有故事可写，朋友笑你无趣，但教练组很满意。<br><br>效果：无属性变化，但避免了感情线风险。';
+      }}
+    ]
+  },
+  {
+    id: 'golf_network',
+    branch: 'network',
+    phase: 'offseason',
+    slot: 'main',
+    weight: 7,
+    title: '名人高尔夫局',
+    body: '赞助商给你安排了一场名人高尔夫局。球场上不只有挥杆，还有经纪团队、人脉圈和未来合作的试探。',
+    requires: function() {
+      return (STATE.career.currentAge || 22) >= 24 && ((STATE.finalOVR || 0) >= 85 || hasCareerHonor('全明星') || hasCareerHonor('总冠军'));
+    },
+    choices: [
+      { label: '参加高尔夫局', hint: '可能遇到 Rich Paul、库里团队或商业机会', apply: function() {
+        var c = STATE.career;
+        c.flags = c.flags || {};
+        advanceBranch('network', 1, { status: 'golf' });
+        var mods = getNextSeasonMods();
+        var roll = Math.random();
+        var intro = pickOffseasonText([
+          '你到球场时，几个熟悉的联盟面孔已经在练习果岭。这里没人穿球衣，但每一次寒暄都像在试探未来的合作空间。',
+          '阳光很好，球车开得很慢。赞助商介绍你认识一桌人，有投资人、退役球员、经纪团队，也有几个你只在新闻里见过的名字。',
+          '你原本只是想放松，结果第一洞还没打完，就有人开始聊阵容、市场和未来几年联盟的权力流向。'
+        ]);
+        if (roll < 0.25) {
+          c.flags.richPaulContact = true;
+          return intro + '<br><br>Rich Paul 线索：你和 Rich Paul 的团队在第九洞聊了很久。他们没有直接招募你，只说如果未来想管理更大的职业版图，可以再坐下来谈。<br><br>效果：记录 Rich Paul 接触线，未来可联动经纪团队/詹姆斯训练营。';
+        }
+        if (roll < 0.48) {
+          c.flags.curryCircle = true;
+          addAttrDelta('threePT', 1);
+          STATE.finalOVR = calcOVR(STATE.attrs);
+          return intro + '<br><br>库里圈子：库里团队的人注意到你在果岭上的手感，玩笑说你的腕部控制像投篮。后来你们聊到训练和空间体系，对方留下了联系方式。<br><br>效果：三分+1；记录库里圈子线索。';
+        }
+        if (roll < 0.75) {
+          mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+          return intro + '<br><br>放松成功：没有重大合作，也没有新闻爆点。你只是久违地从比赛压力里抽离出来，身体恢复得比预期更好。<br><br>效果：下赛季伤病/疲劳风险略降。';
+        }
+        c.flags.businessBuzz = true;
+        mods.formVariance = Math.min(4, (mods.formVariance || 0) + 1);
+        return intro + '<br><br>应酬过量：你认识了很多人，也拍了很多合照。商业曝光变多，但训练节奏被打碎，团队提醒你别让夏天变成巡演。<br><br>效果：记录商业热度；下赛季状态波动略升。';
+      }},
+      { label: '拒绝社交，留在训练馆', hint: '错过人脉，但得到纯训练收益', apply: function() {
+        advanceBranch('network', 1, { status: 'training' });
+        addAttrDelta('MID', 1);
+        addAttrDelta('STA', 1);
+        STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你婉拒了球局，把那一整天留给训练馆。助教说你可能错过了一些人脉，但你只回了一句：球会替我介绍自己。<br><br>效果：中投+1，耐力+1。';
+      }}
+    ]
+  }
+];
+
+const STAGED_BRANCH_EVENTS = [
+  {
+    id: 'china_team_first_call',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 12,
+    title: '中国男篮：首次征召',
+    scenes: [
+      '国家队的正式征召函发到你的团队邮箱。标题很短，却让整个会议室安静下来：中国男篮集训名单确认。',
+      '教练组没有把你当成普通新人。他们在战术板上写下你的名字，旁边标注：最后五分钟持球点。'
+    ],
+    body: '这是你第一次真正站到国家队选择面前。接受意味着荣誉和消耗，拒绝意味着恢复和争议。',
+    requires: function() { return getBranchNode('china_team') === 'start'; },
+    choices: [
+      { label: '接受征召，证明自己', hint: '推进中国男篮线；关键球/传球提升，伤病风险上升', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('china_team', 'first_camp', { status: 'accepted', reputation: 2, controversy: 0, acceptedCount: 1 });
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 2);
+        addAttrDelta('CLU', 1); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你穿上国家队训练服的第一天，队友们没有太多寒暄。训练赛最后一攻，教练直接把球交给你。<br><br>效果：关键球+1，传球+1；下赛季伤病风险上升。';
+      }},
+      { label: '婉拒征召，专注身体', hint: '降低波动，但留下舆论争议', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('china_team', 'second_call_after_decline', { status: 'declined', reputation: 0, controversy: 1, declinedCount: 1 });
+        mods.formVariance = Math.max(-2, (mods.formVariance || 0) - 1);
+        return '你给教练组打了一通很长的电话。你说自己尊重这身球衣，但这个夏天必须把身体修好。消息传出后，舆论很快分成两派。<br><br>效果：下赛季状态波动略降。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_second_call_after_decline',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 18,
+    title: '中国男篮：再一次电话',
+    scenes: [
+      '去年婉拒之后，国家队没有把你的名字划掉。这个夏天，教练组再次打来电话。',
+      '语气比第一次更克制，也更沉重：我们还是希望你回来，但这一次，我们需要一个明确答案。'
+    ],
+    body: '这不是简单的第二次邀请。你需要修复外界对你态度的怀疑，也需要重新决定身体和国家队之间的顺序。',
+    requires: function() { return getBranchNode('china_team') === 'second_call_after_decline'; },
+    choices: [
+      { label: '接受再征召', hint: '带着质疑回归，用表现重新建立信任', apply: function() {
+        var mods = getNextSeasonMods();
+        var b = setBranchNode('china_team', 'return_under_pressure', { status: 'returned', acceptedCount: (getBranchState('china_team').acceptedCount || 0) + 1 });
+        b.reputation = (b.reputation || 0) + 1;
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 2);
+        addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你回到集训基地时，寒暄少了一些，观察多了一些。你没有解释太多，只是在第一堂训练课把每个回合都跑到底。<br><br>重点：信任不是靠声明修复的，你选择用训练和比赛重新把它拿回来。<br><br>影响：传球+1；下赛季伤病风险上升。';
+      }},
+      { label: '再次婉拒', hint: '身体更安全，但国家队关系明显疏远', apply: function() {
+        var mods = getNextSeasonMods();
+        var b = setBranchNode('china_team', 'national_team_distance', { status: 'distant', declinedCount: (getBranchState('china_team').declinedCount || 0) + 1 });
+        b.controversy = (b.controversy || 0) + 2;
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        addProfileDelta('chinaPopularity', -1);
+        return '你第二次说不。电话那头没有责备，只是安静了很久。新闻出来后，讨论不再只是身体管理，而是你和国家队之间到底还剩多少距离。<br><br>重点：你保护了身体，也让国家队关系变得更冷。<br><br>影响：下赛季伤病风险略降；国内舆论压力上升。';
+      }},
+      { label: '承诺未来窗口', hint: '暂缓决定，保留回归可能', apply: function() {
+        setBranchNode('china_team', 'future_commitment', { status: 'future_window' });
+        addProfileDelta('mediaTrust', 1);
+        return '你没有把门关上。你告诉教练组，自己会在下一个大赛窗口认真考虑。这个答案不够热血，但至少诚实。<br><br>重点：你争取了一点时间，也保留了未来回归的余地。<br><br>影响：舆论暂时缓和。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_future_commitment',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 14,
+    title: '中国男篮：未来窗口到了',
+    scenes: [
+      '你曾经承诺会在下一个大赛窗口重新考虑。现在，那个窗口真的来了。',
+      '这一次，国家队没有催你。选择权完整地回到了你手里。'
+    ],
+    body: '你要兑现承诺，还是继续把国家队放在职业规划之外？',
+    requires: function() { return getBranchNode('china_team') === 'future_commitment'; },
+    choices: [
+      { label: '兑现承诺，回到国家队', hint: '重新开始，但需要用表现修复信任', apply: function() {
+        setBranchNode('china_team', 'first_camp', { status: 'accepted_late', acceptedCount: (getBranchState('china_team').acceptedCount || 0) + 1 });
+        addProfileDelta('chinaPopularity', 1);
+        return '你没有再解释过去的决定。报到那天，你提前半小时到训练馆，把球放在地上，自己先练了起来。<br><br>重点：迟到的回归也是回归，接下来要靠比赛说话。<br><br>影响：中国球迷支持略有回升。';
+      }},
+      { label: '继续不回归', hint: '进入国家队缺席方向', apply: function() {
+        setBranchNode('china_team', 'national_team_distance', { status: 'long_absence', declinedCount: (getBranchState('china_team').declinedCount || 0) + 1 });
+        addProfileDelta('chinaPopularity', -2);
+        return '你没有出现在名单里。久而久之，媒体每次讨论国家队都会提到你，但语气已经从期待变成了遗憾。<br><br>重点：你的 NBA 生涯仍在前进，但国家队这条路开始离你远去。<br><br>影响：中国球迷支持下降。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_role_fight',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 14,
+    title: '中国男篮：定位之争',
+    scenes: [
+      '集训第二周，教练安排了一场内部对抗。老队员仍习惯从自己手里发起进攻，年轻队员却不断把球交给你。',
+      '训练馆里没人明说，但所有人都知道，这是一次无声的权力交接。'
+    ],
+    body: '你已经不是被观察的新人了。现在的问题是，你要怎样成为这支球队的核心。',
+    requires: function() { return getBranchNode('china_team') === 'first_camp' || getBranchNode('china_team') === 'return_under_pressure'; },
+    choices: [
+      { label: '主动接管球权', hint: '提高个人声望和关键球，但压力上升', apply: function() {
+        var b = setBranchNode('china_team', 'role_fight_primary', { role: 'primary_creator' });
+        b.reputation = (b.reputation || 0) + 2;
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你在对抗赛最后三分钟连续叫挡拆，把每个回合都打成自己的判断。教练没有喊停，只是在场边点了点头。<br><br>效果：关键球+1；国家队声望提升。';
+      }},
+      { label: '先做组织者', hint: '提升传球和国家队默契', apply: function() {
+        var b = setBranchNode('china_team', 'role_fight_connector', { role: 'connector' });
+        b.reputation = (b.reputation || 0) + 1; b.chemistry = (b.chemistry || 0) + 2;
+        addAttrDelta('PAS', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你没有急着证明自己，而是连续喂出几个简单到舒服的球。年轻队友投进后第一时间回头看你，像是在确认新的秩序。<br><br>效果：传球+2；国家队默契提升。';
+      }},
+      { label: '保留体能，不争定位', hint: '降低伤病风险，但声望推进较慢', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('china_team', 'role_fight_managed', { role: 'managed_load' });
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        return '你主动和教练沟通出场负荷。媒体不太喜欢这个答案，但队医很满意。<br><br>效果：下赛季伤病风险略降。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_core_burden',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 16,
+    title: '中国男篮：绝对核心',
+    scenes: [
+      '这一次集训，你的名字被写在所有战术板最上面。教练没有再问你是否准备好。',
+      '他说：我们需要你每晚都像核心一样活着。'
+    ],
+    body: '最后一攻、媒体期待、更衣室责任，现在都被推到你面前。',
+    requires: function() { return ['role_fight_primary','role_fight_connector','role_fight_managed'].indexOf(getBranchNode('china_team')) >= 0; },
+    choices: [
+      { label: '扛起绝对核心责任', hint: '关键球大幅提升，但身体消耗明显', apply: function() {
+        var mods = getNextSeasonMods();
+        var b = setBranchNode('china_team', 'national_core', { coreStyle: 'hero' });
+        b.reputation = (b.reputation || 0) + 3;
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 2);
+        addAttrDelta('CLU', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你接受了所有关键球。赢球时全场喊你的名字，输球时所有镜头也追着你。<br><br>效果：关键球+2；国家队声望大幅提升；下赛季伤病风险上升。';
+      }},
+      { label: '打造团队篮球', hint: '传球和默契提升，风险较低', apply: function() {
+        var b = setBranchNode('china_team', 'team_core', { coreStyle: 'system' });
+        b.reputation = (b.reputation || 0) + 2; b.chemistry = (b.chemistry || 0) + 3;
+        addAttrDelta('PAS', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你开始把年轻队友带进战术中心。中国队不再只等你单挑，而是每个人都知道自己该站在哪里。<br><br>效果：传球+2；国家队默契大幅提升。';
+      }},
+      { label: '控制负荷，做关键时刻的核心', hint: '保护身体，把责任集中到最需要你的回合', apply: function() {
+        var b = setBranchNode('china_team', 'managed_core', { coreStyle: 'managed' });
+        b.reputation = (b.reputation || 0) + 1; b.chemistry = (b.chemistry || 0) + 1;
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你没有把每个回合都揽到自己身上。前三节你让队友承担更多，到了真正需要答案的时候，你再站出来。<br><br>效果：关键球+1；国家队默契提升；下赛季伤病风险略降。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_legacy_game',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 18,
+    title: '中国男篮：国际大赛关键战',
+    scenes: [
+      '真正决定评价的比赛来了。不是热身赛，不是小组里的普通夜晚，而是一场会被反复回看的生死战。',
+      '赛前发布会上，有记者问你：中国队这次能不能过这一关？你看了看桌上的国旗，没有立刻回答。'
+    ],
+    body: '这是中国男篮支线的关键节点。你要决定最后一节如何打。',
+    requires: function() { return ['national_core','team_core','managed_core'].indexOf(getBranchNode('china_team')) >= 0; },
+    choices: [
+      { label: '最后一节自己解决', hint: '高声望高压力，成败都很重', apply: function() {
+        var b = getBranchState('china_team');
+        var win = Math.random() < 0.58;
+        if (win) { setBranchNode('china_team', 'national_flag', { ending: 'hero_ball_win' }); b = getBranchState('china_team'); b.legend = (b.legend || 0) + 4; addAttrDelta('CLU', 2); STATE.finalOVR = calcOVR(STATE.attrs); return '你连续三个回合点名对手最强防守人。最后一次出手命中后，替补席冲进场内。<br><br>结果：关键战取胜；关键球+2。'; }
+        setBranchNode('china_team', 'public_trial', { ending: 'hero_ball_loss' });
+        b.controversy = (b.controversy || 0) + 3;
+        return '最后一投砸在篮筐前沿。你站在原地，听见场馆里的声音一点点远去。<br><br>结果：遗憾失利；舆论压力上升。';
+      }},
+      { label: '相信队友，打团队篮球', hint: '提升传球和传承评价，但结果取决于全队回应', apply: function() {
+        var win = Math.random() < 0.68;
+        if (win) {
+          var b = setBranchNode('china_team', 'team_revival', { ending: 'team_basketball_win' });
+          b.legend = (b.legend || 0) + 2; b.chemistry = (b.chemistry || 0) + 3;
+          addAttrDelta('PAS', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+          return '最后两分钟，你连续把球传给位置更好的队友。有人投进，也有人替你补上防守。这支球队终于不再只靠一个人呼吸。<br><br>效果：传球+2；国家队传承评价提升。';
+        }
+        var b = setBranchNode('china_team', 'clutch_question', { ending: 'team_basketball_loss' });
+        b.controversy = (b.controversy || 0) + 1; b.chemistry = (b.chemistry || 0) + 1;
+        addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        addSeasonMod('mediaPressure', 1, -10, 10);
+        return '你把球传给了空位队友。战术没有错，出手机会也干净，可篮球有时候就是不讲道理。终场之后，镜头还是回到你脸上。<br><br>结果：团队路线遗憾失利；传球+1；媒体压力上升。';
+      }},
+      { label: '带伤坚持', hint: '传奇值最高，但伤病风险大幅上升', apply: function() {
+        var mods = getNextSeasonMods();
+        var b = setBranchNode('china_team', 'injured_hero', { ending: 'injured_legend' });
+        b.legend = (b.legend || 0) + 5;
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 4);
+        return '队医建议你不要再上，但你把护具重新绑紧。那一晚之后，没人再质疑你对这身球衣的态度。<br><br>结果：国家队传奇值大幅提升；下赛季伤病风险大幅上升。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_public_trial',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 16,
+    title: '中国男篮：舆论审判',
+    scenes: [
+      '失利后的几天，你没有打开社交媒体。可有些声音不用打开也会传进来。',
+      '有人说你已经尽力，也有人说最后一球证明你还不是答案。'
+    ],
+    body: '失败没有让国家队故事结束，但它让下一次回归变得更沉重。',
+    requires: function() { return getBranchNode('china_team') === 'public_trial' || getBranchNode('china_team') === 'clutch_question'; },
+    choices: [
+      { label: '回应质疑，准备再次冲击', hint: '承受压力，争取下一次证明', apply: function() {
+        setBranchNode('china_team', 'redemption_run', { response: 'public_answer' });
+        addSeasonMod('mediaPressure', 1, -10, 10);
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你没有逃避采访。你说最后一球可以讨论，但下一次你还会站在那里。<br><br>重点：你把失败变成下一次回来的理由。<br><br>影响：关键球+1；媒体压力上升。';
+      }},
+      { label: '沉默训练', hint: '降低噪音，把回应留给下一届赛事', apply: function() {
+        setBranchNode('china_team', 'redemption_run', { response: 'silent_work' });
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你没有发声明。训练馆里，助教把那场比赛最后五分钟剪成一个单独文件，你一遍遍看，一遍遍重来。<br><br>重点：你没有把情绪交给舆论，而是把它留给训练。<br><br>影响：下赛季状态更稳定。';
+      }},
+      { label: '退出国家队', hint: '保护身体，但留下争议结局', apply: function() {
+        setBranchNode('china_team', 'controversial_exit', { retiredFromNationalTeam: true });
+        addProfileDelta('chinaPopularity', -2);
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        return '你宣布暂时退出国家队。声明写得很克制，但所有人都知道，这不是一个轻松的决定。<br><br>重点：你保护了身体，也让国家队故事停在一个不完整的句号。<br><br>影响：中国球迷支持下降；下赛季伤病风险略降。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_redemption_run',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 18,
+    title: '中国男篮：再次冲击',
+    scenes: [
+      '又一个大赛窗口来了。这一次，外界不再只问你能不能带队赢，而是问你能不能从上一次失败里走出来。',
+      '赛前热身时，你看见看台上有人举着旧比赛的比分牌。那不是嘲讽，更像提醒。'
+    ],
+    body: '这是失败后的第二次机会。它不会抹掉过去，但可能改变人们记住过去的方式。',
+    requires: function() { return getBranchNode('china_team') === 'redemption_run'; },
+    choices: [
+      { label: '这次自己承担到底', hint: '高风险高收益', apply: function() {
+        var win = Math.random() < 0.62;
+        if (win) {
+          var b = setBranchNode('china_team', 'national_flag', { redemption: 'won' });
+          b.legend = (b.legend || 0) + 4;
+          addAttrDelta('CLU', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+          return '最后两分钟，你没有再犹豫。每一次持球，全队都为你拉开。终场哨响时，你终于把上一次没投进的那口气吐了出来。<br><br>结果：完成救赎；关键球+2。';
+        }
+        setBranchNode('china_team', 'national_regret', { redemption: 'failed' });
+        addProfileDelta('legacyBonus', -1);
+        return '你又一次站到了最后。球出手时线路很好，却还是弹了出来。你没有低头，只是慢慢走向更衣室。<br><br>结果：再次遗憾；国家队故事留下沉重注脚。';
+      }},
+      { label: '坚持团队路线', hint: '强化传承和团队评价', apply: function() {
+        var b = setBranchNode('china_team', 'team_revival', { redemption: 'team' });
+        b.chemistry = (b.chemistry || 0) + 3;
+        addAttrDelta('PAS', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你不再试图一个人回答所有问题。最后阶段，你连续把球交给年轻队友，他们有人投进，也有人投丢，但这支球队终于开始像一个整体。<br><br>效果：传球+2；国家队团队评价提升。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_final_resolution',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 14,
+    title: '中国男篮：传承或告别',
+    scenes: [
+      '年轻队友叫你一声队长。你突然意识到，自己已经不是被征召的人，而是后来者判断中国篮球高度的参照物。',
+      '这个夏天，国家队没有再问你能不能来。他们问的是：你希望以什么方式继续留下？'
+    ],
+    body: '你已经走到国家队故事的收束点。继续出战、让位，或体面告别，都会留下不同的记忆。',
+    requires: function() { return ['national_flag','team_revival','injured_hero'].indexOf(getBranchNode('china_team')) >= 0; },
+    choices: [
+      { label: '继续出战，为年轻人压阵', hint: '声望最高，但身体负担继续存在', apply: function() {
+        var b = setBranchNode('china_team', 'national_legend', { finalRole: 'captain' });
+        b.legend = (b.legend || 0) + 3;
+        addProfileDelta('chinaPopularity', 3);
+        addProfileDelta('legacyBonus', 2);
+        addSeasonMod('injuryRiskBonus', 1, -4, 8);
+        return '你没有把队长袖标交出去。训练结束后，年轻队友还在等你讲最后一组战术。<br><br>重点：你选择继续站在最前面。<br><br>影响：中国球迷支持上升；历史评价上升；下赛季伤病风险略升。';
+      }},
+      { label: '让位年轻球员，转为精神领袖', hint: '保护身体，强化传承评价', apply: function() {
+        setBranchNode('china_team', 'national_mentor', { finalRole: 'mentor' });
+        addProfileDelta('chinaPopularity', 2);
+        addProfileDelta('legacyBonus', 2);
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        return '你把更多球权交给年轻人。暂停时，你不再总是第一个接球的人，却成了所有人回头寻找的声音。<br><br>重点：你从核心变成参照物。<br><br>影响：中国篮球评价上升；下赛季伤病风险略降。';
+      }},
+      { label: '宣布退出国家队', hint: '体面告别，身体保护', apply: function() {
+        setBranchNode('china_team', 'honorable_exit', { retiredFromNationalTeam: true });
+        addProfileDelta('legacyBonus', 1);
+        addSeasonMod('injuryRiskBonus', -2, -4, 8);
+        return '发布会最后，你把国家队球衣叠好放在桌上。你说自己不是离开，只是把路让给后来的人。<br><br>重点：国家队故事有了一个完整的句号。<br><br>影响：下赛季伤病风险下降；退役后的中国篮球相关评价更完整。';
+      }}
+    ]
+  },
+  {
+    id: 'china_team_distance_resolution',
+    branch: 'china_team', phase: 'offseason', slot: 'main', weight: 8,
+    title: '中国男篮：越来越远的名单',
+    scenes: [
+      '又一年国家队窗口，你没有把自己的名字放进名单。公布那天你翻了一遍，果然没有你。',
+      '一开始媒体还会争论，后来大家慢慢习惯把你放在另一条叙事里：NBA 成功，但国家队缺席。'
+    ],
+    body: '长期拒绝国家队也应该有结局。它不是错误选择，但会留下缺口。',
+    requires: function() { return getBranchNode('china_team') === 'national_team_distance'; },
+    choices: [
+      { label: '未来主动回归', hint: '重新打开国家队关系，但需要修复信任', apply: function() {
+        setBranchNode('china_team', 'return_under_pressure', { status: 'late_return' });
+        addProfileDelta('chinaPopularity', 1);
+        return '你主动给教练组打了电话。电话那头没有立刻热情起来，但至少那扇门又开了一条缝。<br><br>重点：你选择重新面对曾经拉开的距离。<br><br>影响：中国球迷支持略有回升。';
+      }},
+      { label: '长期不回归', hint: '国家队缺席结局', apply: function() {
+        setBranchNode('china_team', 'national_team_absence', { finalRole: 'absent' });
+        addProfileDelta('chinaPopularity', -2);
+        addProfileDelta('legacyBonus', -1);
+        return '你继续专注 NBA。很多年后，每次国际大赛名单公布，还是会有人提起你的名字，但语气已经从期待变成遗憾。<br><br>重点：你的职业生涯很成功，但国家队篇章留下了空白。<br><br>影响：中国球迷支持下降；历史评价略受影响。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_first_date',
+    branch: 'relationship', phase: 'offseason', slot: 'main', weight: 8,
+    title: '恋爱线：约会邀请',
+    scenes: [
+      '休赛期刚开始，两条完全不同的邀请同时出现：一位当红女明星通过共同朋友发来邀请，朋友也介绍了一位圈外女孩，她在一家小设计工作室上班。',
+      '经纪团队提醒你：一条路通往热搜和商业版图，另一条路安静得多，但同样会改变你的夏天。'
+    ],
+    body: '你要选择哪一种生活出现在训练馆以外？',
+    requires: function() {
+      var c = STATE.career || {};
+      return getBranchNode('relationship') === 'start' && (c.currentAge || 22) >= 22;
+    },
+    choices: [
+      { label: '接受女明星邀约', hint: '开启高曝光恋爱线，可能稳定也可能分心', apply: function() {
+        var c = STATE.career; c.relationships = c.relationships || {};
+        setBranchNode('relationship', 'dating', { status: 'dating' });
+        c.relationships.partner = { type: 'actress', status: 'dating', sinceSeason: c.seasonCount, volatility: 2 };
+        return '你们第一次见面是在一个很低调的私人餐厅。她没有问你数据，只问你赢球后为什么总是先低头。<br><br>结果：恋爱线开启；媒体曝光高；下一步进入关系走向。';
+      }},
+      { label: '接受圈外女孩约会', hint: '开启低曝光恋爱线，生活更安静', apply: function() {
+        var c = STATE.career; c.relationships = c.relationships || {};
+        setBranchNode('relationship', 'dating', { status: 'dating' });
+        c.relationships.partner = { type: 'ordinary', status: 'dating', sinceSeason: c.seasonCount, volatility: 1 };
+        return '她带你去吃了一家没有明星会去的街边小店。她说自己不看球，只知道你训练很拼。那个晚上没有照片，也没有热搜。<br><br>结果：恋爱线开启；媒体关注低；下一步进入关系走向。';
+      }},
+      { label: '礼貌拒绝，专注训练', hint: '不开启恋爱线，获得小训练收益', apply: function() {
+        setBranchNode('relationship', 'declined', { status: 'declined', declinedSeason: STATE.career.seasonCount });
+        addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你回了一条很短但体面的消息，然后把手机交给训练师保管。<br><br>效果：耐力+1；恋爱线记录为“曾经拒绝”。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_second_chance',
+    branch: 'relationship', phase: 'offseason', slot: 'main', weight: 10,
+    title: '恋爱线：第二次约会邀请',
+    scenes: [
+      '两年过去，你几乎已经习惯训练馆、客场和一个人的夏天。直到那天，一条旧消息重新出现在屏幕上。',
+      '经纪团队说得很直接：当初那条没走成的路，现在又有人递来了邀请。这一次，没人替你决定。'
+    ],
+    body: '两年后的夏天，你要不要让恋爱线重新开始？',
+    requires: function() {
+      var b = getBranchState('relationship');
+      var c = STATE.career || {};
+      var declinedAt = b.declinedSeason || 0;
+      return getBranchNode('relationship') === 'declined' && (c.seasonCount || 0) - declinedAt >= 2;
+    },
+    choices: [
+      { label: '接受女明星邀约', hint: '高曝光恋爱线重新开启', apply: function() {
+        var c = STATE.career; c.relationships = c.relationships || {};
+        setBranchNode('relationship', 'dating', { status: 'dating', secondChance: true });
+        c.relationships.partner = { type: 'actress', status: 'dating', sinceSeason: c.seasonCount, volatility: 2, secondChance: true };
+        return '两年后，那条没走成的邀请重新出现。你们约在最初那家私人餐厅，她没有再问你为什么拒绝，只说：这次你来了。<br><br>结果：恋爱线重新开启；媒体曝光高；下一步进入关系走向。';
+      }},
+      { label: '接受圈外女孩约会', hint: '低曝光恋爱线重新开启', apply: function() {
+        var c = STATE.career; c.relationships = c.relationships || {};
+        setBranchNode('relationship', 'dating', { status: 'dating', secondChance: true });
+        c.relationships.partner = { type: 'ordinary', status: 'dating', sinceSeason: c.seasonCount, volatility: 1, secondChance: true };
+        return '朋友说，那个在工作室的女孩还留着两年前那条礼貌的回复。你们约在那家街边小店，她笑你比新闻里安静。<br><br>结果：恋爱线重新开启；媒体关注低；下一步进入关系走向。';
+      }},
+      { label: '再次拒绝，专注篮球', hint: '恋爱线永久收束', apply: function() {
+        setBranchNode('relationship', 'declined_closed', { status: 'declined', secondDecline: true });
+        addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你回了一条很短的感谢，然后把手机交回训练师。这次你知道，自己选的就是这条路。<br><br>效果：耐力+1；恋爱线记录为“二次拒绝”，不再开启。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_direction',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 11,
+    title: '恋爱线：关系走向',
+    scenes: [
+      '几周过去，这段关系不再只是一次约会。她开始知道你的训练表，你也开始记得她的行程。',
+      '问题变得具体起来：这会成为支撑，还是成为噪音？'
+    ],
+    body: '你要如何处理这段关系和职业生涯的边界？',
+    requires: function() { return getBranchNode('relationship') === 'dating'; },
+    choices: [
+      { label: '认真经营，保持低调', hint: '状态更稳定，球队默契略升', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'stable', { status: 'stable' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'stable';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1);
+        return '你们决定不公开，也不把这件事变成新闻。队友偶尔调侃你，但更衣室气氛反而轻松了不少。<br><br>效果：下赛季状态波动略降；球队默契略升。';
+      }},
+      { label: '享受热恋，不想太克制', hint: '可能状态火热，也可能分心', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'volatile', { status: 'volatile' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'volatile';
+        var hot = Math.random() < 0.45;
+        if (hot) { addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs); return '她开始频繁出现在你的主场。你每次看到场边那个位置，都像被多点燃了一点。<br><br>结果：状态火热；关键球+1。'; }
+        mods.formVariance = Math.min(4, (mods.formVariance || 0) + 2);
+        return '你开始频繁改训练时间，只为了配合她的行程。训练师没有明说，但白板上的缺席记录越来越显眼。<br><br>结果：乐不思蜀；下赛季状态波动上升。';
+      }},
+      { label: '暂时拉开距离', hint: '保护身体与专注，但关系可能降温', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'distant', { status: 'distant' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'distant';
+        mods.formVariance = Math.max(-2, (mods.formVariance || 0) - 1);
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        return '你和她约定这几个月先以比赛为重心。消息回得慢了，见面次数也少了，但至少你没有让生活失控。<br><br>效果：下赛季状态波动略降；伤病风险略降；关系进入距离期。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_public_or_crisis',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 12,
+    title: '恋爱线：公开或风波',
+    scenes: [
+      '你不想让媒体替你们宣布。你约她坐下来，认真谈了一次：要不要由我们亲口说出这段关系？',
+      '她说：你想清楚，别让我一个人站在镜头前。'
+    ],
+    body: '恋爱线进入公开节点。你的选择会决定这段关系的长期标签。',
+    requires: function() {
+      return getRelationshipPartnerType() === 'actress' && (getBranchNode('relationship') === 'stable' || getBranchNode('relationship') === 'volatile');
+    },
+    choices: [
+      { label: '公开关系', hint: '商业热度上升，但舆论风险增加', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'public', { status: 'public' });
+        STATE.career.flags.businessBuzz = true;
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'public';
+        mods.formVariance = Math.min(4, (mods.formVariance || 0) + 1);
+        return '你们一起发了一张没有任何品牌露出的合照。评论区爆了，赞助商也开始打电话。<br><br>结果：关系公开；商业热度上升；下赛季状态波动略升。';
+      }},
+      { label: '共同冷处理', hint: '稳定优先，商业收益较低', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'private', { status: 'private' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'private';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        return '你们没有回应任何传闻。几天后，新的新闻盖过旧的新闻，生活慢慢回到训练和比赛。<br><br>结果：关系保持低调；下赛季状态波动略降。';
+      }},
+      { label: '处理失控风波', hint: '高风险，可能影响身体和状态', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'crisis', { status: 'crisis' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'crisis';
+        addProfileDelta('controversy', 1);
+        mods.formVariance = Math.min(5, (mods.formVariance || 0) + 3);
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 1);
+        return '几张模糊照片被放大解读，争吵和声明迅速发酵。你训练后还要处理电话，身体也没有恢复得那么干净。<br><br>结果：感情纠纷；状态波动明显上升；伤病风险略升。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_ordinary_warmth',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 10,
+    title: '恋爱线：生活里的她',
+    scenes: [
+      '你开始主动把她带进你的生活：训练馆门口、公寓楼下、输球后的停车场。她没有热搜，也没有团队，只是每次都站在那里。',
+      '你第一次意识到，和女明星在一起是“被看见”，和她在一起是“被接住”。'
+    ],
+    body: '普通人的恋爱没有镜头，却有温度。你选择用什么方式把这份温度留住？',
+    requires: function() {
+      return getRelationshipPartnerType() === 'ordinary' && (getBranchNode('relationship') === 'stable' || getBranchNode('relationship') === 'volatile');
+    },
+    choices: [
+      { label: '带她走进你的世界', hint: '让她认识球队、家人和真实赛程', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'partnership', { status: 'committed' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'committed';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1);
+        addProfileDelta('fanSupport', 1);
+        return '她第一次坐在你主场的家属席，球馆灯光打下来，她比你还紧张。赛后你说这是你打过最想赢的一场。队友起哄，她脸红，你却觉得这比任何头条都值。<br><br>重点：恋爱线进入长期稳定，家庭线解锁。<br><br>影响：球队默契+1；球迷支持+1；下赛季状态波动略降。';
+      }},
+      { label: '走进她的世界', hint: '陪她过普通人的生活，见她的家人和朋友', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'partnership', { status: 'committed' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'committed';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 2);
+        addProfileDelta('fanSupport', 1);
+        return '她带你去菜市场挑鱼，去她工作室看图纸，去她老家吃一顿没有赞助商的晚饭。她的妈妈说你太瘦了，往你碗里又添了一勺饭。那一晚你睡得很好。<br><br>重点：恋爱线进入长期稳定，家庭线解锁。<br><br>影响：下赛季状态波动明显下降；球迷支持+1。';
+      }},
+      { label: '一起扛过低谷', hint: '在她面前可以脆弱，也学会被照顾', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'partnership', { status: 'committed' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'committed';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 2);
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '球队连败那阵，你半夜从酒店醒来，手机里是她发的长语音：没关系，我在。后来她把感冒药和夜宵送到训练馆门口，只说了一句：吃完再练。<br><br>重点：恋爱线进入长期稳定，家庭线解锁。<br><br>影响：关键球+1；下赛季状态波动明显下降。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_after_distance',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 10,
+    title: '恋爱线：距离之后',
+    scenes: [
+      '休赛期接近尾声，你主动约了一次安静的晚饭。没有热搜，没有行程，只有两个人重新确认彼此的位置。',
+      '她说：我不想成为你训练表里的负担，也不想只是你新闻里的注脚。'
+    ],
+    body: '拉开距离的时间结束了。这段关系是重新靠近，还是体面退场？',
+    requires: function() { return getBranchNode('relationship') === 'distant'; },
+    choices: [
+      { label: '重新建立节奏', hint: '关系回暖，球队默契略升', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'stable', { status: 'rekindled' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'stable';
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1);
+        return '你主动把她的时间排进恢复计划，也把训练时间排进她的行程。这次不是妥协，而是两个人都找到了节奏。<br><br>效果：关系重新稳定；球队默契略升。';
+      }},
+      { label: '变成普通朋友', hint: '体面结束，保护专注度', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'breakup', { status: 'friends' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'friends';
+        mods.formVariance = Math.max(-2, (mods.formVariance || 0) - 1);
+        return '你们聊到很晚，最后把话说明白了：这段关系没有变成支撑，也没有变成噪音，只是没有继续下去的力气。<br><br>结果：和平结束；下赛季状态波动略降。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_commitment',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 12,
+    title: '恋爱线：稳定关系',
+    scenes: [
+      '关系公开之后，生活变得更吵，但至少你们不用再躲。你主动在主场家属席给她留了位置，她也开始习惯赛后等你。',
+      '真正的问题不是要不要在一起，而是要不要把彼此放进更长期的人生计划。'
+    ],
+    body: '这是恋爱线的收束节点。你可以把关系推向长期承诺，也可以保持现状。',
+    requires: function() { return getBranchNode('relationship') === 'public' || getBranchNode('relationship') === 'private'; },
+    choices: [
+      { label: '正式承诺', hint: '关系进入长期稳定，家庭线可触发', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'partnership', { status: 'committed' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'committed';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addProfileDelta('fanSupport', 1);
+        return '没有盛大的仪式，你在她面前把下赛季的赛程表打开，说这里面也有一份你的位置。<br><br>重点：恋爱线进入长期稳定，家庭线解锁。<br><br>影响：下赛季状态波动略降；球迷支持略升。';
+      }},
+      { label: '保持现状，低调陪伴', hint: '关系稳定但不急于承诺', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'partnership', { status: 'long_term' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'long_term';
+        mods.formVariance = Math.max(-2, (mods.formVariance || 0) - 1);
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1);
+        return '你们没有把承诺变成仪式，但每个休赛期都把对方排进生活。稳定不是一句口号，而是彼此都在场。<br><br>重点：恋爱线进入长期陪伴，家庭线解锁。<br><br>影响：下赛季状态波动略降；球队默契略升。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_crisis_recovery',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 13,
+    title: '恋爱线：风波之后',
+    scenes: [
+      '风波之后，你决定先关掉手机。媒体还在等声明，但你想先把话说给该听的人听。',
+      '你第一次意识到，这段关系已经不是两个人的事，而是很多人的谈资。'
+    ],
+    body: '风波之后，你要决定这段关系往哪走。',
+    requires: function() { return getBranchNode('relationship') === 'crisis'; },
+    choices: [
+      { label: '修复关系', hint: '关系转稳，降低争议', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'partnership', { status: 'repaired' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'repaired';
+        addProfileDelta('controversy', -1);
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 2);
+        return '你们没有立刻回应媒体，而是先关掉手机谈了一整晚。最后你只发了一句简短的话，把故事从猜测拉回事实。<br><br>重点：风波被修复，关系进入长期稳定。<br><br>影响：争议下降；下赛季状态波动明显回落。';
+      }},
+      { label: '转为低调陪伴', hint: '关系降温但保留，避开聚光灯', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'private', { status: 'private_after_storm' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'private';
+        addProfileDelta('controversy', -1);
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 2);
+        return '你们决定不再对镜头交代任何事。慢慢地，热搜被下一件事盖过，生活重新变得安静。<br><br>结果：关系转低调；争议下降；接下来可进入稳定关系。';
+      }},
+      { label: '分手止损', hint: '结束关系，保护状态但留下讨论', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('relationship', 'breakup', { status: 'breakup' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'breakup';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        return '声明很短：我们尊重彼此，也尊重各自的未来。训练馆里没人问细节，但你知道这条新闻还会被讨论很久。<br><br>结果：恋爱线结束；下赛季状态波动略降；伤病风险略降。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_betrayal',
+    branch: 'relationship', phases: ['offseason', 'season'], slot: 'main', weight: 8,
+    title: '恋爱线：被情感伤害',
+    scenes: [
+      '最近的对话越来越不对劲：临时取消、扣过去的手机、对不上的时间。你决定主动约她见面，把话说开。',
+      '她没有否认。真相摆到桌上时，你才明白，信任裂开的声音很轻。'
+    ],
+    body: '这是恋爱线里“被情感伤害”的走向。信任一旦裂开，继续或离开都会留下痕迹。',
+    requires: function() {
+      var node = getBranchNode('relationship');
+      var p = (STATE.career && STATE.career.relationships && STATE.career.relationships.partner) || {};
+      if (node === 'volatile' || node === 'crisis') return true;
+      return node === 'distant' && p.type === 'ordinary';
+    },
+    choices: [
+      { label: '当面问清，选择原谅', hint: '关系保留，但留下信任裂缝', apply: function() {
+        var mods = getNextSeasonMods();
+        var p = (STATE.career.relationships && STATE.career.relationships.partner) || {};
+        var intro = p.type === 'ordinary' ? '她终于坦白：她认识了一个能每天陪她吃晚饭的人。你们隔着时差和赛程维系了半年，最后还是输给了距离。' : '那张照片拍得很清楚：她和一个陌生男人在同一辆车里，时间对不上你们的行程。';
+        setBranchNode('relationship', 'hurt_scar', { status: 'hurt_scar' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'hurt_scar';
+        STATE.career.flags.relationshipHurt = true;
+        mods.formVariance = Math.min(5, (mods.formVariance || 0) + 2);
+        return intro + '<br><br>她没有否认，也没有狡辩。你听完了所有解释，最后只说了一句：我原谅你，但需要时间。<br><br>重点：关系保留，但信任裂缝已经存在。<br><br>影响：下赛季状态波动上升；不解锁家庭线。';
+      }},
+      { label: '决绝分手，封存感情', hint: '结束关系，保护自己，但留下防备心', apply: function() {
+        var mods = getNextSeasonMods();
+        var p = (STATE.career.relationships && STATE.career.relationships.partner) || {};
+        var intro = p.type === 'ordinary' ? '她最终承认，自己已经先走远了。你说不出愤怒，只觉得那半年的视频通话像一场漫长的告别。' : '照片和聊天记录被放在你面前，没有误会，也没有反转。';
+        setBranchNode('relationship', 'hurt_guard', { status: 'hurt_guard' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'hurt_guard';
+        STATE.career.flags.relationshipHurt = true;
+        mods.formVariance = Math.min(5, (mods.formVariance || 0) + 1);
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        return intro + '<br><br>你把她的联系方式全部删除。发布会没人敢问，但更衣室里所有人都知道，你的眼神变冷了。<br><br>重点：你保护了自己，也把心门关上了。<br><br>影响：下赛季状态波动略升；伤病风险略降；之后恋爱线不再开启。';
+      }},
+      { label: '彻底放下，专注自己', hint: '接受伤害，用训练消化情绪', apply: function() {
+        var mods = getNextSeasonMods();
+        var p = (STATE.career.relationships && STATE.career.relationships.partner) || {};
+        var intro = p.type === 'ordinary' ? '她哭了，说对不起。你第一次发现，原谅和继续是两件完全不同的事。' : '她试图解释，但你已经不想再听版本二。';
+        setBranchNode('relationship', 'hurt_moved_on', { status: 'hurt_moved_on' });
+        if (STATE.career.relationships.partner) STATE.career.relationships.partner.status = 'hurt_moved_on';
+        STATE.career.flags.relationshipHurt = true;
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return intro + '<br><br>你约教练加练，把那些没回的消息全部清空。痛是真的，但你决定不让它定义你。<br><br>重点：你选择走出阴影。<br><br>影响：耐力+1；下赛季状态波动略降；获得“走出阴影”标签。';
+      }}
+    ]
+  },
+  {
+    id: 'relationship_single_aftermath',
+    branch: 'relationship', phase: 'offseason', slot: 'main', weight: 6,
+    title: '恋爱线：单身生活',
+    scenes: [
+      '没有新故事可写。媒体开始习惯把“感情状态”从你的档案里划掉。',
+      '你发现训练馆里的时间反而变得完整：没有电话要回，没有行程要迁就。'
+    ],
+    body: '恋爱线以单身结束。你可以选择怎么消化这段空白。',
+    requires: function() { var n = getBranchNode('relationship'); return n === 'breakup' || n === 'declined_closed'; },
+    choices: [
+      { label: '专注篮球', hint: '耐力提升，心更静', apply: function() {
+        setBranchNode('relationship', 'single_focus', { finalStatus: 'focused' });
+        addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        STATE.career.flags.singleFocus = true;
+        return '你把休赛期重新排满。助教说你又回到了刚进联盟时的样子：眼里只有训练和比赛。<br><br>效果：耐力+1；获得“单身专注”标签。';
+      }},
+      { label: '顺其自然', hint: '保持开放，不刻意寻找', apply: function() {
+        setBranchNode('relationship', 'single_open', { finalStatus: 'open' });
+        addProfileDelta('fanSupport', 1);
+        return '你没有把单身当成问题。偶尔和朋友吃饭，偶尔独自加练，生活没有因为缺少一段关系而变空。<br><br>效果：心态稳定；球迷支持略升。';
+      }}
+    ]
+  },
+  {
+    id: 'network_golf_intro',
+    branch: 'network', phase: 'offseason', slot: 'main', weight: 7,
+    title: '人脉线：名人高尔夫局',
+    scenes: [
+      '休赛期，赞助商的高尔夫局邀请函放在你桌上。你翻开看了很久，决定要不要用这个夏天换一张场外入场券。',
+      '你原本只是想放松，结果第一洞还没打完，就有人开始聊阵容、市场和未来几年联盟的权力流向。'
+    ],
+    body: '你要不要进入这个场外圈子？',
+    requires: function() {
+      return getBranchNode('network') === 'start' && (STATE.career.currentAge || 22) >= 24 && ((STATE.finalOVR || 0) >= 85 || hasCareerHonor('全明星') || hasCareerHonor('总冠军'));
+    },
+    choices: [
+      { label: '参加高尔夫局', hint: '开启人脉线，可能遇到 Rich Paul 或库里圈子', apply: function() {
+        var c = STATE.career; c.flags = c.flags || {};
+        setBranchNode('network', 'golf_meet', { status: 'golf' });
+        if (Math.random() < 0.5) { c.flags.richPaulContact = true; return '你和 Rich Paul 的团队在第九洞聊了很久。他们没有直接招募你，只说未来可以坐下来谈职业版图。<br><br>结果：记录 Rich Paul 接触；人脉线进入二阶段。'; }
+        c.flags.curryCircle = true; addAttrDelta('threePT', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '库里团队的人注意到你在果岭上的手感，玩笑说你的腕部控制像投篮。后来对方留下了联系方式。<br><br>效果：三分+1；记录库里圈子；人脉线进入二阶段。';
+      }},
+      { label: '拒绝社交，留在训练馆', hint: '放弃社交，把整个夏天留给训练', apply: function() {
+        setBranchNode('network', 'training_focus', { status: 'training' });
+        addAttrDelta('MID', 1); addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你婉拒了球局，把那一整天留给训练馆。助教说你可能错过了一些人脉，但你只回了一句：球会替我介绍自己。<br><br>效果：中投+1，耐力+1。';
+      }}
+    ]
+  },
+  {
+    id: 'superstar_recruit_call',
+    branch: 'superstar_recruit', phase: 'offseason', slot: 'main', weight: 18,
+    title: '巨星招募：午夜电话',
+    scenes: [
+      '休赛期训练结束后，手机在储物柜里亮了很久。',
+      '来电的人不是记者，也不是经纪人，而是{招募者}。他说：我不想再只隔着球衣和你对抗了。我们可以一起赢。别让忠诚害了你，你难道不想复刻詹姆斯的传奇历程吗？'
+    ],
+    body: '{招募者}所在的{招募球队}正在寻找另一个能改变系列赛的人。你不需要现在答应，但这通电话会让自由市场变得不一样。',
+    requires: function() {
+      var c = STATE.career;
+      if (!c || !c.flags) return false;
+      var season = c.seasonCount || 0;
+      if ((STATE.finalOVR || 0) < 85 && !hasCareerHonor('全明星') && !hasCareerHonor('最佳阵容')) return false;
+      if ((c.contract || 0) > 1 && (c.currentAge || 22) < 24) return false;
+      if (c.flags.lastSuperstarRecruitSeason != null && season - c.flags.lastSuperstarRecruitSeason < 3) return false;
+      var node = getBranchNode('superstar_recruit');
+      if (node && node !== 'start') return false;
+      return !!prepareSuperstarRecruitment();
+    },
+    choices: [
+      { label: '认真考虑联手', hint: '目标球队报价倾向明显提高，但争议会上升', apply: function() {
+        var c = STATE.career; c.flags = c.flags || {};
+        var star = prepareSuperstarRecruitment();
+        if (!star) return '你让经纪人先别回应。电话挂断后，训练馆重新安静下来。';
+        c.flags.lastSuperstarRecruitSeason = c.seasonCount || 0;
+        c.flags.superstarRecruitInterest = 'serious';
+        c.flags.freeAgentChoice = 'contender';
+        setBranchNode('superstar_recruit', 'consider_team_up', { targetTeam: c.flags.superstarRecruitTargetTeam, recruiter: c.flags.superstarRecruiterName });
+        addProfileDelta('fame', 1);
+        addProfileDelta('controversy', 1);
+        return '你没有答应，也没有拒绝，只说：让我的团队和你们聊聊。几分钟后，经纪人的电话就打了进来。<br><br>重点：{招募球队}会成为自由市场重点选项。<br><br>影响：人气+1；争议+1；自由市场更偏争冠联手。';
+      }},
+      { label: '保持距离', hint: '维持自主和忠诚，不改变报价倾向', apply: function() {
+        var c = STATE.career; c.flags = c.flags || {};
+        prepareSuperstarRecruitment();
+        c.flags.lastSuperstarRecruitSeason = c.seasonCount || 0;
+        c.flags.superstarRecruitInterest = 'declined';
+        setBranchNode('superstar_recruit', 'kept_distance', { targetTeam: c.flags.superstarRecruitTargetTeam, recruiter: c.flags.superstarRecruiterName });
+        addProfileDelta('loyalty', 1);
+        addProfileDelta('mediaTrust', 1);
+        return '你感谢了他的尊重，但没有给任何承诺。你说：如果未来真的要决定，我希望那是我自己的决定。<br><br>重点：你保持距离，也保住了主动权。<br><br>影响：忠诚+1；媒体好感+1。';
+      }},
+      { label: '把消息放给媒体', hint: '制造热度，大市场和争冠队更关注你', apply: function() {
+        var c = STATE.career; c.flags = c.flags || {};
+        var star = prepareSuperstarRecruitment();
+        if (!star) return '你让经纪人先别回应。电话挂断后，训练馆重新安静下来。';
+        c.flags.lastSuperstarRecruitSeason = c.seasonCount || 0;
+        c.flags.superstarRecruitInterest = 'public';
+        c.flags.freeAgentChoice = 'market';
+        setBranchNode('superstar_recruit', 'public_leverage', { targetTeam: c.flags.superstarRecruitTargetTeam, recruiter: c.flags.superstarRecruiterName });
+        addProfileDelta('fame', 2);
+        addProfileDelta('controversy', 2);
+        addSeasonMod('mediaPressure', 1, -10, 10);
+        return '第二天，记者们都在问同一个问题：{招募者}是不是已经给你打过电话？你没有承认，也没有否认。自由市场的空气一下变热了。<br><br>重点：你把招募变成筹码。<br><br>影响：人气+2；争议+2；媒体压力+1；大市场报价倾向提升。';
+      }}
+    ]
+  },
+  {
+    id: 'network_court_introduction',
+    branch: 'network', phase: 'offseason', slot: 'main', weight: 8,
+    title: '人脉线：迟来的入场券',
+    scenes: [
+      '你拒绝那次高尔夫局之后，没有离开这场游戏。三年后，你主动让经纪人把你的名字放进全明星周末的晚宴名单。',
+      '助教笑着说：你看，球真的会替你介绍自己。'
+    ],
+    body: '拒绝不是终点。当你的表现足够硬，门会自己再开一次。',
+    requires: function() {
+      return getBranchNode('network') === 'training_focus' && ((STATE.finalOVR || 0) >= 88 || hasCareerHonor('全明星') || hasCareerHonor('总冠军'));
+    },
+    choices: [
+      { label: '接受迟来的入场券', hint: '重新进入人脉线，从第二次会面继续', apply: function() {
+        setBranchNode('network', 'golf_meet', { status: 'reopened' });
+        addProfileDelta('fame', 1);
+        addProfileDelta('businessValue', 1);
+        return '你坐在同一张晚宴桌旁，这次没有人再试探你，而是直接问你想要什么。<br><br>重点：你重新回到人脉线。<br><br>影响：人气+1；商业价值+1。';
+      }},
+      { label: '继续把时间留给训练', hint: '彻底走训练馆路线', apply: function() {
+        setBranchNode('network', 'training_resource', { identity: 'training_resource' });
+        addAttrDelta('MID', 1); addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你把名片收进抽屉，第二天照常出现在训练馆。助教没有再劝，因为他知道，这条路同样是你想要的。<br><br>效果：中投+1，耐力+1；获得“顶级训练资源”标签；人脉线以训练身份收束。';
+      }}
+    ]
+  },
+  {
+    id: 'network_follow_up',
+    branch: 'network', phase: 'offseason', slot: 'main', weight: 12,
+    title: '人脉线：第二次会面',
+    scenes: [
+      '这个夏天，你主动拨通了之前那次球局留下的联系方式。',
+      '这一次不是寒暄。对方带着明确的问题来：你想把职业生涯经营成什么样？'
+    ],
+    body: '人脉线进入正式会面。你可以选择商业版图，或者保持球员身份的纯粹。',
+    requires: function() { return getBranchNode('network') === 'golf_meet'; },
+    choices: [
+      { label: '接受职业版图会议', hint: '商业热度上升，未来会有更多选择', apply: function() {
+        var b = setBranchNode('network', 'career_map_meeting', { status: 'business_team' });
+        b.business = (b.business || 0) + 2;
+        STATE.career.flags.businessBuzz = true;
+        return '会议室里没有战术板，只有品牌、城市、合同和未来十年的规划。你第一次意识到，球员也可以经营自己的时代。<br><br>结果：商业热度提升；未来自由市场/品牌线获得伏笔。';
+      }},
+      { label: '只保留私人联系', hint: '降低商业噪音，保持训练稳定', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('network', 'private_circle', { status: 'private_circle' });
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        return '你没有答应任何团队，也没有拒绝任何朋友。关系被留在私人层面，训练节奏没有被打断。<br><br>结果：下赛季状态波动略降。';
+      }}
+    ]
+  },
+  {
+    id: 'network_identity',
+    branch: 'network', phase: 'offseason', slot: 'main', weight: 10,
+    title: '人脉线：圈层身份',
+    scenes: [
+      '几年过去，你已经不是被介绍进局的人。现在新的年轻球员会被带到你面前。',
+      '他们看你的眼神，像是在看一个已经拿到入场券的人。'
+    ],
+    body: '你要把这条人脉线变成什么身份？',
+    requires: function() { return getBranchNode('network') === 'career_map_meeting'; },
+    choices: [
+      { label: '建立自己的商业圈', hint: '商业标签成型', apply: function() {
+        setBranchNode('network', 'business_circle', { identity: 'business_circle' });
+        STATE.career.flags.businessLeader = true;
+        return '你开始主动组织休赛期小型聚会。球员、经纪人、投资人都知道，有些事情可以通过你牵上线。<br><br>结果：获得“商业圈层”长期标签。';
+      }},
+      { label: '把圈子用于训练资源', hint: '训练收益稳定', apply: function() {
+        setBranchNode('network', 'training_resource', { identity: 'training_resource' });
+        addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你把人脉主要用在训练师、康复师和高质量陪练上。它不热闹，但非常实用。<br><br>效果：耐力+1；获得“顶级训练资源”长期标签。';
+      }}
+    ]
+  },
+  {
+    id: 'training_camp_open',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 12,
+    title: '夏日训练：夏天的岔路口',
+    scenes: [
+      '休赛期第一天，训练馆的灯只开了一半。助教把三份计划放在桌上：巨星训练营、专项课程、身体评估。',
+      '你站在门口想了很久。过去一个赛季的疲惫、遗憾和不甘心，都堆在这个夏天面前。'
+    ],
+    body: '这个夏天决定的不只是属性，而是你准备成为什么样的球员。',
+    requires: function() { return getBranchNode('training') === 'start'; },
+    choices: [
+      { label: '跟巨星练一夏', hint: '从前辈身上继承比赛理解', apply: function() {
+        setBranchNode('training', 'mentor_line', { route: 'mentor' });
+        return '你拨通了经纪人的电话：帮我把训练营都排上，我想看看他们怎么理解篮球。<br><br>重点：选择导师线。<br><br>影响：下一步进入导师第一课。';
+      }},
+      { label: '把专项磨成武器', hint: '一个方向练到对手害怕', apply: function() {
+        setBranchNode('training', 'skill_line', { route: 'skill' });
+        return '你把夏天的日历清空，只留下一项技术。训练师说：这是最无聊也最可怕的夏天。<br><br>重点：选择专项线。<br><br>影响：下一步进入专项第一课。';
+      }},
+      { label: '先把身体修好', hint: '恢复、力量、作息，重建身体底子', apply: function() {
+        setBranchNode('training', 'body_line', { route: 'body' });
+        return '你告诉队医：这赛季的疲劳感我不想再带着打。所有计划从一次彻底的身体评估开始。<br><br>重点：选择身体线。<br><br>影响：下一步进入身体重建计划。';
+      }},
+      { label: '双线并行', hint: '导师点拨 + 专项训练，强度更大', apply: function() {
+        setBranchNode('training', 'dual_line', { route: 'dual' });
+        return '你贪心地两个都要。教练组摇头，但你列了一张精确到小时的表：上午导师，下午专项。<br><br>重点：选择双修线。<br><br>影响：下一步进入双修计划。';
+      }},
+      { label: '找回篮球的乐趣', hint: '野球、孩子、家庭，让热爱先回来', apply: function() {
+        setBranchNode('training', 'joy_line', { route: 'joy' });
+        return '你把训练表收起来，先跑去野球场打了一下午。汗水落下来的时候，你突然觉得，自己还能再爱一次。<br><br>重点：选择乐趣线。<br><br>影响：下一步进入快乐篮球计划。';
+      }}
+    ]
+  },
+  {
+    id: 'mentor_first_lesson',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 13,
+    title: '夏日训练：导师第一课',
+    scenes: [
+      '训练馆很安静，只有鞋底摩擦地板的声音。老将没有先教动作，他先问你：你上一次真正喜欢篮球是什么时候？'
+    ],
+    body: '选择一位导师，带走一种比赛理解。',
+    requires: function() { return getBranchNode('training') === 'mentor_line'; },
+    choices: [
+      { label: '奥拉朱旺：梦幻脚步', hint: '终结/内防/篮板', apply: function() {
+        getBranchState('mentor').lastMentor = 'hakeem';
+        setBranchNode('training', 'mentor_first', { lastMentor: 'hakeem' });
+        addAttrDelta('FIN', 2); addAttrDelta('IDEF', 1); addAttrDelta('REB', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '奥拉朱旺没有急着教动作，他先让你在低位连续转身二十分钟。每次你以为找到了节奏，他都会轻轻摇头：脚先骗过人，球只是最后的证明。<br><br>效果：终结+2，内防+1，篮板+1。';
+      }},
+      { label: '杜兰特：无差别单打', hint: '中投/三分', apply: function() {
+        getBranchState('mentor').lastMentor = 'durant';
+        setBranchNode('training', 'mentor_first', { lastMentor: 'durant' });
+        addAttrDelta('MID', 2); addAttrDelta('threePT', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '杜兰特让你在贴身干扰下反复出手。他说：伟大的投篮不是空位准，而是被看穿后依然能进。<br><br>效果：中投+2，三分+1。';
+      }},
+      { label: '詹姆斯：身体管理', hint: '运动/力量/终结', apply: function() {
+        getBranchState('mentor').lastMentor = 'lebron';
+        setBranchNode('training', 'mentor_first', { lastMentor: 'lebron' });
+        addAttrDelta('ATH', 1); addAttrDelta('STR', 1); addAttrDelta('FIN', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '詹姆斯的训练在冲刺、对抗和阅读之间来回切换。最累的时候，他要你做最清醒的决定。<br><br>效果：运动+1，力量+1，终结+1。';
+      }},
+      { label: '保罗：控场大师', hint: '控球/传球/关键球', apply: function() {
+        getBranchState('mentor').lastMentor = 'paul';
+        setBranchNode('training', 'mentor_first', { lastMentor: 'paul' });
+        addAttrDelta('HAN', 1); addAttrDelta('PAS', 2); addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '保罗不断要求你说出弱侧第二个防守人的站位。你开始明白，控场是让九个人先暴露答案。<br><br>效果：控球+1，传球+2，关键球+1。';
+      }},
+      { label: '库里：空间与无球', hint: '三分/无球/空间理解', apply: function() {
+        getBranchState('mentor').lastMentor = 'curry';
+        setBranchNode('training', 'mentor_first', { lastMentor: 'curry' });
+        addAttrDelta('threePT', 2); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '库里没有让你一直投。他先带着你跑无球：什么时候加速、什么时候停、什么时候让防守人以为你放弃了。他说：三分是结果，跑动才是原因。<br><br>效果：三分+2，传球+1。';
+      }},
+      { label: '伦纳德：防守与重心', hint: '防守/力量/稳定', apply: function() {
+        getBranchState('mentor').lastMentor = 'kawhi';
+        setBranchNode('training', 'mentor_first', { lastMentor: 'kawhi' });
+        addAttrDelta('PDEF', 2); addAttrDelta('STR', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '伦纳德一整个下午只让你练两件事：横移和压重心。他说：大多数人输给的不是对手，是自己的重心。<br><br>效果：外防+2，力量+1。';
+      }}
+    ]
+  },
+  {
+    id: 'skill_first_lesson',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 11,
+    title: '夏日训练：专项第一课',
+    scenes: ['你把夏天的日历清空，只留下一项技术。训练师说：这是最无聊也最可怕的夏天。'],
+    body: '选择一个专项方向，一个夏天只做一件事。',
+    requires: function() { return getBranchNode('training') === 'skill_line'; },
+    choices: [
+      { label: '投射专项', hint: '三分/中投', apply: function() {
+        getBranchState('skill_training').lastFocus = 'shooting';
+        setBranchNode('training', 'skill_first', { lastFocus: 'shooting' });
+        return applyTrainingOutcome('threePT', 'MID', 'shootingPity', ['你把整个夏天拆成无数个投篮点。训练师不再数命中，只记录疲劳后的出手轨迹。'], { primary: '三分', secondary: '中投' });
+      }},
+      { label: '持球专项', hint: '控球/终结', apply: function() {
+        getBranchState('skill_training').lastFocus = 'handle';
+        setBranchNode('training', 'skill_first', { lastFocus: 'handle' });
+        return applyTrainingOutcome('HAN', 'FIN', 'handlePity', ['训练师在半场摆满障碍物，让你每次突破前都必须先读出协防位置。'], { primary: '控球', secondary: '终结' });
+      }},
+      { label: '防守专项', hint: '外防/抢断', apply: function() {
+        getBranchState('skill_training').lastFocus = 'defense';
+        setBranchNode('training', 'skill_first', { lastFocus: 'defense' });
+        return applyTrainingOutcome('PDEF', 'STL', 'defensePity', ['你花了一周只练横移和追防。教练不让你赌博式抢断，只要求你夺走对手的舒服空间。'], { primary: '外防', secondary: '抢断' });
+      }},
+      { label: '身体终结专项', hint: '力量/终结', apply: function() {
+        getBranchState('skill_training').lastFocus = 'strength';
+        setBranchNode('training', 'skill_first', { lastFocus: 'strength' });
+        return applyTrainingOutcome('STR', 'FIN', 'strengthPity', ['力量房和禁区训练被排在同一天。你先把身体练到发沉，再去篮下完成对抗终结。'], { primary: '力量', secondary: '终结' });
+      }},
+      { label: '组织专项', hint: '传球/关键球', apply: function() {
+        getBranchState('skill_training').lastFocus = 'playmaking';
+        setBranchNode('training', 'skill_first', { lastFocus: 'playmaking' });
+        return applyTrainingOutcome('PAS', 'CLU', 'playmakingPity', ['你和助教把每套战术拆成三层选择：第一选择被锁死，第二选择被延误，第三选择才是真正能赢的球。'], { primary: '传球', secondary: '关键球' });
+      }},
+      { label: '无球跑动', hint: '空间/中投/耐力', apply: function() {
+        getBranchState('skill_training').lastFocus = 'offball';
+        setBranchNode('training', 'skill_first', { lastFocus: 'offball' });
+        addAttrDelta('MID', 1); addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你整个夏天都在和助教玩“找空位”游戏：不看球，只看防守人的眼睛。训练结束，你开始能提前半拍出现在正确的位置。<br><br>效果：中投+1，耐力+1。';
+      }},
+      { label: '罚球稳定', hint: '关键时刻的心理锚点', apply: function() {
+        getBranchState('skill_training').lastFocus = 'free_throw';
+        setBranchNode('training', 'skill_first', { lastFocus: 'free_throw' });
+        addAttrDelta('CLU', 1); addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你每天罚 200 球，每一球之前都做同一个呼吸。两个月后，站在罚球线上时，你听见的只剩自己的呼吸。<br><br>效果：关键球+1，耐力+1。';
+      }}
+    ]
+  },
+  {
+    id: 'body_rebuild_plan',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 9,
+    title: '夏日训练：身体重建计划',
+    scenes: [
+      '身体评估报告摊在桌上：肌肉不平衡、睡眠负债、慢性炎症。队医说，好消息是这些都能修，坏消息是修它们不产生任何高光集锦。'
+    ],
+    body: '先成为健康的身体，再成为更强的球员。',
+    requires: function() { return getBranchNode('training') === 'body_line'; },
+    choices: [
+      { label: '科学恢复', hint: '康复优先，长期风险下降', apply: function() {
+        setBranchNode('training', 'body_plan', { plan: 'recovery' });
+        addSeasonMod('injuryRiskBonus', -2, -4, 8);
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你把每天的恢复课当成正式训练。训练师说：大多数人不是输在天赋，是输在不肯慢下来。<br><br>效果：伤病风险-2；状态波动-1。';
+      }},
+      { label: '力量加练', hint: '对抗和爆发提升，负荷较高', apply: function() {
+        setBranchNode('training', 'body_plan', { plan: 'strength' });
+        addAttrDelta('STR', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+        addSeasonMod('injuryRiskBonus', 1, -4, 8);
+        return '力量房成了你的第二个家。老将路过时只说了一句：别急，身体会给你的耐心付利息。<br><br>效果：力量+2；伤病风险+1。';
+      }},
+      { label: '营养作息', hint: '睡眠和饮食重建，状态更稳', apply: function() {
+        setBranchNode('training', 'body_plan', { plan: 'nutrition' });
+        addSeasonMod('formVariance', -2, -10, 10);
+        addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你戒了夜宵，把手机放在客厅充电。两个月后，队医说你的恢复指标像换了个人。<br><br>效果：状态波动-2；耐力+1。';
+      }},
+      { label: '家人陪伴康复', hint: '心理放松，家人参与训练生活', apply: function() {
+        setBranchNode('training', 'body_plan', { plan: 'family' });
+        addProfileDelta('fanSupport', 1);
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你每周空出一天让家人来训练馆。孩子在场边拍球，你在场中恢复。那一年，你第一次觉得训练馆也是家的延伸。<br><br>效果：球迷支持+1；状态波动-1。';
+      }}
+    ]
+  },
+  {
+    id: 'dual_training_plan',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 10,
+    title: '夏日训练：双修计划',
+    scenes: ['你贪心地两个都要。教练组摇头，但你列了一张精确到小时的表：上午导师，下午专项。'],
+    body: '双修不是偷懒，是更高强度的自我要求。',
+    requires: function() { return getBranchNode('training') === 'dual_line'; },
+    choices: [
+      { label: '导师主导 + 专项辅助', hint: '比赛理解优先', apply: function() {
+        setBranchNode('training', 'dual_plan', { plan: 'mentor_first' });
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '上午跟着导师读比赛，下午用专项把理解变成肌肉记忆。导师说：你是我见过最会用身体记笔记的人。<br><br>效果：关键球+1。';
+      }},
+      { label: '专项主导 + 导师点拨', hint: '技术优先，导师纠正细节', apply: function() {
+        setBranchNode('training', 'dual_plan', { plan: 'skill_first' });
+        addAttrDelta('MID', 1); addAttrDelta('STA', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '下午的专项课决定方向，上午的导师课只负责纠错。一个夏天下来，你的动作没变多，但每个动作都变对了。<br><br>效果：中投+1，耐力+1；状态波动-1。';
+      }},
+      { label: '轻量双修', hint: '两项都练但都不过载', apply: function() {
+        setBranchNode('training', 'dual_plan', { plan: 'light' });
+        addAttrDelta('STA', 1); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        return '你把强度控制在八成，只求每堂课都完整。训练师说：完整比猛烈更能坚持到九月。<br><br>效果：耐力+1，传球+1；伤病风险-1。';
+      }}
+    ]
+  },
+  {
+    id: 'joy_basketball_plan',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 7,
+    title: '夏日训练：快乐篮球计划',
+    scenes: ['你把训练表收起来，先跑去野球场打了一下午。汗水落下来的时候，你突然觉得，自己还能再爱一次。'],
+    body: '找回热爱，也是训练的一部分。',
+    requires: function() { return getBranchNode('training') === 'joy_line'; },
+    choices: [
+      { label: '野球局', hint: '即兴对抗，手感与创造力', apply: function() {
+        setBranchNode('training', 'joy_plan', { plan: 'pickup' });
+        addAttrDelta('HAN', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你混进社区的野球局，没人让着你，也没人采访你。你打出了这个夏天最开心的几个回合。<br><br>效果：控球+1；手感提升。';
+      }},
+      { label: '教孩子', hint: '把技术讲出来，理解更深', apply: function() {
+        setBranchNode('training', 'joy_plan', { plan: 'kids' });
+        addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        addProfileDelta('fanSupport', 1);
+        return '你在小球馆教孩子们第一步。有个男孩怎么都学不会，你蹲下来陪他练了四十分钟。他学会那天，笑得比你还大声。<br><br>效果：传球+1；球迷支持+1。';
+      }},
+      { label: '家庭投篮', hint: '让篮球回到生活里', apply: function() {
+        setBranchNode('training', 'joy_plan', { plan: 'family' });
+        addSeasonMod('formVariance', -1, -10, 10);
+        addProfileDelta('fanSupport', 1);
+        return '你带着家人每天傍晚投一会儿篮。孩子投进第一个球时，你忽然想起自己小时候爸爸也是这样教的。<br><br>效果：状态波动-1；球迷支持+1。';
+      }}
+    ]
+  },
+  {
+    id: 'mentor_deepen',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 12,
+    title: '夏日训练：导师深化',
+    scenes: [
+      '第一次训练之后，你以为自己已经懂了。直到导师第二次见面，他把录像停在你最狼狈的那个回合：动作只是门票，理解才是房间。'
+    ],
+    body: '把学到的东西变成比赛习惯。',
+    requires: function() { return getBranchNode('training') === 'mentor_first'; },
+    choices: [
+      { label: '把技术融入关键战', hint: '关键球提升', apply: function() {
+        setBranchNode('training', 'mentor_deep', { lesson: 'clutch_translation' });
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '训练从动作课变成了最后两分钟模拟。你被迫在疲劳、包夹和噪音里做选择。<br><br>效果：关键球+1。';
+      }},
+      { label: '反复打磨基础动作', hint: '稳定提升核心技术', apply: function() {
+        setBranchNode('training', 'mentor_deep', { lesson: 'foundation' });
+        addAttrDelta('MID', 1); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你没有追求新招，而是把已有动作重复到不需要思考。<br><br>效果：中投+1，传球+1。';
+      }},
+      { label: '学习如何教会队友', hint: '传球和队友线提升', apply: function() {
+        setBranchNode('training', 'mentor_deep', { lesson: 'teaching' });
+        addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        STATE.career.flags.teachingSkill = true;
+        return '导师让你把刚学会的东西讲给年轻球员听。你第一次发现，教一遍比自己练十遍更能暴露理解的漏洞。<br><br>效果：传球+1；flag teachingSkill = true。';
+      }},
+      { label: '身体管理', hint: '伤病风险下降，晚年技术维持', apply: function() {
+        setBranchNode('training', 'mentor_deep', { lesson: 'body' });
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        STATE.career.flags.bodyManagement = true;
+        return '导师把恢复课排进你的每一天。他说：天赋让你进联盟，习惯才决定你能待多久。<br><br>效果：伤病风险-1；晚年技术维持倾向。';
+      }}
+    ]
+  },
+  {
+    id: 'skill_deepen',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 12,
+    title: '夏日训练：专项深化',
+    scenes: ['第二个专项夏天，进步不再像第一次那么明显。训练师说：现在不是练更多，而是决定你到底是谁。'],
+    body: '深挖、补短板、强化体能，还是拉到实战里检验？',
+    requires: function() { return getBranchNode('training') === 'skill_first'; },
+    choices: [
+      { label: '继续深挖上次专项', hint: '更高突破概率，但过度训练风险存在', apply: function() {
+        var b = getBranchState('skill_training');
+        var focus = b.lastFocus || 'shooting';
+        setBranchNode('training', 'skill_deep', { identityPath: focus });
+        if (focus === 'handle') return applyTrainingOutcome('HAN', 'FIN', 'handlePity', ['你决定不换方向，把上个夏天没吃透的动作继续磨下去。'], { primary: '控球', secondary: '终结' });
+        if (focus === 'defense') return applyTrainingOutcome('PDEF', 'STL', 'defensePity', ['你继续把自己锁在防守训练里，一次次重来脚步角度。'], { primary: '外防', secondary: '抢断' });
+        if (focus === 'strength') return applyTrainingOutcome('STR', 'FIN', 'strengthPity', ['你继续泡在力量房里，把对抗终结当成每天最后一课。'], { primary: '力量', secondary: '终结' });
+        if (focus === 'playmaking') return applyTrainingOutcome('PAS', 'CLU', 'playmakingPity', ['你把战术选择继续拆细，逼自己在第三选择里找到赢球答案。'], { primary: '传球', secondary: '关键球' });
+        return applyTrainingOutcome('threePT', 'MID', 'shootingPity', ['你继续投，投到训练师不再看命中率，只看你的动作是否完全一样。'], { primary: '三分', secondary: '中投' });
+      }},
+      { label: '补强短板', hint: '低风险均衡成长', apply: function() {
+        setBranchNode('training', 'skill_deep', { identityPath: 'balanced' });
+        addAttrDelta('STA', 1); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你没有继续追逐一个夸张突破，而是把夏天拆给体能、传球和基础动作。<br><br>效果：耐力+1，传球+1。';
+      }},
+      { label: '强化体能', hint: '耐力与恢复优先', apply: function() {
+        setBranchNode('training', 'skill_deep', { identityPath: 'stamina' });
+        addAttrDelta('STA', 2); STATE.finalOVR = calcOVR(STATE.attrs);
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        return '你把夏天后半段交给体能师。训练师说：技术决定你有多高，体能决定你能站多高多久。<br><br>效果：耐力+2；伤病风险-1。';
+      }},
+      { label: '实战检验', hint: '用比赛验证训练', apply: function() {
+        setBranchNode('training', 'skill_deep', { identityPath: 'live' });
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        addSeasonMod('formVariance', 1, -10, 10);
+        return '你约了几场高强度对抗赛，把自己扔进真实的攻防里。有一场被防得很惨，但那晚你反而睡得最踏实。<br><br>效果：关键球+1；状态波动+1。';
+      }}
+    ]
+  },
+  {
+    id: 'training_identity',
+    branch: 'training', phase: 'offseason', slot: 'main', weight: 10,
+    title: '夏日训练：训练收束',
+    scenes: [
+      '九月的第一场队内训练，助教把你的新数据放到大屏幕上。它已经不只是属性，而是你的打法画像。',
+      '你想起这个夏天的每一个清晨、每一滴汗、每一次想放弃又继续的瞬间。'
+    ],
+    body: '选择你希望被记住的样子。',
+    requires: function() {
+      var node = getBranchNode('training');
+      return node === 'mentor_deep' || node === 'skill_deep' || node === 'body_plan' || node === 'dual_plan' || node === 'joy_plan';
+    },
+    choices: [
+      { label: '关键战解决者', hint: '关键球提升', apply: function() {
+        setBranchNode('training', 'training_identity', { identity: 'closer' });
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你开始有了自己的招牌回合。对手知道你要做什么，但仍然很难阻止。<br><br>效果：关键球+1；获得“关键战解决者”标签。';
+      }},
+      { label: '技术型领袖', hint: '传球提升', apply: function() {
+        setBranchNode('training', 'training_identity', { identity: 'technical_leader' });
+        addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '年轻队友开始围着你问问题。你说得越多，理解得越深。<br><br>效果：传球+1；获得“技术型领袖”标签。';
+      }},
+      { label: '身体管理样本', hint: '伤病风险下降', apply: function() {
+        setBranchNode('training', 'training_identity', { identity: 'body_standard' });
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        return '你的恢复课成了队内模板。没有漂亮镜头，但每个人都想复制你的长赛季。<br><br>效果：伤病风险-1；获得“身体管理样本”标签。';
+      }},
+      { label: '招牌技术', hint: '专项主属性提升', apply: function() {
+        setBranchNode('training', 'training_identity', { identity: 'signature_skill' });
+        addAttrDelta('CLU', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '你终于有了对手赛前报告里必须加粗的一项技术。<br><br>效果：关键球+1；获得“招牌技术”标签。';
+      }},
+      { label: '全面打法', hint: '稳定性提升', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('training', 'training_identity', { identity: 'balanced_player' });
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        return '你没有一项极端夸张的武器，但每个夜晚都更难被针对。<br><br>效果：状态波动-1；获得“全面打法”标签。';
+      }},
+      { label: '双修全能', hint: '比赛理解和专项技术并存', apply: function() {
+        setBranchNode('training', 'training_identity', { identity: 'dual_versatile' });
+        addAttrDelta('CLU', 1); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs);
+        return '有人说你不够纯粹，但你心里清楚：你已经不是只会一种方式打球的球员。<br><br>效果：关键球+1，传球+1；获得“双修全能”标签。';
+      }}
+    ]
+  },
+  {
+    id: 'team_practice_start',
+    branch: 'team_practice', phase: 'offseason', slot: 'main', weight: 9,
+    title: '球队线：提前合练',
+    scenes: ['休赛期刚过一半，你在群里发了一条消息：想提前合练的，后天早上训练馆见。你知道这能让球队更快进入状态。'],
+    body: '你要组织球队合练，还是把夏天留给个人恢复？',
+    requires: function() { return getBranchNode('team_practice') === 'start'; },
+    choices: [
+      { label: '组织球队合练', hint: '默契提升，开启领袖线', apply: function() { var mods = getNextSeasonMods(); setBranchNode('team_practice', 'practice_start', { status: 'organized' }); mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 2); mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs); return '你把队友一个个叫回训练馆。没人说这是领袖投票，但所有人都在用行动投票。<br><br>效果：传球+1；球队默契提升；球队线进入回应阶段。'; }},
+      { label: '个人恢复优先', hint: '降低伤病风险', apply: function() { var mods = getNextSeasonMods(); setBranchNode('team_practice', 'practice_start', { status: 'recovery' }); mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1); return '你选择把身体修好。教练理解这个决定，但队友们也会记住这个夏天你没有出现。<br><br>效果：下赛季伤病风险略降；球队线进入回应阶段。'; }}
+    ]
+  },
+  {
+    id: 'team_practice_response',
+    branch: 'team_practice', phase: 'offseason', slot: 'main', weight: 10,
+    title: '球队线：队内回应',
+    scenes: ['第二年夏天，合练邀请变得微妙。年轻球员期待你开口，核心队友也在观察你的态度。'],
+    body: '你要把自己推向更衣室领袖的位置吗？',
+    requires: function() { return getBranchNode('team_practice') === 'practice_start'; },
+    choices: [
+      { label: '主动承担领袖责任', hint: '球队默契和传球提升', apply: function() { var mods = getNextSeasonMods(); setBranchNode('team_practice', 'practice_response', { leadership: 'vocal' }); mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 2); addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs); return '你不再只是参加合练的人，而是安排训练内容、提醒年轻队友站位的人。<br><br>效果：传球+1；球队默契提升；球队线进入队魂阶段。'; }},
+      { label: '保持低调，只做好自己', hint: '降低波动，不争队内话语权', apply: function() { var mods = getNextSeasonMods(); setBranchNode('team_practice', 'practice_response', { leadership: 'quiet' }); mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1); return '你没有演讲，也没有喊口号，只是每天第一个到训练馆。久而久之，这也成了一种声音。<br><br>效果：下赛季状态波动略降；球队线进入队魂阶段。'; }},
+      { label: '把舞台让给年轻队友', hint: '年轻球员成长，个人声望温和', apply: function() { var mods = getNextSeasonMods(); setBranchNode('team_practice', 'practice_mentor', { leadership: 'mentor' }); mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1); STATE.career.flags.youthDevelopment = true; return '你把训练安排和回合组织交给年轻人，只在关键节点帮他们纠错。他们开始敢在你面前大声说话。<br><br>重点：你选择让位。<br><br>影响：球队默契略升；年轻球员成长。'; }}
+    ]
+  },
+  {
+    id: 'team_practice_identity',
+    branch: 'team_practice', phase: 'offseason', slot: 'main', weight: 8,
+    title: '球队线：队魂雏形',
+    scenes: ['这一次，合练不再需要你发消息。年轻球员已经提前到了。教练看着你，像是在看这支球队的秩序。'],
+    body: '球队线收束。你要留下怎样的队内标签？',
+    requires: function() { return getBranchNode('team_practice') === 'practice_response' || getBranchNode('team_practice') === 'practice_mentor'; },
+    choices: [
+      { label: '成为更衣室领袖', hint: '退役球衣队史分倾向提升', apply: function() { setBranchNode('team_practice', 'practice_identity', { identity: 'locker_room_leader' }); STATE.career.flags.lockerRoomLeader = true; return '你说话不一定最多，但关键时刻所有人都会看你。<br><br>结果：获得“更衣室领袖”长期标签。'; }},
+      { label: '成为训练馆标杆', hint: '身体管理更稳定', apply: function() { var mods = getNextSeasonMods(); setBranchNode('team_practice', 'practice_identity', { identity: 'gym_standard' }); mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1); return '你的训练方式成了队内年轻人的模板。没有海报，没有口号，只有每天重复。<br><br>结果：获得“训练馆标杆”长期标签；下赛季伤病风险略降。'; }},
+      { label: '成为年轻球员导师', hint: '传球和年轻球员成长提升', apply: function() { setBranchNode('team_practice', 'practice_identity', { identity: 'team_mentor' }); STATE.career.flags.youthMentor = true; addAttrDelta('PAS', 1); STATE.finalOVR = calcOVR(STATE.attrs); return '你开始把每个夏天的录像课交给年轻人讲，自己只补最后一层。他们讲得越来越像你。<br><br>效果：传球+1；获得“年轻球员导师”标签。'; }}
+    ]
+  },
+  {
+    id: 'family_table_talk',
+    branch: 'family', phases: ['offseason', 'season'], slot: 'main', weight: 11,
+    title: '家庭：餐桌上的问题',
+    scenes: [
+      '赛季结束后，你没有第一时间去训练馆。你主动把那个一直回避的问题摆上桌。',
+      '她说：我不是要你少爱篮球，我只是想知道，我们在你的人生里有没有位置。'
+    ],
+    body: '这不是逼你做选择，而是让你承认篮球之外也有人在等你。',
+    requires: function() {
+      var c = STATE.career || {};
+      var partner = (c.relationships && c.relationships.partner) || {};
+      var since = partner.sinceSeason == null ? 0 : (c.seasonCount || 0) - partner.sinceSeason;
+      return getBranchNode('family') === 'start' && getBranchNode('relationship') === 'partnership' && ((c.currentAge || 22) >= 28 || since >= 2);
+    },
+    choices: [
+      { label: '把家庭放进计划里', hint: '生活更稳定，但训练安排会更谨慎', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_plan', { status: 'committed' });
+        STATE.career.flags.familyPriority = true;
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addProfileDelta('fanSupport', 1);
+        return '你没有说漂亮话，只是把下个月的训练表打开，认真空出几天。她看着你改行程，终于笑了一下。<br><br>重点：你开始把亲密关系当成职业生涯的一部分，而不是赛季之外的附属品。<br><br>影响：下赛季状态更稳定；生活压力下降。';
+      }},
+      { label: '先完成争冠窗口', hint: '短期更专注，关系压力上升', apply: function() {
+        setBranchNode('family', 'career_priority', { status: 'delayed' });
+        addSeasonMod('moraleBonus', 1, -10, 10);
+        addProfileDelta('controversy', 1);
+        return '你沉默了很久，说自己还需要一到两年。她没有吵，只是点点头。那种安静比争吵更重。<br><br>重点：你把冠军窗口放在前面，但这段关系开始承受时间的磨损。<br><br>影响：短期斗志上升；未来家庭事件可能带来更大压力。';
+      }},
+      { label: '暂时回避承诺', hint: '暂缓决定，但关系开始磨损', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'avoid_commitment', { status: 'avoided' });
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addProfileDelta('controversy', 1);
+        return '你说赛季太忙，等稳定下来再谈。她没再追问，但那个晚上之后，你们的对话少了一点东西。<br><br>重点：你争取了时间，也让关系开始磨损。<br><br>影响：下赛季状态波动略降；争议上升。';
+      }}
+    ]
+  },
+  {
+    id: 'family_daily_life',
+    branch: 'family', phases: ['offseason', 'season'], slot: 'main', weight: 10,
+    title: '家庭：把家过成日常',
+    scenes: [
+      '她开始出现在你生活的固定角落：晨练前的一杯咖啡，客场回来门口的一盏灯。',
+      '你发现，承诺不需要每天说，但它需要每天都有人在场。'
+    ],
+    body: '家庭优先不是放弃篮球，而是让生活有地方落脚。',
+    requires: function() { return getBranchNode('family') === 'family_plan'; },
+    choices: [
+      { label: '把家庭排进赛季日历', hint: '给家人固定时间，状态更稳', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_settled', { status: 'settled' });
+        STATE.career.flags.familyPriority = true;
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 2);
+        mods.injuryRiskBonus = Math.max(-4, (mods.injuryRiskBonus || 0) - 1);
+        addProfileDelta('fanSupport', 1);
+        return '你在手机日历里给家庭日上了锁，连训练师都不许改。她说你终于学会不是把所有时间都交给球队。<br><br>重点：家庭进入长期稳定。<br><br>影响：下赛季状态波动明显下降；伤病风险略降；球迷支持+1。';
+      }},
+      { label: '带家人一起面对客场', hint: '让家人进入你真实的生活', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_settled', { status: 'settled' });
+        STATE.career.flags.familyPriority = true;
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addSeasonMod('moraleBonus', 1, -10, 10);
+        addProfileDelta('fanSupport', 1);
+        return '孩子第一次跟你坐球队包机，全程盯着窗外。你忽然明白，你不在家的每一晚，她们都在用另一种方式等你。<br><br>重点：家庭进入长期稳定。<br><br>影响：下赛季状态波动略降；士气+1；球迷支持+1。';
+      }}
+    ]
+  },
+  {
+    id: 'family_balance',
+    branch: 'family', phases: ['offseason', 'season'], slot: 'main', weight: 12,
+    title: '家庭：家庭与冠军之间',
+    scenes: [
+      '争冠窗口没有因为家庭停下来，但它开始变得更具体：总决赛赛程、孩子的生日、她独自撑过的那些客场。',
+      '你终于要回答那个被推迟很久的问题。'
+    ],
+    body: '冠军和家庭不是二选一，但你需要先让家里的人相信这一点。',
+    requires: function() { return getBranchNode('family') === 'career_priority'; },
+    choices: [
+      { label: '给家庭一个明确时限', hint: '用具体承诺修复信任', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_settled', { status: 'settled' });
+        STATE.career.flags.familyPriority = true;
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 2);
+        addProfileDelta('controversy', -1);
+        addProfileDelta('mediaTrust', 1);
+        return '你告诉她：给我这两年，之后时间都是你们的。她认真看着你，最后点头：好，我信你一次。<br><br>重点：家庭转稳，信任被补回来。<br><br>影响：下赛季状态波动明显下降；争议下降；媒体好感+1。';
+      }},
+      { label: '让家人进入决策', hint: '把选择权和家人分享', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_settled', { status: 'settled' });
+        STATE.career.flags.familyPriority = true;
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        mods.teamChemistry = Math.min(5, (mods.teamChemistry || 0) + 1);
+        addProfileDelta('fanSupport', 1);
+        return '你把交易流言和赛程摊在桌上，和她一起决定夏天怎么过。她第一次觉得，自己不是被你人生排除在外的人。<br><br>重点：家庭转稳，关系更真实。<br><br>影响：下赛季状态波动略降；球队默契+1；球迷支持+1。';
+      }},
+      { label: '把承诺继续推后', hint: '短期专注，但家庭裂痕加深', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_pressure', { status: 'pressure' });
+        mods.formVariance = Math.min(5, (mods.formVariance || 0) + 1);
+        mods.injuryRiskBonus = Math.min(8, (mods.injuryRiskBonus || 0) + 1);
+        addProfileDelta('controversy', 1);
+        return '你只说“再等等”。这句话你用过太多次，她这次没有点头，只是把门轻轻带上了。<br><br>重点：家庭进入压力状态。<br><br>影响：下赛季状态波动略升；伤病风险略升；争议上升。';
+      }}
+    ]
+  },
+  {
+    id: 'family_avoidance_cost',
+    branch: 'family', phases: ['offseason', 'season'], slot: 'main', weight: 10,
+    title: '家庭：回避的代价',
+    scenes: [
+      '你回避的那个问题没有消失，它只是换了更安静的方式出现：更少的电话、更长的沉默、更客气的“没事”。',
+      '你主动约她坐下来，这一次没有人愿意再假装没事。'
+    ],
+    body: '回避的代价，是让两个人都在等待中磨损。',
+    requires: function() { return getBranchNode('family') === 'avoid_commitment'; },
+    choices: [
+      { label: '认真补上承诺', hint: '修复关系，但裂缝仍然存在', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_pressure', { status: 'repaired_pressure' });
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addProfileDelta('controversy', -1);
+        return '你推掉一个商业活动，专门空出周末。她听完你的计划，眼睛有点红：你知道我等这句话等了多久吗。<br><br>重点：关系开始修复，但裂缝还在。<br><br>影响：下赛季状态波动略降；争议下降。';
+      }},
+      { label: '把话说开，体面放下', hint: '结束关系，留下遗憾', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_regret', { status: 'regret' });
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addProfileDelta('controversy', 1);
+        return '你们没有争吵，只是承认彼此需要的东西不一样。那顿饭吃完，谁都没有再联系谁。<br><br>重点：家庭故事以遗憾收场。<br><br>影响：下赛季状态波动略降；争议上升。';
+      }},
+      { label: '继续回避', hint: '不面对，让关系慢慢熄灭', apply: function() {
+        var mods = getNextSeasonMods();
+        setBranchNode('family', 'family_regret', { status: 'regret' });
+        mods.formVariance = Math.min(5, (mods.formVariance || 0) + 2);
+        addProfileDelta('controversy', 2);
+        addProfileDelta('fanSupport', -1);
+        return '她不再问，也不再等你。你训练完打开手机，消息停留在三天前。<br><br>重点：回避让家庭故事慢慢熄灭。<br><br>影响：下赛季状态波动上升；争议上升；球迷支持下降。';
+      }}
+    ]
+  },
+  {
+    id: 'family_late_career',
+    branch: 'family', phases: ['offseason', 'season'], slot: 'main', weight: 12,
+    title: '家庭：客场的深夜',
+    scenes: [
+      '你已经不再年轻。某个客场深夜，你看着手机里孩子发来的一段视频，突然发现自己错过了太多第一次。',
+      '教练组说还能打，身体也说还能扛，但你知道，有些时间一旦错过就不会再有。'
+    ],
+    body: '晚年收束。家庭会改变你愿意留在球场多久。',
+    requires: function() {
+      var node = getBranchNode('family');
+      return node === 'family_settled' || node === 'family_pressure' || node === 'family_regret';
+    },
+    choices: [
+      { label: '继续战斗', hint: '保持角色，把家庭放进未来计划', apply: function() {
+        STATE.career.flags.familyRetireTendency = 'play';
+        addSeasonMod('moraleBonus', 1, -10, 10);
+        return '你给家里打了电话，说再给我一年。电话那头沉默了几秒，然后说：好，但这是最后一年了。<br><br>重点：你选择继续战斗，但时间开始有边界。<br><br>影响：短期斗志上升。';
+      }},
+      { label: '降低角色，多陪家人', hint: '调整角色，家庭优先', apply: function() {
+        var mods = getNextSeasonMods();
+        STATE.career.flags.familyRetireTendency = 'family';
+        mods.formVariance = Math.max(-3, (mods.formVariance || 0) - 1);
+        addProfileDelta('fanSupport', 1);
+        return '你主动和教练谈角色调整，把上场时间让给年轻人。孩子的视频，你终于能第一时间点开。<br><br>重点：你选择把时间留给家人。<br><br>影响：下赛季状态波动略降；球迷支持+1。';
+      }},
+      { label: '把退役提上日程', hint: '主动结束球员生涯', apply: function() {
+        STATE.career.flags.familyRetireTendency = 'retire';
+        addProfileDelta('legacyBonus', 1);
+        return '你在更衣室待到所有人都走光，最后把护具放进包里。不是打不动了，是有些地方更需要你。<br><br>重点：你主动决定生涯的终点。<br><br>影响：历史评价略升。';
+      }}
+    ]
+  },
+  {
+    id: 'china_market_homecoming',
+    branch: 'china_market', phase: 'offseason', slot: 'main', weight: 10,
+    title: '中国市场：中国行',
+    scenes: [
+      '机场出口的人群比你想象中更夸张。有人举着你国家队的照片，也有人穿着你 NBA 球队的球衣。',
+      '你忽然意识到，这两种身份在这里重叠了。'
+    ],
+    body: '这趟中国行会消耗你的休赛期，但也会让你的影响力真正落到球迷面前。',
+    requires: function() {
+      var chinaNode = getBranchNode('china_team');
+      return getBranchNode('china_market') === 'start'
+        && (['national_core','team_core','managed_core','national_flag','team_revival','injured_hero','national_legend','national_mentor','honorable_exit'].indexOf(chinaNode) >= 0
+            || hasCareerHonor('全明星') || hasCareerHonor('MVP'));
+    },
+    choices: [
+      { label: '完整参加中国行', hint: '中国人气上升，但身体负担增加', apply: function() {
+        setBranchNode('china_market', 'market_tour', { status: 'tour' });
+        addProfileDelta('chinaPopularity', 3);
+        addProfileDelta('businessValue', 1);
+        addSeasonMod('injuryRiskBonus', 1, -4, 8);
+        return '你跑了三座城市，签名签到手腕发酸。最后一站，有个孩子举着手写海报说，他也想进国家队。<br><br>重点：你不再只是海外联赛里的中国球员，而是很多年轻球迷的现实坐标。<br><br>影响：中国人气上升；商业价值上升；下赛季身体负担略增。';
+      }},
+      { label: '缩短行程保护身体', hint: '保留精力，但热度少一点', apply: function() {
+        setBranchNode('china_market', 'market_light', { status: 'light' });
+        addProfileDelta('chinaPopularity', 1);
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你砍掉了两个商业站台，只留下球迷见面会和一次公开训练。机场的人没变少，但你的训练表终于没被活动塞满。<br><br>重点：你保住了身体，也让热度保持在场。<br><br>影响：中国人气略升；下赛季伤病风险略降；状态波动略降。';
+      }},
+      { label: '把时间留给青训活动', hint: '商业少一点，但中国篮球评价更高', apply: function() {
+        setBranchNode('china_market', 'market_grassroots', { status: 'grassroots' });
+        addProfileDelta('chinaPopularity', 2);
+        addProfileDelta('legacyBonus', 1);
+        return '你取消了两个商业站台，把时间留给一座小球馆。孩子们的动作很生涩，但每个人都在认真听你讲第一步。<br><br>重点：这不是流量最高的选择，却让你和中国篮球的关系变得更深。<br><br>影响：中国篮球评价上升；退役后的国家队/青训相关结局更容易出现。';
+      }}
+    ]
+  },
+  {
+    id: 'china_market_brand_offer',
+    branch: 'china_market', phase: 'offseason', slot: 'main', weight: 12,
+    title: '中国市场：国产品牌接触',
+    scenes: [
+      '品牌方没有先谈钱。他们拿出一张设计图，上面写着你的中文名字。',
+      '负责人说：我们想做一双中国孩子会记住的鞋。'
+    ],
+    body: '球鞋线在这里分叉：国产品牌、国际大牌，还是自己的品牌。',
+    requires: function() {
+      var node = getBranchNode('china_market');
+      return node === 'market_tour' || node === 'market_light' || node === 'market_grassroots';
+    },
+    choices: [
+      { label: '签国产品牌', hint: '国内支持强，品牌故事更稳', apply: function() {
+        setBranchNode('china_market', 'domestic_brand', { status: 'domestic' });
+        addProfileDelta('chinaPopularity', 2);
+        addProfileDelta('businessValue', 2);
+        addProfileDelta('mediaTrust', 1);
+        return '你看着设计图上自己的中文名字，想起小时候隔着橱窗看球鞋的自己。你签下了名字，也签下了一个承诺。<br><br>重点：你和中国品牌绑定在一起。<br><br>影响：中国人气上升；商业价值上升；媒体好感上升。';
+      }},
+      { label: '等待国际大牌', hint: '商业收益更高，但舆论压力更大', apply: function() {
+        addProfileDelta('businessValue', 3);
+        addProfileDelta('chinaPopularity', 1);
+        addSeasonMod('mediaPressure', 1, -10, 10);
+        setBranchNode('china_market', 'global_brand', { status: 'global' });
+        return '国际品牌的条件确实更好，但谈判拖了很久。网上开始有人问：你是不是看不上中国品牌？<br><br>重点：你选择了更大的盘子，也接住了更大的议论。<br><br>影响：商业价值大幅上升；中国人气略升；媒体压力上升。';
+      }},
+      { label: '尝试个人品牌', hint: '自由度和品牌烙印最高，风险也高', apply: function() {
+        addProfileDelta('businessValue', 1);
+        addProfileDelta('fame', 1);
+        addProfileDelta('controversy', 1);
+        setBranchNode('china_market', 'own_brand', { status: 'own' });
+        return '你决定自己组团队、自己投钱、自己选颜色。所有人都说这条路更难，但你想要一双真正属于你的鞋。<br><br>重点：你把自己的名字押上去。<br><br>影响：商业价值略升；人气上升；争议上升。';
+      }}
+    ]
+  },
+  {
+    id: 'china_market_shoe_deal',
+    branch: 'china_market', phase: 'offseason', slot: 'main', weight: 12,
+    title: '中国市场：球鞋落地',
+    scenes: [
+      '设计师把第一版鞋样推到你面前。你伸手摸了摸鞋面，忽然想起小时候站在商店橱窗外看球鞋的自己。',
+      '球鞋会在中国发售，也会跟你的名字一起被反复提起。'
+    ],
+    body: '签名鞋的风格会决定它被记住的方式。',
+    requires: function() {
+      var node = getBranchNode('china_market');
+      return node === 'domestic_brand' || node === 'global_brand' || node === 'own_brand';
+    },
+    choices: [
+      { label: '强调性能', hint: '球场口碑优先', apply: function() {
+        setBranchNode('china_market', 'shoe_settled', { status: 'settled' });
+        STATE.career.flags.chinaShoeBrand = true;
+        addProfileDelta('businessValue', 2);
+        return '你把鞋底、防侧翻和缓震全部调成比赛标准。首发配色普通，但穿上的人都说：这是一双真正能打球的鞋。<br><br>重点：这双鞋开始替你说话。<br><br>影响：商业价值上升；球鞋口碑提升。';
+      }},
+      { label: '强调故事', hint: '用生涯叙事打动球迷', apply: function() {
+        setBranchNode('china_market', 'shoe_settled', { status: 'settled' });
+        STATE.career.flags.chinaShoeBrand = true;
+        addProfileDelta('fanSupport', 2);
+        addProfileDelta('legacyBonus', 1);
+        return '鞋面上印着你的城市、号码和一路走来的年份。很多球迷说，这双鞋里装着一个完整的人生。<br><br>重点：这双鞋装着你的人生。<br><br>影响：球迷支持上升；历史评价上升。';
+      }},
+      { label: '强调中国元素', hint: '和中国篮球绑定更深', apply: function() {
+        setBranchNode('china_market', 'shoe_settled', { status: 'settled' });
+        STATE.career.flags.chinaShoeBrand = true;
+        addProfileDelta('chinaPopularity', 3);
+        addProfileDelta('legacyBonus', 1);
+        return '鞋舌内侧绣着国旗的轮廓，后跟是汉字签名。发售那天，中国球迷把它当成一种身份的证明。<br><br>重点：这双鞋和你的身份连在一起。<br><br>影响：中国人气大幅上升；历史评价上升。';
+      }},
+      { label: '追求高利润', hint: '商业最大化，但口碑有风险', apply: function() {
+        setBranchNode('china_market', 'shoe_settled', { status: 'settled' });
+        STATE.career.flags.chinaShoeBrand = true;
+        addProfileDelta('businessValue', 3);
+        addProfileDelta('controversy', 1);
+        return '你选了最轻便也最便宜的材料组合，定价却很高。销量不错，但球场上开始有人抱怨鞋底寿命。<br><br>重点：这双鞋带来了销量，也带来了争议。<br><br>影响：商业价值大幅上升；争议上升。';
+      }}
+    ]
+  },
+  {
+    id: 'media_first_press',
+    branch: 'media', phase: 'season', slot: 'main', weight: 12,
+    title: '媒体：输球发布会',
+    scenes: [
+      '更衣室的门还没关，记者已经围上来。你刚打出一场想删掉的比赛，输球原因却在镜头前被拆成一百个问题。',
+      '记者问你：今晚最后几个回合，你是不是太想自己解决了？'
+    ],
+    body: '同样的失利，不同的表达会留下不同的人设。',
+    requires: function() {
+      var c = STATE.career || {};
+      var played = (c.totalStats && c.totalStats.games > 0) || (STATE.season && STATE.season.playerStats && STATE.season.playerStats.games > 0);
+      var honored = hasCareerHonor('全明星') || hasCareerHonor('MVP') || hasCareerHonor('总冠军');
+      return getBranchNode('media') === 'start' && (played || honored);
+    },
+    choices: [
+      { label: '承担责任', hint: '媒体好感与队友关系提升', apply: function() {
+        setBranchNode('media', 'press_accountable', { tone: 'accountable' });
+        addProfileDelta('mediaTrust', 2);
+        addProfileDelta('lockerRoomTrust', 1);
+        return '你没有甩锅，把最后几个回合的责任全部接过来。队友没有说话，但更衣室安静了几秒——那是信任开始生长的声音。<br><br>效果：媒体好感+2；更衣室信任+1。';
+      }},
+      { label: '强调团队问题', hint: '保护自己，但会显得回避', apply: function() {
+        setBranchNode('media', 'press_team', { tone: 'team' });
+        addProfileDelta('mediaTrust', 1);
+        return '你说篮球是五个人的比赛，输球不该由一个人背锅。话没错，但镜头切走时，你知道媒体想要的不是答案，是标题。<br><br>效果：媒体好感+1；队友线轻微受益。';
+      }},
+      { label: '拒绝评价', hint: '降低热度，专注比赛', apply: function() {
+        setBranchNode('media', 'press_silent', { tone: 'silent' });
+        addSeasonMod('formVariance', -1, -10, 10);
+        addProfileDelta('fame', -1);
+        return '你只说了一句“下一场见”，然后起身离开。没有漂亮话，但训练师说你那晚投篮特别安静。<br><br>效果：状态波动-1；人气-1。';
+      }},
+      { label: '反问记者', hint: '热度上升，争议上升', apply: function() {
+        setBranchNode('media', 'press_confront', { tone: 'confront', confront: true });
+        addProfileDelta('fame', 1);
+        addProfileDelta('controversy', 1);
+        return '你反问：如果是你最后三分钟五次失误，你会怎么总结？采访间安静了一秒，然后所有人都知道明天头条有了。<br><br>效果：人气+1；争议+1；接下来的头条，都会围着你转。';
+      }}
+    ]
+  },
+  {
+    id: 'media_social_storm',
+    branch: 'media', phase: 'season', slot: 'main', weight: 12,
+    title: '媒体：社交媒体风波',
+    scenes: [
+      '你深夜发了一条社交媒体动态。醒来时，它已经被截图转发，不再是情绪话，而是所有节目讨论的标题。'
+    ],
+    body: '你无法控制别人怎么截图，但你可以控制自己怎么回应。',
+    requires: function() {
+      var node = getBranchNode('media');
+      if (node === 'press_accountable' || node === 'press_team' || node === 'press_silent' || node === 'press_confront') return true;
+      var rl = getBranchNode('relationship');
+      var cm = getBranchNode('china_market');
+      var nw = getBranchNode('network');
+      var contra = (STATE.career.profile && STATE.career.profile.controversy) || 0;
+      return rl === 'public' || rl === 'crisis' || cm === 'shoe_settled' || nw === 'business_circle' || contra >= 2;
+    },
+    choices: [
+      { label: '道歉', hint: '短期口碑受损，长期形象挽回', apply: function() {
+        setBranchNode('media', 'crisis_apology', { response: 'apology' });
+        addProfileDelta('mediaTrust', 1);
+        addProfileDelta('controversy', -1);
+        return '你发了一条没有删改的道歉，承认那句话不该发。评论区一半在骂，一半在说：至少他敢认。<br><br>效果：媒体好感+1；争议-1；商业热度短期下降。';
+      }},
+      { label: '解释', hint: '保持中立，不温不火', apply: function() {
+        setBranchNode('media', 'crisis_explain', { response: 'explain' });
+        return '你解释了语境，没有认错也没有反击。热度慢慢退去，但总有人觉得你在找借口。<br><br>效果：媒体好感0；争议0。';
+      }},
+      { label: '删除并沉默', hint: '让热度自然消退，但留下猜测', apply: function() {
+        setBranchNode('media', 'crisis_delete', { response: 'delete' });
+        addProfileDelta('mediaTrust', -1);
+        addProfileDelta('controversy', 1);
+        return '你删了动态，没有发任何解释。几天后热度被别的事盖过，但评论区永远有人提“他删了”。<br><br>效果：媒体好感-1；争议+1。';
+      }},
+      { label: '强硬回应', hint: '热度暴涨，人设更硬', apply: function() {
+        setBranchNode('media', 'crisis_strong', { response: 'strong' });
+        addProfileDelta('fame', 2);
+        addProfileDelta('controversy', 2);
+        return '你发了一条更长的回应，直接点名所有断章取义的人。转发量爆炸，支持者和批评者都更兴奋了。<br><br>效果：人气+2；争议+2。';
+      }}
+    ]
+  },
+  {
+    id: 'media_persona',
+    branch: 'media', phase: 'season', slot: 'main', weight: 10,
+    title: '媒体：人设成型',
+    scenes: [
+      '几个月过去，媒体不再纠结那一条动态。他们开始用一句话概括你：你是哪种球员，也是哪种人。',
+      '你发现，人设不是别人给你的，是每一次发言自己攒出来的。'
+    ],
+    body: '选择你希望被记住的媒体形象。每一种形象，都需要你先把对应的故事走完。',
+    requires: function() {
+      var node = getBranchNode('media');
+      return node === 'crisis_apology' || node === 'crisis_explain' || node === 'crisis_delete' || node === 'crisis_strong';
+    },
+    choices: [
+      { label: '谦逊团队型', hint: '媒体好感与队友信任提升', lockHint: '需要更衣室和队友已经真正认你', requires: function() {
+        var tp = getBranchNode('team_practice');
+        var tb = getBranchNode('teammate_bond');
+        return tp === 'practice_identity' || (tb && tb !== 'start');
+      }, bonus: function() {
+        addProfileDelta('lockerRoomTrust', 1);
+        return { text: '球队线/队友线已经成型，更衣室更认你这套说法。' };
+      }, apply: function() {
+        setBranchNode('media', 'persona_humble', { persona: 'humble' });
+        addProfileDelta('mediaTrust', 2);
+        addProfileDelta('lockerRoomTrust', 1);
+        return '你每次采访都先提队友。记者开始觉得你“无趣”，但更衣室里的人知道，你是把话留给他们的人。<br><br>效果：媒体好感+2；更衣室信任+1。';
+      }},
+      { label: '狂人巨星型', hint: '人气和争议上升', lockHint: '需要你已经在关键时刻留下名字', requires: function() {
+        var t = getBranchState('training');
+        return getBranchNode('training') === 'training_identity' && t.identity === 'closer';
+      }, bonus: function() {
+        addProfileDelta('fame', 1);
+        return { text: '关键战解决者的名号让狂言更有底气。' };
+      }, apply: function() {
+        setBranchNode('media', 'persona_arrogant', { persona: 'arrogant' });
+        addProfileDelta('fame', 2);
+        addProfileDelta('controversy', 1);
+        return '你说：我就是最好的，不接受讨论。喜欢你的人更狂热，讨厌你的人更有动力。<br><br>效果：人气+2；争议+1。';
+      }},
+      { label: '沉默杀手型', hint: '稳定性提升，媒体关注下降', lockHint: '需要你已经在训练中打磨出全面打法', requires: function() {
+        var t = getBranchState('training');
+        return getBranchNode('training') === 'training_identity' && t.identity === 'balanced_player';
+      }, bonus: function() {
+        addSeasonMod('formVariance', -1, -10, 10);
+        return { text: '全面打法让沉默更有说服力，状态更稳。' };
+      }, apply: function() {
+        setBranchNode('media', 'persona_silent', { persona: 'silent' });
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你几乎不开口，只用表现说话。记者抱怨采访不到你，但你的比赛集锦越传越广。<br><br>效果：状态波动-1。';
+      }},
+      { label: '商业偶像型', hint: '商业价值上升，媒体压力上升', lockHint: '需要人脉或中国市场结果', requires: function() {
+        return getBranchNode('network') === 'business_circle' || getBranchNode('china_market') === 'shoe_settled';
+      }, bonus: function() {
+        addProfileDelta('businessValue', 1);
+        return { text: '商业圈层/球鞋线已经铺好，偶像人设直接变现。' };
+      }, apply: function() {
+        setBranchNode('media', 'persona_business', { persona: 'business' });
+        addProfileDelta('businessValue', 3);
+        addSeasonMod('mediaPressure', 1, -10, 10);
+        return '你开始出现在广告牌、综艺和商业活动里。镜头喜欢你，但每个镜头后面都有一份合同在提醒你微笑。<br><br>效果：商业价值+3；媒体压力+1。';
+      }},
+      { label: '国家队英雄型', hint: '中国球迷支持与历史评价上升', lockHint: '需要你在国家队扛过核心位置', requires: function() {
+        var cn = getBranchNode('china_team');
+        return ['national_core','team_core','managed_core','national_flag','team_revival','injured_hero','national_legend','national_mentor','honorable_exit'].indexOf(cn) >= 0;
+      }, bonus: function() {
+        addProfileDelta('chinaPopularity', 1);
+        addProfileDelta('legacyBonus', 1);
+        return { text: '国家队核心身份加持，中国球迷更认这套人设。' };
+      }, apply: function() {
+        setBranchNode('media', 'persona_national', { persona: 'national' });
+        addProfileDelta('chinaPopularity', 3);
+        addProfileDelta('legacyBonus', 1);
+        return '你把国家队和国家荣誉放进每一次发言。中国球迷把你当成自己人，媒体也开始用“中国篮球的骄傲”称呼你。<br><br>效果：中国人气+3；历史评价+1。';
+      }},
+      { label: '争议天才型', hint: '人气与争议双高', lockHint: '需要高争议值或情感伤害结果', requires: function() {
+        var contra = (STATE.career.profile && STATE.career.profile.controversy) || 0;
+        var rl = getBranchNode('relationship');
+        return contra >= 3 || rl === 'hurt_scar' || rl === 'hurt_guard' || rl === 'hurt_moved_on' || !!getBranchState('media').confront;
+      }, bonus: function() {
+        addProfileDelta('fame', 1);
+        addProfileDelta('controversy', 1);
+        return { text: '此前的争议与交锋给“天才”人设添了火。' };
+      }, apply: function() {
+        setBranchNode('media', 'persona_controversial', { persona: 'controversial' });
+        addProfileDelta('fame', 2);
+        addProfileDelta('controversy', 3);
+        addProfileDelta('legacyBonus', 1);
+        return '你承认自己不好惹，也不打算讨好任何人。媒体恨你，但离不开你；球迷也一样。<br><br>效果：人气+2；争议+3；历史评价+1。';
+      }},
+      { label: '自由发声', hint: '不固定人设，按本心说话', apply: function() {
+        setBranchNode('media', 'persona_independent', { persona: 'independent' });
+        addProfileDelta('mediaTrust', 1);
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你没有固定人设，每句话都按当时的心情来。媒体觉得你难以预测，但球迷喜欢这种真实。<br><br>效果：媒体好感+1；状态波动-1。';
+      }}
+    ]
+  },
+  {
+    id: 'fan_culture_heat',
+    branch: 'fan_culture', phase: 'season', slot: 'main', weight: 11,
+    title: '球迷文化：虎扑的第一张热度帖',
+    scenes: [
+      '比赛结束两小时，虎扑湿乎乎已经开楼。你的名字挂在标题里，点灭数和点亮数同时疯涨。',
+      '有人说你是“JR”，也有人把你和十年前那位传奇放在一起比。你第一次发现，虎扑比发布会更早给你定性。'
+    ],
+    body: '第一张热度帖会定义你在虎扑的起点，也会决定虎扑以后怎么称呼你。',
+    requires: function() {
+      var media = getBranchNode('media');
+      return getBranchNode('fan_culture') === 'start'
+        && (media === 'press_accountable' || media === 'press_team' || media === 'press_silent' || media === 'press_confront'
+        || media === 'crisis_apology' || media === 'crisis_explain' || media === 'crisis_delete' || media === 'crisis_strong'
+        || ['persona_humble','persona_arrogant','persona_silent','persona_business','persona_national','persona_controversial','persona_independent'].indexOf(media) >= 0);
+    },
+    choices: [
+      { label: '晒数据回应', hint: '技术流好评，数据党认可', apply: function() {
+        setBranchNode('fan_culture', 'fan_heat', { tone: 'stats' });
+        addProfileDelta('fanSupport', 2);
+        return '你把效率值、正负值和关键球录像贴上去。热评第一变成：这数据没得黑。<br><br>效果：球迷支持+2。';
+      }},
+      { label: '发段子自嘲', hint: '亲和力上升，黑粉变乐子', apply: function() {
+        setBranchNode('fan_culture', 'fan_heat', { tone: 'meme' });
+        addProfileDelta('fame', 1);
+        addProfileDelta('controversy', -1);
+        return '你转发了那张表情包，配文：我打的，认了。评论区从对骂变成整活。<br><br>效果：人气+1；争议-1。';
+      }},
+      { label: '正面回应黑粉', hint: '热度爆炸，立场鲜明', apply: function() {
+        setBranchNode('fan_culture', 'fan_heat', { tone: 'fight' });
+        addProfileDelta('fame', 2);
+        addProfileDelta('controversy', 2);
+        return '你引用黑粉的原话，一条条回怼。帖子被转到所有分区，支持者和黑粉都更兴奋了。<br><br>效果：人气+2；争议+2。';
+      }},
+      { label: '不回应', hint: '热度自然消退，专注比赛', apply: function() {
+        setBranchNode('fan_culture', 'fan_lowkey', { tone: 'lowkey' });
+        addSeasonMod('formVariance', -1, -10, 10);
+        addProfileDelta('fanSupport', 1);
+        return '你没有登录账号。帖子慢慢沉下去，但有人记住了：那个被黑的人一句话没说。<br><br>效果：状态波动-1；球迷支持+1。';
+      }}
+    ]
+  },
+  {
+    id: 'fan_culture_score',
+    branch: 'fan_culture', phase: 'season', slot: 'main', weight: 12,
+    title: '球迷文化：虎扑评分事件',
+    scenes: [
+      '赛后评分上线，你头像下的数字跳个不停。这一晚你打得很满：关键球有，失误也有。',
+      '热评第一写着“这分不真实”，第二写着“反向评分走起”，第三已经开始吵你的防守。'
+    ],
+    body: '评分只是一个数字，但虎扑会用一整晚讨论它。你要给这串数字一个什么样的结尾？',
+    requires: function() {
+      var node = getBranchNode('fan_culture');
+      return node === 'fan_heat' || node === 'fan_lowkey';
+    },
+    choices: [
+      { label: '把评分当成镜子', hint: '关掉手机，把这一晚变成训练素材', apply: function() {
+        setBranchNode('fan_culture', 'score_mirror', { score: 'mirror' });
+        addSeasonMod('formVariance', -2, -10, 10);
+        addSeasonMod('injuryRiskBonus', -1, -4, 8);
+        return '你关掉手机，回训练馆把录像从头看到尾。评分不会变，但你决定下一场不一样。<br><br>效果：状态波动-2；伤病风险-1。';
+      }},
+      { label: '回热评自嘲', hint: '用幽默接住争议', apply: function() {
+        setBranchNode('fan_culture', 'score_meme', { score: 'meme' });
+        addProfileDelta('fame', 1);
+        addProfileDelta('mediaTrust', 1);
+        return '你在评论区回了一条：这分我先投了，下一场还。评论区从对骂变成整活。<br><br>效果：人气+1；媒体好感+1。';
+      }},
+      { label: '主动列出自己的失误', hint: '自己开楼，把问题摊开', apply: function() {
+        setBranchNode('fan_culture', 'score_own', { score: 'own' });
+        addProfileDelta('mediaTrust', 2);
+        addProfileDelta('fanSupport', 1);
+        return '你自己开了一楼，把今晚的失误一条条列出来。有人说你太认真，也有人说这才是真实。<br><br>效果：媒体好感+2；球迷支持+1。';
+      }},
+      { label: '让团队控评', hint: '版面干净，但真实感下降', apply: function() {
+        setBranchNode('fan_culture', 'score_report', { score: 'report' });
+        addProfileDelta('controversy', -1);
+        addProfileDelta('mediaTrust', -1);
+        return '你让团队处理掉那些带节奏的帖子。版面干净了，但有人说你玩不起。<br><br>效果：争议-1；媒体好感-1。';
+      }}
+    ]
+  },
+  {
+    id: 'fan_culture_community',
+    branch: 'fan_culture', phase: 'season', slot: 'main', weight: 11,
+    title: '球迷文化：社区互动',
+    scenes: [
+      '虎扑给你开了官方认证，邀请你空降。你发现账号有 20 万关注，但一条都没发过。',
+      '编辑问你：要不要先从回一条热评开始？'
+    ],
+    body: '从“被谈论”到“亲自下场”，是球迷文化线最关键的转折。',
+    requires: function() {
+      var node = getBranchNode('fan_culture');
+      return node === 'score_mirror' || node === 'score_meme' || node === 'score_own' || node === 'score_report';
+    },
+    choices: [
+      { label: '亲自回帖', hint: '真实感上升，风评变活', apply: function() {
