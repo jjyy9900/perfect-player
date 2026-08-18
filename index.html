@@ -9,7 +9,7 @@
   <div id="loading">正在加载游戏…</div>
   <script>
     const parts = Array.from({length: 18}, (_, i) => String(i).padStart(2, '0'));
-    Promise.all(parts.map((part) => fetch(`chunks/game-${part}.txt?v=legendary-3`).then((r) => {
+    Promise.all(parts.map((part) => fetch(`chunks/game-${part}.txt?v=legendary-4`).then((r) => {
       if (!r.ok) throw new Error(`游戏文件加载失败：${part}`);
       return r.text();
       }))).then((html) => {
