@@ -1,0 +1,4682 @@
+    function validateArrayFormatSeparator(value) {
+        if (typeof value !== "string" || value.length !== 1) {
+          throw new TypeError("arrayFormatSeparator must be single character string");
+        }
+      }
+      function encode(value, options) {
+        if (options.encode) {
+          return options.strict ? strictUriEncode(value) : encodeURIComponent(value);
+        }
+        return value;
+      }
+      function decode2(value, options) {
+        if (options.decode) {
+          return decodeUriComponent(value);
+        }
+        return value;
+      }
+      function keysSorter(input) {
+        if (Array.isArray(input)) {
+          return input.sort();
+        }
+        if ((typeof input === "undefined" ? "undefined" : _type_of(input)) === "object") {
+          return keysSorter(Object.keys(input)).sort(function(a, b) {
+            return Number(a) - Number(b);
+          }).map(function(key) {
+            return input[key];
+          });
+        }
+        return input;
+      }
+      function removeHash(input) {
+        var hashStart = input.indexOf("#");
+        if (hashStart !== -1) {
+          input = input.slice(0, hashStart);
+        }
+        return input;
+      }
+      function getHash(url) {
+        var hash = "";
+        var hashStart = url.indexOf("#");
+        if (hashStart !== -1) {
+          hash = url.slice(hashStart);
+        }
+        return hash;
+      }
+      function parseValue(value, options, type) {
+        if (type === "string" && typeof value === "string") {
+          return value;
+        }
+        if (typeof type === "function" && typeof value === "string") {
+          return type(value);
+        }
+        if (options.parseBooleans && value !== null && (value.toLowerCase() === "true" || value.toLowerCase() === "false")) {
+          return value.toLowerCase() === "true";
+        }
+        if (type === "number" && !Number.isNaN(Number(value)) && typeof value === "string" && value.trim() !== "") {
+          return Number(value);
+        }
+        if (options.parseNumbers && !Number.isNaN(Number(value)) && typeof value === "string" && value.trim() !== "") {
+          return Number(value);
+        }
+        return value;
+      }
+      function extract(input) {
+        input = removeHash(input);
+        var queryStart = input.indexOf("?");
+        if (queryStart === -1) {
+          return "";
+        }
+        return input.slice(queryStart + 1);
+      }
+      function parse(query, options) {
+        options = _object_spread({
+          decode: true,
+          sort: true,
+          arrayFormat: "none",
+          arrayFormatSeparator: ",",
+          parseNumbers: false,
+          parseBooleans: false,
+          types: /* @__PURE__ */ Object.create(null)
+        }, options);
+        validateArrayFormatSeparator(options.arrayFormatSeparator);
+        var formatter = parserForArrayFormat(options);
+        var returnValue = /* @__PURE__ */ Object.create(null);
+        if (typeof query !== "string") {
+          return returnValue;
+        }
+        query = query.trim().replace(/^[?#&]/, "");
+        if (!query) {
+          return returnValue;
+        }
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+        try {
+          for (var _iterator = query.split("&")[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var parameter = _step.value;
+            if (parameter === "") {
+              continue;
+            }
+            var parameter_ = options.decode ? parameter.replaceAll("+", " ") : parameter;
+            var _splitOnFirst = _sliced_to_array(splitOnFirst(parameter_, "="), 2), key = _splitOnFirst[0], value = _splitOnFirst[1];
+            if (key === void 0) {
+              key = parameter_;
+            }
+            value = value === void 0 ? null : [
+              "comma",
+              "separator",
+              "bracket-separator"
+            ].includes(options.arrayFormat) ? value : decode2(value, options);
+            formatter(decode2(key, options), value, returnValue);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+        var _iteratorNormalCompletion1 = true, _didIteratorError1 = false, _iteratorError1 = void 0;
+        try {
+          for (var _iterator1 = Object.entries(returnValue)[Symbol.iterator](), _step1; !(_iteratorNormalCompletion1 = (_step1 = _iterator1.next()).done); _iteratorNormalCompletion1 = true) {
+            var _step_value = _sliced_to_array(_step1.value, 2), key1 = _step_value[0], value1 = _step_value[1];
+            if ((typeof value1 === "undefined" ? "undefined" : _type_of(value1)) === "object" && value1 !== null && options.types[key1] !== "string") {
+              var _iteratorNormalCompletion2 = true, _didIteratorError2 = false, _iteratorError2 = void 0;
+              try {
+                for (var _iterator2 = Object.entries(value1)[Symbol.iterator](), _step2; !(_iteratorNormalCompletion2 = (_step2 = _iterator2.next()).done); _iteratorNormalCompletion2 = true) {
+                  var _step_value1 = _sliced_to_array(_step2.value, 2), key2 = _step_value1[0], value2 = _step_value1[1];
+                  var type = options.types[key1] ? options.types[key1].replace("[]", "") : void 0;
+                  value1[key2] = parseValue(value2, options, type);
+                }
+              } catch (err) {
+                _didIteratorError2 = true;
+                _iteratorError2 = err;
+              } finally {
+                try {
+                  if (!_iteratorNormalCompletion2 && _iterator2.return != null) {
+                    _iterator2.return();
+                  }
+                } finally {
+                  if (_didIteratorError2) {
+                    throw _iteratorError2;
+                  }
+                }
+              }
+            } else if ((typeof value1 === "undefined" ? "undefined" : _type_of(value1)) === "object" && value1 !== null && options.types[key1] === "string") {
+              returnValue[key1] = Object.values(value1).join(options.arrayFormatSeparator);
+            } else {
+              returnValue[key1] = parseValue(value1, options, options.types[key1]);
+            }
+          }
+        } catch (err) {
+          _didIteratorError1 = true;
+          _iteratorError1 = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion1 && _iterator1.return != null) {
+              _iterator1.return();
+            }
+          } finally {
+            if (_didIteratorError1) {
+              throw _iteratorError1;
+            }
+          }
+        }
+        if (options.sort === false) {
+          return returnValue;
+        }
+        return (options.sort === true ? Object.keys(returnValue).sort() : Object.keys(returnValue).sort(options.sort)).reduce(function(result, key3) {
+          var value3 = returnValue[key3];
+          result[key3] = Boolean(value3) && (typeof value3 === "undefined" ? "undefined" : _type_of(value3)) === "object" && !Array.isArray(value3) ? keysSorter(value3) : value3;
+          return result;
+        }, /* @__PURE__ */ Object.create(null));
+      }
+      function stringify(object, options) {
+        if (!object) {
+          return "";
+        }
+        options = _object_spread({
+          encode: true,
+          strict: true,
+          arrayFormat: "none",
+          arrayFormatSeparator: ","
+        }, options);
+        validateArrayFormatSeparator(options.arrayFormatSeparator);
+        var shouldFilter = function(key2) {
+          return options.skipNull && isNullOrUndefined(object[key2]) || options.skipEmptyString && object[key2] === "";
+        };
+        var formatter = encoderForArrayFormat(options);
+        var objectCopy = {};
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+        try {
+          for (var _iterator = Object.entries(object)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var _step_value = _sliced_to_array(_step.value, 2), key = _step_value[0], value = _step_value[1];
+            if (!shouldFilter(key)) {
+              objectCopy[key] = value;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+        var keys = Object.keys(objectCopy);
+        if (options.sort !== false) {
+          keys.sort(options.sort);
+        }
+        return keys.map(function(key2) {
+          var value2 = object[key2];
+          if (value2 === void 0) {
+            return "";
+          }
+          if (value2 === null) {
+            return encode(key2, options);
+          }
+          if (Array.isArray(value2)) {
+            if (value2.length === 0 && options.arrayFormat === "bracket-separator") {
+              return encode(key2, options) + "[]";
+            }
+            return value2.reduce(formatter(key2), []).join("&");
+          }
+          return encode(key2, options) + "=" + encode(value2, options);
+        }).filter(function(x) {
+          return x.length > 0;
+        }).join("&");
+      }
+      function parseUrl(url, options) {
+        var _url__split;
+        options = _object_spread({
+          decode: true
+        }, options);
+        var _splitOnFirst = _sliced_to_array(splitOnFirst(url, "#"), 2), url_ = _splitOnFirst[0], hash = _splitOnFirst[1];
+        if (url_ === void 0) {
+          url_ = url;
+        }
+        var _url__split_;
+        return _object_spread({
+          url: (_url__split_ = url_ === null || url_ === void 0 ? void 0 : (_url__split = url_.split("?")) === null || _url__split === void 0 ? void 0 : _url__split[0]) !== null && _url__split_ !== void 0 ? _url__split_ : "",
+          query: parse(extract(url), options)
+        }, options && options.parseFragmentIdentifier && hash ? {
+          fragmentIdentifier: decode2(hash, options)
+        } : {});
+      }
+      function stringifyUrl(object, options) {
+        options = _object_spread(_define_property({
+          encode: true,
+          strict: true
+        }, encodeFragmentIdentifier, true), options);
+        var url = removeHash(object.url).split("?")[0] || "";
+        var queryFromUrl = extract(object.url);
+        var query = _object_spread({}, parse(queryFromUrl, {
+          sort: false
+        }), object.query);
+        var queryString = stringify(query, options);
+        queryString && (queryString = "?".concat(queryString));
+        var hash = getHash(object.url);
+        if (typeof object.fragmentIdentifier === "string") {
+          var urlObjectForFragmentEncode = new URL(url);
+          urlObjectForFragmentEncode.hash = object.fragmentIdentifier;
+          hash = options[encodeFragmentIdentifier] ? urlObjectForFragmentEncode.hash : "#".concat(object.fragmentIdentifier);
+        }
+        return "".concat(url).concat(queryString).concat(hash);
+      }
+      function pick(input, filter, options) {
+        options = _object_spread(_define_property({
+          parseFragmentIdentifier: true
+        }, encodeFragmentIdentifier, false), options);
+        var _parseUrl = parseUrl(input, options), url = _parseUrl.url, query = _parseUrl.query, fragmentIdentifier = _parseUrl.fragmentIdentifier;
+        return stringifyUrl({
+          url,
+          query: includeKeys(query, filter),
+          fragmentIdentifier
+        }, options);
+      }
+      function exclude(input, filter, options) {
+        var exclusionFilter = Array.isArray(filter) ? function(key) {
+          return !filter.includes(key);
+        } : function(key, value) {
+          return !filter(key, value);
+        };
+        return pick(input, exclusionFilter, options);
+      }
+      var query_string_default = base_exports;
+      var import_compare_versions = require_umd();
+      var import_uuid = require_commonjs_browser();
+      var import_parse_url = __toESM(require_dist());
+      function isValidUrl(url) {
+        try {
+          new URL(url);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+      function getQueryParams(url) {
+        var questionMarkIndex = url.indexOf("?");
+        var search = questionMarkIndex !== -1 ? url.substring(questionMarkIndex + 1) : url;
+        var fixedSearch = search.split("?").join("&");
+        var parsed = query_string_default.parse(fixedSearch, {
+          arrayFormat: "none"
+        });
+        var finalParams = {};
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+        try {
+          for (var _iterator = Object.keys(parsed)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var key = _step.value;
+            var values = parsed[key];
+            if (Array.isArray(values)) {
+              finalParams[key] = values.filter(function(v) {
+                return v !== null;
+              }).pop();
+            } else if (typeof values === "string") {
+              finalParams[key] = values;
+            }
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+        return finalParams;
+      }
+      function isBrowser() {
+        return !!(typeof window !== "undefined" && window.document && window.document.createElement);
+      }
+      function isAndroid() {
+        if (isBrowser()) {
+          var userAgent = window.navigator.userAgent;
+          return /Android/i.test(userAgent);
+        }
+        return false;
+      }
+      function isIOS() {
+        if (isBrowser()) {
+          var userAgent = window.navigator.userAgent;
+          return /iPhone|iPad|iPod/i.test(userAgent);
+        }
+        return false;
+      }
+      function isWeChat() {
+        if (isBrowser()) {
+          var userAgent = window.navigator.userAgent;
+          return /MicroMessenger/i.test(userAgent);
+        }
+        return false;
+      }
+      function isHupu() {
+        if (isBrowser()) {
+          var userAgent = window.navigator.userAgent;
+          return /kanqiu/i.test(userAgent);
+        }
+        return false;
+      }
+      function getEnvByOnlinePkg(href) {
+        var onlinePkgRegexp = /offline-download.hupu.com\/online\/(sit|stg|prod)\/\d{4,8}\/\w+/;
+        var onlinePkgMatch = href.match(onlinePkgRegexp);
+        return onlinePkgMatch ? onlinePkgMatch[1] : null;
+      }
+      function getEnvByHostname(hostname) {
+        if (hostname.includes("-sit") || hostname.includes("-test")) return "sit";
+        if (hostname.includes("-stg") || hostname.includes("-pre")) return "stg";
+        return "prod";
+      }
+      function getEnvByHupuBridge(env) {
+        switch (env) {
+          case 3:
+          case 4:
+            return "sit";
+          case 2:
+            return "stg";
+          default:
+            return "prod";
+        }
+      }
+      var getEnv = function() {
+        var url = arguments.length > 0 && arguments[0] !== void 0 ? arguments[0] : window.location.href;
+        if (true) {
+          return "dev";
+        }
+        if (isValidUrl(url)) {
+          var _ref = (0, import_parse_url.default)(url), href = _ref.href, hostname = _ref.host, search = _ref.search;
+          var queryParams = getQueryParams(search);
+          if (queryParams.env) {
+            return queryParams.env;
+          }
+          var onlinePkgEnv = getEnvByOnlinePkg(href);
+          if (onlinePkgEnv) {
+            return onlinePkgEnv;
+          }
+          return getEnvByHostname(hostname);
+        }
+        if (isHupu()) {
+          var _window_HupuBridge;
+          var hupuBridgeEnv = (_window_HupuBridge = window.HupuBridge) === null || _window_HupuBridge === void 0 ? void 0 : _window_HupuBridge.nainfo.env;
+          return getEnvByHupuBridge(hupuBridgeEnv);
+        }
+        return "prod";
+      };
+      function singleton(Constructor) {
+        for (var _len = arguments.length, args = new Array(_len > 1 ? _len - 1 : 0), _key = 1; _key < _len; _key++) {
+          args[_key - 1] = arguments[_key];
+        }
+        var instance = null;
+        var ProxyClass = new Proxy(Constructor, {
+          get: function get(target, prop, receiver) {
+            if (prop === "prototype") {
+              return Reflect.get(target, prop);
+            }
+            var cls = instance !== null && instance !== void 0 ? instance : _construct(ProxyClass, _to_consumable_array(args));
+            return Reflect.get(cls, prop, receiver);
+          },
+          construct: function construct(_target, newArgs) {
+            if (instance) {
+              var _instance_setConfig;
+              var _instance_setConfig1;
+              (_instance_setConfig1 = instance.setConfig) === null || _instance_setConfig1 === void 0 ? void 0 : (_instance_setConfig = _instance_setConfig1).call.apply(_instance_setConfig, [
+                instance
+              ].concat(_to_consumable_array(newArgs)));
+              return instance;
+            }
+            instance = _construct(Constructor, _to_consumable_array(args));
+            return instance;
+          }
+        });
+        return ProxyClass;
+      }
+      function request(options) {
+        return new Promise(function(resolve, reject) {
+          var url = options.url, _options_method = options.method, method = _options_method === void 0 ? "POST" : _options_method, _options_headers = options.headers, headers = _options_headers === void 0 ? {
+            "Content-Type": "application/json"
+          } : _options_headers, timeout = options.timeout, data = options.data, _options_withCredentials = options.withCredentials, withCredentials = _options_withCredentials === void 0 ? true : _options_withCredentials;
+          var xhr = new XMLHttpRequest();
+          xhr.open(method, url, true);
+          xhr.timeout = timeout || 0;
+          xhr.withCredentials = withCredentials;
+          var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+          try {
+            for (var _iterator = Object.entries(headers)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var _step_value = _sliced_to_array(_step.value, 2), key = _step_value[0], value = _step_value[1];
+              xhr.setRequestHeader(key, value);
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+          xhr.onload = function() {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              try {
+                var response = JSON.parse(xhr.responseText);
+                resolve(response);
+              } catch (err) {
+                reject({
+                  message: "Failed to parse response"
+                });
+              }
+            } else {
+              reject({
+                message: xhr.statusText,
+                status: xhr.status
+              });
+            }
+          };
+          xhr.onerror = function() {
+            reject({
+              message: "Network error"
+            });
+          };
+          xhr.ontimeout = function() {
+            reject({
+              message: "Request timed out",
+              status: xhr.status
+            });
+          };
+          xhr.send(data ? JSON.stringify(data) : null);
+        });
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/@hupu+js-bridge@1.1.8/node_modules/@hupu/js-bridge/cjs/index.js
+  var require_cjs2 = __commonJS({
+    "../../node_modules/.pnpm/@hupu+js-bridge@1.1.8/node_modules/@hupu/js-bridge/cjs/index.js"(exports, module) {
+      "use strict";
+      function _class_call_check(instance, Constructor) {
+        if (!(instance instanceof Constructor)) {
+          throw new TypeError("Cannot call a class as a function");
+        }
+      }
+      function _defineProperties(target, props) {
+        for (var i = 0; i < props.length; i++) {
+          var descriptor = props[i];
+          descriptor.enumerable = descriptor.enumerable || false;
+          descriptor.configurable = true;
+          if ("value" in descriptor) descriptor.writable = true;
+          Object.defineProperty(target, descriptor.key, descriptor);
+        }
+      }
+      function _create_class(Constructor, protoProps, staticProps) {
+        if (protoProps) _defineProperties(Constructor.prototype, protoProps);
+        if (staticProps) _defineProperties(Constructor, staticProps);
+        return Constructor;
+      }
+      function _define_property(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      function _object_spread(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i] != null ? arguments[i] : {};
+          var ownKeys2 = Object.keys(source);
+          if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys2 = ownKeys2.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+              return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+          }
+          ownKeys2.forEach(function(key) {
+            _define_property(target, key, source[key]);
+          });
+        }
+        return target;
+      }
+      function ownKeys(object, enumerableOnly) {
+        var keys = Object.keys(object);
+        if (Object.getOwnPropertySymbols) {
+          var symbols = Object.getOwnPropertySymbols(object);
+          if (enumerableOnly) {
+            symbols = symbols.filter(function(sym) {
+              return Object.getOwnPropertyDescriptor(object, sym).enumerable;
+            });
+          }
+          keys.push.apply(keys, symbols);
+        }
+        return keys;
+      }
+      function _object_spread_props(target, source) {
+        source = source != null ? source : {};
+        if (Object.getOwnPropertyDescriptors) {
+          Object.defineProperties(target, Object.getOwnPropertyDescriptors(source));
+        } else {
+          ownKeys(Object(source)).forEach(function(key) {
+            Object.defineProperty(target, key, Object.getOwnPropertyDescriptor(source, key));
+          });
+        }
+        return target;
+      }
+      function _object_without_properties(source, excluded) {
+        if (source == null) return {};
+        var target = _object_without_properties_loose(source, excluded);
+        var key, i;
+        if (Object.getOwnPropertySymbols) {
+          var sourceSymbolKeys = Object.getOwnPropertySymbols(source);
+          for (i = 0; i < sourceSymbolKeys.length; i++) {
+            key = sourceSymbolKeys[i];
+            if (excluded.indexOf(key) >= 0) continue;
+            if (!Object.prototype.propertyIsEnumerable.call(source, key)) continue;
+            target[key] = source[key];
+          }
+        }
+        return target;
+      }
+      function _object_without_properties_loose(source, excluded) {
+        if (source == null) return {};
+        var target = {};
+        var sourceKeys = Object.keys(source);
+        var key, i;
+        for (i = 0; i < sourceKeys.length; i++) {
+          key = sourceKeys[i];
+          if (excluded.indexOf(key) >= 0) continue;
+          target[key] = source[key];
+        }
+        return target;
+      }
+      function _type_of(obj) {
+        "@swc/helpers - typeof";
+        return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+      }
+      var __defProp2 = Object.defineProperty;
+      var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+      var __getOwnPropNames2 = Object.getOwnPropertyNames;
+      var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+      var __defNormalProp2 = function(obj, key, value) {
+        return key in obj ? __defProp2(obj, key, {
+          enumerable: true,
+          configurable: true,
+          writable: true,
+          value
+        }) : obj[key] = value;
+      };
+      var __export = function(target, all) {
+        for (var name in all) __defProp2(target, name, {
+          get: all[name],
+          enumerable: true
+        });
+      };
+      var __copyProps = function(to, from, except, desc) {
+        if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+          var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+          try {
+            var _loop = function() {
+              var key = _step.value;
+              if (!__hasOwnProp2.call(to, key) && key !== except) __defProp2(to, key, {
+                get: function() {
+                  return from[key];
+                },
+                enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+              });
+            };
+            for (var _iterator = __getOwnPropNames2(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) _loop();
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        }
+        return to;
+      };
+      var __toCommonJS = function(mod) {
+        return __copyProps(__defProp2({}, "__esModule", {
+          value: true
+        }), mod);
+      };
+      var __publicField = function(obj, key, value) {
+        return __defNormalProp2(obj, (typeof key === "undefined" ? "undefined" : _type_of(key)) !== "symbol" ? key + "" : key, value);
+      };
+      var src_exports = {};
+      __export(src_exports, {
+        default: function() {
+          return JSBridge_default;
+        }
+      });
+      module.exports = __toCommonJS(src_exports);
+      var import_shared = require_cjs();
+      var EventEmitter = /* @__PURE__ */ (function() {
+        function EventEmitter2() {
+          _class_call_check(this, EventEmitter2);
+          __publicField(this, "events", {});
+        }
+        _create_class(EventEmitter2, [
+          {
+            key: "addListener",
+            value: function addListener(event, listener) {
+              var _this_events_event;
+              if (_type_of(this.events[event]) !== "object") {
+                this.events[event] = [];
+              }
+              (_this_events_event = this.events[event]) === null || _this_events_event === void 0 ? void 0 : _this_events_event.push(listener);
+            }
+          },
+          {
+            key: "removeListener",
+            value: function removeListener(event, listener) {
+              if (_type_of(this.events[event]) === "object") {
+                var _this_events_event;
+                var idx = (_this_events_event = this.events[event]) === null || _this_events_event === void 0 ? void 0 : _this_events_event.indexOf(listener);
+                if (idx !== void 0 && idx > -1) {
+                  var _this_events_event1;
+                  (_this_events_event1 = this.events[event]) === null || _this_events_event1 === void 0 ? void 0 : _this_events_event1.splice(idx, 1);
+                }
+              }
+            }
+          },
+          {
+            key: "emit",
+            value: function emit(event, arg) {
+              if (_type_of(this.events[event]) === "object") {
+                var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+                try {
+                  for (var _iterator = this.events[event][Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+                    var listener = _step.value;
+                    listener.call(this, arg);
+                  }
+                } catch (err) {
+                  _didIteratorError = true;
+                  _iteratorError = err;
+                } finally {
+                  try {
+                    if (!_iteratorNormalCompletion && _iterator.return != null) {
+                      _iterator.return();
+                    }
+                  } finally {
+                    if (_didIteratorError) {
+                      throw _iteratorError;
+                    }
+                  }
+                }
+              }
+            }
+          },
+          {
+            key: "once",
+            value: function once(event, listener) {
+              var _this = this;
+              var remove = function() {
+                _this.removeListener(event, listener);
+                _this.removeListener(event, remove);
+              };
+              this.addListener(event, listener);
+              this.addListener(event, remove);
+            }
+          }
+        ]);
+        return EventEmitter2;
+      })();
+      var createAdModule = function(send, _register) {
+        return {
+          /** 打开通用激励视频 */
+          openRewardFlow: function(params) {
+            return send("hupu.adver.beginRewardFlow", params);
+          },
+          /** 打开游戏激励视频 */
+          openRewardedVideo: function(params) {
+            return send("hupu.adver.openRewardedVideo", params);
+          },
+          /** 游戏激励视频预加载 */
+          preloadAdver: function(params) {
+            return send("hupu.adver.preload", params);
+          },
+          /** 游戏通知展示横屏 */
+          showFullscreen: function(params) {
+            return send("hupu.common.fullscreen", params);
+          },
+          /** 游戏横屏通知 */
+          showOrientation: function(params) {
+            return send("hupu.activity.orientation", params);
+          },
+          /** 游戏竖屏通知 */
+          showVerticalScreen: function(params) {
+            return send("hupu.common.longscreen", params);
+          }
+        };
+      };
+      var ad_default = createAdModule;
+      var createAppModule = function(send, _register) {
+        return {
+          /** 询问是否安装 */
+          checkinstall: function(params) {
+            return send("hupu.common.checkinstall", params);
+          },
+          /** 唤起三方 App */
+          wakeApp: function(params) {
+            return send("hupu.common.wakeapp", params);
+          },
+          /** 通知客户端下载 */
+          download: function(params) {
+            return send("hupu.common.downloadApp", params);
+          },
+          /** 获取下载状态 */
+          getDownloadStatus: function(params) {
+            return send("hupu.common.downloadStatus", params);
+          },
+          /** 唤起安装 */
+          install: function(params) {
+            return send("hupu.common.installApp", params);
+          },
+          /** 暂停下载 */
+          pauseDownload: function(params) {
+            return send("hupu.common.handles", params);
+          }
+        };
+      };
+      var app_default = createAppModule;
+      var createBaseModule = function(send, _register) {
+        return {
+          /** 获得当前设备信息 */
+          getDeviceInfo: function() {
+            return send("bridgeReadyLite");
+          },
+          /** 离线包已准备好 */
+          readyHybrid: function() {
+            return send("hupu.common.hybridready");
+          }
+        };
+      };
+      var base_default = createBaseModule;
+      var createBusinessModule = function(send, _register) {
+        return {
+          /** 获取皮肤数据 */
+          getSkinInfoByKey: function(params) {
+            return send("hupu.common.resource.getSkinInfoByKey", params);
+          },
+          /** 获取皮肤数据 */
+          postThread: function(params) {
+            return send("hupu.common.h5PostThread", params);
+          },
+          /** 打开专区选择 */
+          selectZone: function(params) {
+            return send("hupu.editor.zone.click", params);
+          },
+          /** 设置帖子页面高度 */
+          setThreadPageHeight: function(params) {
+            return send("hupu.ui.pageHeightDidChanged", params);
+          }
+        };
+      };
+      var business_default = createBusinessModule;
+      var createImageModule = function(send, _register) {
+        return {
+          /** 取消上传图片 */
+          cancelUpload: function(params) {
+            return send("hupu.common.photo.upload.cancel", params);
+          },
+          /** 禁止长按图片 */
+          disableLongPress: function() {
+            return send("hupu.common.image.forbidLongClick");
+          },
+          /** 预览图片 */
+          preview: function(params) {
+            return send("hupu.album.view", params);
+          },
+          /** 保存图片 */
+          save: function(params) {
+            return send("hupu.common.saveImage", params);
+          },
+          /** 截图 */
+          screenshot: function() {
+            return send("hupu.common.screenshot");
+          },
+          /** 选择图片 */
+          select: function(params) {
+            return send("hupu.common.photo.add", params);
+          },
+          /** 预览本地图片 */
+          showEditablePreview: function() {
+            return send("hupu.common.photo.preview");
+          },
+          /** 打开摄像头拍照 */
+          takePhoto: function() {
+            return send("hupu.common.photo.take");
+          },
+          /** 上传图片 */
+          upload: function(params) {
+            return send("hupu.common.photo.upload", params);
+          }
+        };
+      };
+      var image_default = createImageModule;
+      var createInteractionModule = function(send, _register) {
+        return {
+          /** 震动 */
+          shake: function() {
+            return send("hupu.common.shake");
+          },
+          /** 复制 */
+          copy: function(params) {
+            return send("hupu.ui.copy");
+          },
+          /** 通用 H5 弹窗关闭 */
+          closePopup: function() {
+            return send("hupu.popup.cmdCallback");
+          },
+          /** 启用下拉刷新 */
+          enablePullRefresh: function() {
+            return send("hupu.ui.pullrefresh.enable");
+          },
+          /** 禁用下拉刷新 */
+          disablePullRefresh: function() {
+            return send("hupu.ui.pullrefresh.disenable");
+          },
+          /** 收起下拉刷新 */
+          finishPullRefresh: function() {
+            return send("hupu.ui.pullrefresh.finishload");
+          },
+          /** 隐藏 loading */
+          hideLoading: function() {
+            return send("hupu.common.hideloading");
+          },
+          /** 隐藏导航栏 */
+          hideNavBar: function() {
+            return send("hupu.ui.hideNavBar");
+          },
+          /** 点击 native 回退的时候调用 */
+          markH5Back: function() {
+            return send("hupu.common.markh5back");
+          },
+          /** 打开全屏 H5 页面 */
+          openFullScreenH5: function(params) {
+            return send("hupu.common.fullScreenWebDialog.open", params);
+          },
+          /** 隐藏关闭按钮 与 openFullScreenH5 配合使用 */
+          hideFullscreenCloseButton: function() {
+            return send("hupu.ui.fullscreen.hideCloseButton");
+          },
+          /** 设置导航栏 */
+          setNavBar: function(params) {
+            return send("hupu.ui.header", params);
+          },
+          /** 设置内部手势失败 */
+          setIOSWebGestrueToFail: function(params) {
+            return send("hupu.ui.iOSWebGestrueToFail", params);
+          },
+          /** H5 键盘弹出模式 */
+          setKeyboardMode: function(params) {
+            return send("hupu.common.keyboardMode", params);
+          },
+          /** 设置右上角按钮内容 */
+          setRightTopButton: function(params) {
+            return send("hupu.common.righttopbuttonshow", params);
+          },
+          /** 手势返回是否可用 */
+          setSlideGesture: function(params) {
+            return send("hupu.ui.slidegesture", params);
+          },
+          /** 展示更多面板 */
+          showActionPanel: function(params) {
+            return send("hupu.common.showmoreoperation", params);
+          },
+          /** 打开弹窗 */
+          showAlertView: function(params) {
+            return send("hupu.common.showalertview", params);
+          },
+          /** 打开 webview 弹窗 */
+          showAlertWebview: function(params) {
+            return send("hupu.common.showalertview", params);
+          },
+          /** 确认弹窗 */
+          showConfirm: function(params) {
+            return send("hupu.ui.confirm.show", params);
+          },
+          /** 打开 dialog */
+          showDialog: function(params) {
+            return send("hupu.ui.alert.show", params);
+          },
+          /** 展示编辑弹窗 */
+          showEditTextAlert: function(params) {
+            return send("hupu.ui.edittext", params);
+          },
+          /** 带输入框的弹窗 */
+          showInputAlert: function(params) {
+            return send("hupu.common.inputalert", params);
+          },
+          /** 展示 picker */
+          showPicker: function(params) {
+            return send("hupu.ui.picker.show", params);
+          },
+          /** 展示评分来源弹窗 */
+          showPlayerRatingSource: function(params) {
+            return send("hupu.ui.popup.playerRatingSource", params);
+          },
+          /** 展示 H5 弹窗 */
+          showPopH5: function(params) {
+            return send("hupu.common.showpoph5", params);
+          },
+          /** 显示本地的弹窗 */
+          showPopupLocal: function(params) {
+            return send("hupu.common.popup.local", params);
+          },
+          /** 可输入文本的弹窗 */
+          showPrompt: function(params) {
+            return send("hupu.ui.prompt", params);
+          },
+          /** 评分回复输入框 */
+          showRatingInputAlert: function(params) {
+            return send("hupu.common.ratingInputAlert", params);
+          },
+          /** 展示评分来源 */
+          showRatingSource: function(params) {
+            return send("hupu.ui.popup.playerRatingSource", params);
+          },
+          /** 展示 Toast */
+          showToast: function(_param) {
+            var _param_duration = _param.duration, duration = _param_duration === void 0 ? 2e3 : _param_duration, params = _object_without_properties(_param, [
+              "duration"
+            ]);
+            return send("hupu.ui.toast.show", _object_spread_props(_object_spread({}, params), {
+              duration
+            }));
+          }
+        };
+      };
+      var interaction_default = createInteractionModule;
+      var createNavigateModule = function(send, _register) {
+        return {
+          /** 关闭 Webview 页面 */
+          closeWebview: function() {
+            return send("hupu.ui.pageclose");
+          },
+          /** 回退到最后一个 native 页面 */
+          goBack: function() {
+            return send("hupu.ui.back");
+          },
+          /** schema 跳转 */
+          openSchema: function(params) {
+            return send("hupu.common.open.schema", params);
+          },
+          /** 打开微信小程序 */
+          openWeChatMiniApp: function(params) {
+            return send("hupu.common.openwxminiapp", params);
+          },
+          openModule: function(params) {
+            return send("hupu.common.module.open", params);
+          },
+          receiveModule: function(params) {
+            return send("hupu.common.module.receive", params);
+          }
+        };
+      };
+      var navigate_default = createNavigateModule;
+      var createPaymentModule = function(send, _register) {
+        return {
+          /** 进入充值页面 */
+          rechargeCoin: function(params) {
+            return send("hupu.wallet.rechargeCoin", params);
+          },
+          /** 选择支付方式 */
+          showPayMethod: function(params) {
+            return send("hupu.ui.pay.show", params);
+          },
+          /** 打开第三方支付 */
+          openThirdPartyPay: function(params) {
+            return send("hupu.ui.pay.show", params);
+          }
+        };
+      };
+      var payment_default = createPaymentModule;
+      var createShareModule = function(send, _register) {
+        return {
+          /** 打开分享弹窗 */
+          openShareModal: function(params) {
+            return send("hupu.common.share.open", params);
+          },
+          /**
+          * @deprecated 请使用 shareToPlatform
+          */
+          shateToPlatform: function(params) {
+            return send("hupu.common.share.result", params);
+          },
+          /** 分享到某个渠道 */
+          shareToPlatform: function(params) {
+            return send("hupu.common.share.result", params);
+          },
+          /** 是否展示分享按钮 */
+          showShareButton: function(params) {
+            return send("hupu.ui.share", params);
+          },
+          /** 更新右上角分享信息 */
+          setShareNative: function(params) {
+            return send("hupu.share.setNative", params);
+          },
+          /** 自定义分享 */
+          customShare: function(params) {
+            return send("hupu.common.share.custom", params);
+          }
+        };
+      };
+      var share_default = createShareModule;
+      var createStroageModule = function(send, _register) {
+        return {
+          setValue: function(params) {
+            return send("hupu.common.setValue", params);
+          },
+          getValue: function(params) {
+            return send("hupu.common.getValue", params);
+          }
+        };
+      };
+      var storage_default = createStroageModule;
+      var createUserModule = function(send, _register) {
+        return {
+          /** 登录 */
+          login: function() {
+            return send("hupu.user.login");
+          },
+          /** 退出登录 */
+          logout: function(params) {
+            return send("hupu.user.annul", params);
+          },
+          /** 绑定 */
+          bind: function(params) {
+            return send("hupu.user.binding", params);
+          },
+          /** 更新昵称 */
+          updateNickname: function(params) {
+            return send("hupu.user.update", params);
+          },
+          /** 获取用户信息 */
+          getUserInfo: function() {
+            return send("bridgeReady");
+          }
+        };
+      };
+      var user_default = createUserModule;
+      var createVideoModule = function(send, _register) {
+        return {
+          /** 取消上传视频 */
+          cancelUpload: function(params) {
+            return send("hupu.common.video.upload.cancel", params);
+          },
+          /** 播放视频 */
+          play: function(params) {
+            return send("hupu.common.playvideo", params);
+          },
+          /** 预览视频 */
+          preview: function(params) {
+            return send("hupu.common.video.preview", params);
+          },
+          /** 选择视频 */
+          select: function() {
+            return send("hupu.common.video.select");
+          },
+          /** 上传视频 */
+          upload: function(params) {
+            return send("hupu.common.video.upload", params);
+          },
+          /** 贴片播放器操作 */
+          setVideo: function(params) {
+            return send("hupu.common.video", params);
+          }
+        };
+      };
+      var video_default = createVideoModule;
+      var generateCallbackId = function(tag) {
+        var rand = Math.floor(Math.random() * 1e3);
+        var timestamp = Date.now();
+        return "_hupu_bridge_".concat(tag, "_").concat(timestamp).concat(rand, "_");
+      };
+      var parseJsonOrString = function(input) {
+        try {
+          return JSON.parse(input);
+        } catch (error) {
+          return input;
+        }
+      };
+      var JSBridge = /* @__PURE__ */ (function() {
+        function JSBridge2() {
+          var _this = this;
+          _class_call_check(this, JSBridge2);
+          __publicField(this, "emitter", new EventEmitter());
+          __publicField(this, "base");
+          __publicField(this, "user");
+          __publicField(this, "storage");
+          __publicField(this, "video");
+          __publicField(this, "image");
+          __publicField(this, "interaction");
+          __publicField(this, "payment");
+          __publicField(this, "ad");
+          __publicField(this, "business");
+          __publicField(this, "app");
+          __publicField(this, "share");
+          __publicField(this, "navigate");
+          __publicField(this, "setupBridge", function() {
+            var _window_HupuBridge, _window_HupuBridge1;
+            var emitter = _this.emitter;
+            if ((_window_HupuBridge = window.HupuBridge) === null || _window_HupuBridge === void 0 ? void 0 : _window_HupuBridge.bridgePatch) {
+              window.HupuBridge.bridgePatch({
+                _handle_: function(method, result) {
+                  emitter.emit(method, parseJsonOrString(result));
+                }
+              });
+            } else if (!window.HupuBridge) {
+              Object.defineProperty(window, "HupuBridge", {
+                value: {
+                  _handle_: function(method, result) {
+                    var jsBridgeEvent = new CustomEvent("onHupuJSBridgeHandle", {
+                      detail: {
+                        method,
+                        result
+                      }
+                    });
+                    dispatchEvent(jsBridgeEvent);
+                  }
+                }
+              });
+            }
+            window.addEventListener("onHupuJSBridgeHandle", function(event) {
+              var detail = event.detail;
+              var method = detail.method, result = detail.result;
+              emitter.emit(method, parseJsonOrString(result));
+            });
+            if ((0, import_shared.isHupu)() && !((_window_HupuBridge1 = window.HupuBridge) === null || _window_HupuBridge1 === void 0 ? void 0 : _window_HupuBridge1.nainfo)) {
+              _this.send("bridgeReady").then(function(userInfo) {
+                window.HupuBridge.nainfo = userInfo;
+              });
+            }
+          });
+          __publicField(this, "setupModule", function() {
+            var thisSend = _this.send.bind(_this);
+            var thisRegister = _this.register.bind(_this);
+            _this.base = base_default(thisSend, thisRegister);
+            _this.interaction = interaction_default(thisSend, thisRegister);
+            _this.user = user_default(thisSend, thisRegister);
+            _this.storage = storage_default(thisSend, thisRegister);
+            _this.video = video_default(thisSend, thisRegister);
+            _this.image = image_default(thisSend, thisRegister);
+            _this.ad = ad_default(thisSend, thisRegister);
+            _this.payment = payment_default(thisSend, thisRegister);
+            _this.user = user_default(thisSend, thisRegister);
+            _this.business = business_default(thisSend, thisRegister);
+            _this.app = app_default(thisSend, thisRegister);
+            _this.share = share_default(thisSend, thisRegister);
+            _this.navigate = navigate_default(thisSend, thisRegister);
+          });
+          __publicField(this, "send", function(method, params) {
+            return new Promise(function(resolve, reject) {
+              var successCallbackId = generateCallbackId("success");
+              var errorCallbackId = generateCallbackId("error");
+              var clearCallbacks = function() {
+                _this.emitter.removeListener(successCallbackId, successCallback);
+                _this.emitter.removeListener(errorCallbackId, errorCallback);
+              };
+              var successCallback = function(result) {
+                resolve(result);
+                clearCallbacks();
+              };
+              var errorCallback = function(error) {
+                reject(error);
+                clearCallbacks();
+              };
+              _this.emitter.addListener(successCallbackId, successCallback);
+              _this.emitter.addListener(errorCallbackId, errorCallback);
+              _this.callNative({
+                method,
+                data: params,
+                successcb: successCallbackId,
+                errorcb: errorCallbackId
+              });
+            });
+          });
+          __publicField(this, "register", function(method, callback) {
+            _this.emitter.addListener(method, callback);
+            return {
+              remove: function() {
+                _this.emitter.removeListener(method, callback);
+              }
+            };
+          });
+          if ((0, import_shared.isBrowser)()) {
+            this.setupBridge();
+            this.setupModule();
+          }
+        }
+        _create_class(JSBridge2, [
+          {
+            key: "unregister",
+            value: function unregister(method, callback) {
+              this.emitter.removeListener(method, callback);
+            }
+          },
+          {
+            key: "callNative",
+            value: function callNative(params) {
+              if (!(0, import_shared.isHupu)()) {
+                throw new Error("JSBridge is not available");
+              }
+              try {
+                var _window_webkit_messageHandlers, _window_webkit, _window, _window_webkit_messageHandlers_ClientBridge_postMessage, _window_webkit_messageHandlers_ClientBridge, _window_webkit_messageHandlers1, _window_webkit1, _window1, _window2, _window_androidBridge_callNativeAsync, _window_androidBridge, _window3;
+                var handler = (0, import_shared.isIOS)() ? (_window1 = window) === null || _window1 === void 0 ? void 0 : (_window_webkit1 = _window1.webkit) === null || _window_webkit1 === void 0 ? void 0 : (_window_webkit_messageHandlers1 = _window_webkit1.messageHandlers) === null || _window_webkit_messageHandlers1 === void 0 ? void 0 : (_window_webkit_messageHandlers_ClientBridge = _window_webkit_messageHandlers1.ClientBridge) === null || _window_webkit_messageHandlers_ClientBridge === void 0 ? void 0 : (_window_webkit_messageHandlers_ClientBridge_postMessage = _window_webkit_messageHandlers_ClientBridge.postMessage) === null || _window_webkit_messageHandlers_ClientBridge_postMessage === void 0 ? void 0 : _window_webkit_messageHandlers_ClientBridge_postMessage.bind((_window = window) === null || _window === void 0 ? void 0 : (_window_webkit = _window.webkit) === null || _window_webkit === void 0 ? void 0 : (_window_webkit_messageHandlers = _window_webkit.messageHandlers) === null || _window_webkit_messageHandlers === void 0 ? void 0 : _window_webkit_messageHandlers.ClientBridge) : (_window3 = window) === null || _window3 === void 0 ? void 0 : (_window_androidBridge = _window3.androidBridge) === null || _window_androidBridge === void 0 ? void 0 : (_window_androidBridge_callNativeAsync = _window_androidBridge.callNativeAsync) === null || _window_androidBridge_callNativeAsync === void 0 ? void 0 : _window_androidBridge_callNativeAsync.bind((_window2 = window) === null || _window2 === void 0 ? void 0 : _window2.androidBridge);
+                if (!handler) {
+                  throw new Error("JSBridge handler is not available");
+                }
+                if (!params || !params.method || typeof params.method !== "string") {
+                  throw new Error("Invalid params: method is required and should be a string");
+                }
+                if ((0, import_shared.isIOS)()) {
+                  handler(JSON.parse(JSON.stringify(params)));
+                } else {
+                  var payload = JSON.stringify({
+                    code: 200,
+                    data: params.data || {}
+                  });
+                  handler(params.method, payload, params.successcb);
+                }
+              } catch (err) {
+                console.error("JSBridge callNative Error:", err, params);
+              }
+            }
+          }
+        ]);
+        return JSBridge2;
+      })();
+      var JSBridge_default = (0, import_shared.singleton)(JSBridge);
+    }
+  });
+
+  // src/core/requestGuard.ts
+  var GLOBAL_STATE_KEY = "__COLORBOX_AI_REQUEST_GUARD_STATE__";
+  var GLOBAL_LOG_KEY = "__COLORBOX_AI_REQUEST_GUARD_DEBUG__";
+  var DATA_CAPABILITY_REQUEST_GUARD_DEFAULTS = {
+    /** 是否启用数据能力请求保护。 */
+    enabled: true,
+    /** 相同 method + url + body 的在途请求合并窗口，单位毫秒；0 表示不合并。 */
+    dedupeMs: 0,
+    /** GET 成功响应的短缓存时间，单位毫秒；0 表示不缓存，POST 始终不缓存。 */
+    cacheTtlMs: 0,
+    /** 单个底层 HTTP 请求超时时间，单位毫秒。 */
+    timeoutMs: 8e3,
+    /** 单个能力允许同时执行的最大调用数；0 表示不限制。 */
+    maxConcurrent: 0,
+    /** 单个能力每分钟允许的最大调用次数；0 表示不限制。 */
+    maxCallsPerMinute: 0,
+    /** 同一个 URL 在 urlWindowMs 窗口内允许的新请求次数；超出后排队等待。 */
+    maxCallsPerUrlWindow: 20,
+    /** 同 URL 频率统计窗口，单位毫秒。 */
+    urlWindowMs: 1e4,
+    /** 同一页面内，同一个接口路径（去掉 query/hash 参数）在 endpointWindowMs 窗口内允许的新请求次数；超出后直接返回 429。 */
+    maxCallsPerEndpointWindow: 20,
+    /** 同接口路径频率统计窗口，单位毫秒。 */
+    endpointWindowMs: 5e3,
+    /** 同一请求连续失败达到该次数后进入熔断。 */
+    failureThreshold: 3,
+    /** 熔断持续时间，单位毫秒。 */
+    circuitOpenMs: 3e4,
+    /** 复制提示词中的自动分页建议上限；runtime 不主动翻页。 */
+    maxAutoPages: 5
+  };
+  var RequestGuardError = class extends Error {
+    constructor(code, message, options = {}) {
+      super(message);
+      this.name = "RequestGuardError";
+      this.code = code;
+      this.reason = options.reason;
+      this.detail = options.detail;
+      this.requestGuardLogged = options.requestGuardLogged;
+    }
+  };
+  function getGuardState() {
+    const globalObj = globalThis;
+    if (!globalObj[GLOBAL_STATE_KEY]) {
+      globalObj[GLOBAL_STATE_KEY] = {
+        capabilityCalls: /* @__PURE__ */ new Map(),
+        activeByCapability: /* @__PURE__ */ new Map(),
+        capabilityWaiters: /* @__PURE__ */ new Map(),
+        urlCalls: /* @__PURE__ */ new Map(),
+        endpointCalls: /* @__PURE__ */ new Map(),
+        endpointLimitErrors: /* @__PURE__ */ new Map(),
+        inFlight: /* @__PURE__ */ new Map(),
+        cache: /* @__PURE__ */ new Map(),
+        failures: /* @__PURE__ */ new Map()
+      };
+    }
+    return globalObj[GLOBAL_STATE_KEY];
+  }
+  function getGuardDebugLog() {
+    const globalObj = globalThis;
+    if (!globalObj[GLOBAL_LOG_KEY]) {
+      globalObj[GLOBAL_LOG_KEY] = [];
+    }
+    return globalObj[GLOBAL_LOG_KEY];
+  }
+  function reportRequestGuardLog(entry) {
+    const globalObj = globalThis;
+    const hupuLog = globalObj.WebGuard && globalObj.WebGuard.hupuLog;
+    if (typeof hupuLog !== "function") {
+      return;
+    }
+    try {
+      hupuLog({
+        type: "jsError",
+        message: `[ColorboxAI.RequestGuard] ${entry.scene} ${entry.reason}: ${entry.message}`,
+        stack: new Error().stack || "",
+        detail: entry
+      });
+    } catch (error) {
+    }
+  }
+  function reportRequestGuardRuntimeError(entry) {
+    if (entry.reason !== "endpoint-window-limit") {
+      return;
+    }
+    const globalObj = globalThis;
+    if (!globalObj.window || !globalObj.window.parent || globalObj.window.parent === globalObj.window) {
+      return;
+    }
+    try {
+      globalObj.window.parent.postMessage({
+        protocol: "colorbox-ai-bridge",
+        version: 1,
+        direction: "frame-to-host",
+        type: "runtime.error",
+        payload: {
+          message: entry.message,
+          sourceFile: entry.url || "",
+          line: 0,
+          column: 0,
+          stack: `[ColorboxAI.RequestGuard] ${entry.reason}`,
+          detail: entry
+        }
+      }, "*");
+    } catch (error) {
+    }
+  }
+  function recordRequestGuardLog(entry) {
+    const log = getGuardDebugLog();
+    const nextEntry = __spreadValues({
+      ts: Date.now()
+    }, entry);
+    log.push(nextEntry);
+    if (log.length > 200) {
+      log.shift();
+    }
+    try {
+      console.warn("[ColorboxAI.RequestGuard] " + nextEntry.message, nextEntry);
+    } catch (error) {
+    }
+    reportRequestGuardLog(nextEntry);
+    reportRequestGuardRuntimeError(nextEntry);
+    return nextEntry;
+  }
+  function emitRequestGuardLog(entry) {
+    return recordRequestGuardLog(entry);
+  }
+  function resolveRequestGuardConfig(config) {
+    return __spreadValues(__spreadValues({}, DATA_CAPABILITY_REQUEST_GUARD_DEFAULTS), config || {});
+  }
+  function isRequestGuardError(err) {
+    return err instanceof RequestGuardError || !!err && typeof err === "object" && err.name === "RequestGuardError" && typeof err.code === "number";
+  }
+  function toRequestGuardResponse(err) {
+    if (isRequestGuardError(err)) {
+      return {
+        code: err.code,
+        message: err.message,
+        data: null,
+        reason: err.reason,
+        detail: err.detail,
+        dropped: err.reason === "endpoint-window-dropped"
+      };
+    }
+    return null;
+  }
+  function stableStringify(value) {
+    if (value === void 0) return "";
+    if (value === null || typeof value !== "object") return JSON.stringify(value);
+    if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
+  }
+  function compactWindow(values, now, windowMs) {
+    return values.filter((value) => now - value < windowMs);
+  }
+  function sleepMs(ms) {
+    if (!ms || ms <= 0) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+  function normalizeEndpointUrl(url) {
+    const queryIndex = url.indexOf("?");
+    const hashIndex = url.indexOf("#");
+    const candidates = [queryIndex, hashIndex].filter((index) => index >= 0);
+    if (!candidates.length) {
+      return url;
+    }
+    return url.slice(0, Math.min(...candidates));
+  }
+  function getCapabilityWaiters(state, capabilityPath) {
+    let waiters = state.capabilityWaiters.get(capabilityPath);
+    if (!waiters) {
+      waiters = /* @__PURE__ */ new Set();
+      state.capabilityWaiters.set(capabilityPath, waiters);
+    }
+    return waiters;
+  }
+  function notifyCapabilityWaiters(state, capabilityPath) {
+    const waiters = state.capabilityWaiters.get(capabilityPath);
+    if (!waiters || !waiters.size) {
+      return;
+    }
+    Array.from(waiters).forEach((waiter) => {
+      waiter.resolve();
+    });
+  }
+  function waitForCapabilitySignal(state, capabilityPath, waitMs) {
+    return new Promise((resolve) => {
+      const waiters = getCapabilityWaiters(state, capabilityPath);
+      const waiter = {
+        done: false,
+        resolve: () => {
+          if (waiter.done) {
+            return;
+          }
+          waiter.done = true;
+          if (waiter.timer) {
+            clearTimeout(waiter.timer);
+          }
+          waiters.delete(waiter);
+          resolve();
+        }
+      };
+      waiters.add(waiter);
+      if (typeof waitMs === "number" && waitMs > 0) {
+        waiter.timer = setTimeout(() => waiter.resolve(), waitMs);
+      }
+    });
+  }
+  function acquireCapabilityPermit(state, capabilityPath, guard) {
+    return __async(this, null, function* () {
+      while (true) {
+        let now = Date.now();
+        const calls = compactWindow(state.capabilityCalls.get(capabilityPath) || [], now, 6e4);
+        state.capabilityCalls.set(capabilityPath, calls);
+        const active = state.activeByCapability.get(capabilityPath) || 0;
+        const hasConcurrentSlot = guard.maxConcurrent <= 0 || active < guard.maxConcurrent;
+        const hasMinuteBudget = guard.maxCallsPerMinute <= 0 || calls.length < guard.maxCallsPerMinute;
+        if (hasConcurrentSlot && hasMinuteBudget) {
+          if (guard.maxCallsPerMinute > 0) {
+            calls.push(now);
+            state.capabilityCalls.set(capabilityPath, calls);
+          }
+          state.activeByCapability.set(capabilityPath, active + 1);
+          return () => {
+            const nextActive = Math.max((state.activeByCapability.get(capabilityPath) || 1) - 1, 0);
+            state.activeByCapability.set(capabilityPath, nextActive);
+            notifyCapabilityWaiters(state, capabilityPath);
+          };
+        }
+        const minuteWaitMs = hasMinuteBudget || guard.maxCallsPerMinute <= 0 ? void 0 : Math.max((calls[0] || now) + 6e4 - now + 1, 1);
+        yield waitForCapabilitySignal(state, capabilityPath, minuteWaitMs);
+      }
+    });
+  }
+  function makeRequestKey(capabilityPath, method, url, body) {
+    return `${capabilityPath}|${method.toUpperCase()}|${url}|${stableStringify(body)}`;
+  }
+  function timeoutPromise(promise, timeoutMs) {
+    if (!timeoutMs || timeoutMs <= 0) return promise;
+    let timer;
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        reject(new RequestGuardError(408, `\u8BF7\u6C42\u8D85\u65F6\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5\uFF08${timeoutMs}ms\uFF09`));
+      }, timeoutMs);
+    });
+    return Promise.race([promise, timeout]).finally(() => {
+      if (timer) clearTimeout(timer);
+    });
+  }
+  function runCapabilityWithRequestGuard(capabilityPath, config, task) {
+    return __async(this, null, function* () {
+      const guard = resolveRequestGuardConfig(config);
+      if (!guard.enabled) return task();
+      const state = getGuardState();
+      const release = yield acquireCapabilityPermit(state, capabilityPath, guard);
+      try {
+        return yield task();
+      } catch (err) {
+        const guarded = toRequestGuardResponse(err);
+        if (guarded) {
+          if (!isRequestGuardError(err) || !err.requestGuardLogged) {
+            emitRequestGuardLog({
+              scene: "request.capability",
+              capabilityPath,
+              reason: isRequestGuardError(err) && err.reason ? err.reason : guarded.code === 408 ? "timeout" : guarded.code === 503 ? "circuit-open" : "guard-block",
+              code: guarded.code,
+              message: guarded.message,
+              detail: isRequestGuardError(err) && err.detail ? err.detail : {
+                source: "runCapabilityWithRequestGuard"
+              }
+            });
+            if (isRequestGuardError(err)) {
+              err.requestGuardLogged = true;
+            }
+          }
+          return guarded;
+        }
+        throw err;
+      } finally {
+        release();
+      }
+    });
+  }
+  function createGuardedHttpClient(capabilityPath, config, client) {
+    const guard = resolveRequestGuardConfig(config);
+    if (!guard.enabled) return client;
+    function request(method, url, body, invoke) {
+      return __async(this, null, function* () {
+        const state = getGuardState();
+        let now = Date.now();
+        const key = makeRequestKey(capabilityPath, method, url, body);
+        const urlKey = `${capabilityPath}|${method}|${url}`;
+        const endpointUrl = normalizeEndpointUrl(url);
+        const endpointKey = `${method}|${endpointUrl}`;
+        const failure = state.failures.get(key);
+        if ((failure == null ? void 0 : failure.openUntil) && failure.openUntil > now) {
+          const error = new RequestGuardError(503, "\u8BE5\u6570\u636E\u63A5\u53E3\u8FDE\u7EED\u5931\u8D25\uFF0C\u5DF2\u4E34\u65F6\u7194\u65AD\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5");
+          emitRequestGuardLog({
+            scene: "request.http",
+            capabilityPath,
+            method,
+            url,
+            reason: "circuit-open",
+            code: error.code,
+            message: error.message,
+            detail: {
+              openUntil: failure.openUntil,
+              failureCount: failure.count
+            }
+          });
+          throw error;
+        }
+        if (method === "GET") {
+          const cached = state.cache.get(key);
+          if (cached && cached.expiresAt > now) {
+            return cached.value;
+          }
+        }
+        if (guard.dedupeMs > 0) {
+          const inFlight = state.inFlight.get(key);
+          if (inFlight && inFlight.expiresAt > now) {
+            return inFlight.promise;
+          }
+        }
+        let endpointCalls = compactWindow(state.endpointCalls.get(endpointKey) || [], now, guard.endpointWindowMs);
+        state.endpointCalls.set(endpointKey, endpointCalls);
+        if (guard.maxCallsPerEndpointWindow > 0 && endpointCalls.length >= guard.maxCallsPerEndpointWindow) {
+          const muted = state.endpointLimitErrors.get(endpointKey);
+          const mutedUntil = (endpointCalls[0] || now) + guard.endpointWindowMs;
+          const message = `\u540C\u4E00\u9875\u9762\u540C\u63A5\u53E3 ${Math.round(guard.endpointWindowMs / 1e3)} \u79D2\u5185\u8BF7\u6C42\u8D85\u8FC7 ${guard.maxCallsPerEndpointWindow} \u6B21\uFF0C\u5DF2\u963B\u6B62\u672C\u6B21\u8BF7\u6C42`;
+          const detail = {
+            endpointUrl,
+            endpointWindowMs: guard.endpointWindowMs,
+            maxCallsPerEndpointWindow: guard.maxCallsPerEndpointWindow,
+            callsInWindow: endpointCalls.length,
+            mutedUntil
+          };
+          const shouldLog = !muted || muted.mutedUntil <= now;
+          if (shouldLog) {
+            emitRequestGuardLog({
+              scene: "request.http",
+              capabilityPath,
+              method,
+              url,
+              reason: "endpoint-window-limit",
+              code: 429,
+              message,
+              detail
+            });
+            state.endpointLimitErrors.set(endpointKey, { mutedUntil });
+            throw new RequestGuardError(429, message, {
+              reason: "endpoint-window-limit",
+              detail,
+              requestGuardLogged: true
+            });
+          }
+          throw new RequestGuardError(204, "\u8BF7\u6C42\u5DF2\u88AB\u524D\u7AEF\u5B88\u536B\u9759\u9ED8\u4E22\u5F03", {
+            reason: "endpoint-window-dropped",
+            detail,
+            requestGuardLogged: true
+          });
+        }
+        let urlCalls = [];
+        let urlLimitLogged = false;
+        while (true) {
+          urlCalls = compactWindow(state.urlCalls.get(urlKey) || [], now, guard.urlWindowMs);
+          if (guard.maxCallsPerUrlWindow > 0 && urlCalls.length >= guard.maxCallsPerUrlWindow) {
+            const waitMs = Math.max((urlCalls[0] || now) + guard.urlWindowMs - now + 1, 1);
+            if (!urlLimitLogged) {
+              emitRequestGuardLog({
+                scene: "request.http",
+                capabilityPath,
+                method,
+                url,
+                reason: "url-window-limit",
+                code: 429,
+                message: `\u540C URL ${Math.round(guard.urlWindowMs / 1e3)} \u79D2\u5185\u8BF7\u6C42\u8D85\u8FC7 ${guard.maxCallsPerUrlWindow} \u6B21\uFF0C\u5DF2\u6392\u961F\u7B49\u5F85`,
+                detail: {
+                  urlWindowMs: guard.urlWindowMs,
+                  maxCallsPerUrlWindow: guard.maxCallsPerUrlWindow,
+                  callsInWindow: urlCalls.length,
+                  waitMs
+                }
+              });
+              urlLimitLogged = true;
+            }
+            yield sleepMs(waitMs);
+            now = Date.now();
+            continue;
+          }
+          break;
+        }
+        endpointCalls.push(now);
+        state.endpointCalls.set(endpointKey, endpointCalls);
+        urlCalls.push(now);
+        state.urlCalls.set(urlKey, urlCalls);
+        const guardedPromise = timeoutPromise(Promise.resolve().then(invoke), guard.timeoutMs).then((value) => {
+          state.failures.delete(key);
+          if (method === "GET" && guard.cacheTtlMs > 0) {
+            state.cache.set(key, {
+              value,
+              expiresAt: Date.now() + guard.cacheTtlMs
+            });
+          }
+          return value;
+        }).catch((err) => {
+          if (isRequestGuardError(err)) {
+            emitRequestGuardLog({
+              scene: "request.http",
+              capabilityPath,
+              method,
+              url,
+              reason: err.code === 408 ? "timeout" : err.code === 503 ? "circuit-open" : "guard-block",
+              code: err.code,
+              message: err.message,
+              detail: {
+                timeoutMs: guard.timeoutMs,
+                urlWindowMs: guard.urlWindowMs
+              }
+            });
+          }
+          const current = state.failures.get(key) || { count: 0, openUntil: 0 };
+          const count = current.count + 1;
+          const openUntil = count >= guard.failureThreshold ? Date.now() + guard.circuitOpenMs : 0;
+          state.failures.set(key, {
+            count,
+            openUntil
+          });
+          if (openUntil) {
+            emitRequestGuardLog({
+              scene: "request.http",
+              capabilityPath,
+              method,
+              url,
+              reason: "failure-circuit-open",
+              code: 503,
+              message: "\u8BE5\u6570\u636E\u63A5\u53E3\u8FDE\u7EED\u5931\u8D25\uFF0C\u5DF2\u4E34\u65F6\u7194\u65AD\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5",
+              detail: {
+                failureThreshold: guard.failureThreshold,
+                circuitOpenMs: guard.circuitOpenMs,
+                failureCount: count
+              }
+            });
+          }
+          throw err;
+        }).finally(() => {
+          if (guard.dedupeMs <= 0) {
+            return;
+          }
+          setTimeout(() => {
+            const latest = state.inFlight.get(key);
+            if ((latest == null ? void 0 : latest.promise) === guardedPromise) {
+              state.inFlight.delete(key);
+            }
+          }, guard.dedupeMs);
+        });
+        if (guard.dedupeMs > 0) {
+          state.inFlight.set(key, {
+            promise: guardedPromise,
+            expiresAt: now + guard.dedupeMs
+          });
+        }
+        return guardedPromise;
+      });
+    }
+    return {
+      get: (url, requestConfig) => request("GET", url, void 0, () => client.get(url, requestConfig)),
+      post: (url, body, requestConfig) => request("POST", url, body, () => client.post(url, body, requestConfig))
+    };
+  }
+
+  // src/capabilities/auth/getUserInfo/executor.ts
+  function executor(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      const win2 = typeof window !== "undefined" ? window : {};
+      if (((_a = win2.ColorboxAI) == null ? void 0 : _a.__auth) && typeof win2.ColorboxAI.__auth.getUserInfo === "function") {
+        const info2 = yield win2.ColorboxAI.__auth.getUserInfo();
+        return {
+          code: 200,
+          message: "success",
+          data: info2
+        };
+      }
+      const info = win2.userInfo || win2.HupuBridge && win2.HupuBridge.nainfo || null;
+      return {
+        code: 200,
+        message: "success (fallback)",
+        data: info
+      };
+    });
+  }
+
+  // src/core/cloudAuthStore.ts
+  var sessions = /* @__PURE__ */ new Map();
+  var lastEnvId = "";
+  function setCloudAuthSession(session) {
+    sessions.set(session.envId, session);
+    lastEnvId = session.envId;
+  }
+  function clearCloudAuthSession(envId, _context) {
+    if (envId) {
+      sessions.delete(envId);
+      if (lastEnvId === envId) lastEnvId = "";
+      return;
+    }
+    sessions.clear();
+    lastEnvId = "";
+  }
+  function getValidCloudAuthSession(envId, context) {
+    return __async(this, null, function* () {
+      const memSession = getCloudAuthSession(envId);
+      if (!memSession) return null;
+      if (memSession.hupuToken && context) {
+        try {
+          const currentHupuToken = yield resolveHupuToken(context);
+          if (currentHupuToken && currentHupuToken !== memSession.hupuToken) {
+            clearCloudAuthSession(envId);
+            return null;
+          }
+        } catch (_) {
+        }
+      }
+      return memSession;
+    });
+  }
+  function saveCloudAuthSession(session, _context) {
+    return __async(this, null, function* () {
+      setCloudAuthSession(session);
+    });
+  }
+  function getCloudAccessToken(envId) {
+    const key = envId || lastEnvId;
+    if (!key) return "";
+    const session = sessions.get(key);
+    if (!session) return "";
+    if (Date.now() >= session.expiresAt - 6e4) {
+      sessions.delete(key);
+      if (lastEnvId === key) lastEnvId = "";
+      return "";
+    }
+    return session.accessToken;
+  }
+  function getCloudAuthSession(envId) {
+    const key = envId || lastEnvId;
+    if (!key) return null;
+    const token = getCloudAccessToken(key);
+    if (!token) return null;
+    return sessions.get(key) || null;
+  }
+
+  // src/capabilities/cloud/auth/executor.ts
+  var DEFAULT_LOGIN_URL = "https://colorbox-cloud-auth-d9bx03753d7a.service.tcloudbase.com/api/auth/login";
+  function parseCookie(raw) {
+    const map = {};
+    if (!raw) return map;
+    for (const part of raw.split(";")) {
+      const idx = part.indexOf("=");
+      if (idx <= 0) continue;
+      const k = part.slice(0, idx).trim();
+      const v = part.slice(idx + 1).trim();
+      if (k) map[k] = decodeURIComponent(v);
+    }
+    return map;
+  }
+  function cookieValue(cookies, name) {
+    for (const [k, v] of Object.entries(cookies)) {
+      if (k.toLowerCase() === name.toLowerCase() && v) return v;
+    }
+    return "";
+  }
+  function resolveHupuToken(context) {
+    return __async(this, null, function* () {
+      var _a;
+      const sync = (context.env.getAuthToken() || "").trim();
+      if (sync) return sync;
+      const win2 = typeof window !== "undefined" ? window : {};
+      if (((_a = win2.ColorboxAI) == null ? void 0 : _a.__auth) && typeof win2.ColorboxAI.__auth.getAuthToken === "function") {
+        try {
+          const token = String((yield win2.ColorboxAI.__auth.getAuthToken()) || "").trim();
+          if (token) return token;
+        } catch (_) {
+        }
+      }
+      if (typeof document !== "undefined" && document.cookie) {
+        const cookies = parseCookie(document.cookie);
+        const u = cookieValue(cookies, "u");
+        const ua = cookieValue(cookies, "ua");
+        const us = cookieValue(cookies, "us");
+        if (u && us) return ua ? `${u}:${ua}:${us}` : `${u}:${us}`;
+        if (u) return u;
+      }
+      return "";
+    });
+  }
+  function postJson(_0, _1) {
+    return __async(this, arguments, function* (url, body, headers = {}) {
+      const res = yield fetch(url, {
+        method: "POST",
+        headers: __spreadValues({
+          "Content-Type": "application/json"
+        }, headers),
+        body: JSON.stringify(body != null ? body : {})
+      });
+      let json = null;
+      try {
+        json = yield res.json();
+      } catch (_) {
+        json = null;
+      }
+      return { res, json };
+    });
+  }
+  function executor2(params, context) {
+    return __async(this, null, function* () {
+      const envId = String((params == null ? void 0 : params.envId) || "").trim();
+      if (!envId) {
+        return { code: 400, message: "\u7F3A\u5C11\u53C2\u6570 envId", data: null };
+      }
+      const hupuToken = yield resolveHupuToken(context);
+      if (!hupuToken) {
+        return { code: 401, message: "\u672A\u83B7\u53D6\u5230\u864E\u6251\u767B\u5F55\u6001\uFF08x-hupu-token\uFF09", data: null };
+      }
+      const loginResp = yield postJson(
+        DEFAULT_LOGIN_URL,
+        {},
+        {
+          "x-hupu-token": hupuToken,
+          "X-Target-Env-Id": envId
+        }
+      );
+      const loginJson = loginResp.json || {};
+      const data = loginJson.data || {};
+      const accessToken = data.accessToken || data.access_token || "";
+      if (!loginResp.res.ok || loginJson.code !== 0 || !accessToken) {
+        return {
+          code: loginResp.res.status === 401 ? 401 : loginJson.code || 500,
+          message: loginJson.message || "\u9274\u6743\u4E2D\u5FC3\u4E00\u6B65\u767B\u5F55\u5931\u8D25",
+          data: null
+        };
+      }
+      const expiresIn = Number(data.expiresIn || data.expires_in || 7200);
+      const customUserId = String(data.customUserId || data.custom_user_id || "");
+      yield saveCloudAuthSession(
+        {
+          envId,
+          accessToken,
+          expiresAt: Date.now() + expiresIn * 1e3,
+          customUserId,
+          hupuToken
+        },
+        context
+      );
+      return {
+        code: 200,
+        message: "success",
+        data: {
+          accessToken,
+          expiresIn,
+          envId: data.envId || envId,
+          customUserId
+        }
+      };
+    });
+  }
+
+  // src/capabilities/cloud/request/executor.ts
+  function appendQuery(url, data) {
+    if (!data || typeof data !== "object") return url;
+    try {
+      const urlObj = new URL(url);
+      Object.entries(data).forEach(([key, val]) => {
+        if (val !== void 0 && val !== null) {
+          urlObj.searchParams.set(key, String(val));
+        }
+      });
+      return urlObj.toString();
+    } catch (_) {
+      return url;
+    }
+  }
+  function executor3(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      if (!(params == null ? void 0 : params.url)) {
+        return {
+          statusCode: 400,
+          code: 400,
+          message: "Missing parameter: url is required",
+          data: null
+        };
+      }
+      const method = (params.method || "GET").toUpperCase() === "POST" ? "POST" : "GET";
+      const envId = String(params.envId || "").trim();
+      const requireAuth = params.auth === true;
+      if (requireAuth) {
+        if (!envId) {
+          return {
+            statusCode: 400,
+            code: 400,
+            message: "auth:true \u65F6\u5FC5\u987B\u63D0\u4F9B envId",
+            data: null
+          };
+        }
+        const validSession = yield getValidCloudAuthSession(envId, context);
+        if (!validSession) {
+          const authRes = yield executor2({ envId }, context);
+          if (authRes.code !== 200 || !((_a = authRes.data) == null ? void 0 : _a.accessToken)) {
+            return {
+              statusCode: authRes.code === 401 ? 401 : 500,
+              code: authRes.code,
+              message: authRes.message || "CloudBase \u767B\u5F55\u5931\u8D25",
+              data: null
+            };
+          }
+        }
+      }
+      const bearer = getCloudAccessToken(envId || void 0);
+      const headers = __spreadValues({
+        "Content-Type": "application/json;charset=UTF-8"
+      }, params.headers || {});
+      const hasAuthHeader = Object.keys(headers).some(
+        (k) => k.toLowerCase() === "authorization"
+      );
+      if (bearer && !hasAuthHeader) {
+        headers.Authorization = `Bearer ${bearer}`;
+      }
+      if (requireAuth && !headers.Authorization) {
+        return {
+          statusCode: 401,
+          code: 401,
+          message: "\u7F3A\u5C11 CloudBase Bearer\uFF0C\u8BF7\u5148 cloud.auth",
+          data: null
+        };
+      }
+      let finalUrl = params.url;
+      let body;
+      if (method === "GET") {
+        finalUrl = appendQuery(
+          finalUrl,
+          params.data && typeof params.data === "object" ? params.data : null
+        );
+      } else if (params.data !== void 0) {
+        body = typeof params.data === "string" ? params.data : JSON.stringify(params.data);
+      }
+      let res;
+      try {
+        res = yield fetch(finalUrl, {
+          method,
+          headers,
+          body
+        });
+      } catch (e) {
+        return {
+          statusCode: 500,
+          code: 500,
+          message: (e == null ? void 0 : e.message) || "network error",
+          data: null
+        };
+      }
+      let json = null;
+      try {
+        json = yield res.json();
+      } catch (_) {
+        json = null;
+      }
+      if (res.status === 401 && envId) {
+        clearCloudAuthSession(envId);
+      }
+      return {
+        statusCode: res.status,
+        code: json && typeof json.code === "number" ? json.code : res.status,
+        message: json && (json.message || json.msg) || res.statusText || "",
+        data: json && Object.prototype.hasOwnProperty.call(json, "data") ? json.data : json
+      };
+    });
+  }
+
+  // src/capabilities/navigate/to/executor.ts
+  function executor4(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      if (!(params == null ? void 0 : params.url)) {
+        return { code: 400, message: "Missing parameters: url is required", data: null };
+      }
+      const win2 = typeof window !== "undefined" ? window : {};
+      try {
+        if (typeof ((_a = win2.ColorboxAI) == null ? void 0 : _a.navigateTo) === "function") {
+          win2.ColorboxAI.navigateTo(params.url, params.target);
+        } else {
+          console.log("[ColorboxAI.Navigate] Fallback navigation for:", params.url);
+          if (params.target === "_blank") {
+            window.open(params.url);
+          } else {
+            window.location.href = params.url;
+          }
+        }
+        return { code: 200, message: "success" };
+      } catch (err) {
+        return {
+          code: 500,
+          message: `Navigation failed: ${err instanceof Error ? err.message : String(err)}`
+        };
+      }
+    });
+  }
+
+  // src/core/iframeBridge.ts
+  var pendingCallbacks = {};
+  var isMessageListenerReady = false;
+  function ensureMessageListener() {
+    if (isMessageListenerReady) return;
+    if (typeof window === "undefined") return;
+    isMessageListenerReady = true;
+    window.addEventListener("message", function(event) {
+      const data = event && event.data;
+      if (!data || data.protocol !== "colorbox-ai-bridge" || data.direction !== "host-to-frame") return;
+      if (data.type.endsWith(".callback") || data.type === "http.response") {
+        const payload = data.payload || {};
+        const callbackId = payload.callbackId || payload.requestId;
+        if (!callbackId) return;
+        const callback = pendingCallbacks[callbackId];
+        if (!callback) return;
+        delete pendingCallbacks[callbackId];
+        if (payload.error) {
+          callback.reject(new Error(payload.error));
+        } else {
+          callback.resolve(payload);
+        }
+      }
+    });
+  }
+  function sendIframeBridgeMessage(type, payload) {
+    const win2 = typeof window !== "undefined" ? window : {};
+    const inIframe = typeof window !== "undefined" && window.parent && window.parent !== window;
+    if (!inIframe) {
+      return Promise.reject(new Error("Not running inside an iframe host"));
+    }
+    ensureMessageListener();
+    return new Promise((resolve, reject) => {
+      var _a, _b;
+      const callbackId = `${type.replace(/\./g, "_")}_cb_${Date.now()}_${Math.floor(Math.random() * 1e6)}`;
+      pendingCallbacks[callbackId] = { resolve, reject };
+      const projectId = ((_b = (_a = win2.ColorboxAI) == null ? void 0 : _a.project) == null ? void 0 : _b.id) || "";
+      window.parent.postMessage({
+        protocol: "colorbox-ai-bridge",
+        version: 1,
+        direction: "frame-to-host",
+        projectId,
+        type,
+        payload: __spreadProps(__spreadValues({}, payload), {
+          callbackId
+        }),
+        timestamp: Date.now()
+      }, "*");
+    });
+  }
+
+  // src/capabilities/oss/uploadFile/executor.ts
+  function executor5(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.file)) {
+        throw new Error("ColorboxAI.oss.uploadFile requires file parameter (File/Blob)");
+      }
+      const file = params.file;
+      const filename = params.filename || file.name || "";
+      const res = yield sendIframeBridgeMessage("oss.upload", {
+        file,
+        filename,
+        module: "colorbox-ai-activity"
+      });
+      return {
+        downloadUrl: res.downloadUrl,
+        name: res.name
+      };
+    });
+  }
+
+  // src/types/errors.ts
+  var COLORBOX_AI_ERRORS = {
+    SUCCESS: { code: 200, message: "success" },
+    UNAUTHORIZED: { code: 401, message: "\u7528\u6237\u672A\u767B\u5F55" },
+    BAD_REQUEST: { code: 400, message: "\u53C2\u6570\u9519\u8BEF" },
+    FORBIDDEN: { code: 403, message: "\u8BE5\u80FD\u529B\u4EC5\u652F\u6301\u5728\u864E\u6251 App \u73AF\u5883\u5185\u8C03\u7528" },
+    SERVER_ERROR: { code: 500, message: "\u8BF7\u6C42\u5931\u8D25" }
+  };
+
+  // src/core/api.ts
+  function callBridgeViaParentProxy(method, data) {
+    return new Promise((resolve, reject) => {
+      const callbackId = "cb_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9);
+      function messageListener(event) {
+        const msg = event.data;
+        if (msg && msg.protocol === "colorbox-ai-bridge" && msg.direction === "host-to-frame" && msg.type === "bridge.callback" && msg.payload && msg.payload.callbackName === callbackId) {
+          window.removeEventListener("message", messageListener);
+          if (msg.payload.args && msg.payload.args.length > 0) {
+            resolve(msg.payload.args[0]);
+          } else {
+            resolve(null);
+          }
+        }
+      }
+      window.addEventListener("message", messageListener);
+      setTimeout(() => {
+        window.removeEventListener("message", messageListener);
+        reject(new Error("Bridge proxy call timeout (3s)"));
+      }, 3e3);
+      window.parent.postMessage({
+        protocol: "colorbox-ai-bridge",
+        version: 1,
+        direction: "frame-to-host",
+        type: "bridge.call",
+        payload: {
+          payload: {
+            method,
+            data: data || {},
+            successcb: callbackId,
+            errorcb: callbackId
+          }
+        }
+      }, "*");
+    });
+  }
+  function normalizeHupuResponse(res) {
+    if (!res) return res;
+    if (res.code !== 200) return res;
+    const rawData = res.data;
+    if (!rawData) return res;
+    if (typeof rawData.id === "number" && typeof rawData.text === "string") {
+      return {
+        code: rawData.id || 500,
+        message: rawData.text,
+        data: null
+      };
+    }
+    const hasError = !!(rawData.success === false || rawData.errorCode || rawData.errorMsg || rawData.internalCode && rawData.internalCode !== "AL000000" && rawData.internalCode !== "AC000000" || rawData.success === void 0 && rawData.msg && !["success", "SUCCESS", "\u6210\u529F", "OK"].includes(rawData.msg));
+    if (hasError) {
+      const errorCode = rawData.status || rawData.code || 500;
+      const finalCode = errorCode === 200 || errorCode === 1 ? 500 : errorCode;
+      return {
+        code: finalCode,
+        message: rawData.errorMsg || rawData.msg || "Request failed",
+        data: null
+      };
+    }
+    const targetData = rawData.data !== void 0 ? rawData.data : rawData.result !== void 0 ? rawData.result : rawData;
+    return {
+      code: 200,
+      message: "success",
+      data: targetData
+    };
+  }
+  function callApi(_0, _1) {
+    return __async(this, arguments, function* (url, context, options = {}) {
+      var _a;
+      const isAppVal = context.env.isApp();
+      console.log("[ColorboxAI.Api.Diagnostics] callApi constraint check:", {
+        url,
+        supportEnv: options.supportEnv,
+        isAppEvaluated: isAppVal,
+        userAgent: typeof navigator !== "undefined" ? navigator.userAgent : "undefined",
+        hasHupuBridge: typeof window !== "undefined" && !!window.HupuBridge,
+        hasHupuBridgeModule: typeof window !== "undefined" && !!window.HupuBridgeModule,
+        hasAndroidBridge: typeof window !== "undefined" && !!window.androidBridge,
+        hasIosBridge: typeof window !== "undefined" && !!(window.webkit && window.webkit.messageHandlers)
+      });
+      if (options.supportEnv && options.supportEnv.length > 0) {
+        const currentEnv = isAppVal ? "app" : "web";
+        if (!options.supportEnv.includes(currentEnv)) {
+          console.warn(`[ColorboxAI.Api] Request blocked: URL "${url}" is only supported in environments: ${options.supportEnv.join(", ")} (current: ${currentEnv})`);
+          return {
+            code: COLORBOX_AI_ERRORS.FORBIDDEN.code,
+            message: COLORBOX_AI_ERRORS.FORBIDDEN.message,
+            data: null
+          };
+        }
+      }
+      const method = options.method || "GET";
+      if (!options.params) {
+        options.params = {};
+      }
+      if (options.params.clientId === void 0) {
+        let clientId = "00000";
+        try {
+          const win2 = typeof window !== "undefined" ? window : {};
+          const nativeInfo = context.env.getNativeInfo();
+          const syncInfo = win2.userInfo || win2.HupuBridge && win2.HupuBridge.nainfo;
+          if (nativeInfo && nativeInfo.cid) {
+            clientId = String(nativeInfo.cid);
+          } else if (syncInfo && syncInfo.cid) {
+            clientId = String(syncInfo.cid);
+          } else if (((_a = win2.ColorboxAI) == null ? void 0 : _a.__auth) && typeof win2.ColorboxAI.__auth.getUserInfo === "function") {
+            const infoRes = yield win2.ColorboxAI.__auth.getUserInfo();
+            if (infoRes && infoRes.cid) {
+              clientId = String(infoRes.cid);
+            }
+          }
+        } catch (e) {
+          console.warn("[ColorboxAI.Api] Failed to resolve clientId:", e);
+        }
+        options.params.clientId = clientId;
+      }
+      let finalUrl = url;
+      if (method === "GET" && options.params) {
+        try {
+          const urlObj = new URL(finalUrl);
+          Object.entries(options.params).forEach(([key, val]) => {
+            if (val !== void 0 && val !== null) {
+              urlObj.searchParams.set(key, String(val));
+            }
+          });
+          finalUrl = urlObj.toString();
+        } catch (e) {
+        }
+      }
+      const isApp = typeof navigator !== "undefined" && /kanqiu/i.test(navigator.userAgent);
+      const inIframe = typeof window !== "undefined" && window.parent && window.parent !== window;
+      const hasDirectBridge = typeof window !== "undefined" && window.HupuBridge && typeof window.HupuBridge.send === "function";
+      console.log("[ColorboxAI.Api] Environment capability trace:", {
+        url: finalUrl,
+        channel: options.channel,
+        isApp,
+        inIframe,
+        hasDirectBridge
+      });
+      let bridgeRes = null;
+      let executedViaBridge = false;
+      if (options.channel === "bridge") {
+        if (hasDirectBridge) {
+          try {
+            console.log("[ColorboxAI.Api] Routing via direct HupuBridge.send");
+            const token = context.env.getAuthToken();
+            const headers = Object.assign(
+              { "Content-Type": "application/json;charset=UTF-8" },
+              token ? { "X-Hupu-Token": token } : {},
+              options.headers || {}
+            );
+            const requestData = method === "GET" ? options.params || {} : options.body || {};
+            const bridgeParams = __spreadValues({
+              url: finalUrl,
+              method,
+              data: requestData,
+              header: headers
+            }, options.postContentType ? { postContentType: options.postContentType } : {});
+            bridgeRes = yield window.HupuBridge.send("hupu.common.request", bridgeParams);
+            executedViaBridge = true;
+          } catch (err) {
+            console.error("[ColorboxAI.Api] Direct HupuBridge.send call error:", err);
+          }
+        } else if (inIframe && isApp) {
+          try {
+            console.log("[ColorboxAI.Api] Routing via parent postMessage proxy (in iframe)");
+            const token = context.env.getAuthToken();
+            const headers = Object.assign(
+              { "Content-Type": "application/json;charset=UTF-8" },
+              token ? { "X-Hupu-Token": token } : {},
+              options.headers || {}
+            );
+            const requestData = method === "GET" ? options.params || {} : options.body || {};
+            const bridgeParams = __spreadValues({
+              url: finalUrl,
+              method,
+              data: requestData,
+              header: headers
+            }, options.postContentType ? { postContentType: options.postContentType } : {});
+            bridgeRes = yield callBridgeViaParentProxy("hupu.common.request", bridgeParams);
+            executedViaBridge = true;
+          } catch (err) {
+            console.error("[ColorboxAI.Api] Parent postMessage bridge proxy error:", err);
+          }
+        } else {
+          console.log("[ColorboxAI.Api] Bridge channel requested, but neither direct bridge nor parent app-proxy was available.");
+        }
+      }
+      if (executedViaBridge) {
+        console.log("[ColorboxAI.Api] Bridge response received:", bridgeRes, {
+          bridgeResType: typeof bridgeRes,
+          isNull: bridgeRes === null,
+          isUndefined: bridgeRes === void 0,
+          keys: bridgeRes ? Object.keys(bridgeRes) : [],
+          rawJsonString: JSON.stringify(bridgeRes)
+        });
+        const isSuccess = bridgeRes && (bridgeRes.status === 200 || bridgeRes.status === void 0 || bridgeRes.status === 0 || bridgeRes.status === "200");
+        let parsedData = null;
+        if (bridgeRes && bridgeRes.data) {
+          try {
+            const decodedData = decodeURIComponent(bridgeRes.data);
+            parsedData = JSON.parse(decodedData);
+          } catch (e) {
+            console.warn("[ColorboxAI.Api] Failed to parse bridge response data as JSON:", e);
+            parsedData = bridgeRes.data;
+          }
+        }
+        if (!isSuccess) {
+          return {
+            code: (bridgeRes == null ? void 0 : bridgeRes.status) || 500,
+            message: (bridgeRes == null ? void 0 : bridgeRes.statusText) || "Bridge request failed",
+            data: null
+          };
+        }
+        return {
+          code: 200,
+          message: "success",
+          data: parsedData
+        };
+      }
+      console.log("[ColorboxAI.Api] Falling back to Web Fetch channel");
+      try {
+        const token = context.env.getAuthToken();
+        const headers = Object.assign(
+          { "Content-Type": "application/json;charset=UTF-8" },
+          token ? { "X-Hupu-Token": token } : {},
+          options.headers || {}
+        );
+        const res = method === "GET" ? yield context.httpClient.get(finalUrl, { headers }) : yield context.httpClient.post(finalUrl, options.body, { headers });
+        return {
+          code: 200,
+          message: "success",
+          data: res
+        };
+      } catch (err) {
+        console.error("[ColorboxAI.Api] Fetch channel failed:", err);
+        const guarded = toRequestGuardResponse(err);
+        if (guarded && isRequestGuardError(err) && !err.requestGuardLogged) {
+          recordRequestGuardLog({
+            scene: "core.api.fetch",
+            capabilityPath: "request",
+            method,
+            url: finalUrl,
+            reason: err.reason || (err.code === 408 ? "timeout" : err.code === 503 ? "circuit-open" : "guard-block"),
+            code: err.code,
+            message: err.message,
+            detail: err.detail || {
+              channel: "fetch"
+            }
+          });
+          err.requestGuardLogged = true;
+        }
+        if (guarded) return guarded;
+        return {
+          code: 500,
+          message: err instanceof Error ? err.message : String(err),
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/capabilities/request/activity/getVoteDetail/executor.ts
+  function executor6(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.activityId)) {
+        return { code: 400, message: "Missing parameter: activityId is required", data: null };
+      }
+      const res = yield callApi(`https://bbsactivity.hupu.com/bbsactivityapi/activity/vote/detail`, context, {
+        method: "GET",
+        params: {
+          activityId: params.activityId
+        }
+      });
+      const rawData = res.data;
+      if (rawData && (rawData.succeed === true || rawData.internalCode === "AC000000" || rawData.code === 1)) {
+        return {
+          code: 200,
+          message: "success",
+          data: rawData.data !== void 0 ? rawData.data : rawData
+        };
+      }
+      return {
+        code: (rawData == null ? void 0 : rawData.status) || (rawData == null ? void 0 : rawData.code) || (res.code !== 200 ? res.code : 500),
+        message: (rawData == null ? void 0 : rawData.msg) || (rawData == null ? void 0 : rawData.errorMsg) || (res.code !== 200 ? res.message : "failed"),
+        data: null
+      };
+    });
+  }
+
+  // src/capabilities/request/activity/listByBizKeys/executor.ts
+  function executor7(params, context) {
+    return __async(this, null, function* () {
+      var _a, _b;
+      if (!(params == null ? void 0 : params.bizKeys) || !Array.isArray(params.bizKeys) || params.bizKeys.length === 0) {
+        return { code: 400, message: "Missing or empty parameter: bizKeys is required", data: null };
+      }
+      try {
+        const version = context.env.getAppVersion() || "8.0.99";
+        const host = "https://games.mobileapi.hupu.com";
+        const url = `${host}/1/${version}/bplcommentapi/bpl/score_tree/listByBizKeys`;
+        const payload = {
+          bizKeys: params.bizKeys,
+          querySubItemLimit: (_a = params.querySubItemLimit) != null ? _a : 1,
+          queryHasLight: (_b = params.queryHasLight) != null ? _b : false
+        };
+        const token = context.env.getAuthToken();
+        const headers = {};
+        if (token) headers["X-Hupu-Token"] = token;
+        const res = yield context.httpClient.post(url, payload, { headers });
+        return res;
+      } catch (err) {
+        const guarded = toRequestGuardResponse(err);
+        if (guarded) return guarded;
+        return {
+          code: 500,
+          message: `Failed to list scores: ${err instanceof Error ? err.message : String(err)}`,
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/capabilities/request/activity/submitVote/executor.ts
+  function executor8(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      if (!(params == null ? void 0 : params.activityId) || !(params == null ? void 0 : params.groupId) || !(params == null ? void 0 : params.itemId)) {
+        return { code: 400, message: "Missing parameters: activityId, groupId, and itemId are required", data: null };
+      }
+      const res = yield callApi(`https://bbsactivity.hupu.com/bbsactivityapi/activity/vote`, context, {
+        method: "POST",
+        body: {
+          activityId: params.activityId,
+          groupId: params.groupId,
+          itemId: params.itemId,
+          voteNum: (_a = params.voteNum) != null ? _a : 1
+        }
+      });
+      const rawData = res.data;
+      if (rawData && (rawData.succeed === true || rawData.internalCode === "AC000000")) {
+        return {
+          code: 200,
+          message: "success",
+          data: {
+            succeed: true
+          }
+        };
+      }
+      if ((rawData == null ? void 0 : rawData.internalCode) === "AC100001") {
+        return {
+          code: 401,
+          message: (rawData == null ? void 0 : rawData.msg) || (rawData == null ? void 0 : rawData.errorMsg) || "\u7528\u6237\u672A\u767B\u9646",
+          data: {
+            succeed: false
+          }
+        };
+      }
+      return {
+        code: (rawData == null ? void 0 : rawData.status) || (res.code !== 200 ? res.code : 500),
+        message: (rawData == null ? void 0 : rawData.msg) || (rawData == null ? void 0 : rawData.errorMsg) || (res.code !== 200 ? res.message : "failed"),
+        data: {
+          succeed: false
+        }
+      };
+    });
+  }
+
+  // src/capabilities/request/basketball/playerInfo/executor.ts
+  function executor9(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.playerId)) {
+        return { code: 400, message: "Missing parameter: playerId", data: null };
+      }
+      if (!(params == null ? void 0 : params.leagueType)) {
+        return { code: 400, message: "Missing parameter: leagueType", data: null };
+      }
+      const version = context.env.getAppVersion() || "7.5.50";
+      const res = yield callApi(`https://games.mobileapi.hupu.com/3/${version}/basketballapi/playerPageHeadInfo`, context, {
+        method: "GET",
+        params: {
+          playerId: params.playerId,
+          leagueType: params.leagueType
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/core/constants.ts
+  var DEFAULT_HUPU_APP_VERSION = "8.2.46";
+
+  // src/capabilities/request/basketball/singleMatch/executor.ts
+  function executor10(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.matchId)) {
+        return { code: 400, message: "Missing parameter: matchId", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/basketballapi/singleMatch`, context, {
+        method: "GET",
+        params: {
+          matchId: params.matchId,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/bbs/detail/executor.ts
+  function normalizeDetailData(postData) {
+    var _a, _b, _c, _d, _e, _f, _g, _h, _i, _j, _k, _l;
+    const moduleConfigList = postData.moduleConfigList || {};
+    const titleModule = ((_a = moduleConfigList.title) == null ? void 0 : _a.moduleContent) || {};
+    const contentModule = ((_b = moduleConfigList.content) == null ? void 0 : _b.moduleContent) || {};
+    const userModule = ((_c = moduleConfigList.user) == null ? void 0 : _c.moduleContent) || {};
+    const basicInfo = postData.basicInfo || {};
+    return __spreadProps(__spreadValues({}, postData), {
+      title: titleModule.title || postData.title || postData.thread_title || "",
+      content: contentModule.content || postData.content || postData.thread_content || "",
+      author: ((_d = basicInfo.author) == null ? void 0 : _d.name) || userModule.name || postData.author || postData.username || postData.user_name || "",
+      avatar: userModule.header || postData.avatar || postData.user_avatar || "",
+      replyCount: (_g = (_f = (_e = postData.replies) != null ? _e : postData.replys) != null ? _f : postData.replyCount) != null ? _g : 0,
+      lightReplyCount: (_i = (_h = postData.light_replys) != null ? _h : postData.lightReplyCount) != null ? _i : 0,
+      recommends: (_j = postData.recommends) != null ? _j : 0,
+      fid: (_l = (_k = basicInfo.fid) != null ? _k : postData.fid) != null ? _l : "",
+      forumName: basicInfo.topicCategoryName || postData.forumName || postData.forum_name || ""
+    });
+  }
+  function executor11(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      if (!(params == null ? void 0 : params.tid)) {
+        return { code: 400, message: "Missing parameter: tid", data: null };
+      }
+      const host = "https://enterprise.hupu.com";
+      try {
+        const res = yield context.httpClient.get(`${host}/api/activity/threadList?tids=${encodeURIComponent(params.tid)}`);
+        if (res && res.data && !Array.isArray(res.data) && !Array.isArray(res.data.list)) {
+          return {
+            code: Number(res.code) || 200,
+            message: res.message || res.msg || "success",
+            success: (_a = res.success) != null ? _a : true,
+            data: normalizeDetailData(res.data)
+          };
+        }
+        let list = [];
+        if (res && res.data) {
+          if (Array.isArray(res.data)) {
+            list = res.data;
+          } else if (Array.isArray(res.data.list)) {
+            list = res.data.list;
+          }
+        }
+        const postData = list[0] || null;
+        if (!postData) {
+          return { code: 404, message: "Post not found", data: null };
+        }
+        return {
+          code: 200,
+          message: "success",
+          success: true,
+          data: normalizeDetailData(postData)
+        };
+      } catch (err) {
+        const guarded = toRequestGuardResponse(err);
+        if (guarded) return guarded;
+        return {
+          code: 500,
+          message: `BBS detail fetch failed: ${err instanceof Error ? err.message : String(err)}`,
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/capabilities/request/bbs/getTagThreadList/executor.ts
+  function executor12(params, context) {
+    return __async(this, null, function* () {
+      var _a, _b, _c, _d, _e, _f, _g;
+      if (!(params == null ? void 0 : params.tagId)) {
+        return {
+          code: 400,
+          message: "Missing parameter: tagId is required",
+          data: null
+        };
+      }
+      const version = context.env.getAppVersion() || "8.2.53";
+      const res = yield callApi(`https://bbs.mobileapi.hupu.com/3/${version}/bbsallapi/tag/v1/getTagThreadList`, context, {
+        method: "GET",
+        channel: "bridge",
+        supportEnv: ["app"],
+        params: {
+          tagId: params.tagId,
+          tabType: (_a = params.tabType) != null ? _a : 2,
+          page: (_b = params.page) != null ? _b : 1,
+          lastCursor: (_c = params.lastCursor) != null ? _c : "",
+          newapp: 1,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      if (res.code === 200 && res.data) {
+        const rawData = res.data;
+        if (rawData && typeof rawData.id === "number" && typeof rawData.text === "string") {
+          res.code = rawData.id || 500;
+          res.message = rawData.text;
+          res.data = null;
+        } else if (rawData && (rawData.success === false || rawData.internalCode && rawData.internalCode !== "AL000000")) {
+          const errorCode = rawData.status || rawData.code || 500;
+          res.code = errorCode === 200 || errorCode === 1 ? 500 : errorCode;
+          res.message = rawData.msg || rawData.errorMsg || "Request failed";
+          res.data = null;
+        } else {
+          const targetData = rawData.data !== void 0 ? rawData.data : rawData;
+          let list = [];
+          if (Array.isArray(targetData.list)) {
+            list = targetData.list;
+          } else if (Array.isArray(targetData.threads)) {
+            list = targetData.threads;
+          } else if (targetData.result && Array.isArray(targetData.result.list)) {
+            list = targetData.result.list;
+          }
+          const hasNextPage = targetData.nextPage === true || typeof targetData.next_page === "number" && targetData.next_page > 0 || typeof targetData.next_page === "boolean" && targetData.next_page || targetData.nextPage !== void 0 && !!targetData.nextPage;
+          res.data = {
+            cursor: typeof targetData.cursor === "string" ? targetData.cursor : "",
+            nextPage: hasNextPage,
+            next_page: typeof targetData.next_page === "number" ? targetData.next_page : hasNextPage ? ((_d = params.page) != null ? _d : 1) + 1 : 0,
+            stamp: (_e = targetData.stamp) != null ? _e : null,
+            total: (_f = targetData.total) != null ? _f : null,
+            list,
+            threads: (_g = targetData.threads) != null ? _g : null
+          };
+        }
+      }
+      return res;
+    });
+  }
+
+  // src/capabilities/request/bbs/getTopicThreads/executor.ts
+  function executor13(params, context) {
+    return __async(this, null, function* () {
+      var _a, _b, _c, _d, _e, _f, _g;
+      if (!(params == null ? void 0 : params.topic_id)) {
+        return { code: 400, message: "Missing parameter: topic_id is required", data: null };
+      }
+      const version = context.env.getAppVersion() || "8.2.53";
+      const res = yield callApi(`https://bbs.mobileapi.hupu.com/1/${version}/topics/getTopicThreads`, context, {
+        method: "GET",
+        channel: "bridge",
+        supportEnv: ["app"],
+        params: {
+          topic_id: params.topic_id,
+          tab_type: (_a = params.tab_type) != null ? _a : 2,
+          page: (_b = params.page) != null ? _b : 1,
+          stamp: (_c = params.stamp) != null ? _c : 0,
+          width: 1155,
+          lastCursor: (_d = params.lastCursor) != null ? _d : ""
+        }
+      });
+      if (res.code === 200 && res.data) {
+        const rawData = res.data;
+        if (rawData && typeof rawData.id === "number" && typeof rawData.text === "string") {
+          res.code = rawData.id || 500;
+          res.message = rawData.text;
+          res.data = null;
+        } else if (rawData && (rawData.success === false || rawData.internalCode && rawData.internalCode !== "AL000000")) {
+          const errorCode = rawData.status || rawData.code || 500;
+          res.code = errorCode === 200 || errorCode === 1 ? 500 : errorCode;
+          res.message = rawData.msg || rawData.errorMsg || "Request failed";
+          res.data = null;
+        } else {
+          let coercedList = [];
+          let cursor = "";
+          const targetData = rawData.data !== void 0 ? rawData.data : rawData;
+          if (Array.isArray(targetData.list)) {
+            coercedList = targetData.list;
+          } else if (targetData.result && Array.isArray(targetData.result.list)) {
+            coercedList = targetData.result.list;
+          } else if (Array.isArray(targetData)) {
+            coercedList = targetData;
+          }
+          if (typeof targetData.cursor === "string") {
+            cursor = targetData.cursor;
+          }
+          const nextPage = typeof targetData.nextPage === "boolean" ? targetData.nextPage : typeof targetData.next_page === "boolean" ? targetData.next_page : typeof targetData.next_page === "number" ? targetData.next_page > 0 : false;
+          res.data = {
+            list: coercedList,
+            cursor,
+            nextPage,
+            next_page: typeof targetData.next_page === "number" ? targetData.next_page : nextPage ? ((_e = params.page) != null ? _e : 1) + 1 : 0,
+            stamp: (_f = targetData.stamp) != null ? _f : null,
+            total: (_g = targetData.total) != null ? _g : null
+          };
+        }
+      }
+      return res;
+    });
+  }
+
+  // src/capabilities/request/bbs/getsThreadPostList/executor.ts
+  function executor14(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.tid)) {
+        return { code: 400, message: "Missing parameter: tid is required", data: null };
+      }
+      const version = context.env.getAppVersion() || "8.2.53";
+      const res = yield callApi(`https://bbs.mobileapi.hupu.com/1/${version}/threads/getsThreadPostList`, context, {
+        method: "GET",
+        channel: "bridge",
+        supportEnv: ["app"],
+        params: {
+          tid: params.tid,
+          fid: params.fid || "",
+          page: params.page || 1,
+          sort: params.sort || 0,
+          order: params.order || "asc"
+        }
+      });
+      if (res.code === 200 && res.data) {
+        const rawData = res.data;
+        if (rawData && typeof rawData.id === "number" && typeof rawData.text === "string") {
+          res.code = rawData.id || 500;
+          res.message = rawData.text;
+          res.data = null;
+        } else if (rawData && (rawData.success === false || rawData.internalCode && rawData.internalCode !== "AL000000")) {
+          const errorCode = rawData.status || rawData.code || 500;
+          res.code = errorCode === 200 || errorCode === 1 ? 500 : errorCode;
+          res.message = rawData.msg || rawData.errorMsg || "Request failed";
+          res.data = null;
+        } else {
+          let coercedData = { list: [] };
+          if (Array.isArray(rawData.list)) {
+            coercedData = rawData;
+          } else if (rawData.result && Array.isArray(rawData.result.list)) {
+            coercedData = rawData.result;
+          } else if (rawData.data && Array.isArray(rawData.data.list)) {
+            coercedData = rawData.data;
+          } else if (rawData.data && rawData.data.result && Array.isArray(rawData.data.result.list)) {
+            coercedData = rawData.data.result;
+          } else if (Array.isArray(rawData)) {
+            coercedData = { list: rawData };
+          }
+          res.data = __spreadProps(__spreadValues({}, coercedData), { list: Array.isArray(coercedData.list) ? coercedData.list : [] });
+        }
+      }
+      return res;
+    });
+  }
+
+  // src/capabilities/request/bbs/openPostEditor/executor.ts
+  function executor15(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      if (!(params == null ? void 0 : params.topicId)) {
+        return { code: 400, message: "Missing parameter: topicId is required", schema: "" };
+      }
+      try {
+        const tagId = params.tagId || "";
+        const topicId = params.topicId;
+        const topicName = params.topicName || "";
+        const tagName = params.tagName || "";
+        const title = params.title || "";
+        const content = params.content || "";
+        const imageUrl = params.imageUrl || "";
+        const imageList = imageUrl ? [{ key: "ColorboxAI", remoteUrl: imageUrl }] : [];
+        const initialValue = {
+          syncPost: true,
+          appJsonV3: {
+            activeTab: "thread",
+            data: {
+              title,
+              imageList,
+              content
+            }
+          }
+        };
+        const schema = `huputiyu://bbs/postImg?tagId=${tagId}&topicId=${topicId}&topicName=${encodeURIComponent(topicName)}&tagName=${encodeURIComponent(tagName)}&initialValue=${encodeURIComponent(JSON.stringify(initialValue))}`;
+        const win2 = typeof window !== "undefined" ? window : {};
+        if (typeof ((_a = win2.ColorboxAI) == null ? void 0 : _a.navigateTo) === "function") {
+          win2.ColorboxAI.navigateTo(schema);
+        } else if (typeof win2.location !== "undefined") {
+          win2.location.href = schema;
+        }
+        return {
+          code: 200,
+          message: "success",
+          schema
+        };
+      } catch (err) {
+        return {
+          code: 500,
+          message: `Failed to open post editor: ${err instanceof Error ? err.message : String(err)}`,
+          schema: ""
+        };
+      }
+    });
+  }
+
+  // src/capabilities/request/bbs/replyPost/executor.ts
+  function isIosRuntime(context) {
+    var _a, _b;
+    const nativeInfo = ((_b = (_a = context.env).getNativeInfo) == null ? void 0 : _b.call(_a)) || {};
+    const nativeText = [
+      nativeInfo.platform,
+      nativeInfo.os,
+      nativeInfo.osType,
+      nativeInfo.system,
+      nativeInfo.device,
+      nativeInfo.model,
+      nativeInfo.client
+    ].filter(Boolean).join(" ");
+    if (/ios|iphone|ipad|ipod/i.test(nativeText)) {
+      return true;
+    }
+    if (typeof navigator !== "undefined") {
+      const ua = navigator.userAgent || "";
+      if (/iPhone|iPad|iPod/i.test(ua)) {
+        return true;
+      }
+      if (/Macintosh/i.test(ua) && navigator.maxTouchPoints > 1) {
+        return true;
+      }
+    }
+    const win2 = typeof window !== "undefined" ? window : {};
+    return !!(win2.webkit && win2.webkit.messageHandlers && win2.webkit.messageHandlers.ClientBridge) && !win2.androidBridge;
+  }
+  function executor16(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.tid)) {
+        return { code: 400, message: "Missing parameter: tid is required", data: null };
+      }
+      if (typeof params.content !== "string" || !params.content.trim()) {
+        return { code: 400, message: "Missing parameter: content is required", data: null };
+      }
+      const version = context.env.getAppVersion() || "8.2.53";
+      const isIos = isIosRuntime(context);
+      const apiPrefix = isIos ? "3" : "1";
+      const res = yield callApi(`https://bbs.mobileapi.hupu.com/${apiPrefix}/${version}/bbsreplyapi/reply/v1/app/create`, context, __spreadProps(__spreadValues({
+        method: "POST",
+        channel: "bridge",
+        supportEnv: ["app"]
+      }, isIos ? { postContentType: "json" } : {}), {
+        body: {
+          tid: params.tid,
+          content: params.content
+        }
+      }));
+      if (res.code === 200 && res.data) {
+        const rawData = res.data;
+        if (typeof rawData.id === "number" && typeof rawData.text === "string") {
+          res.code = rawData.id || 500;
+          res.message = rawData.text;
+          res.data = null;
+        } else if (rawData.success === false || rawData.internalCode && rawData.internalCode !== "AL000000") {
+          const errorCode = rawData.status || rawData.code || 500;
+          res.code = errorCode === 200 || errorCode === 1 ? 500 : errorCode;
+          res.message = rawData.msg || rawData.errorMsg || "Request failed";
+          res.data = null;
+        } else {
+          res.data = rawData.data !== void 0 ? rawData.data : rawData.result !== void 0 ? rawData.result : rawData;
+        }
+      }
+      return res;
+    });
+  }
+
+  // src/capabilities/request/football/liveRoomNewsList/executor.ts
+  function executor17(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.matchId)) {
+        return { code: 400, message: "Missing parameter: matchId", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/basketballapi/news/v2/matchNews`, context, {
+        method: "GET",
+        params: {
+          matchId: params.matchId,
+          cateGoryCode: params.matchType || "football",
+          nId: params.newsId || "0",
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      if (res.code !== 200 || !res.data) {
+        return res;
+      }
+      const rawData = res.data;
+      if (rawData.success === false || rawData.errorCode || rawData.errorMsg) {
+        return {
+          code: Number(rawData.status) || 500,
+          message: rawData.errorMsg || rawData.msg || "Request failed",
+          data: null
+        };
+      }
+      return {
+        code: 200,
+        message: rawData.msg || rawData.message || "success",
+        data: rawData
+      };
+    });
+  }
+
+  // src/capabilities/request/football/matchInfo/executor.ts
+  function executor18(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.matchId)) {
+        return { code: 400, message: "Missing parameter: matchId", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://football-api.hupu.com/1/${version}/match/v2/info`, context, {
+        method: "GET",
+        params: {
+          matchId: params.matchId,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/football/playerInfo/executor.ts
+  function executor19(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.playerId)) {
+        return { code: 400, message: "Missing parameter: playerId", data: null };
+      }
+      const version = context.env.getAppVersion() || "8.0.0";
+      const res = yield callApi(`https://football-api.hupu.com/1/${version}/football/player/info`, context, {
+        method: "GET",
+        params: {
+          oldId: "",
+          newId: params.playerId
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/kog/playbyplay/executor.ts
+  function executor20(params, context) {
+    return __async(this, null, function* () {
+      const bid = (params == null ? void 0 : params.battleId) || (params == null ? void 0 : params.battle_id);
+      if (!bid) {
+        return { code: 400, message: "Missing parameter: battleId", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/kog/getPlaybyplay`, context, {
+        method: "GET",
+        params: {
+          battle_id: bid,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/liveTab/infoList/executor.ts
+  function executor21(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.matchId)) {
+        return { code: 400, message: "Missing parameter: matchId", data: null };
+      }
+      if (!(params == null ? void 0 : params.matchType)) {
+        return { code: 400, message: "Missing parameter: matchType", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/basketballapi/news/v2/matchNews`, context, {
+        method: "GET",
+        params: {
+          matchId: params.matchId,
+          cateGoryCode: params.matchType,
+          nId: params.newsId || "0",
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      if (res.code !== 200 || !res.data) {
+        return res;
+      }
+      const rawData = res.data;
+      if (rawData.success === false || rawData.errorCode || rawData.errorMsg) {
+        return {
+          code: Number(rawData.status) || 500,
+          message: rawData.errorMsg || rawData.msg || "Request failed",
+          data: null
+        };
+      }
+      return {
+        code: 200,
+        message: rawData.msg || rawData.message || "success",
+        data: rawData
+      };
+    });
+  }
+
+  // src/capabilities/request/liveTab/list/executor.ts
+  function executor22(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.matchId)) {
+        return { code: 400, message: "Missing parameter: matchId", data: null };
+      }
+      if (!(params == null ? void 0 : params.matchType)) {
+        return { code: 400, message: "Missing parameter: matchType", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://match-api.hupu.com/1/${version}/matchallapi/liveTabList`, context, {
+        method: "GET",
+        params: {
+          matchId: params.matchId,
+          matchType: params.matchType,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/lol/playbyplay/executor.ts
+  function executor23(params, context) {
+    return __async(this, null, function* () {
+      const bid = (params == null ? void 0 : params.battleId) || (params == null ? void 0 : params.battle_id);
+      if (!bid) {
+        return { code: 400, message: "Missing parameter: battleId", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/lol/getPlaybyplay`, context, {
+        method: "GET",
+        params: {
+          battle_id: bid,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/match/getTabDetailScheduleList/executor.ts
+  function executor24(params, context) {
+    return __async(this, null, function* () {
+      const finalParams = params && params.params ? params.params : params || {};
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://match-api.hupu.com/1/${version}/matchallapi/bff/standard/getTabDetailScheduleList`, context, {
+        method: "GET",
+        params: finalParams
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/match/queryAllDiagramInfoById/executor.ts
+  function executor25(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.standingsId)) {
+        return { code: 400, message: "Missing parameter: standingsId", data: null };
+      }
+      const version = context.env.getAppVersion() || "8.0.0";
+      const res = yield callApi(`https://match-api.hupu.com/1/${version}/matchallapi/common/queryStandingsInfoById`, context, {
+        method: "GET",
+        params: {
+          standingsId: params.standingsId
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/match/queryMatchStatsByMatchInfo/executor.ts
+  function executor26(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.matchId)) {
+        return { code: 400, message: "Missing parameter: matchId", data: null };
+      }
+      const version = context.env.getAppVersion() || "8.0.0";
+      const res = yield callApi(`https://match-api.hupu.com/1/${version}/matchallapi/stat/queryMatchStatsByMatchInfo/v2`, context, {
+        method: "GET",
+        params: {
+          matchId: params.matchId,
+          boNumber: params.boNumber !== void 0 ? params.boNumber : 0
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/news/newsCommonList/executor.ts
+  function executor27(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.source)) {
+        return { code: 400, message: "Missing parameter: source", data: null };
+      }
+      if (!(params == null ? void 0 : params.tagCode)) {
+        return { code: 400, message: "Missing parameter: tagCode", data: null };
+      }
+      const apiParams = {
+        source: params.source,
+        tagCode: params.tagCode,
+        time_zone: "Asia/Shanghai"
+      };
+      if (params.newsId !== void 0) {
+        apiParams.newsId = params.newsId;
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/basketballapi/news/newsCommonList`, context, {
+        method: "GET",
+        params: apiParams
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/news/playerNewsList/executor.ts
+  function executor28(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.playerId)) {
+        return { code: 400, message: "Missing parameter: playerId", data: null };
+      }
+      if (!(params == null ? void 0 : params.category)) {
+        return { code: 400, message: "Missing parameter: category", data: null };
+      }
+      const isFootball = params.category === "football";
+      const defaultVer = isFootball ? "7.3.12" : "7.5.50";
+      const version = context.env.getAppVersion() || defaultVer;
+      const major = isFootball ? "1" : "3";
+      const url = `https://games.mobileapi.hupu.com/${major}/${version}/basketballapi/news/${isFootball ? "v2" : "v3"}/playerNewsById`;
+      const apiParams = {
+        playerId: params.playerId,
+        cateGoryCode: params.category
+      };
+      if (isFootball) {
+        apiParams.nId = params.newsId || "0";
+      } else {
+        if (params.newsId !== void 0) {
+          apiParams.newsId = params.newsId;
+        }
+        if (params.page !== void 0) {
+          apiParams.page = params.page;
+        }
+      }
+      const res = yield callApi(url, context, {
+        method: "GET",
+        params: apiParams
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/news/subjectNews/executor.ts
+  function executor29(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.newsId)) {
+        return { code: 400, message: "Missing parameter: newsId", data: null };
+      }
+      const version = context.env.getAppVersion() || DEFAULT_HUPU_APP_VERSION;
+      const res = yield callApi(`https://games.mobileapi.hupu.com/1/${version}/basketballapi/news/v2/subjectNews`, context, {
+        method: "GET",
+        params: {
+          newsId: params.newsId,
+          time_zone: "Asia/Shanghai"
+        }
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/news/teamNewsList/executor.ts
+  function executor30(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.teamId)) {
+        return { code: 400, message: "Missing parameter: teamId", data: null };
+      }
+      if (!(params == null ? void 0 : params.category)) {
+        return { code: 400, message: "Missing parameter: category", data: null };
+      }
+      const isFootball = params.category === "football";
+      const defaultVer = isFootball ? "7.3.12" : "7.5.60";
+      const version = context.env.getAppVersion() || defaultVer;
+      const major = isFootball ? "1" : "3";
+      const url = `https://games.mobileapi.hupu.com/${major}/${version}/basketballapi/news/v2/teamNewsById`;
+      const apiParams = {
+        teamId: params.teamId,
+        cateGoryCode: params.category
+      };
+      if (isFootball) {
+        apiParams.nId = params.newsId || "0";
+      } else {
+        apiParams.newsId = params.newsId || "0";
+      }
+      const res = yield callApi(url, context, {
+        method: "GET",
+        params: apiParams
+      });
+      return normalizeHupuResponse(res);
+    });
+  }
+
+  // src/capabilities/request/request/executor.ts
+  function executor31(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      if (!params || !params.url) {
+        return { statusCode: 400, data: null, headers: {}, message: "Missing parameter: url is required" };
+      }
+      const method = (params.method || "GET").toUpperCase() === "POST" ? "POST" : "GET";
+      const channel = params.channel === "bridge" ? "bridge" : "fetch";
+      const reqHeaders = params.headers || {};
+      const reqData = (_a = params.data) != null ? _a : null;
+      const res = yield callApi(params.url, context, __spreadValues({
+        method,
+        channel,
+        headers: reqHeaders
+      }, method === "GET" ? { params: reqData && typeof reqData === "object" ? reqData : {} } : { body: reqData }));
+      return __spreadValues({
+        statusCode: res.code,
+        data: res.data,
+        headers: {}
+      }, res.message ? { message: res.message } : {});
+    });
+  }
+
+  // src/capabilities/score/addScore/executor.ts
+  function executor32(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.outBizType) || !(params == null ? void 0 : params.outBizNo) || (params == null ? void 0 : params.score) == null) {
+        return { code: 400, message: "Missing parameters: outBizType, outBizNo and score are required", data: null };
+      }
+      try {
+        const version = context.env.getAppVersion() || "8.0.99";
+        const host = "https://games.mobileapi.hupu.com";
+        const url = `${host}/1/${version}/bplcommentapi/bpl/score/save`;
+        const payload = {
+          outBizKey: {
+            outBizType: params.outBizType,
+            outBizNo: params.outBizNo
+          },
+          score: Number(params.score),
+          source: params.source || ""
+        };
+        const token = context.env.getAuthToken();
+        const headers = {};
+        if (token) headers["X-Hupu-Token"] = token;
+        const res = yield context.httpClient.post(url, payload, { headers });
+        return res;
+      } catch (err) {
+        const guarded = toRequestGuardResponse(err);
+        if (guarded) return guarded;
+        return {
+          code: 500,
+          message: `Failed to submit score: ${err instanceof Error ? err.message : String(err)}`,
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/capabilities/score/getScore/executor.ts
+  function executor33(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.outBizType) || !(params == null ? void 0 : params.outBizNo)) {
+        return { code: 400, message: "Missing parameters: outBizType and outBizNo are required", data: null };
+      }
+      try {
+        const version = context.env.getAppVersion() || "8.0.99";
+        const host = "https://games.mobileapi.hupu.com";
+        const url = `${host}/1/${version}/bplcommentapi/bpl/score_tree/getSelfByBizKey?outBizType=${encodeURIComponent(params.outBizType)}&outBizNo=${encodeURIComponent(params.outBizNo)}`;
+        const token = context.env.getAuthToken();
+        const headers = {};
+        if (token) headers["X-Hupu-Token"] = token;
+        const res = yield context.httpClient.get(url, { headers });
+        return res;
+      } catch (err) {
+        const guarded = toRequestGuardResponse(err);
+        if (guarded) return guarded;
+        return {
+          code: 500,
+          message: `Failed to get score details: ${err instanceof Error ? err.message : String(err)}`,
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/capabilities/security/checkAudit/executor.ts
+  function executor34(params, context) {
+    return __async(this, null, function* () {
+      const content = typeof params === "string" ? params : (params == null ? void 0 : params.content) || "";
+      if (!content) {
+        return {
+          code: COLORBOX_AI_ERRORS.BAD_REQUEST.code,
+          message: COLORBOX_AI_ERRORS.BAD_REQUEST.message + "\uFF1Acontent\u4E0D\u80FD\u4E3A\u7A7A",
+          data: null
+        };
+      }
+      const inIframe = typeof window !== "undefined" && window.parent && window.parent !== window;
+      const hasParentShellBridge = inIframe && (function() {
+        var _a;
+        try {
+          return Number(((_a = window.parent) == null ? void 0 : _a.__colorbox_ai_shell_bridge_version__) || 0) >= 2;
+        } catch (e) {
+          return false;
+        }
+      })();
+      if (inIframe && hasParentShellBridge) {
+        try {
+          const payload = yield sendIframeBridgeMessage("security.checkAudit", { content });
+          return payload.result;
+        } catch (err) {
+          return {
+            code: COLORBOX_AI_ERRORS.SERVER_ERROR.code,
+            message: `Security audit request timeout: ${err instanceof Error ? err.message : String(err)}`,
+            data: null
+          };
+        }
+      }
+      try {
+        const isApp = context.env.isApp();
+        const token = context.env.getAuthToken();
+        if (isApp && !token) {
+          return {
+            code: COLORBOX_AI_ERRORS.UNAUTHORIZED.code,
+            message: COLORBOX_AI_ERRORS.UNAUTHORIZED.message,
+            data: null
+          };
+        }
+        const host = "https://bbsactivity.hupu.com";
+        const url = `${host}/1/1/bbsactivityapi/audit/act/check`;
+        const headers = {};
+        if (token) headers["X-Hupu-Token"] = token;
+        const res = yield context.httpClient.post(url, { content, title: "" }, { headers });
+        const succeed = res == null ? void 0 : res.succeed;
+        const internalCode = res == null ? void 0 : res.internalCode;
+        const rawCode = res == null ? void 0 : res.code;
+        const rawMsg = (res == null ? void 0 : res.message) || (res == null ? void 0 : res.msg);
+        const rawData = res == null ? void 0 : res.data;
+        if (internalCode === "AC100001" || rawCode === 401 || rawCode === 403) {
+          return {
+            code: COLORBOX_AI_ERRORS.UNAUTHORIZED.code,
+            message: rawMsg || COLORBOX_AI_ERRORS.UNAUTHORIZED.message,
+            data: null
+          };
+        }
+        if (succeed === true || rawCode === 1 || internalCode === "AC000000") {
+          return {
+            code: COLORBOX_AI_ERRORS.SUCCESS.code,
+            message: "success",
+            data: rawData === true
+          };
+        }
+        return {
+          code: COLORBOX_AI_ERRORS.SERVER_ERROR.code,
+          message: rawMsg || COLORBOX_AI_ERRORS.SERVER_ERROR.message,
+          data: null
+        };
+      } catch (err) {
+        return {
+          code: COLORBOX_AI_ERRORS.SERVER_ERROR.code,
+          message: err instanceof Error ? err.message : String(err),
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/core/bridgeClient.ts
+  var bridgeInstance = null;
+  function getBridgeClient(context) {
+    if (bridgeInstance) {
+      return bridgeInstance;
+    }
+    const JSBridgeModule = typeof __require !== "undefined" ? require_cjs2() : null;
+    const JSBridge = JSBridgeModule ? JSBridgeModule.default || JSBridgeModule : null;
+    if (!JSBridge) {
+      throw new Error("[ColorboxAI.BridgeClient] JSBridge constructor is not available in current environment.");
+    }
+    const bridge = new JSBridge();
+    const originalCallNative = bridge.callNative;
+    bridge.callNative = function(params) {
+      const isApp = context ? context.env.isApp() : typeof navigator !== "undefined" && /kanqiu/i.test(navigator.userAgent);
+      const inIframe = typeof window !== "undefined" && window.parent && window.parent !== window;
+      console.log(`%c[ColorboxAI.Bridge] \u8C03\u7528\u6865\u63A5\u65B9\u6CD5 => [${params.method}]`, "color: #3b82f6; font-weight: bold;", {
+        method: params.method,
+        data: params.data,
+        successcb: params.successcb,
+        errorcb: params.errorcb
+      });
+      if (isApp) {
+        if (inIframe) {
+          console.log(`%c[ColorboxAI.Bridge] \u8DEF\u7531\u901A\u9053 => Iframe postMessage \u4EE3\u7406`, "color: #8b5cf6;");
+          try {
+            window.parent.postMessage({
+              protocol: "colorbox-ai-bridge",
+              version: 1,
+              direction: "frame-to-host",
+              type: "bridge.call",
+              payload: {
+                platform: "ios",
+                payload: {
+                  method: params.method,
+                  data: params.data,
+                  successcb: params.successcb,
+                  errorcb: params.errorcb
+                }
+              }
+            }, "*");
+            return;
+          } catch (e) {
+            console.error("[ColorboxAI.Bridge] Failed to postMessage to parent:", e);
+          }
+        } else {
+          console.log(`%c[ColorboxAI.Bridge] \u8DEF\u7531\u901A\u9053 => \u5BA2\u6237\u7AEF HupuBridge \u76F4\u8FDE`, "color: #10b981;");
+          if (originalCallNative) {
+            originalCallNative.call(this, params);
+            return;
+          }
+        }
+      }
+      console.warn(`%c[ColorboxAI.Bridge] Bridge \u65B9\u6CD5 [${params.method}] \u5728\u5F53\u524D Web \u73AF\u5883\u4E0B\u4E0D\u652F\u6301\u3002\u5C06\u89E6\u53D1\u9519\u8BEF\u964D\u7EA7\u56DE\u8C03\u3002`, "color: #f59e0b;");
+      if (params.errorcb) {
+        let fn = window;
+        const parts = params.errorcb.split(".");
+        for (let i = 0; i < parts.length; i++) {
+          if (fn) fn = fn[parts[i]];
+        }
+        if (typeof fn === "function") {
+          try {
+            fn.call(null, { code: 430, message: "Bridge unsupported in current environment" });
+          } catch (e) {
+            console.error("[ColorboxAI.Bridge] Error callback failed:", e);
+          }
+        }
+      }
+    };
+    if (typeof window !== "undefined" && window.parent && window.parent !== window) {
+      window.addEventListener("message", (event) => {
+        const data = event && event.data;
+        if (!data || data.protocol !== "colorbox-ai-bridge" || data.direction !== "host-to-frame") return;
+        if (data.type === "bridge.event") {
+          const { method, result } = data.payload || {};
+          console.log(`%c[ColorboxAI.Bridge] \u6536\u5230\u8BA2\u9605\u4E8B\u4EF6 <= [${method}]`, "color: #10b981; font-weight: bold;", result);
+          const jsBridgeEvent = new CustomEvent("onHupuJSBridgeHandle", {
+            detail: { method, result }
+          });
+          window.dispatchEvent(jsBridgeEvent);
+        }
+        if (data.type === "bridge.callback") {
+          const { callbackName, args } = data.payload || {};
+          console.log(`%c[ColorboxAI.Bridge] \u6536\u5230\u5F02\u6B65\u56DE\u8C03 <= [${callbackName}]`, "color: #10b981; font-weight: bold;", args);
+          if (callbackName) {
+            let fn = window;
+            const parts = callbackName.split(".");
+            for (let i = 0; i < parts.length; i++) {
+              if (fn) fn = fn[parts[i]];
+            }
+            if (typeof fn === "function") {
+              try {
+                fn.apply(null, args || []);
+              } catch (e) {
+                console.error("[ColorboxAI.Bridge] Callback invocation failed:", e);
+              }
+            }
+          }
+        }
+      });
+    }
+    bridgeInstance = bridge;
+    return bridge;
+  }
+
+  // src/capabilities/social/share/executor.ts
+  function executor35(params, context) {
+    return __async(this, null, function* () {
+      if (!(params == null ? void 0 : params.title) || !(params == null ? void 0 : params.link)) {
+        return { code: 400, message: "Missing parameters: title and link are required", data: null };
+      }
+      console.log("[ColorboxAI.Bridge.Share] Calling native share bridge with:", JSON.stringify(params));
+      try {
+        const isApp = context.env.isApp();
+        if (isApp) {
+          const bridge = getBridgeClient(context);
+          const res = yield bridge.send("hupu.share.custom", {
+            shareType: 2,
+            // 2 indicates link/webpage share
+            title: params.title,
+            text: params.text || params.title,
+            linkUrl: params.link,
+            imgUrl: params.imageUrl || "",
+            platform: [
+              { channel: "wx", schema: "" },
+              { channel: "moments", schema: "" },
+              { channel: "wb", schema: "" },
+              { channel: "copy", schema: "" }
+            ]
+          });
+          return { code: 200, message: "success", data: { platform: "app-bridge", res } };
+        }
+        if (typeof navigator !== "undefined" && navigator.share) {
+          yield navigator.share({
+            title: params.title,
+            text: params.text || params.title,
+            url: params.link
+          });
+          return { code: 200, message: "success", data: { platform: "web-share-api" } };
+        }
+        return {
+          code: 200,
+          message: "success (fallback)",
+          data: { platform: "web-fallback", link: params.link }
+        };
+      } catch (err) {
+        return {
+          code: 500,
+          message: `Share failed: ${err instanceof Error ? err.message : String(err)}`,
+          data: null
+        };
+      }
+    });
+  }
+
+  // src/capabilities/storage/getValue/executor.ts
+  function executor36(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      const win2 = typeof window !== "undefined" ? window : {};
+      let key = void 0;
+      if (typeof params === "string") {
+        key = params;
+      } else if (params && typeof params === "object") {
+        key = params.key;
+      }
+      const storage = (_a = win2.ColorboxAI) == null ? void 0 : _a.__storage;
+      if (storage && typeof storage.getValue === "function") {
+        return storage.getValue(key);
+      }
+      console.log("[ColorboxAI.Storage.Executor] Fallback getValue for key:", key);
+      return null;
+    });
+  }
+
+  // src/capabilities/storage/setValue/executor.ts
+  function executor37(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      const win2 = typeof window !== "undefined" ? window : {};
+      const data = (params == null ? void 0 : params.data) || params;
+      if (!data || typeof data !== "object" || Array.isArray(data)) {
+        return { ok: false, message: "Invalid storage payload: object data is required" };
+      }
+      const storage = (_a = win2.ColorboxAI) == null ? void 0 : _a.__storage;
+      if (storage && typeof storage.setValue === "function") {
+        return storage.setValue(data);
+      }
+      console.log("[ColorboxAI.Storage.Executor] Fallback setValue:", JSON.stringify(data));
+      const keys = Object.keys(data);
+      return {
+        ok: true,
+        key: keys[0] ? `project-ai-default-${keys[0]}` : "",
+        keys: keys.map((k) => `project-ai-default-${k}`),
+        size: JSON.stringify(data).length,
+        bridgeSynced: false
+      };
+    });
+  }
+
+  // src/capabilities/track/report/executor.ts
+  function executor38(params, context) {
+    return __async(this, null, function* () {
+      var _a;
+      const win2 = typeof window !== "undefined" ? window : {};
+      const trackParams = (params == null ? void 0 : params.params) || params;
+      if (!trackParams) {
+        return { ok: false, message: "Missing parameters: track data is required" };
+      }
+      if (typeof ((_a = win2.ColorboxAI) == null ? void 0 : _a.track) === "function") {
+        win2.ColorboxAI.track(trackParams);
+        return { ok: true };
+      }
+      console.log("[ColorboxAI.Track.Executor] Fallback track event:", JSON.stringify(trackParams));
+      return { ok: true, fallback: true };
+    });
+  }
+
+  // src/capabilities-entry.gen.ts
+  var getContext = (capabilityPath = "", requestGuard) => {
+    const win2 = typeof window !== "undefined" ? window : {};
+    const cb = win2.ColorboxAI || {};
+    const rawHttpClient = {
+      get: (url, config) => {
+        if (typeof cb.__requestJson === "function") {
+          return cb.__requestJson(url, Object.assign({ method: "GET" }, config));
+        }
+        return fetch(url, config).then((r) => r.json());
+      },
+      post: (url, body, config) => {
+        if (typeof cb.__requestJson === "function") {
+          return cb.__requestJson(url, Object.assign({ method: "POST", body }, config));
+        }
+        return fetch(url, Object.assign({ method: "POST", body: JSON.stringify(body) }, config)).then((r) => r.json());
+      }
+    };
+    return {
+      // 所有 executor 都从 context.httpClient 发请求；这里统一套 HTTP 级保护。
+      httpClient: createGuardedHttpClient(capabilityPath, requestGuard, rawHttpClient),
+      env: {
+        getRuntimeEnv: () => typeof cb.__getRuntimeEnv === "function" ? cb.__getRuntimeEnv() : "prod",
+        getNativeInfo: () => typeof cb.getNativeInfo === "function" ? cb.getNativeInfo() : {},
+        getAuthToken: () => typeof cb.__getAuthToken === "function" ? cb.__getAuthToken() : "",
+        getAppVersion: () => typeof cb.__getAppVersion === "function" ? cb.__getAppVersion() : "8.0.0",
+        isApp: () => {
+          const isTest = typeof globalThis !== "undefined" && !!globalThis.__vitest_worker__;
+          return isTest || typeof navigator !== "undefined" && /kanqiu/i.test(navigator.userAgent);
+        }
+      },
+      settings: {
+        projectId: cb.project && cb.project.id || "",
+        trackingCode: (typeof cb.getPageTrackCode === "function" ? cb.getPageTrackCode() : "") || "YOUR_PAGE_TRACK_CODE"
+      },
+      // 暴露给 executor 的只读上下文，方便后续能力需要感知保护配置。
+      requestGuard: {
+        capabilityPath,
+        config: requestGuard
+      }
+    };
+  };
+  var win = typeof window !== "undefined" ? window : {};
+  win.ColorboxAI = win.ColorboxAI || {};
+  win.ColorboxAI.auth = win.ColorboxAI.auth || {};
+  win.ColorboxAI.auth.getUserInfo = (params) => executor(params, getContext("auth.getUserInfo", { "enabled": false }));
+  win.ColorboxAI.cloud = win.ColorboxAI.cloud || {};
+  win.ColorboxAI.cloud.auth = (params) => executor2(params, getContext("cloud.auth", { "enabled": false }));
+  win.ColorboxAI.cloud = win.ColorboxAI.cloud || {};
+  win.ColorboxAI.cloud.request = (params) => executor3(params, getContext("cloud.request", { "enabled": false }));
+  win.ColorboxAI.navigate = win.ColorboxAI.navigate || {};
+  win.ColorboxAI.navigate.to = (params) => executor4(params, getContext("navigate.to", { "enabled": false }));
+  win.ColorboxAI.oss = win.ColorboxAI.oss || {};
+  win.ColorboxAI.oss.uploadFile = (params) => executor5(params, getContext("oss.uploadFile", { "enabled": false }));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.activity = win.ColorboxAI.request.activity || {};
+  win.ColorboxAI.request.activity.getVoteDetail = (params) => runCapabilityWithRequestGuard("request.activity.getVoteDetail", { "enabled": true }, () => executor6(params, getContext("request.activity.getVoteDetail", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.activity = win.ColorboxAI.request.activity || {};
+  win.ColorboxAI.request.activity.listByBizKeys = (params) => runCapabilityWithRequestGuard("request.activity.listByBizKeys", { "enabled": true }, () => executor7(params, getContext("request.activity.listByBizKeys", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.activity = win.ColorboxAI.request.activity || {};
+  win.ColorboxAI.request.activity.submitVote = (params) => runCapabilityWithRequestGuard("request.activity.submitVote", { "enabled": true }, () => executor8(params, getContext("request.activity.submitVote", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.basketball = win.ColorboxAI.request.basketball || {};
+  win.ColorboxAI.request.basketball.playerInfo = (params) => runCapabilityWithRequestGuard("request.basketball.playerInfo", { "enabled": true }, () => executor9(params, getContext("request.basketball.playerInfo", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.basketball = win.ColorboxAI.request.basketball || {};
+  win.ColorboxAI.request.basketball.singleMatch = (params) => runCapabilityWithRequestGuard("request.basketball.singleMatch", { "enabled": true }, () => executor10(params, getContext("request.basketball.singleMatch", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.bbs = win.ColorboxAI.request.bbs || {};
+  win.ColorboxAI.request.bbs.detail = (params) => runCapabilityWithRequestGuard("request.bbs.detail", { "enabled": true }, () => executor11(params, getContext("request.bbs.detail", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.bbs = win.ColorboxAI.request.bbs || {};
+  win.ColorboxAI.request.bbs.getTagThreadList = (params) => runCapabilityWithRequestGuard("request.bbs.getTagThreadList", { "enabled": true }, () => executor12(params, getContext("request.bbs.getTagThreadList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.bbs = win.ColorboxAI.request.bbs || {};
+  win.ColorboxAI.request.bbs.getTopicThreads = (params) => runCapabilityWithRequestGuard("request.bbs.getTopicThreads", { "enabled": true }, () => executor13(params, getContext("request.bbs.getTopicThreads", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.bbs = win.ColorboxAI.request.bbs || {};
+  win.ColorboxAI.request.bbs.getsThreadPostList = (params) => runCapabilityWithRequestGuard("request.bbs.getsThreadPostList", { "enabled": true }, () => executor14(params, getContext("request.bbs.getsThreadPostList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.bbs = win.ColorboxAI.request.bbs || {};
+  win.ColorboxAI.request.bbs.openPostEditor = (params) => runCapabilityWithRequestGuard("request.bbs.openPostEditor", { "enabled": true }, () => executor15(params, getContext("request.bbs.openPostEditor", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.bbs = win.ColorboxAI.request.bbs || {};
+  win.ColorboxAI.request.bbs.replyPost = (params) => runCapabilityWithRequestGuard("request.bbs.replyPost", { "enabled": true }, () => executor16(params, getContext("request.bbs.replyPost", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.football = win.ColorboxAI.request.football || {};
+  win.ColorboxAI.request.football.liveRoomNewsList = (params) => runCapabilityWithRequestGuard("request.football.liveRoomNewsList", { "enabled": true }, () => executor17(params, getContext("request.football.liveRoomNewsList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.football = win.ColorboxAI.request.football || {};
+  win.ColorboxAI.request.football.matchInfo = (params) => runCapabilityWithRequestGuard("request.football.matchInfo", { "enabled": true }, () => executor18(params, getContext("request.football.matchInfo", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.football = win.ColorboxAI.request.football || {};
+  win.ColorboxAI.request.football.playerInfo = (params) => runCapabilityWithRequestGuard("request.football.playerInfo", { "enabled": true }, () => executor19(params, getContext("request.football.playerInfo", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.kog = win.ColorboxAI.request.kog || {};
+  win.ColorboxAI.request.kog.playbyplay = (params) => runCapabilityWithRequestGuard("request.kog.playbyplay", { "enabled": true }, () => executor20(params, getContext("request.kog.playbyplay", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.liveTab = win.ColorboxAI.request.liveTab || {};
+  win.ColorboxAI.request.liveTab.infoList = (params) => runCapabilityWithRequestGuard("request.liveTab.infoList", { "enabled": true }, () => executor21(params, getContext("request.liveTab.infoList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.liveTab = win.ColorboxAI.request.liveTab || {};
+  win.ColorboxAI.request.liveTab.list = (params) => runCapabilityWithRequestGuard("request.liveTab.list", { "enabled": true }, () => executor22(params, getContext("request.liveTab.list", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.lol = win.ColorboxAI.request.lol || {};
+  win.ColorboxAI.request.lol.playbyplay = (params) => runCapabilityWithRequestGuard("request.lol.playbyplay", { "enabled": true }, () => executor23(params, getContext("request.lol.playbyplay", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.match = win.ColorboxAI.request.match || {};
+  win.ColorboxAI.request.match.getTabDetailScheduleList = (params) => runCapabilityWithRequestGuard("request.match.getTabDetailScheduleList", { "enabled": true }, () => executor24(params, getContext("request.match.getTabDetailScheduleList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.match = win.ColorboxAI.request.match || {};
+  win.ColorboxAI.request.match.queryAllDiagramInfoById = (params) => runCapabilityWithRequestGuard("request.match.queryAllDiagramInfoById", { "enabled": true }, () => executor25(params, getContext("request.match.queryAllDiagramInfoById", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.match = win.ColorboxAI.request.match || {};
+  win.ColorboxAI.request.match.queryMatchStatsByMatchInfo = (params) => runCapabilityWithRequestGuard("request.match.queryMatchStatsByMatchInfo", { "enabled": true }, () => executor26(params, getContext("request.match.queryMatchStatsByMatchInfo", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.news = win.ColorboxAI.request.news || {};
+  win.ColorboxAI.request.news.newsCommonList = (params) => runCapabilityWithRequestGuard("request.news.newsCommonList", { "enabled": true }, () => executor27(params, getContext("request.news.newsCommonList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.news = win.ColorboxAI.request.news || {};
+  win.ColorboxAI.request.news.playerNewsList = (params) => runCapabilityWithRequestGuard("request.news.playerNewsList", { "enabled": true }, () => executor28(params, getContext("request.news.playerNewsList", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.news = win.ColorboxAI.request.news || {};
+  win.ColorboxAI.request.news.subjectNews = (params) => runCapabilityWithRequestGuard("request.news.subjectNews", { "enabled": true }, () => executor29(params, getContext("request.news.subjectNews", { "enabled": true })));
+  win.ColorboxAI.request = win.ColorboxAI.request || {};
+  win.ColorboxAI.request.news = win.ColorboxAI.request.news || {};
+  win.ColorboxAI.request.news.teamNewsList = (params) => runCapabilityWithRequestGuard("request.news.teamNewsList", { "enabled": true }, () => executor30(params, getContext("request.news.teamNewsList", { "enabled": true })));
+  var oldReq = win.ColorboxAI.request;
+  win.ColorboxAI.request = (params) => runCapabilityWithRequestGuard("request", { "enabled": true }, () => executor31(params, getContext("request", { "enabled": true })));
+  Object.assign(win.ColorboxAI.request, oldReq);
+  win.ColorboxAI.score = win.ColorboxAI.score || {};
+  win.ColorboxAI.score.addScore = (params) => runCapabilityWithRequestGuard("score.addScore", { "enabled": true }, () => executor32(params, getContext("score.addScore", { "enabled": true })));
+  win.ColorboxAI.score = win.ColorboxAI.score || {};
+  win.ColorboxAI.score.getScore = (params) => runCapabilityWithRequestGuard("score.getScore", { "enabled": true }, () => executor33(params, getContext("score.getScore", { "enabled": true })));
+  win.ColorboxAI.security = win.ColorboxAI.security || {};
+  win.ColorboxAI.security.checkAudit = (params) => executor34(params, getContext("security.checkAudit", { "enabled": false }));
+  win.ColorboxAI.social = win.ColorboxAI.social || {};
+  win.ColorboxAI.social.share = (params) => executor35(params, getContext("social.share", { "enabled": false }));
+  win.ColorboxAI.storage = win.ColorboxAI.storage || {};
+  win.ColorboxAI.storage.getValue = (params) => executor36(params, getContext("storage.getValue", { "enabled": false }));
+  win.ColorboxAI.storage = win.ColorboxAI.storage || {};
+  win.ColorboxAI.storage.setValue = (params) => executor37(params, getContext("storage.setValue", { "enabled": false }));
+  win.ColorboxAI.track = win.ColorboxAI.track || {};
+  win.ColorboxAI.track.report = (params) => executor38(params, getContext("track.report", { "enabled": false }));
+  var ColorboxAI = win.ColorboxAI;
+})();
+
+
+</script>
+<script>
+(function () {
+  window.__COLORBOX_AI_CONFIG__ = {
+    projectId: "project-ai-1783761934042",
+    settings: {"ownerId":402116,"projectId":"project-ai-1783761934042","title":"我创造的完美球员","trackingCode":"PHBS7947","bizCategory":"match","isGamePlay":true,"postTopicId":"152165","shareInviteParams":"1783761934042","rewardVideoIncomeId":"16899","shareTitle":"","shareSubtitle":"","shareCover":"","theme":{"webviewBackground":"#ffffff","skeletonColor":"#edeef0","containerBackground":"#ffffff"},"dayNightMode":"auto"},
+    pagePi: "activity_match_project-ai-1783761934042"
+  };
+  "use strict";
+(() => {
+  // src/iframe-runtime/fallbacks.ts
+  function createLocalFallbackApi() {
+    return {
+      getPostDetail: function() {
+        return Promise.reject(new Error("ColorboxAI SDK is not loaded"));
+      },
+      getTopicThreads: function() {
+        return Promise.reject(new Error("ColorboxAI SDK is not loaded"));
+      },
+      buildPostSchema: function() {
+        return "";
+      },
+      openPostEditor: function() {
+        return "";
+      }
+    };
+  }
+  function createLocalSecurityFallbackApi() {
+    return {
+      checkAudit: function() {
+        return Promise.reject(new Error("ColorboxAI SDK is not loaded"));
+      }
+    };
+  }
+  function createLocalScoreFallbackApi() {
+    return {
+      getScore: function() {
+        return Promise.reject(new Error("ColorboxAI SDK is not loaded"));
+      },
+      addScore: function() {
+        return Promise.reject(new Error("ColorboxAI SDK is not loaded"));
+      }
+    };
+  }
+  function createLocalOssFallbackApi() {
+    return {
+      uploadFile: function() {
+        return Promise.reject(new Error("ColorboxAI SDK is not loaded"));
+      }
+    };
+  }
+  function createLocalAuthFallbackApi() {
+    return {
+      getUserInfo: function() {
+        const info = window.userInfo || window.HupuBridge && window.HupuBridge.nainfo;
+        return Promise.resolve(info || null);
+      },
+      getAuthToken: function() {
+        const info = window.userInfo || window.HupuBridge && window.HupuBridge.nainfo;
+        const token = info && (info.authToken || info.token) || "";
+        return Promise.resolve(token);
+      }
+    };
+  }
+
+  // src/iframe-runtime/storage.ts
+  var MAX_STORAGE_BYTES = 5 * 1024 * 1024;
+  function createColorboxStorageApi(params) {
+    const pId = params.projectId;
+    function resolveScopedKey(key) {
+      return "cb_storage:" + pId + ":" + key;
+    }
+    function isStorageAvailable() {
+      try {
+        const testKey = "__colorbox_storage_test__";
+        window.localStorage.setItem(testKey, "test");
+        window.localStorage.removeItem(testKey);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    const isLocalAvailable = isStorageAvailable();
+    function safeB64Encode(str) {
+      try {
+        const base64 = window.btoa(unescape(encodeURIComponent(str)));
+        return base64;
+      } catch (error) {
+        logError("safeB64Encode failed.", error);
+        throw error;
+      }
+    }
+    function safeB64Decode(str) {
+      try {
+        const decoded = decodeURIComponent(escape(window.atob(str)));
+        return decoded;
+      } catch (error) {
+        logError("safeB64Decode failed.", error);
+        throw error;
+      }
+    }
+    function serializeStorageValue(value) {
+      if (value == null) return "";
+      const text = typeof value === "string" ? value : JSON.stringify(value);
+      try {
+        const encoded = safeB64Encode(text);
+        return "__b64__:" + encoded;
+      } catch (error) {
+        return text;
+      }
+    }
+    function parseStorageValue(value, scopedKey) {
+      if (value == null) return null;
+      if (typeof value !== "string") return value;
+      let text = value;
+      if (text.indexOf("__b64__:") === 0) {
+        text = safeB64Decode(text.slice(8));
+      }
+      if (text.charAt(0) !== "{" && text.charAt(0) !== "[") {
+        return text;
+      }
+      try {
+        const parsed = JSON.parse(text);
+        if (parsed && typeof parsed === "object") {
+          if (!Array.isArray(parsed) && scopedKey && parsed[scopedKey] != null) {
+            return parseStorageValue(parsed[scopedKey], scopedKey);
+          }
+        }
+        return text;
+      } catch (parseError) {
+        if (text.charAt(0) === "{" && text.charAt(text.length - 1) === "}") {
+          const escapedKey = (scopedKey || "").replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+          const pattern = new RegExp('^\\{\\s*"' + (escapedKey || '[^"]+') + '"\\s*:\\s*"(.*)"\\s*\\}\\s*$');
+          const match = text.match(pattern);
+          if (match) {
+            let rawValue = match[1];
+            rawValue = rawValue.replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+            return parseStorageValue(rawValue, scopedKey);
+          }
+        }
+        return text;
+      }
+    }
+    function readLocalStorageValue(scopedKey) {
+      if (!isLocalAvailable) return null;
+      try {
+        return parseStorageValue(window.localStorage.getItem(scopedKey), scopedKey);
+      } catch (e) {
+        return null;
+      }
+    }
+    function writeLocalStorageValue(scopedKey, value) {
+      if (!isLocalAvailable) return false;
+      try {
+        window.localStorage.setItem(scopedKey, serializeStorageValue(value));
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    function readLocalStorageAll() {
+      const result = {};
+      if (!isLocalAvailable) return result;
+      try {
+        const prefix = "cb_storage:" + pId + ":";
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const k = window.localStorage.key(i);
+          if (k && k.indexOf(prefix) === 0) {
+            const rawKey = k.substring(prefix.length);
+            const val = readLocalStorageValue(k);
+            if (val !== null) {
+              result[rawKey] = val;
+            }
+          }
+        }
+      } catch (e) {
+      }
+      return result;
+    }
+    function calculateStorageSize() {
+      let size = 0;
+      if (!isLocalAvailable) return size;
+      try {
+        const prefix = "cb_storage:" + pId + ":";
+        for (let i = 0; i < window.localStorage.length; i++) {
+          const k = window.localStorage.key(i);
+          if (k && k.indexOf(prefix) === 0) {
+            const val = window.localStorage.getItem(k);
+            size += k.length + (val ? val.length : 0);
+          }
+        }
+      } catch (e) {
+      }
+      return size;
+    }
+    function deleteLocalStorageValue(scopedKey) {
+      if (!isLocalAvailable) return false;
+      try {
+        window.localStorage.removeItem(scopedKey);
+        return true;
+      } catch (e) {
+        return false;
+      }
+    }
+    function resolveProjectId() {
+      return pId;
+    }
+    function logInfo(stage, detail) {
+      console.log("[ColorboxAI.Storage] " + stage, detail || {});
+    }
+    function logError(stage, error, extra) {
+      console.error("[ColorboxAI.Storage] Error: " + stage, error);
+      try {
+        const isBridgeError = stage.toLowerCase().indexOf("bridge") >= 0;
+        if (isBridgeError && window.WebGuard && typeof window.WebGuard.hupuLog === "function") {
+          window.WebGuard.hupuLog({
+            type: "jsError",
+            message: "[ColorboxAI.Storage] " + stage + ": " + (error && error.message || String(error)),
+            stack: error && error.stack || new Error().stack || "",
+            detail: Object.assign({
+              projectId: pId,
+              stage
+            }, extra || {})
+          });
+        }
+      } catch (e) {
+        console.error("[ColorboxAI.Storage] Failed to report to WebGuard", e);
+      }
+    }
+    function shouldUseBridge() {
+      const ua = navigator.userAgent || "";
+      return /kanqiu/i.test(ua);
+    }
+    function writeBridgeValue(scopedKey, value) {
+      const payload = {
+        method: "hupu.common.setValue",
+        data: {
+          key: scopedKey,
+          value: serializeStorageValue(value)
+        }
+      };
+      return new Promise(function(resolve, reject) {
+        if (window.HupuBridge && typeof window.HupuBridge.send === "function") {
+          window.HupuBridge.send(payload.method, payload.data).then(resolve).catch(reject);
+        } else {
+          reject(new Error("HupuBridge not available for storage set"));
+        }
+      });
+    }
+    function readBridgeValue(scopedKey) {
+      const payload = {
+        method: "hupu.common.getValue",
+        data: { key: scopedKey }
+      };
+      return new Promise(function(resolve, reject) {
+        if (window.HupuBridge && typeof window.HupuBridge.send === "function") {
+          window.HupuBridge.send(payload.method, payload.data).then(function(res) {
+            const val = res && res.value;
+            resolve(parseStorageValue(val, scopedKey));
+          }).catch(reject);
+        } else {
+          reject(new Error("HupuBridge not available for storage get"));
+        }
+      });
+    }
+    function setValue(key, value) {
+      return Promise.resolve().then(function() {
+        if (key == null || typeof key === "object") {
+          const batch = key || {};
+          const keys = Object.keys(batch);
+          if (!keys.length) return { ok: true, size: calculateStorageSize(), bridgeSynced: false };
+          let currentSize2 = calculateStorageSize();
+          let delta2 = 0;
+          const writeTasks = [];
+          keys.forEach(function(k) {
+            const scopedKey2 = resolveScopedKey(k);
+            const val = batch[k];
+            const rawVal2 = JSON.stringify(val);
+            const oldRaw2 = isLocalAvailable ? window.localStorage.getItem(scopedKey2) : null;
+            const keyDelta = scopedKey2.length + rawVal2.length - (oldRaw2 ? scopedKey2.length + oldRaw2.length : 0);
+            delta2 += keyDelta;
+            writeTasks.push({ scopedKey: scopedKey2, val });
+          });
+          if (currentSize2 + delta2 > MAX_STORAGE_BYTES) {
+            throw new Error("Storage quota exceeded (max 5MB limit). Set value failed.");
+          }
+          let ok2 = true;
+          const bridgeKeys = [];
+          writeTasks.forEach(function(task) {
+            const success = writeLocalStorageValue(task.scopedKey, task.val);
+            if (!success) ok2 = false;
+            bridgeKeys.push(task.scopedKey);
+          });
+          if (shouldUseBridge()) {
+            const bridgePayload = {
+              method: "hupu.common.setValue",
+              data: {
+                keys: bridgeKeys,
+                values: keys.map(function(k) {
+                  return serializeStorageValue(batch[k]);
+                })
+              }
+            };
+            return new Promise(function(resolve) {
+              if (window.HupuBridge && typeof window.HupuBridge.send === "function") {
+                window.HupuBridge.send(bridgePayload.method, bridgePayload.data).then(function(res) {
+                  resolve({ ok: ok2, size: calculateStorageSize(), bridgeSynced: true, rawBridgeResult: res });
+                }).catch(function(err) {
+                  logError("Bridge batch write failed", err, { keys: bridgeKeys });
+                  resolve({ ok: ok2, size: calculateStorageSize(), bridgeSynced: false, error: err });
+                });
+              } else {
+                resolve({ ok: ok2, size: calculateStorageSize(), bridgeSynced: false });
+              }
+            }).then(function(result3) {
+              logInfo("\u5199\u5165\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+                projectId: resolveProjectId(),
+                input: batch,
+                payload: bridgePayload,
+                result: result3
+              });
+              return result3;
+            });
+          }
+          const result2 = { ok: ok2, size: calculateStorageSize(), bridgeSynced: false };
+          logInfo("\u5199\u5165\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId(),
+            input: batch,
+            payload: null,
+            result: result2
+          });
+          return result2;
+        }
+        const storageKey = String(key);
+        const scopedKey = resolveScopedKey(storageKey);
+        const rawVal = JSON.stringify(value);
+        const oldRaw = isLocalAvailable ? window.localStorage.getItem(scopedKey) : null;
+        const currentSize = calculateStorageSize();
+        const delta = scopedKey.length + rawVal.length - (oldRaw ? scopedKey.length + oldRaw.length : 0);
+        if (currentSize + delta > MAX_STORAGE_BYTES) {
+          throw new Error("Storage quota exceeded (max 5MB limit). Set value failed.");
+        }
+        let ok = true;
+        if (value === void 0) {
+          ok = deleteLocalStorageValue(scopedKey);
+        } else {
+          ok = writeLocalStorageValue(scopedKey, value);
+        }
+        if (shouldUseBridge()) {
+          const bridgePayload = {
+            method: "hupu.common.setValue",
+            data: {
+              key: scopedKey,
+              value: serializeStorageValue(value)
+            }
+          };
+          return writeBridgeValue(scopedKey, value).then(function(bridgeResult) {
+            return { ok, key: storageKey, size: calculateStorageSize(), bridgeSynced: bridgeResult !== null };
+          }).catch(function(err) {
+            logError("Bridge write failed for key " + storageKey, err, { key: storageKey });
+            return { ok, key: storageKey, size: calculateStorageSize(), bridgeSynced: false, error: err };
+          }).then(function(result2) {
+            logInfo("\u5199\u5165\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+              projectId: resolveProjectId(),
+              input: value,
+              payload: bridgePayload,
+              result: result2
+            });
+            return result2;
+          });
+        }
+        const result = { ok, key: storageKey, size: calculateStorageSize(), bridgeSynced: false };
+        logInfo("\u5199\u5165\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+          projectId: resolveProjectId(),
+          input: value,
+          payload: null,
+          result
+        });
+        return result;
+      }).catch(function(error) {
+        logError("\u5199\u5165\u5B58\u50A8\u6570\u636E\u5931\u8D25", error, { key });
+        return Promise.reject(error);
+      });
+    }
+    function getValue(key) {
+      const hasKey = key != null && key !== "";
+      const storageKey = hasKey ? String(key) : "";
+      return Promise.resolve().then(function() {
+        if (!hasKey) {
+          const allValues = readLocalStorageAll();
+          logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId(),
+            key: "",
+            scopedKey: "",
+            source: "localStorage",
+            result: allValues
+          });
+          return allValues;
+        }
+        const scopedKey = resolveScopedKey(storageKey);
+        if (!shouldUseBridge()) {
+          const localOnlyValue = readLocalStorageValue(scopedKey);
+          logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId(),
+            key: storageKey,
+            scopedKey,
+            source: "localStorage",
+            result: localOnlyValue
+          });
+          return localOnlyValue;
+        }
+        return readBridgeValue(scopedKey).catch(function(err) {
+          logError("Bridge read failed for key " + storageKey, err, { key: storageKey });
+          throw err;
+        }).then(function(bridgeValue) {
+          if (bridgeValue != null) {
+            logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+              projectId: resolveProjectId(),
+              key: storageKey,
+              scopedKey,
+              source: "hupu.common.getValue",
+              result: bridgeValue
+            });
+            return bridgeValue;
+          }
+          const localValue = readLocalStorageValue(scopedKey);
+          logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId(),
+            key: storageKey,
+            scopedKey,
+            source: "localStorage",
+            result: localValue
+          });
+          return localValue;
+        });
+      }).catch(function(error) {
+        logError("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u5931\u8D25", error, { key: storageKey });
+        return hasKey ? null : {};
+      });
+    }
+    return {
+      maxBytes: MAX_STORAGE_BYTES,
+      setValue,
+      getValue,
+      set: setValue,
+      get: getValue
+    };
+  }
+
+  // src/iframe-runtime/index.ts
+  (function() {
+    const config = window.__COLORBOX_AI_CONFIG__ || {
+      projectId: "",
+      settings: {
+        title: "",
+        trackingCode: "",
+        bizCategory: "",
+        shareTitle: "",
+        shareSubtitle: "",
+        shareCover: ""
+      },
+      pagePi: ""
+    };
+    const { settings, projectId, pagePi } = config;
+    const sessionId = "ai-runtime-" + Date.now() + "-" + Math.random().toString(36).slice(2);
+    window.__colorbox_runtime__ = true;
+    window.__colorbox_ai_runtime__ = true;
+    window.globalState = Object.assign({}, window.globalState || {}, {
+      name: settings.title,
+      pageTrackCode: settings.trackingCode,
+      wxShareTitle: settings.shareTitle,
+      wxShareSubTitle: settings.shareSubtitle,
+      wxShareImage: settings.shareCover,
+      bizCode: settings.bizCategory,
+      webViewColor: settings.theme && settings.theme.webviewBackground,
+      containerColor: settings.theme && settings.theme.containerBackground,
+      pi: pagePi
+    });
+    if (settings.title) {
+      document.title = settings.title;
+    }
+    function setupRuntimeIssueGuard() {
+      if (window.__colorbox_ai_runtime_issue_guard__) return;
+      window.__colorbox_ai_runtime_issue_guard__ = true;
+      let lastTick = Date.now();
+      window.setInterval(function() {
+        const now = Date.now();
+        const drift = now - lastTick - 1e3;
+        if (drift > 3e3) {
+          console.error("[ColorboxAI.Runtime] Main thread blocked for " + drift + "ms; possible long task or infinite loop.");
+        }
+        lastTick = now;
+      }, 1e3);
+    }
+    const frameTrackDebugLog = [];
+    function pushFrameTrackDebug(stage, detail) {
+      const entry = { stage, detail: detail || {}, ts: Date.now() };
+      frameTrackDebugLog.push(entry);
+      if (frameTrackDebugLog.length > 200) {
+        frameTrackDebugLog.shift();
+      }
+      try {
+        console.log("[ColorboxAI.Track] " + stage, detail || {});
+      } catch (error) {
+      }
+    }
+    function createTrackTraceId() {
+      return "trk_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9);
+    }
+    function post(type, payload) {
+      const trackTraceId = payload && payload.trackTraceId;
+      try {
+        if (!window.parent || window.parent === window) {
+          if (type === "events.track") {
+            pushFrameTrackDebug("frame.post.skip", {
+              trackTraceId,
+              reason: "no_parent_or_same_window"
+            });
+          }
+          return;
+        }
+        window.parent.postMessage({
+          protocol: "colorbox-ai-bridge",
+          version: 1,
+          direction: "frame-to-host",
+          sessionId,
+          projectId,
+          type,
+          payload: payload || {},
+          timestamp: Date.now()
+        }, "*");
+        if (type === "events.track") {
+          pushFrameTrackDebug("frame.post.ok", { trackTraceId, projectId });
+        }
+      } catch (error) {
+        if (type === "events.track") {
+          pushFrameTrackDebug("frame.post.error", {
+            trackTraceId,
+            message: error && error.message || String(error)
+          });
+        }
+      }
+    }
+    window.ColorboxAI = window.ColorboxAI || {};
+    window.ColorboxAI.project = window.ColorboxAI.project || {
+      id: projectId,
+      settings,
+      getSettings: function() {
+        return Promise.resolve(settings);
+      }
+    };
+    if (typeof window.ColorboxAI.configure === "function") {
+      window.ColorboxAI.configure({
+        trackingCode: settings.trackingCode,
+        pi: pagePi
+      });
+    }
+    window.__colorbox_ai_track_debug_frame__ = frameTrackDebugLog;
+    window.ColorboxAI.track = function (trackParams) {
+      const trackTraceId = createTrackTraceId();
+      pushFrameTrackDebug("frame.call", {
+        trackTraceId,
+        params: trackParams || {},
+        hasParent: !!(window.parent && window.parent !== window)
+      });
+      try {
+        const customDebugger = window.ColorboxCustomDebugger;
+        if (customDebugger && typeof customDebugger.addLog === "function") {
+          customDebugger.addLog(trackParams || {});
+        }
+      } catch (error) {
+        pushFrameTrackDebug("frame.debug.error", {
+          trackTraceId,
+          message: error && error.message || String(error)
+        });
+      }
+      post("events.track", { trackParams: trackParams || {}, trackTraceId });
+    };
+    window.ColorboxAI.navigateTo = function(url, target) {
+      post("navigation.open", { url, target });
+    };
+    window.ColorboxAI.openUrl = window.ColorboxAI.navigateTo;
+    window.ColorboxAI.bbs = window.ColorboxAI.bbs || createLocalFallbackApi();
+    window.ColorboxAI.security = window.ColorboxAI.security || createLocalSecurityFallbackApi();
+    window.ColorboxAI.score = window.ColorboxAI.score || createLocalScoreFallbackApi();
+    window.ColorboxAI.oss = window.ColorboxAI.oss || createLocalOssFallbackApi();
+    window.ColorboxAI.auth = window.ColorboxAI.auth || createLocalAuthFallbackApi();
+    window.ColorboxAI.storage = window.ColorboxAI.storage || createColorboxStorageApi({ projectId });
+    window.ColorboxAI.runtime = window.ColorboxAI.runtime || {};
+    window.ColorboxAI.runtime.log = function() {
+      post("runtime.log", { args: Array.prototype.slice.call(arguments) });
+    };
+    window.ColorboxAI.hupuLog = function(params) {
+      if (window.WebGuard && typeof window.WebGuard.hupuLog === "function") {
+        window.WebGuard.hupuLog(params);
+      }
+    };
+    window.addEventListener("error", function(event) {
+      if (event.target && event.target !== window && event.target !== document) {
+        return;
+      }
+      const errorMsg = event.message || event.error && event.error.message || "Unknown error";
+      console.error("[ColorboxAI.Runtime] Uncaught error:", errorMsg);
+      post("runtime.error", {
+        message: errorMsg,
+        sourceFile: event.filename || "",
+        line: event.lineno || 0,
+        column: event.colno || 0,
+        stack: event.error && event.error.stack || ""
+      });
+    }, true);
+    window.addEventListener("unhandledrejection", function(event) {
+      const reason = event.reason || {};
+      console.error("[ColorboxAI.Runtime] Unhandled promise rejection:", reason);
+      post("runtime.error", {
+        message: reason.message || String(reason),
+        stack: reason.stack || ""
+      });
+    });
+    setupRuntimeIssueGuard();
+    post("runtime.ready", { href: location.href });
+  })();
+})();
+
+})();
+</script></head>
+<body>
+
+<div id="app">
+
+  <!-- ====== 全局当前赛季徽标 ====== -->
+  <div id="seasonBadge" style="text-align:center;padding:6px 0 0;font-family:var(--font-display);font-size:12px;font-weight:700;color:var(--orange);"></div>
+
+  <!-- ====== 主菜单 ====== -->
+  <div class="screen active" id="screen-menu">
+    <!-- Top Nav Bar (like reference site) -->
+    <div class="navbar">
+      <div class="nav-logo">
+        BUILD<span class="hl">-A-</span>PLAYER
+      </div>
+      <div class="nav-pos-toggle" id="nav-pos-toggle">
+        <button class="nav-pos-btn active" data-pos="NBA">🏀</button>
+      </div>
+    </div>
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-title">Spin the wheel · Build your player</div>
+      <div class="hero-headline">
+        打造我的传奇球星
+      </div>
+      <div class="hero-desc">从现役球员中夺取属性，打造属于我的球星</div>
+    </div>
+
+    <!-- Feature Cards -->
+    <div class="feature-grid" id="feature-grid"></div>
+
+    <div class="fc-footer"></div>
+
+    <div class="debug-btn" style="margin-top:6px">
+      <button onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC17',label:'征服联盟'});if(window.CONQUEST_API)CONQUEST_API.show();else alert('成就系统未加载')" class="btn-conquest">🏆 征服联盟</button>
+      <button onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC20',label:'球员档案库'});showCareerArchive()" class="btn-help">📂 球员档案库</button>
+
+      <button onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC19',label:'查看其他JRs建模'});viewOtherBuilds()" class="btn-help">👥 查看其他JRs建模</button>
+
+    </div>
+  </div>
+
+  <!-- ====== 玩法说明弹窗 ====== -->
+  <div id="helpModal" class="modal-overlay" style="display:none;">
+    <div class="modal-content" style="max-width:360px;">
+      <div class="modal-header">
+        <span style="font-family:var(--font-display);font-size:18px;">📖 玩法说明</span>
+        <button class="modal-close" onclick="closeHelpModal()">✕</button>
+      </div>
+      <div class="modal-tabs" id="helpTabs"></div>
+      <div style="display:flex;align-items:center;gap:8px;padding:8px 12px;">
+        <button class="cal-nav" onclick="helpPrevPage()" id="helpPrevBtn" style="width:36px;height:36px;">◀</button>
+        <div style="flex:1;text-align:center;font-family:var(--font-display);font-size:13px;color:var(--text-dim);" id="helpPageIndicator">1/4</div>
+        <button class="cal-nav" onclick="helpNextPage()" id="helpNextBtn" style="width:36px;height:36px;">▶</button>
+      </div>
+      <div class="modal-body" id="helpBody" style="min-height:260px;"></div>
+    </div>
+  </div>
+<!-- ====== 位置选择 ====== -->
+  <div class="screen" id="screen-position">
+    <div class="section-title">
+      <h1>选择我的位置</h1>
+      <div class="sub">现役模式 · 自选位置</div>
+    </div>
+    <div class="pos-grid" id="pos-grid"></div>
+    <button class="btn btn-primary" onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC2',label:'确认位置'});confirmPosition()">确认位置</button>
+  </div>
+
+  <!-- ====== 建球员 ====== -->
+  <div class="screen" id="screen-build">
+    <div class="section-title">
+      <h1>建球员</h1>
+      <!-- <button class="build-edit-btn" onclick="openEditProfile()" title="编辑个人信息">✏️</button> -->
+    </div>
+    <div id="build-pos-indicator" style="text-align:center;padding:4px 0 2px;font-family:var(--font-display);font-size:13px;color:var(--text-dim);letter-spacing:0.5px;"></div>
+    <div id="build-progress-area"></div>
+
+    <div class="build-split">
+      <!-- Left: Player Attributes (persistent sidebar) -->
+      <div class="build-left">
+        <div class="bl-header">
+          <span class="bl-ovr" id="bl-ovr">--</span>
+          <span class="bl-label">OVR</span>
+        </div>
+        <div class="bl-attrs" id="bl-attrs"></div>
+        <div class="bl-footer" id="bl-footer"></div>
+      </div>
+      
+      <!-- Right: Slot Machine (top) + Roster (bottom) -->
+      <div class="build-right" id="build-right">
+        <div id="br-slot-area"></div>
+        <div id="br-roster-area"></div>
+      </div>
+    </div>
+
+    <div id="build-toast"></div>
+  </div>
+
+  <!-- ====== 揭幕 ====== -->
+  <div class="screen" id="screen-reveal">
+    <div class="section-title">
+      <h1>🎉 揭幕</h1>
+      <div class="sub">我的球员已建成</div>
+    </div>
+    <div id="reveal-content"></div>
+    <button class="btn btn-primary" onclick="goToCareer()" style="margin-top:12px;">开始生涯</button>
+  </div>
+
+  <!-- ====== 生涯球队 ====== -->
+  <div class="screen" id="screen-career">
+    <div class="section-title">
+      <h1>🏆 生涯球队</h1>
+      <div class="sub">决定我的命运</div>
+    </div>
+    <div id="career-area"></div>
+  </div>
+
+  <!-- ====== 赛季模拟 ====== -->
+  <div class="screen" id="screen-season">
+    <div class="sim-header" id="season-header"></div>
+    <div class="sim-controls" id="season-controls"></div>
+    <div id="gamecast-area"></div>
+    <div id="game-list"></div>
+  </div>
+
+  <!-- ====== 常规赛奖项 ====== -->
+  <div class="screen" id="screen-awards">
+    <div class="section-title">
+      <h1>📊 常规赛奖项</h1>
+      <div class="sub">赛季荣誉揭晓</div>
+    </div>
+    <div id="awards-content" style="padding:0 12px 20px;display:flex;flex-direction:column;align-items:stretch;justify-content:center;min-height:calc(100dvh - 120px);"></div>
+  </div>
+
+  <!-- ====== 季后赛 ====== -->
+  <div class="screen" id="screen-playoffs">
+    <div class="section-title">
+      <h1>🏀 季后赛</h1>
+      <div class="sub">逐鹿总冠军</div>
+    </div>
+    <div id="playoffs-area"></div>
+  </div>
+
+  <!-- ====== My Card ====== -->
+  <div class="screen" id="screen-mycard">
+    <div class="section-title">
+      <h1>📊 My Card</h1>
+      <div class="sub">赛季总结</div>
+    </div>
+    <div id="mycard-content"></div>
+  </div>
+
+  <!-- ====== 赛季结果页 ====== -->
+  <div class="screen" id="screen-results">
+    <div id="results-content"></div>
+  </div>
+
+  <!-- ====== 成就墙（由 achievements.js 驱动）====== -->
+  <div class="screen" id="screen-achievements">
+    <div id="ach-wall-content"></div>
+  </div>
+
+  <!-- ====== 生涯数据 ====== -->
+  <div class="screen" id="screen-career-stats">
+    <div class="section-title">
+      <h1>📊 生涯数据</h1>
+      <div class="sub" id="career-stats-sub"></div>
+    </div>
+    <div id="career-stats-content" style="padding:0 10px 20px;"></div>
+  </div>
+
+  <!-- ====== 荣誉墙 ====== -->
+  <div class="screen" id="screen-career-honors">
+    <div class="section-title">
+      <h1>🏆 荣誉墙</h1>
+      <div class="sub" id="career-honors-sub"></div>
+    </div>
+    <div id="career-honors-content" style="padding:0 10px 20px;"></div>
+  </div>
+
+  <!-- ====== 训练营 ====== -->
+  <div class="screen" id="screen-training">
+    <div class="section-title">
+      <h1>🏋️ 休赛期训练营</h1>
+      <div class="sub" id="training-sub"></div>
+    </div>
+    <div id="training-content" style="padding:0 10px 20px;overflow-y:auto;flex:1;-webkit-overflow-scrolling:touch;"></div>
+  </div>
+
+  <!-- ====== 阵容预览 ====== -->
+  <div class="screen" id="screen-roster-review">
+    <div id="roster-review-content" style="padding:0 12px 20px;overflow-y:auto;-webkit-overflow-scrolling:touch;"></div>
+  </div>
+
+  <div style="text-align:center;padding:12px 16px 8px;font-size:10px;color:var(--text-muted);line-height:1.4;">本活动为球迷制作，非NBA官方活动</div>
+
+</div>
+
+<div class="hp-brand"><img src="https://i3.hoopchina.com.cn/newsPost/de00f9a83014c2b3196d831d4be1adb9_w_300_h_300_.png"></div>
+
+<!-- ====== 海报弹窗 ====== -->
+<canvas id="posterCanvas" style="display:none"></canvas>
+<div id="posterOverlay" style="position:fixed;inset:0;background:rgba(0,0,0,0.92);z-index:999;display:none;flex-direction:column;align-items:center;justify-content:center;padding:16px;overflow-y:auto;">
+  <img id="posterPreviewImg" alt="海报预览" style="max-width:100%;max-height:85vh;width:auto;border-radius:12px;box-shadow:0 20px 60px rgba(0,0,0,0.6);">
+  <div id="posterPager" style="display:none;align-items:center;gap:10px;margin-top:14px;color:#fff;font-size:13px;font-weight:700;">
+    <button onclick="switchPosterPage(-1)" style="min-height:34px;padding:8px 14px;border:none;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#333;">上一张</button>
+    <span id="posterPageLabel" style="min-width:54px;text-align:center;">1 / 1</span>
+    <button onclick="switchPosterPage(1)" style="min-height:34px;padding:8px 14px;border:none;border-radius:50px;font-size:13px;font-weight:700;cursor:pointer;background:#fff;color:#333;">下一张</button>
+  </div>
+  <div style="display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;justify-content:center;">
+    <button class="btn-share-poster" onclick="sharePoster(this)" style="min-height:44px;padding:12px 24px;border:none;border-radius:50px;font-size:15px;font-weight:700;cursor:pointer;background:linear-gradient(135deg,#ff6b35,#ff8a5c);color:#fff;box-shadow:0 8px 20px rgba(255,107,53,0.35);">📤 一键发帖</button>
+    <button onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC19',label:'查看其他JRs建模'});viewOtherBuilds()" style="min-height:44px;padding:12px 24px;border:none;border-radius:50px;font-size:14px;font-weight:600;cu
