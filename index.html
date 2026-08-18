@@ -12,19 +12,15 @@
     Promise.all(parts.map((part) => fetch(`chunks/game-${part}.txt`).then((r) => {
       if (!r.ok) throw new Error(`游戏文件加载失败：${part}`);
       return r.text();
-    }))).then((html) => {
-      document.open();
-      document.write(html.join(''));
-      document.close();
-      // 原游戏把入口初始化绑定在 DOMContentLoaded；分片写入发生在
-      // 初始页面加载之后，因此需要补发一次初始化事件。
-      setTimeout(() => {
-        document.dispatchEvent(new Event('DOMContentLoaded'));
-        window.dispatchEvent(new Event('load'));
-      }, 0);
-    }).catch((error) => {
+      }))).then((html) => {
+        // 用 Blob URL 进行一次真正的页面导航，让原游戏按正常的
+        // HTML 解析、脚本执行和 DOMContentLoaded 生命周期启动。
+        const page = new Blob([html.join('')], { type: 'text/html;charset=utf-8' });
+        location.replace(URL.createObjectURL(page));
+      }).catch((error) => {
       document.getElementById('loading').textContent = error.message;
     });
   </script>
 </body>
 </html>
+
