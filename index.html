@@ -16,10 +16,15 @@
       document.open();
       document.write(html.join(''));
       document.close();
+      // 原游戏把入口初始化绑定在 DOMContentLoaded；分片写入发生在
+      // 初始页面加载之后，因此需要补发一次初始化事件。
+      setTimeout(() => {
+        document.dispatchEvent(new Event('DOMContentLoaded'));
+        window.dispatchEvent(new Event('load'));
+      }, 0);
     }).catch((error) => {
       document.getElementById('loading').textContent = error.message;
     });
   </script>
 </body>
 </html>
-
