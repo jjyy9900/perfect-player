@@ -1,4 +1,7 @@
-
+ore_mirror' || node === 'score_meme' || node === 'score_own' || node === 'score_report';
+    },
+    choices: [
+      { label: '亲自回帖', hint: '真实感上升，风评变活', apply: function() {
         setBranchNode('fan_culture', 'community_reply', { action: 'reply' });
         addProfileDelta('fanSupport', 3);
         addProfileDelta('mediaTrust', 1);
@@ -3752,6 +3755,4 @@ var TOP100_COPY = [
     "历史百大公布时，你正在整理旧球衣。{achievement}。你翻出{firstTeam}的球衣，又翻出{lastTeam}的，中间隔着 {teamCount} 支球队和很长一段青春。",
     "你被写进历史百大，不是因为天赋，是因为没有停下。{achievement}。伤病、换队、低谷，你一样都没躲过，但你也一样都没让它们赢到最后。",
     "百大名单念到你时，播音员多停了一秒。{achievement}。那一秒里，{teamList}的球迷都在屏幕前挺直了背。",
-    "你入选NBA历史百大，媒体开始盘点你的名场面。{achievement}。你最想让他们盘点的，是那些没人看见的训练馆清晨。",
-    "历史百大的名单里，你的名字和传奇排在一起。{achievement}。你没有觉得配不上，因为每一座城市的更衣室都记得你是怎么走进来的。",
-    "{achievement}。你让{lastTeam}的球迷相信小城也能出历史级球星
+    "你入选NBA历史百大，
