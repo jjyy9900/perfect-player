@@ -1,0 +1,4816 @@
+? void 0 : res.data) === null || _a === void 0 ? void 0 : _a.data) === null || _b === void 0 ? void 0 : _b.fileSrc; });
+	}
+
+	var OSS = typeof window !== 'undefined' ? window.OSS : (typeof require === 'function' ? require('ali-oss') : null);
+	var KaleidoFedSDK2 = /** @class */ (function () {
+	    function KaleidoFedSDK2(props) {
+	        this.appId = props.appId;
+	        this.sk = props.sk;
+	        this.action = props.action;
+	        this.module = props.module;
+	        this.path = props.path;
+	        this.fileName = '';
+	        this.fileHash = '';
+	        this.oss = null;
+	        this.expiration = 0;
+	        this.host = props.host;
+	        this.supportedTypes = props.supportedTypes || ['jpeg', 'png', 'gif', 'webp', 'mp4'];
+	    }
+	    // 构建获取OSS配置的param
+	    KaleidoFedSDK2.prototype.buildOSSConfig = function (fileHash, extension) {
+	        this.fileHash = fileHash;
+	        var appId = this.appId;
+	        var sk = this.sk;
+	        var timestamp = Date.now().toString();
+	        var action = this.action;
+	        var module = this.module;
+	        var path = this.path;
+	        var sigObj = {
+	            action: action,
+	            appId: appId,
+	            extension: extension,
+	            fileHash: fileHash,
+	            module: module,
+	            path: path,
+	            timestamp: timestamp
+	        };
+	        if (!this.supportedTypes.includes(extension)) {
+	            extension = undefined;
+	            delete sigObj.extension;
+	        }
+	        var hssSign = getSignData(sigObj, sk);
+	        var params = {
+	            action: action,
+	            appId: appId,
+	            fileHash: fileHash,
+	            module: module,
+	            path: path,
+	            timestamp: timestamp,
+	            hss_sign: hssSign,
+	            extension: extension
+	        };
+	        return params;
+	    };
+	    // 实例化OSS
+	    KaleidoFedSDK2.prototype.instantiationOss = function (config) {
+	        return new OSS({
+	            region: config.region,
+	            accessKeyId: config.accessKey,
+	            accessKeySecret: config.secretKey,
+	            bucket: config.bucket,
+	            stsToken: config.token
+	        });
+	    };
+	    // 真正OSS分片上传
+	    KaleidoFedSDK2.prototype.ossMultipartUpload = function (fileHash, name, file, options) {
+	        var _this = this;
+	        if (!this.oss)
+	            return Promise.reject(Error('oss未初始化'));
+	        return this.oss
+	            .multipartUpload(name, file, options)
+	            .then(function (res) {
+	            if (res.res.status === 200) {
+	                _this.oss = null;
+	                return updateFileStatus(fileHash).then(function (downloadUrl) {
+	                    webGuard.hupuLog === null || webGuard.hupuLog === void 0 ? void 0 : webGuard.hupuLog({
+	                        type: 'oss_upload',
+	                        status: 'ok',
+	                        message: 'oss 前端上传',
+	                        name: name,
+	                        fileHash: "" + fileHash,
+	                        url: downloadUrl
+	                    });
+	                    if (_this.host) {
+	                        return {
+	                            name: name,
+	                            downloadUrl: replaceHost(downloadUrl, _this.host)
+	                        };
+	                    }
+	                    return {
+	                        name: name,
+	                        downloadUrl: downloadUrl
+	                    };
+	                });
+	            }
+	            return Promise.reject();
+	        })
+	            .catch(function (reason) {
+	            _this.oss = null;
+	            webGuard.hupuLog === null || webGuard.hupuLog === void 0 ? void 0 : webGuard.hupuLog({
+	                type: 'oss_upload',
+	                status: 'error',
+	                message: 'oss 前端上传',
+	                name: name,
+	                fileHash: "" + fileHash,
+	                error: reason
+	            });
+	            return Promise.reject(reason || Error('文件上传失败'));
+	        });
+	    };
+	    /**
+	     * 分片上传
+	     * @param name {string} 文件名
+	     * @param file {File} 文件内容
+	     * @param options {PutObjectOptions} 上传配置 同OSS上传配置
+	     * @param whData
+	     * @param otherOptions
+	     */
+	    KaleidoFedSDK2.prototype.multipartUpload = function (name, file, options, whData, otherOptions) {
+	        var _this = this;
+	        // 判断是否过期
+	        var currentMoment = Date.now();
+	        var expirationTime = this.expiration;
+	        var isNotExpiration = +expirationTime > +currentMoment && +expirationTime - +currentMoment > 5 * 60 * 1000;
+	        if (isNotExpiration && this.oss) {
+	            return this.ossMultipartUpload(this.fileHash, name, file, options);
+	        }
+	        return this.isAllowUpdate(file).then(function (_a) {
+	            var msg = _a.msg;
+	            return fileMD5(file, otherOptions === null || otherOptions === void 0 ? void 0 : otherOptions.useWasm).then(function (fileHash) {
+	                var params = _this.buildOSSConfig(fileHash, msg);
+	                return getOSSConfig(tslib_4(tslib_4({}, params), whData)).then(function (configRes) {
+	                    var _a;
+	                    var config = configRes.data;
+	                    if (config.status === 'processing') {
+	                        _this.expiration = config.expiration * 1000;
+	                        _this.oss = _this.instantiationOss(config);
+	                        _this.fileName = config.objectKey;
+	                        return _this.ossMultipartUpload(fileHash, _this.fileName, file, options);
+	                    }
+	                    else {
+	                        // 已经上传的过的，直接返回结果
+	                        if (options) {
+	                            (_a = options.progress) === null || _a === void 0 ? void 0 : _a.call(options, 1);
+	                        }
+	                        if (_this.host) {
+	                            return {
+	                                name: name,
+	                                downloadUrl: replaceHost(config.fileSrc, _this.host)
+	                            };
+	                        }
+	                        return {
+	                            name: name,
+	                            downloadUrl: config.fileSrc
+	                        };
+	                    }
+	                });
+	            });
+	        });
+	    };
+	    /**
+	     * 简单上传
+	     * @param name {string} 文件名
+	     * @param file {File} 文件内容
+	     * @param options {PutObjectOptions} 上传配置 同OSS上传配置
+	     * @param whData
+	     * @param otherOptions
+	     */
+	    KaleidoFedSDK2.prototype.put = function (name, file, options, whData, otherOptions) {
+	        var _this = this;
+	        return this.isAllowUpdate(file).then(function (_a) {
+	            var msg = _a.msg;
+	            return fileMD5(file, otherOptions === null || otherOptions === void 0 ? void 0 : otherOptions.useWasm).then(function (fileHash) {
+	                var params = _this.buildOSSConfig(fileHash, msg);
+	                return getOSSConfig(tslib_4(tslib_4({}, params), whData)).then(function (configRes) {
+	                    var config = configRes.data;
+	                    if (config.status === 'processing') {
+	                        _this.expiration = config.expiration * 1000;
+	                        _this.oss = _this.instantiationOss(config);
+	                        _this.fileName = config.objectKey;
+	                        return _this.oss
+	                            .put(config.objectKey, file, options)
+	                            .then(function (res) {
+	                            if (res.res.status === 200) {
+	                                _this.oss = null;
+	                                return updateFileStatus(fileHash).then(function (downloadUrl) {
+	                                    if (_this.host) {
+	                                        return {
+	                                            name: name,
+	                                            downloadUrl: replaceHost(downloadUrl, _this.host)
+	                                        };
+	                                    }
+	                                    return {
+	                                        name: name,
+	                                        downloadUrl: downloadUrl
+	                                    };
+	                                });
+	                            }
+	                            return Promise.reject();
+	                        })
+	                            .catch(function () {
+	                            _this.oss = null;
+	                            return Promise.reject(Error('文件上传失败'));
+	                        });
+	                    }
+	                    else {
+	                        if (_this.host) {
+	                            return {
+	                                name: name,
+	                                downloadUrl: replaceHost(config.fileSrc, _this.host)
+	                            };
+	                        }
+	                        return {
+	                            name: name,
+	                            downloadUrl: config.fileSrc
+	                        };
+	                    }
+	                });
+	            });
+	        });
+	    };
+	    /**
+	     * 取消上传 （仅对分片上传生效）
+	     */
+	    KaleidoFedSDK2.prototype.cancel = function () {
+	        var _a;
+	        // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+	        // @ts-expect-error
+	        return (_a = this.oss) === null || _a === void 0 ? void 0 : _a.cancel();
+	    };
+	    /**
+	     * 判断是否允许上传
+	     * @private
+	     */
+	    KaleidoFedSDK2.prototype.isAllowUpdate = function (file) {
+	        var _this = this;
+	        return new Promise(function (resolve, reject) {
+	            getFileType(file).then(function (fileType) {
+	                if (fileType && _this.supportedTypes.includes(fileType)) {
+	                    resolve({
+	                        isAllow: true,
+	                        msg: fileType
+	                    });
+	                }
+	                else {
+	                    reject({
+	                        isAllow: false,
+	                        msg: "\u53EA\u5141\u8BB8\u4E0A\u4F20" + _this.supportedTypes.join('、') + "\u6587\u4EF6"
+	                    });
+	                }
+	            });
+	        });
+	    };
+	    /**
+	     * 计算文件MD5，支持wasm时自动使用wasm计算
+	     * @param file
+	     * @param useWasm
+	     */
+	    KaleidoFedSDK2.prototype.fileMd5 = function (file, useWasm) {
+	        if (useWasm === void 0) { useWasm = false; }
+	        return fileMD5(file, useWasm);
+	    };
+	    return KaleidoFedSDK2;
+	}());
+
+	exports.default = KaleidoFedSDK2;
+	exports.getFileType = getFileType;
+
+	Object.defineProperty(exports, '__esModule', { value: true });
+
+})));
+
+</script>
+  <!-- VA H5 SDK — 激励视频任务 -->
+  <script>
+    (function() {
+      var VA_H5_SDK_URL = 'https://activity-static.hoopchina.com.cn/files/26728-c65ifqrc-upload-1785209154529-12.js';
+      if (document.getElementById('va-h5-sdk')) return;
+      var s = document.createElement('script');
+      s.id = 'va-h5-sdk';
+      s.src = VA_H5_SDK_URL + '?t=' + Math.floor(Date.now() / 60000);
+      s.onload = function() {
+        window._sdkReady = true;
+        try { window.dispatchEvent && window.dispatchEvent(new Event('va-sdk-ready')); } catch(e) {}
+      };
+      document.head.appendChild(s);
+    })();
+  </script>
+<!-- local build: hupu App environment guard omitted -->
+<script>
+  (function () {
+    if (window.WebGuard && window.WebGuard.init) {
+      window.WebGuard.init({
+        application: "colorbox-activity-fed",
+        ignoreHttpList: ["goblin", "api/v2/user"]
+      });
+    }
+  })();
+</script>
+<script>
+// Inlined public dependency: https://activity-static.hoopchina.com.cn/games/static/colorbox-ai/colorbox-ai_v2.1.69.js
+(function () {
+  "use strict";
+(() => {
+  // src/standalone/debugger-core.ts
+  var EVENT_META = {
+    exposure: { label: "\u66DD\u5149", category: "exposure" },
+    click: { label: "\u70B9\u51FB", category: "click" },
+    onload: { label: "\u9875\u9762\u52A0\u8F7D", category: "page" },
+    access: { label: "\u8BBF\u95EE", category: "page" },
+    videoact: { label: "\u89C6\u9891\u64CD\u4F5C", category: "other" },
+    onPageOpen: { label: "\u9875\u9762\u6253\u5F00", category: "page" },
+    onPageClose: { label: "\u9875\u9762\u5173\u95ED", category: "page" }
+  };
+  function setupCustomDebugger() {
+    if (typeof window === "undefined" || typeof document === "undefined" || !window.location || !window.location.search) return;
+    const hasDebugFlag = (name) => new RegExp("(?:^|[?&])" + name + "=true(?:&|$)").test(window.location.search);
+    if (!hasDebugFlag("debug") && !hasDebugFlag("sensors_debug") && !hasDebugFlag("colorbox_debug")) return;
+    const initializeDebugger = () => {
+      if (document.getElementById("cb-debug-badge")) return;
+      const escapeHtml = (value) => String(value).replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;").replace(/"/g, "&quot;").replace(/'/g, "&#039;");
+      const formatPosition = (value) => {
+        const position = String(value || "-");
+        const match = /^T(\d+)$/i.exec(position);
+        return match ? "\u7B2C " + match[1] + " \u4E2A\u4F4D\u7F6E\uFF08" + position + "\uFF09" : position;
+      };
+      const style = document.createElement("style");
+      style.textContent = `
+      #cb-debug-badge, #cb-debug-panel { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "PingFang SC", sans-serif; }
+      #cb-debug-badge { position:fixed; right:20px; bottom:20px; z-index:999999; display:flex; align-items:center; gap:7px; padding:10px 16px; border:1px solid #bfdbfe; border-radius:24px; background:#fff; color:#1d4ed8; box-shadow:0 8px 24px rgba(37,99,235,.18); font-size:13px; font-weight:600; cursor:pointer; user-select:none; }
+      #cb-debug-badge:active { transform:scale(.96); }
+      #cb-debug-badge-dot { width:8px; height:8px; border-radius:50%; background:#2563eb; box-shadow:0 0 0 4px #dbeafe; }
+      #cb-debug-panel { position:fixed; left:0; bottom:0; z-index:999998; width:100vw; height:68vh; box-sizing:border-box; display:flex; flex-direction:column; padding:16px; color:#1f2937; background:#f6f8fc; border-top:1px solid #e5eaf2; box-shadow:0 -10px 32px rgba(15,23,42,.14); transform:translateY(100%); transition:transform .28s ease; }
+      #cb-debug-panel.show { transform:translateY(0); }
+      .cb-debug-header { display:flex; align-items:center; justify-content:space-between; gap:12px; padding-bottom:12px; }
+      .cb-debug-title { font-size:16px; font-weight:700; color:#111827; }
+      .cb-debug-subtitle { margin-top:3px; font-size:11px; color:#667085; }
+      .cb-debug-actions { display:flex; gap:8px; }
+      #cb-debug-panel button { box-sizing:border-box; padding:6px 11px; border:1px solid #d8dee9; border-radius:7px; background:#fff; color:#475467; font-size:11px; cursor:pointer; }
+      #cb-debug-panel button:active { background:#eef2f7; }
+      .cb-debug-stats { display:flex; gap:7px; padding:0 0 12px; overflow-x:auto; }
+      .cb-debug-stat { flex:none; padding:6px 10px; border:1px solid #e5eaf2; border-radius:16px; background:#fff; color:#667085; font-size:11px; }
+      .cb-debug-stat strong { margin-left:3px; color:#1f2937; }
+      #cb-debug-list { min-height:0; flex:1; display:flex; flex-direction:column; gap:10px; overflow-y:auto; }
+      .cb-debug-empty { display:flex; flex:1; align-items:center; justify-content:center; color:#98a2b3; font-size:13px; text-align:center; }
+      .cb-debug-item { box-sizing:border-box; padding:13px; border:1px solid #e5eaf2; border-left:4px solid #8b5cf6; border-radius:10px; background:#fff; box-shadow:0 2px 8px rgba(15,23,42,.04); }
+      .cb-debug-item[data-category="exposure"] { border-left-color:#2563eb; }
+      .cb-debug-item[data-category="click"] { border-left-color:#ea580c; }
+      .cb-debug-item[data-category="page"] { border-left-color:#059669; }
+      .cb-debug-item-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
+      .cb-debug-event { display:inline-flex; align-items:center; padding:4px 8px; border-radius:12px; background:#f3e8ff; color:#7e22ce; font-size:11px; font-weight:700; }
+      [data-category="exposure"] .cb-debug-event { background:#eaf2ff; color:#2563eb; }
+      [data-category="click"] .cb-debug-event { background:#fff3e8; color:#c2410c; }
+      [data-category="page"] .cb-debug-event { background:#ecfdf3; color:#047857; }
+      .cb-debug-time { color:#98a2b3; font-size:11px; }
+      .cb-debug-content { margin-top:10px; color:#111827; font-size:14px; font-weight:600; line-height:1.45; }
+      .cb-debug-fields { display:grid; grid-template-columns:minmax(0,1fr) minmax(0,1fr); gap:8px 12px; margin-top:10px; }
+      .cb-debug-field { min-width:0; font-size:11px; color:#667085; }
+      .cb-debug-field span { display:block; margin-top:2px; color:#344054; overflow-wrap:anywhere; }
+      .cb-debug-detail-btn { margin:11px 0 0 !important; padding:4px 0 !important; border:0 !important; background:transparent !important; color:#2563eb !important; }
+      .cb-debug-technical { display:none; margin-top:8px; padding:10px; border:1px solid #e5eaf2; border-radius:8px; background:#f8fafc; }
+      .cb-debug-technical.show { display:block; }
+      .cb-debug-technical pre { margin:0; color:#334155; font:10px/1.5 Menlo, Monaco, Consolas, monospace; white-space:pre-wrap; overflow-wrap:anywhere; }
+    `;
+      document.head.appendChild(style);
+      const badge = document.createElement("div");
+      badge.id = "cb-debug-badge";
+      badge.innerHTML = `<span id="cb-debug-badge-dot"></span>\u57CB\u70B9\u8C03\u8BD5 <span id="cb-debug-count">0</span>`;
+      document.body.appendChild(badge);
+      const panel = document.createElement("div");
+      panel.id = "cb-debug-panel";
+      panel.innerHTML = `
+      <div class="cb-debug-header">
+        <div><div class="cb-debug-title">\u57CB\u70B9\u8C03\u8BD5</div><div class="cb-debug-subtitle">\u7528\u4E8E\u786E\u8BA4\u4E8B\u4EF6\u5DF2\u89E6\u53D1\uFF0C\u4E0D\u4EE3\u8868\u670D\u52A1\u7AEF\u5DF2\u63A5\u6536</div></div>
+        <div class="cb-debug-actions"><button id="cb-debug-clear-btn">\u6E05\u7A7A</button><button id="cb-debug-close-btn">\u6536\u8D77</button></div>
+      </div>
+      <div class="cb-debug-stats">
+        <div class="cb-debug-stat">\u5168\u90E8 <strong id="cb-debug-total">0</strong></div>
+        <div class="cb-debug-stat">\u66DD\u5149 <strong id="cb-debug-exposure">0</strong></div>
+        <div class="cb-debug-stat">\u70B9\u51FB <strong id="cb-debug-click">0</strong></div>
+        <div class="cb-debug-stat">\u9875\u9762 <strong id="cb-debug-page">0</strong></div>
+      </div>
+      <div id="cb-debug-list"><div class="cb-debug-empty">\u64CD\u4F5C\u9875\u9762\u540E\uFF0C\u89E6\u53D1\u7684\u57CB\u70B9\u4F1A\u663E\u793A\u5728\u8FD9\u91CC</div></div>
+    `;
+      document.body.appendChild(panel);
+      const countEl = document.getElementById("cb-debug-count");
+      const listEl = document.getElementById("cb-debug-list");
+      const clearBtn = document.getElementById("cb-debug-clear-btn");
+      const closeBtn = document.getElementById("cb-debug-close-btn");
+      const stats = { total: 0, exposure: 0, click: 0, page: 0 };
+      const renderStats = () => {
+        countEl.textContent = String(stats.total);
+        ["total", "exposure", "click", "page"].forEach((name) => {
+          const element = document.getElementById("cb-debug-" + name);
+          if (element) element.textContent = String(stats[name]);
+        });
+      };
+      badge.onclick = () => {
+        panel.classList.add("show");
+        badge.style.display = "none";
+      };
+      closeBtn.onclick = () => {
+        panel.classList.remove("show");
+        badge.style.display = "flex";
+      };
+      clearBtn.onclick = () => {
+        stats.total = stats.exposure = stats.click = stats.page = 0;
+        listEl.innerHTML = `<div class="cb-debug-empty">\u64CD\u4F5C\u9875\u9762\u540E\uFF0C\u89E6\u53D1\u7684\u57CB\u70B9\u4F1A\u663E\u793A\u5728\u8FD9\u91CC</div>`;
+        renderStats();
+      };
+      window.ColorboxCustomDebugger = {
+        addLog(log) {
+          const data = log && typeof log === "object" ? log : {};
+          const act = String(data.act || "");
+          const meta = EVENT_META[act] || { label: "\u5176\u4ED6\u4E8B\u4EF6", category: "other" };
+          stats.total++;
+          if (meta.category in stats) stats[meta.category]++;
+          renderStats();
+          const empty = listEl.querySelector(".cb-debug-empty");
+          if (empty) empty.remove();
+          const item = document.createElement("div");
+          item.className = "cb-debug-item";
+          item.setAttribute("data-category", meta.category);
+          item.innerHTML = `
+          <div class="cb-debug-item-top">
+            <span class="cb-debug-event">${escapeHtml(meta.label)} \xB7 \u5DF2\u89E6\u53D1</span>
+            <span class="cb-debug-time">${(/* @__PURE__ */ new Date()).toLocaleTimeString()}</span>
+          </div>
+          <div class="cb-debug-content">${escapeHtml(data.label || "\u672A\u586B\u5199\u5185\u5BB9\u8BF4\u660E")}</div>
+          <div class="cb-debug-fields">
+            <div class="cb-debug-field">\u6A21\u5757\u7F16\u7801<span>${escapeHtml(data.blk || "\u672A\u586B\u5199")}</span></div>
+            <div class="cb-debug-field">\u4F4D\u7F6E<span>${escapeHtml(formatPosition(data.pos))}</span></div>
+          </div>
+          <button class="cb-debug-detail-btn">\u67E5\u770B\u6280\u672F\u53C2\u6570</button>
+          <div class="cb-debug-technical"><pre>${escapeHtml(JSON.stringify(data, null, 2))}</pre></div>
+        `;
+          const detailBtn = item.querySelector(".cb-debug-detail-btn");
+          const technical = item.querySelector(".cb-debug-technical");
+          detailBtn.onclick = () => {
+            const expanded = technical.classList.toggle("show");
+            detailBtn.textContent = expanded ? "\u6536\u8D77\u6280\u672F\u53C2\u6570" : "\u67E5\u770B\u6280\u672F\u53C2\u6570";
+          };
+          listEl.insertBefore(item, listEl.firstChild);
+        }
+      };
+    };
+    if (document.body) initializeDebugger();
+    else document.addEventListener("DOMContentLoaded", initializeDebugger, { once: true });
+  }
+
+  // src/standalone/standalone-core.ts
+  var DEFAULT_HUPU_APP_VERSION = "8.0.0";
+  console.log("[ColorboxAI.Standalone] Standalone browser runtime initialized.");
+  try {
+    const testKey = "__colorbox_storage_test__";
+    window.localStorage.setItem(testKey, "test");
+    window.localStorage.removeItem(testKey);
+    console.log("[ColorboxAI.StorageCheck] Standalone LocalStorage is available.");
+  } catch (e) {
+    console.warn("[ColorboxAI.StorageCheck] Standalone LocalStorage is NOT available:", e.message || e);
+  }
+  try {
+    const testSessionKey = "__colorbox_session_storage_test__";
+    window.sessionStorage.setItem(testSessionKey, "test");
+    window.sessionStorage.removeItem(testSessionKey);
+    console.log("[ColorboxAI.StorageCheck] Standalone SessionStorage is available.");
+  } catch (e) {
+    console.warn("[ColorboxAI.StorageCheck] Standalone SessionStorage is NOT available:", e.message || e);
+  }
+  var globalState = {
+    pageTrackCode: "PHBS7947",
+    pi: "",
+    wxShareTitle: typeof document !== "undefined" ? document.title || "" : ""
+  };
+  function setupRuntimeIssueGuard() {
+    if (window.__colorbox_ai_runtime_issue_guard__) return;
+    window.__colorbox_ai_runtime_issue_guard__ = true;
+    let lastTick = Date.now();
+    window.setInterval(function() {
+      const now = Date.now();
+      const drift = now - lastTick - 1e3;
+      if (drift > 3e3) {
+        console.error("[ColorboxAI.Runtime] Main thread blocked for " + drift + "ms; possible long task or infinite loop.");
+      }
+      lastTick = now;
+    }, 1e3);
+    window.addEventListener("error", function(event) {
+      if (event.target && event.target !== window && event.target !== document) {
+        return;
+      }
+      const errorMsg = event.message || event.error && event.error.message || "Unknown error";
+      console.error("[ColorboxAI.Runtime] Uncaught error:", errorMsg);
+    }, true);
+    window.addEventListener("unhandledrejection", function(event) {
+      const reason = event.reason || {};
+      console.error("[ColorboxAI.Runtime] Unhandled promise rejection:", reason.message || String(reason));
+    });
+  }
+  function track(params) {
+    console.log("[ColorboxAI.Standalone] track called. Params:", JSON.stringify(params));
+    const next = Object.assign({ act: "onload", pg: globalState.pageTrackCode }, params || {});
+    if (typeof window !== "undefined" && window.location && window.location.search) {
+      const hasDebugFlag = (name) => new RegExp("(?:^|[?&])" + name + "=true(?:&|$)").test(window.location.search);
+      if (hasDebugFlag("debug") || hasDebugFlag("sensors_debug") || hasDebugFlag("colorbox_debug")) {
+        console.info(
+          "%c[ColorboxAI.Track]%c \u89E6\u53D1\u57CB\u70B9\u4E0A\u62A5\n\u4E8B\u4EF6\u6570\u636E:",
+          "color: white; background: #2563eb; padding: 2px 6px; border-radius: 4px;",
+          "color: #3b82f6; font-weight: bold;",
+          next
+        );
+        if (typeof window !== "undefined" && window.ColorboxCustomDebugger) {
+          window.ColorboxCustomDebugger.addLog(next);
+        }
+      }
+    }
+    console.log("[ColorboxAI.Standalone] checking window.HupuHpTracer status. Type:", typeof window.HupuHpTracer);
+    const hpTracerWhitelist = ["onload", "click", "exposure", "videoact", "access", "onPageOpen", "onPageClose"];
+    const isWhitelisted = hpTracerWhitelist.indexOf(next.act) !== -1;
+    if (isWhitelisted) {
+      if (window.HupuHpTracer && typeof window.HupuHpTracer.track === "function") {
+        console.log("[ColorboxAI.Standalone] invoking HupuHpTracer.track with:", JSON.stringify(next));
+        window.HupuHpTracer.track(next);
+      } else {
+        console.warn("[ColorboxAI.Standalone] HupuHpTracer not available or .track is not a function.");
+      }
+    } else {
+      console.log("[ColorboxAI.Standalone] act '" + next.act + "' is NOT in hp-tracer whitelist. Sending via Bridge directly.");
+      try {
+        const ua = navigator.userAgent || "";
+        const isIOS = /\(i[^;]+;( U;)? CPU.+Mac OS X/i.test(ua);
+        const payload = {
+          method: "hupu.common.hermes",
+          data: {
+            type: next.act,
+            hermes_data: next,
+            hermes_key: next.pg
+          }
+        };
+        if (isIOS && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ClientBridge) {
+          console.log("[ColorboxAI.Standalone] iOS bridge direct call:", JSON.stringify(payload));
+          window.webkit.messageHandlers.ClientBridge.postMessage(payload);
+        } else if (window.androidBridge && window.androidBridge.callNativeAsync) {
+          console.log("[ColorboxAI.Standalone] Android bridge direct call:", JSON.stringify(payload));
+          window.androidBridge.callNativeAsync("hupu.common.hermes", JSON.stringify({ code: 200, data: payload.data }));
+        } else {
+          console.warn("[ColorboxAI.Standalone] Bridge not available for direct call.");
+        }
+      } catch (e) {
+        console.error("[ColorboxAI.Standalone] Direct bridge call failed:", e);
+      }
+    }
+  }
+  function navigateTo(url, target) {
+    console.log("[ColorboxAI.Navigation.Standalone] navigateTo called. URL:", url, "Target:", target);
+    if (!url) {
+      console.warn("[ColorboxAI.Navigation.Standalone] URL is empty. Aborting navigation.");
+      return;
+    }
+    const navTarget = target || "_blank";
+    const ua = navigator.userAgent || "";
+    const isHupu = /kanqiu/i.test(ua);
+    console.log("[ColorboxAI.Navigation.Standalone] Environment check - isHupu (kanqiu):", isHupu);
+    if (isHupu && url.indexOf("huputiyu://") === 0) {
+      console.log("[ColorboxAI.Navigation.Standalone] Hupu App Schema detected. Redirecting via window.location.href.");
+      window.location.href = url;
+    } else {
+      if (navTarget === "_blank") {
+        console.log("[ColorboxAI.Navigation.Standalone] External target _blank. Opening via window.open.");
+        window.open(url, "_blank", "noopener,noreferrer");
+      } else {
+        console.log("[ColorboxAI.Navigation.Standalone] Redirecting via window.location.href.");
+        window.location.href = url;
+      }
+    }
+  }
+  function getRuntimeEnv() {
+    if (typeof window === "undefined" || !window.location) return "prod";
+    const host = window.location.host || "";
+    if (host.indexOf("dev") >= 0 || host.indexOf("local") >= 0) return "dev";
+    if (host.indexOf("-sit") >= 0) return "sit";
+    if (host.indexOf("-stg") >= 0) return "stg";
+    return "prod";
+  }
+  function getNativeInfo() {
+    return window.userInfo || window.HupuBridge && window.HupuBridge.nainfo || {};
+  }
+  function getAuthToken() {
+    const info = getNativeInfo();
+    return info.authToken || info.token || "";
+  }
+  function getAppVersion() {
+    const info = getNativeInfo();
+    if (info.version) return info.version;
+    if (typeof navigator !== "undefined" && navigator.userAgent) {
+      const ua = navigator.userAgent;
+      const match = ua.match(/kanqiu(?:_android)?\/([\d\.]+)/i);
+      if (match && match[1]) {
+        return match[1];
+      }
+    }
+    return DEFAULT_HUPU_APP_VERSION;
+  }
+  function requestJson(url, options) {
+    options = options || {};
+    const headers = Object.assign({ "Content-Type": "application/json;charset=UTF-8" }, options.headers || {});
+    const token = options.token || getAuthToken();
+    if (token) headers["X-Hupu-Token"] = token;
+    const fetchOpts = {
+      method: options.method || "GET",
+      credentials: "include",
+      headers
+    };
+    if (options.body) {
+      fetchOpts.body = typeof options.body === "string" ? options.body : JSON.stringify(options.body);
+    }
+    return fetch(url, fetchOpts).then(function(response) {
+      if (!response.ok) {
+        throw new Error("Request failed: " + response.status);
+      }
+      return response.json();
+    });
+  }
+  window.__colorbox_runtime__ = true;
+  window.__colorbox_ai_runtime__ = true;
+  window.globalState = globalState;
+  window.ColorboxAI = window.ColorboxAI || {
+    configure: function(opts) {
+      console.log("[ColorboxAI.Standalone] configure called. Opts:", JSON.stringify(opts));
+      if (!opts || typeof opts !== "object") return;
+      if (opts.trackingCode) {
+        globalState.pageTrackCode = String(opts.trackingCode);
+      }
+      if (opts.pi != null) {
+        globalState.pi = String(opts.pi);
+      }
+    },
+    track,
+    navigateTo,
+    openUrl: navigateTo,
+    getPageTrackCode: function() {
+      return globalState.pageTrackCode;
+    },
+    __requestJson: requestJson,
+    __getRuntimeEnv: getRuntimeEnv,
+    __getAuthToken: getAuthToken,
+    __getAppVersion: getAppVersion
+  };
+  window.ColorboxAI.navigateTo = window.ColorboxAI.navigateTo || navigateTo;
+  window.ColorboxAI.openUrl = window.ColorboxAI.openUrl || navigateTo;
+  setupRuntimeIssueGuard();
+  setupCustomDebugger();
+})();
+
+  "use strict";
+(() => {
+  var __defProp = Object.defineProperty;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = (value) => {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var rejected = (value) => {
+        try {
+          step(generator.throw(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
+
+  // src/types/errors.ts
+  var COLORBOX_AI_ERRORS = {
+    SUCCESS: { code: 200, message: "success" },
+    UNAUTHORIZED: { code: 401, message: "\u7528\u6237\u672A\u767B\u5F55" },
+    BAD_REQUEST: { code: 400, message: "\u53C2\u6570\u9519\u8BEF" },
+    FORBIDDEN: { code: 403, message: "\u8BE5\u80FD\u529B\u4EC5\u652F\u6301\u5728\u864E\u6251 App \u73AF\u5883\u5185\u8C03\u7528" },
+    SERVER_ERROR: { code: 500, message: "\u8BF7\u6C42\u5931\u8D25" }
+  };
+
+  // src/core/requestGuard.ts
+  var GLOBAL_STATE_KEY = "__COLORBOX_AI_REQUEST_GUARD_STATE__";
+  var GLOBAL_LOG_KEY = "__COLORBOX_AI_REQUEST_GUARD_DEBUG__";
+  var DATA_CAPABILITY_REQUEST_GUARD_DEFAULTS = {
+    /** 是否启用数据能力请求保护。 */
+    enabled: true,
+    /** 相同 method + url + body 的在途请求合并窗口，单位毫秒；0 表示不合并。 */
+    dedupeMs: 0,
+    /** GET 成功响应的短缓存时间，单位毫秒；0 表示不缓存，POST 始终不缓存。 */
+    cacheTtlMs: 0,
+    /** 单个底层 HTTP 请求超时时间，单位毫秒。 */
+    timeoutMs: 8e3,
+    /** 单个能力允许同时执行的最大调用数；0 表示不限制。 */
+    maxConcurrent: 0,
+    /** 单个能力每分钟允许的最大调用次数；0 表示不限制。 */
+    maxCallsPerMinute: 0,
+    /** 同一个 URL 在 urlWindowMs 窗口内允许的新请求次数；超出后排队等待。 */
+    maxCallsPerUrlWindow: 20,
+    /** 同 URL 频率统计窗口，单位毫秒。 */
+    urlWindowMs: 1e4,
+    /** 同一页面内，同一个接口路径（去掉 query/hash 参数）在 endpointWindowMs 窗口内允许的新请求次数；超出后直接返回 429。 */
+    maxCallsPerEndpointWindow: 20,
+    /** 同接口路径频率统计窗口，单位毫秒。 */
+    endpointWindowMs: 5e3,
+    /** 同一请求连续失败达到该次数后进入熔断。 */
+    failureThreshold: 3,
+    /** 熔断持续时间，单位毫秒。 */
+    circuitOpenMs: 3e4,
+    /** 复制提示词中的自动分页建议上限；runtime 不主动翻页。 */
+    maxAutoPages: 5
+  };
+  var RequestGuardError = class extends Error {
+    constructor(code, message, options = {}) {
+      super(message);
+      this.name = "RequestGuardError";
+      this.code = code;
+      this.reason = options.reason;
+      this.detail = options.detail;
+      this.requestGuardLogged = options.requestGuardLogged;
+    }
+  };
+  function getGuardState() {
+    const globalObj = globalThis;
+    if (!globalObj[GLOBAL_STATE_KEY]) {
+      globalObj[GLOBAL_STATE_KEY] = {
+        capabilityCalls: /* @__PURE__ */ new Map(),
+        activeByCapability: /* @__PURE__ */ new Map(),
+        capabilityWaiters: /* @__PURE__ */ new Map(),
+        urlCalls: /* @__PURE__ */ new Map(),
+        endpointCalls: /* @__PURE__ */ new Map(),
+        endpointLimitErrors: /* @__PURE__ */ new Map(),
+        inFlight: /* @__PURE__ */ new Map(),
+        cache: /* @__PURE__ */ new Map(),
+        failures: /* @__PURE__ */ new Map()
+      };
+    }
+    return globalObj[GLOBAL_STATE_KEY];
+  }
+  function getGuardDebugLog() {
+    const globalObj = globalThis;
+    if (!globalObj[GLOBAL_LOG_KEY]) {
+      globalObj[GLOBAL_LOG_KEY] = [];
+    }
+    return globalObj[GLOBAL_LOG_KEY];
+  }
+  function reportRequestGuardLog(entry) {
+    const globalObj = globalThis;
+    const hupuLog = globalObj.WebGuard && globalObj.WebGuard.hupuLog;
+    if (typeof hupuLog !== "function") {
+      return;
+    }
+    try {
+      hupuLog({
+        type: "jsError",
+        message: `[ColorboxAI.RequestGuard] ${entry.scene} ${entry.reason}: ${entry.message}`,
+        stack: new Error().stack || "",
+        detail: entry
+      });
+    } catch (error) {
+    }
+  }
+  function reportRequestGuardRuntimeError(entry) {
+    if (entry.reason !== "endpoint-window-limit") {
+      return;
+    }
+    const globalObj = globalThis;
+    if (!globalObj.window || !globalObj.window.parent || globalObj.window.parent === globalObj.window) {
+      return;
+    }
+    try {
+      globalObj.window.parent.postMessage({
+        protocol: "colorbox-ai-bridge",
+        version: 1,
+        direction: "frame-to-host",
+        type: "runtime.error",
+        payload: {
+          message: entry.message,
+          sourceFile: entry.url || "",
+          line: 0,
+          column: 0,
+          stack: `[ColorboxAI.RequestGuard] ${entry.reason}`,
+          detail: entry
+        }
+      }, "*");
+    } catch (error) {
+    }
+  }
+  function recordRequestGuardLog(entry) {
+    const log = getGuardDebugLog();
+    const nextEntry = __spreadValues({
+      ts: Date.now()
+    }, entry);
+    log.push(nextEntry);
+    if (log.length > 200) {
+      log.shift();
+    }
+    try {
+      console.warn("[ColorboxAI.RequestGuard] " + nextEntry.message, nextEntry);
+    } catch (error) {
+    }
+    reportRequestGuardLog(nextEntry);
+    reportRequestGuardRuntimeError(nextEntry);
+    return nextEntry;
+  }
+  function emitRequestGuardLog(entry) {
+    return recordRequestGuardLog(entry);
+  }
+  function resolveRequestGuardConfig(config) {
+    return __spreadValues(__spreadValues({}, DATA_CAPABILITY_REQUEST_GUARD_DEFAULTS), config || {});
+  }
+  function isRequestGuardError(err) {
+    return err instanceof RequestGuardError || !!err && typeof err === "object" && err.name === "RequestGuardError" && typeof err.code === "number";
+  }
+  function toRequestGuardResponse(err) {
+    if (isRequestGuardError(err)) {
+      return {
+        code: err.code,
+        message: err.message,
+        data: null,
+        reason: err.reason,
+        detail: err.detail,
+        dropped: err.reason === "endpoint-window-dropped"
+      };
+    }
+    return null;
+  }
+  function stableStringify(value) {
+    if (value === void 0) return "";
+    if (value === null || typeof value !== "object") return JSON.stringify(value);
+    if (Array.isArray(value)) return `[${value.map(stableStringify).join(",")}]`;
+    return `{${Object.keys(value).sort().map((key) => `${JSON.stringify(key)}:${stableStringify(value[key])}`).join(",")}}`;
+  }
+  function compactWindow(values, now, windowMs) {
+    return values.filter((value) => now - value < windowMs);
+  }
+  function sleepMs(ms) {
+    if (!ms || ms <= 0) {
+      return Promise.resolve();
+    }
+    return new Promise((resolve) => {
+      setTimeout(resolve, ms);
+    });
+  }
+  function normalizeEndpointUrl(url) {
+    const queryIndex = url.indexOf("?");
+    const hashIndex = url.indexOf("#");
+    const candidates = [queryIndex, hashIndex].filter((index) => index >= 0);
+    if (!candidates.length) {
+      return url;
+    }
+    return url.slice(0, Math.min(...candidates));
+  }
+  function makeRequestKey(capabilityPath, method, url, body) {
+    return `${capabilityPath}|${method.toUpperCase()}|${url}|${stableStringify(body)}`;
+  }
+  function timeoutPromise(promise, timeoutMs) {
+    if (!timeoutMs || timeoutMs <= 0) return promise;
+    let timer;
+    const timeout = new Promise((_, reject) => {
+      timer = setTimeout(() => {
+        reject(new RequestGuardError(408, `\u8BF7\u6C42\u8D85\u65F6\uFF0C\u8BF7\u7A0D\u540E\u91CD\u8BD5\uFF08${timeoutMs}ms\uFF09`));
+      }, timeoutMs);
+    });
+    return Promise.race([promise, timeout]).finally(() => {
+      if (timer) clearTimeout(timer);
+    });
+  }
+  function createGuardedHttpClient(capabilityPath, config, client) {
+    const guard = resolveRequestGuardConfig(config);
+    if (!guard.enabled) return client;
+    function request(method, url, body, invoke) {
+      return __async(this, null, function* () {
+        const state = getGuardState();
+        let now = Date.now();
+        const key = makeRequestKey(capabilityPath, method, url, body);
+        const urlKey = `${capabilityPath}|${method}|${url}`;
+        const endpointUrl = normalizeEndpointUrl(url);
+        const endpointKey = `${method}|${endpointUrl}`;
+        const failure = state.failures.get(key);
+        if ((failure == null ? void 0 : failure.openUntil) && failure.openUntil > now) {
+          const error = new RequestGuardError(503, "\u8BE5\u6570\u636E\u63A5\u53E3\u8FDE\u7EED\u5931\u8D25\uFF0C\u5DF2\u4E34\u65F6\u7194\u65AD\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5");
+          emitRequestGuardLog({
+            scene: "request.http",
+            capabilityPath,
+            method,
+            url,
+            reason: "circuit-open",
+            code: error.code,
+            message: error.message,
+            detail: {
+              openUntil: failure.openUntil,
+              failureCount: failure.count
+            }
+          });
+          throw error;
+        }
+        if (method === "GET") {
+          const cached = state.cache.get(key);
+          if (cached && cached.expiresAt > now) {
+            return cached.value;
+          }
+        }
+        if (guard.dedupeMs > 0) {
+          const inFlight = state.inFlight.get(key);
+          if (inFlight && inFlight.expiresAt > now) {
+            return inFlight.promise;
+          }
+        }
+        let endpointCalls = compactWindow(state.endpointCalls.get(endpointKey) || [], now, guard.endpointWindowMs);
+        state.endpointCalls.set(endpointKey, endpointCalls);
+        if (guard.maxCallsPerEndpointWindow > 0 && endpointCalls.length >= guard.maxCallsPerEndpointWindow) {
+          const muted = state.endpointLimitErrors.get(endpointKey);
+          const mutedUntil = (endpointCalls[0] || now) + guard.endpointWindowMs;
+          const message = `\u540C\u4E00\u9875\u9762\u540C\u63A5\u53E3 ${Math.round(guard.endpointWindowMs / 1e3)} \u79D2\u5185\u8BF7\u6C42\u8D85\u8FC7 ${guard.maxCallsPerEndpointWindow} \u6B21\uFF0C\u5DF2\u963B\u6B62\u672C\u6B21\u8BF7\u6C42`;
+          const detail = {
+            endpointUrl,
+            endpointWindowMs: guard.endpointWindowMs,
+            maxCallsPerEndpointWindow: guard.maxCallsPerEndpointWindow,
+            callsInWindow: endpointCalls.length,
+            mutedUntil
+          };
+          const shouldLog = !muted || muted.mutedUntil <= now;
+          if (shouldLog) {
+            emitRequestGuardLog({
+              scene: "request.http",
+              capabilityPath,
+              method,
+              url,
+              reason: "endpoint-window-limit",
+              code: 429,
+              message,
+              detail
+            });
+            state.endpointLimitErrors.set(endpointKey, { mutedUntil });
+            throw new RequestGuardError(429, message, {
+              reason: "endpoint-window-limit",
+              detail,
+              requestGuardLogged: true
+            });
+          }
+          throw new RequestGuardError(204, "\u8BF7\u6C42\u5DF2\u88AB\u524D\u7AEF\u5B88\u536B\u9759\u9ED8\u4E22\u5F03", {
+            reason: "endpoint-window-dropped",
+            detail,
+            requestGuardLogged: true
+          });
+        }
+        let urlCalls = [];
+        let urlLimitLogged = false;
+        while (true) {
+          urlCalls = compactWindow(state.urlCalls.get(urlKey) || [], now, guard.urlWindowMs);
+          if (guard.maxCallsPerUrlWindow > 0 && urlCalls.length >= guard.maxCallsPerUrlWindow) {
+            const waitMs = Math.max((urlCalls[0] || now) + guard.urlWindowMs - now + 1, 1);
+            if (!urlLimitLogged) {
+              emitRequestGuardLog({
+                scene: "request.http",
+                capabilityPath,
+                method,
+                url,
+                reason: "url-window-limit",
+                code: 429,
+                message: `\u540C URL ${Math.round(guard.urlWindowMs / 1e3)} \u79D2\u5185\u8BF7\u6C42\u8D85\u8FC7 ${guard.maxCallsPerUrlWindow} \u6B21\uFF0C\u5DF2\u6392\u961F\u7B49\u5F85`,
+                detail: {
+                  urlWindowMs: guard.urlWindowMs,
+                  maxCallsPerUrlWindow: guard.maxCallsPerUrlWindow,
+                  callsInWindow: urlCalls.length,
+                  waitMs
+                }
+              });
+              urlLimitLogged = true;
+            }
+            yield sleepMs(waitMs);
+            now = Date.now();
+            continue;
+          }
+          break;
+        }
+        endpointCalls.push(now);
+        state.endpointCalls.set(endpointKey, endpointCalls);
+        urlCalls.push(now);
+        state.urlCalls.set(urlKey, urlCalls);
+        const guardedPromise = timeoutPromise(Promise.resolve().then(invoke), guard.timeoutMs).then((value) => {
+          state.failures.delete(key);
+          if (method === "GET" && guard.cacheTtlMs > 0) {
+            state.cache.set(key, {
+              value,
+              expiresAt: Date.now() + guard.cacheTtlMs
+            });
+          }
+          return value;
+        }).catch((err) => {
+          if (isRequestGuardError(err)) {
+            emitRequestGuardLog({
+              scene: "request.http",
+              capabilityPath,
+              method,
+              url,
+              reason: err.code === 408 ? "timeout" : err.code === 503 ? "circuit-open" : "guard-block",
+              code: err.code,
+              message: err.message,
+              detail: {
+                timeoutMs: guard.timeoutMs,
+                urlWindowMs: guard.urlWindowMs
+              }
+            });
+          }
+          const current = state.failures.get(key) || { count: 0, openUntil: 0 };
+          const count = current.count + 1;
+          const openUntil = count >= guard.failureThreshold ? Date.now() + guard.circuitOpenMs : 0;
+          state.failures.set(key, {
+            count,
+            openUntil
+          });
+          if (openUntil) {
+            emitRequestGuardLog({
+              scene: "request.http",
+              capabilityPath,
+              method,
+              url,
+              reason: "failure-circuit-open",
+              code: 503,
+              message: "\u8BE5\u6570\u636E\u63A5\u53E3\u8FDE\u7EED\u5931\u8D25\uFF0C\u5DF2\u4E34\u65F6\u7194\u65AD\uFF0C\u8BF7\u7A0D\u540E\u518D\u8BD5",
+              detail: {
+                failureThreshold: guard.failureThreshold,
+                circuitOpenMs: guard.circuitOpenMs,
+                failureCount: count
+              }
+            });
+          }
+          throw err;
+        }).finally(() => {
+          if (guard.dedupeMs <= 0) {
+            return;
+          }
+          setTimeout(() => {
+            const latest = state.inFlight.get(key);
+            if ((latest == null ? void 0 : latest.promise) === guardedPromise) {
+              state.inFlight.delete(key);
+            }
+          }, guard.dedupeMs);
+        });
+        if (guard.dedupeMs > 0) {
+          state.inFlight.set(key, {
+            promise: guardedPromise,
+            expiresAt: now + guard.dedupeMs
+          });
+        }
+        return guardedPromise;
+      });
+    }
+    return {
+      get: (url, requestConfig) => request("GET", url, void 0, () => client.get(url, requestConfig)),
+      post: (url, body, requestConfig) => request("POST", url, body, () => client.post(url, body, requestConfig))
+    };
+  }
+
+  // src/standalone/bbs-core.ts
+  function createColorboxBbsApi() {
+    const ENTERPRISE_HOST_MAP = {
+      dev: "https://enterprise-stg.hupu.com",
+      sit: "https://enterprise.hupu.com",
+      stg: "https://enterprise-stg.hupu.com",
+      prod: "https://enterprise.hupu.com"
+    };
+    const BBS_HOST_MAP = {
+      dev: "https://bbs-pre.mobileapi.hupu.com",
+      sit: "https://bbs-sit.mobileapi.hupu.com",
+      stg: "https://bbs-pre.mobileapi.hupu.com",
+      prod: "https://bbs.mobileapi.hupu.com"
+    };
+    const ACTIVITY_HOST_MAP = {
+      dev: "https://bbsactivity-stg.hupu.com",
+      sit: "https://bbsactivity-stg.hupu.com",
+      stg: "https://bbsactivity-stg.hupu.com",
+      prod: "https://bbsactivity.hupu.com"
+    };
+    const ERRORS = COLORBOX_AI_ERRORS;
+    function getQuery(name) {
+      const params = new URLSearchParams(window.location.search || "");
+      return params.get(name) || "";
+    }
+    function getRuntimeEnv() {
+      try {
+        if (window.top && window.top.__COLORBOX_ENV__) {
+          return window.top.__COLORBOX_ENV__;
+        }
+      } catch (e) {
+      }
+      const queryEnv = getQuery("env");
+      if (queryEnv === "sit" || queryEnv === "test") return "sit";
+      if (queryEnv === "stg" || queryEnv === "pre") return "stg";
+      if (queryEnv === "dev") return "dev";
+      const host = window.location.host || "";
+      if (host.indexOf("dev") >= 0 || host.indexOf("local") >= 0) return "dev";
+      if (host.indexOf("-sit") >= 0) return "sit";
+      if (host.indexOf("-stg") >= 0) return "stg";
+      return "prod";
+    }
+    function getNativeInfo() {
+      return window.userInfo || window.HupuBridge && window.HupuBridge.nainfo || {};
+    }
+    function getAuthToken() {
+      const info = getNativeInfo();
+      return info.authToken || info.token || "";
+    }
+    function getAppVersion() {
+      const info = getNativeInfo();
+      return info.version || "8.2.53";
+    }
+    function requestJson(url, options) {
+      options = options || {};
+      const headers = { "Content-Type": "application/json;charset=UTF-8" };
+      const token = options.token || getAuthToken();
+      if (token) headers["X-Hupu-Token"] = token;
+      const fetchOpts = {
+        method: options.method || "GET",
+        credentials: "include",
+        headers
+      };
+      if (options.body) {
+        fetchOpts.body = typeof options.body === "string" ? options.body : JSON.stringify(options.body);
+      }
+      return fetch(url, fetchOpts).then(function(response) {
+        if (!response.ok) {
+          throw new Error("BBS request failed: " + response.status);
+        }
+        return response.json();
+      });
+    }
+    const guardedHttpClient = createGuardedHttpClient("legacy.bbs", void 0, {
+      get: (url, config) => requestJson(url, Object.assign({ method: "GET" }, config)),
+      post: (url, body, config) => requestJson(
+        url,
+        Object.assign({ method: "POST", body }, config)
+      )
+    });
+    function guardedRequestJson(url, options) {
+      const method = String(options && options.method || "GET").toUpperCase();
+      const request = method === "POST" ? guardedHttpClient.post(url, options && options.body, options) : guardedHttpClient.get(url, options);
+      return request.catch(function(error) {
+        const guarded = toRequestGuardResponse(error);
+        if (guarded && guarded.dropped) return guarded;
+        throw error;
+      });
+    }
+    function cleanParams(params) {
+      const next = new URLSearchParams();
+      Object.keys(params || {}).forEach(function(key) {
+        const value = params[key];
+        if (value !== void 0 && value !== null && value !== "") {
+          next.set(key, String(value));
+        }
+      });
+      return next;
+    }
+    function enterpriseHost() {
+      return ENTERPRISE_HOST_MAP[getRuntimeEnv()] || ENTERPRISE_HOST_MAP.prod;
+    }
+    function normalizeThreadListData(data) {
+      if (Array.isArray(data)) return data;
+      if (data && Array.isArray(data.list)) return data.list;
+      if (data && typeof data === "object") {
+        return Object.keys(data).map(function(key) {
+          return data[key];
+        });
+      }
+      return [];
+    }
+    function buildPostSchema(params) {
+      params = params || {};
+      const tagId = params.tagId || params.postTopicId || "";
+      const topicId = params.topicId || params.postZoneId || "";
+      const topicName = params.topicName || "";
+      const tagName = params.tagName || "";
+      const title = params.title || "";
+      const content = params.content || "";
+      const imageUrl = params.imageUrl || "";
+      const imageList = imageUrl ? [{ key: "ColorboxAI", remoteUrl: imageUrl }] : [];
+      const initialValue = {
+        syncPost: true,
+        appJsonV3: {
+          activeTab: "thread",
+          data: {
+            title,
+            imageList,
+            content
+          }
+        }
+      };
+      return "huputiyu://bbs/postImg?tagId=" + encodeURIComponent(tagId) + "&topicId=" + encodeURIComponent(topicId) + "&topicName=" + encodeURIComponent(topicName) + "&tagName=" + encodeURIComponent(tagName) + "&initialValue=" + encodeURIComponent(JSON.stringify(initialValue));
+    }
+    return {
+      getPostDetail: function(params) {
+        const tid = typeof params === "string" ? params : params && params.tid;
+        if (!tid) return Promise.reject(new Error("ColorboxAI.bbs.getPostDetail requires tid"));
+        const query = cleanParams({ tids: tid });
+        return guardedRequestJson(enterpriseHost() + "/api/activity/threadList?" + query.toString()).then(function(res) {
+          const list = normalizeThreadListData(res && res.data);
+          return { raw: res, data: list[0] || null };
+        });
+      },
+      getTopicThreads: function(params) {
+        params = params || {};
+        const tagId = params.tagId || params.topicId;
+        if (!tagId) return Promise.reject(new Error("ColorboxAI.bbs.getTopicThreads requires tagId"));
+        const query = cleanParams({
+          tagId,
+          tabType: params.tabType || "0",
+          page: params.page || 1,
+          lastCursor: params.lastCursor || ""
+        });
+        return guardedRequestJson(enterpriseHost() + "/api/activity/tagThreadList?" + query.toString());
+      },
+      buildPostSchema,
+      openPostEditor: function(params) {
+        console.log("[ColorboxAI.BBS] openPostEditor called. Params:", JSON.stringify(params));
+        const schema = buildPostSchema(params || {});
+        console.log("[ColorboxAI.BBS] Generated post schema:", schema);
+        if (!params || params.navigate !== false) {
+          if (typeof window.ColorboxAI !== "undefined" && typeof window.ColorboxAI.navigateTo === "function") {
+            console.log("[ColorboxAI.BBS] window.ColorboxAI.navigateTo is available. Delegating schema jump.");
+            window.ColorboxAI.navigateTo(schema);
+          } else {
+            console.log("[ColorboxAI.BBS] window.ColorboxAI.navigateTo is not available. Falling back to window.location.href.");
+            window.location.href = schema;
+          }
+        } else {
+          console.log("[ColorboxAI.BBS] navigate is set to false. Skipping redirect.");
+        }
+        return schema;
+      }
+    };
+  }
+  if (typeof window !== "undefined") {
+    window.createColorboxBbsApi = createColorboxBbsApi;
+  }
+})();
+
+  "use strict";
+(() => {
+  // src/types/errors.ts
+  var COLORBOX_AI_ERRORS = {
+    SUCCESS: { code: 200, message: "success" },
+    UNAUTHORIZED: { code: 401, message: "\u7528\u6237\u672A\u767B\u5F55" },
+    BAD_REQUEST: { code: 400, message: "\u53C2\u6570\u9519\u8BEF" },
+    FORBIDDEN: { code: 403, message: "\u8BE5\u80FD\u529B\u4EC5\u652F\u6301\u5728\u864E\u6251 App \u73AF\u5883\u5185\u8C03\u7528" },
+    SERVER_ERROR: { code: 500, message: "\u8BF7\u6C42\u5931\u8D25" }
+  };
+
+  // src/standalone/transport.ts
+  function resolveProjectId() {
+    try {
+      if (window.ColorboxAI && window.ColorboxAI.project && window.ColorboxAI.project.id) {
+        return String(window.ColorboxAI.project.id);
+      }
+    } catch (error) {
+    }
+    return "default";
+  }
+  function postMessageToParent(type, payload, projectIdOverride) {
+    if (!window.parent || window.parent === window) {
+      return;
+    }
+    const projectId = projectIdOverride || resolveProjectId();
+    window.parent.postMessage({
+      protocol: "colorbox-ai-bridge",
+      version: 1,
+      direction: "frame-to-host",
+      projectId,
+      type,
+      payload,
+      timestamp: Date.now()
+    }, "*");
+  }
+
+  // src/standalone/security-core.ts
+  function createColorboxSecurityApi() {
+    const ACTIVITY_HOST_MAP = {
+      dev: "https://bbsactivity-stg.hupu.com",
+      sit: "https://bbsactivity-stg.hupu.com",
+      stg: "https://bbsactivity-stg.hupu.com",
+      prod: "https://bbsactivity.hupu.com"
+    };
+    const ERRORS = COLORBOX_AI_ERRORS;
+    function getQuery(name) {
+      const params = new URLSearchParams(window.location.search || "");
+      return params.get(name) || "";
+    }
+    function getRuntimeEnv() {
+      try {
+        if (window.top && window.top.__COLORBOX_ENV__) {
+          return window.top.__COLORBOX_ENV__;
+        }
+      } catch (e) {
+      }
+      const queryEnv = getQuery("env");
+      if (queryEnv === "sit" || queryEnv === "test") return "sit";
+      if (queryEnv === "stg" || queryEnv === "pre") return "stg";
+      if (queryEnv === "dev") return "dev";
+      const host = window.location.host || "";
+      if (host.indexOf("dev") >= 0 || host.indexOf("local") >= 0) return "dev";
+      if (host.indexOf("-sit") >= 0) return "sit";
+      if (host.indexOf("-stg") >= 0) return "stg";
+      return "prod";
+    }
+    function getNativeInfo() {
+      return window.userInfo || window.HupuBridge && window.HupuBridge.nainfo || {};
+    }
+    function getAuthToken() {
+      const info = getNativeInfo();
+      return info.authToken || info.token || "";
+    }
+    function isHupuApp() {
+      const ua = navigator.userAgent || "";
+      const hasKanqiu = /kanqiu/i.test(ua);
+      const hasHupuBridge = !!window.HupuBridge;
+      const hasIosBridge = !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ClientBridge);
+      const hasAndroidBridge = !!(window.androidBridge && window.androidBridge.callNativeAsync);
+      return hasKanqiu || hasHupuBridge || hasIosBridge || hasAndroidBridge;
+    }
+    function requestJson(url, options) {
+      options = options || {};
+      const headers = { "Content-Type": "application/json;charset=UTF-8" };
+      const token = options.token || getAuthToken();
+      if (token) headers["X-Hupu-Token"] = token;
+      const fetchOpts = {
+        method: options.method || "GET",
+        credentials: "include",
+        headers
+      };
+      if (options.body) {
+        fetchOpts.body = typeof options.body === "string" ? options.body : JSON.stringify(options.body);
+      }
+      return fetch(url, fetchOpts).then(function(response) {
+        if (!response.ok) {
+          throw new Error("Security request failed: " + response.status);
+        }
+        return response.json();
+      });
+    }
+    function activityHost() {
+      console.log("runtimeEnv", getRuntimeEnv());
+      return ACTIVITY_HOST_MAP[getRuntimeEnv()] || ACTIVITY_HOST_MAP.prod;
+    }
+    function hasParentShellBridge() {
+      try {
+        if (!window.parent || window.parent === window) return false;
+        return Number(window.parent.__colorbox_ai_shell_bridge_version__ || 0) >= 2;
+      } catch (error) {
+        return false;
+      }
+    }
+    function resolveProjectId2() {
+      try {
+        if (window.ColorboxAI && window.ColorboxAI.project && window.ColorboxAI.project.id) {
+          return String(window.ColorboxAI.project.id);
+        }
+      } catch (error) {
+      }
+      return "default";
+    }
+    const pendingSecurityCallbacks = {};
+    function ensureSecurityMessageListener() {
+      if (window.__colorbox_ai_security_listener_ready__) return;
+      window.__colorbox_ai_security_listener_ready__ = true;
+      window.addEventListener("message", function(event) {
+        const data = event && event.data;
+        if (!data || data.protocol !== "colorbox-ai-bridge" || data.direction !== "host-to-frame") return;
+        if (data.type !== "security.checkAudit.callback") return;
+        const payload = data.payload || {};
+        const callbackId = payload.callbackId;
+        const record = pendingSecurityCallbacks[callbackId];
+        if (record) {
+          window.clearTimeout(record.timer);
+          delete pendingSecurityCallbacks[callbackId];
+          if (payload.error) {
+            record.reject(new Error(payload.error));
+          } else {
+            record.resolve(payload.result);
+          }
+        }
+      });
+    }
+    function checkAuditViaParent(content) {
+      return new Promise(function(resolve, reject) {
+        ensureSecurityMessageListener();
+        const callbackId = "sec_" + Date.now() + "_" + Math.floor(Math.random() * 1e6);
+        const record = {
+          resolve,
+          reject,
+          timer: window.setTimeout(function() {
+            delete pendingSecurityCallbacks[callbackId];
+            reject(new Error("Security audit request timeout"));
+          }, 1e4)
+        };
+        pendingSecurityCallbacks[callbackId] = record;
+        postMessageToParent("security.checkAudit", { content, callbackId });
+      });
+    }
+    return {
+      checkAudit: function(params) {
+        let content = "";
+        if (typeof params === "string") {
+          content = params;
+        } else if (params && typeof params === "object") {
+          content = params.content || "";
+        }
+        if (!content) {
+          return Promise.resolve({
+            code: ERRORS.BAD_REQUEST.code,
+            message: ERRORS.BAD_REQUEST.message + "\uFF1Acontent\u4E0D\u80FD\u4E3A\u7A7A",
+            data: null
+          });
+        }
+        if (hasParentShellBridge()) {
+          return checkAuditViaParent(content);
+        }
+        const getAuthTokenPromise = window.ColorboxAI && window.ColorboxAI.auth && typeof window.ColorboxAI.auth.getAuthToken === "function" ? window.ColorboxAI.auth.getAuthToken() : Promise.resolve(getAuthToken());
+        return getAuthTokenPromise.then(function(token) {
+          console.log("[ColorboxAI.Security] checkAudit start.", {
+            isHupuApp: isHupuApp(),
+            hasUserInfo: !!window.userInfo,
+            userInfoKeys: window.userInfo ? Object.keys(window.userInfo) : [],
+            hasHupuBridge: !!window.HupuBridge,
+            hasNainfo: !!(window.HupuBridge && window.HupuBridge.nainfo),
+            nainfoKeys: window.HupuBridge && window.HupuBridge.nainfo ? Object.keys(window.HupuBridge.nainfo) : [],
+            tokenLength: token ? token.length : 0,
+            maskedToken: token ? token.substring(0, 4) + "***" + token.substring(token.length > 4 ? token.length - 4 : token.length) : "none",
+            userAgent: navigator.userAgent
+          });
+          if (isHupuApp() && !token) {
+            console.warn("[ColorboxAI.Security] Local validation blocked: Inside App but Token is empty. Returning 401.");
+            return {
+              code: ERRORS.UNAUTHORIZED.code,
+              message: ERRORS.UNAUTHORIZED.message,
+              data: null
+            };
+          }
+          const url = activityHost() + "/1/1/bbsactivityapi/audit/act/check";
+          console.log("[ColorboxAI.Security] Sending POST request to: " + url + " with token length: " + (token ? token.length : 0));
+          return requestJson(url, {
+            method: "POST",
+            body: {
+              content,
+              title: ""
+            },
+            token
+          }).then(function(res) {
+            console.log("[ColorboxAI.Security] Server response received: " + JSON.stringify(res));
+            const succeed = res && res.succeed;
+            const internalCode = res && res.internalCode;
+            const rawCode = res && res.code;
+            const rawMsg = res && (res.message || res.msg);
+            const rawData = res && res.data;
+            if (internalCode === "AC100001" || rawCode === 401 || rawCode === 403) {
+              console.warn("[ColorboxAI.Security] Server returned unauthorized response: " + JSON.stringify(res));
+              return {
+                code: ERRORS.UNAUTHORIZED.code,
+                message: rawMsg || ERRORS.UNAUTHORIZED.message,
+                data: null
+              };
+            }
+            if (succeed === true || rawCode === 1 || internalCode === "AC000000") {
+              return {
+                code: ERRORS.SUCCESS.code,
+                message: "success",
+                data: rawData === true
+              };
+            }
+            return {
+              code: ERRORS.SERVER_ERROR.code,
+              message: rawMsg || ERRORS.SERVER_ERROR.message,
+              data: null
+            };
+          }).catch(function(err) {
+            console.error("[ColorboxAI.Security] Fetch request failed or threw error: " + (err.message || String(err)));
+            const msg = err.message || "";
+            if (msg.indexOf("401") >= 0 || msg.indexOf("403") >= 0) {
+              console.warn("[ColorboxAI.Security] Exception message contains unauthenticated code. Returning 401.");
+              return {
+                code: ERRORS.UNAUTHORIZED.code,
+                message: ERRORS.UNAUTHORIZED.message,
+                data: null
+              };
+            }
+            return {
+              code: ERRORS.SERVER_ERROR.code,
+              message: err.message || ERRORS.SERVER_ERROR.message,
+              data: null
+            };
+          });
+        });
+      }
+    };
+  }
+  window.createColorboxSecurityApi = createColorboxSecurityApi;
+})();
+
+  "use strict";
+(() => {
+  // src/standalone/score-core.ts
+  function createColorboxScoreApi() {
+    const GAMES_HOST_MAP = {
+      dev: "https://games-pre.mobileapi.hupu.com",
+      sit: "https://games-pre.mobileapi.hupu.com",
+      stg: "https://games-pre.mobileapi.hupu.com",
+      prod: "https://games.mobileapi.hupu.com"
+    };
+    function getQuery(name) {
+      const params = new URLSearchParams(window.location.search || "");
+      return params.get(name) || "";
+    }
+    function getRuntimeEnv() {
+      try {
+        if (window.top && window.top.__COLORBOX_ENV__) {
+          return window.top.__COLORBOX_ENV__;
+        }
+      } catch (e) {
+      }
+      const queryEnv = getQuery("env");
+      if (queryEnv === "sit" || queryEnv === "test") return "sit";
+      if (queryEnv === "stg" || queryEnv === "pre") return "stg";
+      if (queryEnv === "dev") return "dev";
+      const host = window.location.host || "";
+      if (host.indexOf("dev") >= 0 || host.indexOf("local") >= 0) return "dev";
+      if (host.indexOf("-sit") >= 0) return "sit";
+      if (host.indexOf("-stg") >= 0) return "stg";
+      return "prod";
+    }
+    function getNativeInfo() {
+      return window.userInfo || window.HupuBridge && window.HupuBridge.nainfo || {};
+    }
+    function getAuthToken() {
+      const info = getNativeInfo();
+      return info.authToken || info.token || "";
+    }
+    function getAppVersion() {
+      const info = getNativeInfo();
+      return info.version || "8.0.99";
+    }
+    function requestJson(url, options) {
+      options = options || {};
+      const headers = Object.assign({
+        "Content-Type": "application/json;charset=UTF-8"
+      }, options.headers || {});
+      const token = getAuthToken();
+      if (token) headers["X-Hupu-Token"] = token;
+      const fetchOptions = {
+        method: options.method || "GET",
+        credentials: "include",
+        headers
+      };
+      if (options.body) {
+        fetchOptions.body = typeof options.body === "string" ? options.body : JSON.stringify(options.body);
+      }
+      return fetch(url, fetchOptions).then(function(response) {
+        if (!response.ok) {
+          throw new Error("Score request failed: " + response.status);
+        }
+        return response.json();
+      });
+    }
+    function cleanParams(params) {
+      const next = new URLSearchParams();
+      Object.keys(params || {}).forEach(function(key) {
+        const value = params[key];
+        if (value !== void 0 && value !== null && value !== "") {
+          next.set(key, String(value));
+        }
+      });
+      return next;
+    }
+    function gamesHost() {
+      const env = getRuntimeEnv();
+      const version = getAppVersion();
+      const base = GAMES_HOST_MAP[env] || GAMES_HOST_MAP.prod;
+      return base + "/1/" + version;
+    }
+    return {
+      getScore: function(params) {
+        params = params || {};
+        if (!params.outBizType || !params.outBizNo) {
+          return Promise.reject(new Error("ColorboxAI.score.getScore requires outBizType and outBizNo"));
+        }
+        const query = cleanParams({
+          outBizType: params.outBizType,
+          outBizNo: params.outBizNo
+        });
+        return requestJson(gamesHost() + "/bplcommentapi/bpl/score_tree/getSelfByBizKey?" + query.toString());
+      },
+      addScore: function(params) {
+        params = params || {};
+        if (!params.outBizType || !params.outBizNo) {
+          return Promise.reject(new Error("ColorboxAI.score.addScore requires outBizType and outBizNo"));
+        }
+        if (params.score == null) {
+          return Promise.reject(new Error("ColorboxAI.score.addScore requires score"));
+        }
+        const payload = {
+          outBizKey: {
+            outBizType: params.outBizType,
+            outBizNo: params.outBizNo
+          },
+          score: Number(params.score),
+          source: params.source || ""
+        };
+        return requestJson(gamesHost() + "/bplcommentapi/bpl/score/save", {
+          method: "POST",
+          body: payload
+        });
+      },
+      listByBizKeys: function(params) {
+        var _a, _b;
+        params = params || {};
+        if (!params.bizKeys || !Array.isArray(params.bizKeys) || params.bizKeys.length === 0) {
+          return Promise.reject(new Error("ColorboxAI.score.listByBizKeys requires non-empty bizKeys array"));
+        }
+        const payload = {
+          bizKeys: params.bizKeys,
+          querySubItemLimit: (_a = params.querySubItemLimit) != null ? _a : 1,
+          queryHasLight: (_b = params.queryHasLight) != null ? _b : false
+        };
+        return requestJson(gamesHost() + "/bplcommentapi/bpl/score_tree/listByBizKeys", {
+          method: "POST",
+          body: payload
+        });
+      }
+    };
+  }
+  window.createColorboxScoreApi = createColorboxScoreApi;
+})();
+
+  "use strict";
+(() => {
+  // src/standalone/transport.ts
+  function resolveProjectId() {
+    try {
+      if (window.ColorboxAI && window.ColorboxAI.project && window.ColorboxAI.project.id) {
+        return String(window.ColorboxAI.project.id);
+      }
+    } catch (error) {
+    }
+    return "default";
+  }
+  function postMessageToParent(type, payload, projectIdOverride) {
+    if (!window.parent || window.parent === window) {
+      return;
+    }
+    const projectId = projectIdOverride || resolveProjectId();
+    window.parent.postMessage({
+      protocol: "colorbox-ai-bridge",
+      version: 1,
+      direction: "frame-to-host",
+      projectId,
+      type,
+      payload,
+      timestamp: Date.now()
+    }, "*");
+  }
+
+  // src/standalone/storage-core.ts
+  function createColorboxStorageApi(options) {
+    options = options || {};
+    const MAX_STORAGE_BYTES = 200 * 1024;
+    const BRIDGE_TIMEOUT = 3e3;
+    const pendingBridgeCallbacks = {};
+    const hupuJsBridgeCallbacks = {};
+    let hupuJsBridgePreviousBridge = null;
+    let hupuJsBridgePreviousHandle = null;
+    let hupuJsBridgeChannelReady = false;
+    let hupuJsBridgeIsPatched = false;
+    let hupuJsBridgeTask = null;
+    let bridgeMessageListenerReady = false;
+    function logError(message, error) {
+      try {
+        console.error("[ColorboxAI.Storage] " + message, error || "");
+      } catch (innerError) {
+      }
+    }
+    function logInfo(message, detail) {
+      try {
+        console.log("[ColorboxAI.Storage] " + message, detail || {});
+      } catch (innerError) {
+      }
+    }
+    function buildSetValueLogDetail(data, args) {
+      const values = data || {};
+      const keyValues = Object.keys(values).map(function(key) {
+        return {
+          key,
+          value: values[key]
+        };
+      });
+      return {
+        keyValues,
+        payload: values,
+        callbackArgs: args || []
+      };
+    }
+    function resolveProjectId2() {
+      if (options.projectId) return String(options.projectId);
+      try {
+        if (window.ColorboxAI && window.ColorboxAI.project && window.ColorboxAI.project.id) {
+          return String(window.ColorboxAI.project.id);
+        }
+      } catch (error) {
+      }
+      return "default";
+    }
+    function resolveStorageScope() {
+      const projectId = resolveProjectId2();
+      if (projectId.indexOf("project-ai-") === 0) {
+        return projectId;
+      }
+      return "project-ai-" + projectId;
+    }
+    function normalizeStorageKey(key) {
+      const nextKey = String(key == null ? "" : key).trim();
+      if (!nextKey) {
+        throw new Error("ColorboxAI.storage key is required");
+      }
+      return nextKey;
+    }
+    function resolveScopedKey(key) {
+      return resolveStorageScope() + "-" + normalizeStorageKey(key);
+    }
+    function getScopedPrefix() {
+      return resolveStorageScope() + "-";
+    }
+    function safeB64Encode(str) {
+      try {
+        const base64 = window.btoa(unescape(encodeURIComponent(str)));
+        return base64;
+      } catch (error) {
+        logError("safeB64Encode failed.", error);
+        throw error;
+      }
+    }
+    function safeB64Decode(str) {
+      try {
+        const decoded = decodeURIComponent(escape(window.atob(str)));
+        return decoded;
+      } catch (error) {
+        logError("safeB64Decode failed.", error);
+        throw error;
+      }
+    }
+    function getByteSize(value) {
+      try {
+        if (window.TextEncoder) {
+          return new TextEncoder().encode(value).length;
+        }
+      } catch (error) {
+      }
+      try {
+        return unescape(encodeURIComponent(value)).length;
+      } catch (error) {
+        return String(value || "").length;
+      }
+    }
+    function stringifyStorageData(data) {
+      try {
+        return JSON.stringify(data || {});
+      } catch (error) {
+        logError("Failed to stringify storage data. Circular structures are not supported.", error);
+        throw error;
+      }
+    }
+    function assertStorageSize(json) {
+      const size = getByteSize(json);
+      if (size > MAX_STORAGE_BYTES) {
+        const error = new Error("\u5199\u5165\u5B58\u50A8\u6570\u636E\u8D85\u8FC7 200KB\uFF0C\u672C\u6B21\u5199\u5165\u5DF2\u53D6\u6D88");
+        logError("\u5199\u5165\u5B58\u50A8\u6570\u636E\u8D85\u8FC7 200KB\uFF0C\u672C\u6B21\u5199\u5165\u5DF2\u53D6\u6D88\u3002\u5F53\u524D\u5927\u5C0F\uFF1A" + size + " bytes\uFF0C\u9650\u5236\uFF1A" + MAX_STORAGE_BYTES + " bytes\u3002", error);
+        throw error;
+      }
+      return size;
+    }
+    function isRecord(value) {
+      return !!value && typeof value === "object" && !Array.isArray(value);
+    }
+    function serializeStorageValue(value) {
+      if (value == null) {
+        logInfo("[ColorboxAI.Storage.Serialize] value is null/undefined");
+        return "";
+      }
+      const text = typeof value === "string" ? value : JSON.stringify(value);
+      try {
+        const encoded = safeB64Encode(text);
+        const result = "__b64__:" + encoded;
+        logInfo("[ColorboxAI.Storage.Serialize] successfully serialized with Base64", {
+          originalType: typeof value,
+          originalLength: text.length,
+          encodedLength: result.length
+        });
+        return result;
+      } catch (error) {
+        logInfo("[ColorboxAI.Storage.Serialize] Base64 serialization failed, falling back to raw text", {
+          originalType: typeof value,
+          text
+        });
+        return text;
+      }
+    }
+    function parseStorageValue(value, scopedKey) {
+      if (value == null) {
+        logInfo("[ColorboxAI.Storage.Parse] input is null/undefined");
+        return null;
+      }
+      if (typeof value !== "string") {
+        logInfo("[ColorboxAI.Storage.Parse] input is not a string, returning directly", { type: typeof value });
+        return value;
+      }
+      let text = value;
+      let isB64 = false;
+      if (text.indexOf("__b64__:") === 0) {
+        try {
+          text = safeB64Decode(text.slice(8));
+          isB64 = true;
+        } catch (e) {
+          logError("[ColorboxAI.Storage.Parse] Base64 decode failed for text starting with __b64__", e);
+        }
+      }
+      if (text.charAt(0) !== "{" && text.charAt(0) !== "[") {
+        logInfo("[ColorboxAI.Storage.Parse] not a JSON object/array, returning as string", {
+          isB64,
+          preview: text.slice(0, 100)
+        });
+        return text;
+      }
+      try {
+        const parsed = JSON.parse(text);
+        if (parsed && typeof parsed === "object") {
+          if (!Array.isArray(parsed) && scopedKey && parsed[scopedKey] != null) {
+            logInfo("[ColorboxAI.Storage.Parse] detected double-wrapped JSON key", {
+              scopedKey,
+              isB64
+            });
+            return parseStorageValue(parsed[scopedKey], scopedKey);
+          }
+        }
+        logInfo("[ColorboxAI.Storage.Parse] successfully parsed JSON (returning raw string for compatibility)", {
+          isB64,
+          type: Array.isArray(parsed) ? "array" : "object"
+        });
+        return text;
+      } catch (parseError) {
+        if (text.charAt(0) === "{" && text.charAt(text.length - 1) === "}") {
+          const escapedKey = (scopedKey || "").replace(/[-\/\\^$*+?.()|[\]{}]/g, "\\$&");
+          const pattern = new RegExp('^\\{\\s*"' + (escapedKey || '[^"]+') + '"\\s*:\\s*"(.*)"\\s*\\}\\s*$');
+          const match = text.match(pattern);
+          if (match) {
+            let rawValue = match[1];
+            rawValue = rawValue.replace(/\\"/g, '"').replace(/\\\\/g, "\\");
+            logInfo("[ColorboxAI.Storage.Parse] recovered mangled JSON using regex recovery", {
+              scopedKey,
+              isB64
+            });
+            return parseStorageValue(rawValue, scopedKey);
+          }
+        }
+        logInfo("[ColorboxAI.Storage.Parse] JSON parse failed, returning raw string", {
+          isB64,
+          preview: text.slice(0, 100)
+        });
+        return text;
+      }
+    }
+    function readLocalStorageValue(scopedKey) {
+      try {
+        if (!window.localStorage) return null;
+        return parseStorageValue(window.localStorage.getItem(scopedKey), scopedKey);
+      } catch (error) {
+        logError("Failed to read localStorage.", error);
+        return null;
+      }
+    }
+    function writeLocalStorageValue(scopedKey, value) {
+      const serialized = serializeStorageValue(value);
+      try {
+        if (!window.localStorage) return false;
+        window.localStorage.setItem(scopedKey, serialized);
+        return true;
+      } catch (error) {
+        logError("Failed to write localStorage.", error);
+        return false;
+      }
+    }
+    function readLocalStorageAll() {
+      const result = {};
+      const prefix = getScopedPrefix();
+      try {
+        if (!window.localStorage) return result;
+        for (let i = 0; i < window.localStorage.length; i += 1) {
+          const scopedKey = window.localStorage.key(i);
+          if (!scopedKey || scopedKey.indexOf(prefix) !== 0) continue;
+          result[scopedKey.slice(prefix.length)] = parseStorageValue(window.localStorage.getItem(scopedKey), scopedKey);
+        }
+      } catch (error) {
+        logError("Failed to read all localStorage data.", error);
+      }
+      return result;
+    }
+    function isHupuApp() {
+      try {
+        return /kanqiu/i.test(navigator.userAgent || "");
+      } catch (error) {
+        return false;
+      }
+    }
+    function hasDirectNativeBridge() {
+      try {
+        return !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ClientBridge || window.androidBridge && window.androidBridge.callNativeAsync);
+      } catch (error) {
+        return false;
+      }
+    }
+    function hasParentShellBridge() {
+      try {
+        if (!window.parent || window.parent === window) return false;
+        return Number(window.parent.__colorbox_ai_shell_bridge_version__ || 0) >= 2;
+      } catch (error) {
+        return false;
+      }
+    }
+    function getParentShellBridgeVersion() {
+      try {
+        if (!window.parent || window.parent === window) return 0;
+        return Number(window.parent.__colorbox_ai_shell_bridge_version__ || 0);
+      } catch (error) {
+        return 0;
+      }
+    }
+    function shouldUseBridge() {
+      return isHupuApp() || hasDirectNativeBridge();
+    }
+    function createCallbackName(type) {
+      return "_colorbox_ai_storage_" + type + "_" + Date.now() + "_" + Math.floor(Math.random() * 1e6) + "_";
+    }
+    function createHupuJsBridgeCallbackName(type) {
+      return "_hupu_bridge_" + type + "_" + Date.now() + Math.floor(Math.random() * 1e3) + "_";
+    }
+    function parseBridgeResult(value) {
+      if (typeof value !== "string") return value;
+      try {
+        return JSON.parse(value);
+      } catch (error) {
+        return value;
+      }
+    }
+    function handleHupuJsBridgeCallback(method, result, isFromEvent) {
+      const record = hupuJsBridgeCallbacks[method];
+      if (record) {
+        window.clearTimeout(record.timer);
+        delete hupuJsBridgeCallbacks[record.successcb];
+        delete hupuJsBridgeCallbacks[record.errorcb];
+        delete hupuJsBridgeCallbacks[record.method];
+        try {
+          delete window[record.successcb];
+          delete window[record.errorcb];
+        } catch (error) {
+        }
+        const parsedResult = parseBridgeResult(result);
+        if (record.method === "hupu.common.setValue") {
+          if (method === record.errorcb) {
+            logError("hupu.common.setValue \u5931\u8D25\u56DE\u8C03", buildSetValueLogDetail(record.data, [parsedResult]));
+          } else {
+            logInfo("hupu.common.setValue \u6210\u529F\u56DE\u8C03", buildSetValueLogDetail(record.data, [parsedResult]));
+          }
+        }
+        if (method === record.errorcb) {
+          record.reject(parsedResult || new Error("Bridge call failed"));
+          return;
+        }
+        record.resolve(parsedResult);
+        return;
+      }
+      if (typeof method === "string" && typeof window[method] === "function") {
+        try {
+          window[method](parseBridgeResult(result));
+          return;
+        } catch (error) {
+        }
+      }
+      if (!isFromEvent && !hupuJsBridgeIsPatched && hupuJsBridgePreviousHandle) {
+        try {
+          hupuJsBridgePreviousHandle.apply(hupuJsBridgePreviousBridge, [method, result]);
+        } catch (error) {
+        }
+      }
+    }
+    function ensureHupuJsBridgeChannel() {
+      if (hupuJsBridgeChannelReady) return;
+      hupuJsBridgeChannelReady = true;
+      hupuJsBridgePreviousBridge = window.HupuBridge || {};
+      hupuJsBridgePreviousHandle = typeof hupuJsBridgePreviousBridge._handle_ === "function" ? hupuJsBridgePreviousBridge._handle_ : null;
+      if (hupuJsBridgePreviousBridge && typeof hupuJsBridgePreviousBridge.bridgePatch === "function") {
+        hupuJsBridgeIsPatched = true;
+        hupuJsBridgePreviousBridge.bridgePatch({ _handle_: handleHupuJsBridgeCallback });
+      } else {
+        if (!window.HupuBridge) {
+          window.HupuBridge = {};
+        }
+        window.HupuBridge._handle_ = handleHupuJsBridgeCallback;
+      }
+      window.addEventListener("onHupuJSBridgeHandle", function(event) {
+        const detail = event && event.detail || {};
+        handleHupuJsBridgeCallback(detail.method, detail.result, true);
+      });
+    }
+    function createHupuJsBridgeTask() {
+      if (hupuJsBridgeTask) return hupuJsBridgeTask;
+      ensureHupuJsBridgeChannel();
+      function send(method, data, options2) {
+        return new Promise(function(resolve, reject) {
+          const fireAndForget = !!(options2 && options2.fireAndForget);
+          const successcb = createHupuJsBridgeCallbackName("success");
+          const errorcb = createHupuJsBridgeCallbackName("error");
+          const record = {
+            successcb,
+            errorcb,
+            method,
+            data: data || {},
+            resolve,
+            reject,
+            timer: window.setTimeout(function() {
+              delete hupuJsBridgeCallbacks[successcb];
+              delete hupuJsBridgeCallbacks[errorcb];
+              delete hupuJsBridgeCallbacks[method];
+              try {
+                delete window[successcb];
+                delete window[errorcb];
+              } catch (error) {
+              }
+              if (fireAndForget) return;
+              reject(new Error("Bridge call timeout"));
+            }, BRIDGE_TIMEOUT)
+          };
+          hupuJsBridgeCallbacks[successcb] = record;
+          hupuJsBridgeCallbacks[errorcb] = record;
+          hupuJsBridgeCallbacks[method] = record;
+          window[successcb] = function() {
+            handleHupuJsBridgeCallback(successcb, arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
+          };
+          window[errorcb] = function() {
+            handleHupuJsBridgeCallback(errorcb, arguments.length > 1 ? Array.prototype.slice.call(arguments) : arguments[0]);
+          };
+          try {
+            const ua = navigator.userAgent || "";
+            const isIOS = /\(i[^;]+;( U;)? CPU.+Mac OS X/i.test(ua);
+            if (isIOS && window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ClientBridge) {
+              window.webkit.messageHandlers.ClientBridge.postMessage({
+                method,
+                data: data || {},
+                successcb,
+                errorcb
+              });
+              if (fireAndForget) {
+                logInfo(method + " \u5DF2\u53D1\u8D77\uFF0C\u672A\u7B49\u5F85\u5BA2\u6237\u7AEF\u56DE\u8C03", data || {});
+                resolve({ code: 200, fireAndForget: true });
+              }
+              return;
+            }
+            if (window.androidBridge && window.androidBridge.callNativeAsync) {
+              window.androidBridge.callNativeAsync(method, JSON.stringify({ code: 200, data: data || {} }), successcb);
+              if (fireAndForget) {
+                logInfo(method + " \u5DF2\u53D1\u8D77\uFF0C\u672A\u7B49\u5F85\u5BA2\u6237\u7AEF\u56DE\u8C03", data || {});
+                resolve({ code: 200, fireAndForget: true });
+              }
+              return;
+            }
+            reject(new Error("Native bridge is not available"));
+          } catch (error) {
+            reject(error);
+          }
+        });
+      }
+      hupuJsBridgeTask = {
+        storage: {
+          setValue: function(params, options2) {
+            return send("hupu.common.setValue", params, options2);
+          },
+          getValue: function(params, options2) {
+            return send("hupu.common.getValue", params, options2);
+          }
+        }
+      };
+      return hupuJsBridgeTask;
+    }
+    function cleanupBridgeCallback(record) {
+      if (!record) return;
+      window.clearTimeout(record.timer);
+      delete pendingBridgeCallbacks[record.successcb];
+      delete pendingBridgeCallbacks[record.errorcb];
+      try {
+        delete window[record.successcb];
+        delete window[record.errorcb];
+      } catch (error) {
+      }
+    }
+    function ensureBridgeMessageListener() {
+      if (bridgeMessageListenerReady) return;
+      bridgeMessageListenerReady = true;
+      window.addEventListener("message", function(event) {
+        const data = event && event.data;
+        if (!data || data.protocol !== "colorbox-ai-bridge" || data.direction !== "host-to-frame") return;
+        if (data.type !== "bridge.callback") return;
+        const payload = data.payload || {};
+        const callbackName = payload.callbackName;
+        const record = pendingBridgeCallbacks[callbackName];
+        logInfo("iframe \u6536\u5230 bridge.callback", {
+          callbackName,
+          hasRecord: !!record,
+          args: payload.args || []
+        });
+        if (!record) return;
+        cleanupBridgeCallback(record);
+        if (record.method === "hupu.common.setValue") {
+          const detail = buildSetValueLogDetail(record.data, payload.args);
+          if (callbackName === record.errorcb) {
+            logError("hupu.common.setValue \u5931\u8D25\u56DE\u8C03", detail);
+          } else {
+            logInfo("hupu.common.setValue \u6210\u529F\u56DE\u8C03", detail);
+          }
+        }
+        if (callbackName === record.errorcb) {
+          record.reject(payload.args && payload.args[0] || new Error("Bridge call failed"));
+          return;
+        }
+        record.resolve(payload.args || []);
+      });
+    }
+    function callFrameBridge(method, data, options2) {
+      return new Promise(function(resolve, reject) {
+        if (!window.parent || window.parent === window) {
+          reject(new Error("Parent shell is not available"));
+          return;
+        }
+        ensureBridgeMessageListener();
+        const fireAndForget = !!(options2 && options2.fireAndForget);
+        const successcb = createCallbackName("suc");
+        const errorcb = createCallbackName("err");
+        const record = {
+          successcb,
+          errorcb,
+          method,
+          data: data || {},
+          resolve,
+          reject,
+          timer: window.setTimeout(function() {
+            cleanupBridgeCallback(record);
+            if (fireAndForget) return;
+            reject(new Error("Bridge call timeout"));
+          }, BRIDGE_TIMEOUT)
+        };
+        pendingBridgeCallbacks[successcb] = record;
+        pendingBridgeCallbacks[errorcb] = record;
+        if (method === "hupu.common.getValue") {
+          logInfo("hupu.common.getValue iframe \u53D1\u8D77 bridge.call", {
+            data: data || {},
+            successcb,
+            errorcb,
+            parentShellBridgeVersion: getParentShellBridgeVersion()
+          });
+        }
+        postMessageToParent("bridge.call", {
+          payload: {
+            method,
+            data: data || {},
+            successcb,
+            errorcb
+          }
+        }, resolveProjectId2());
+        if (fireAndForget) {
+          logInfo(method + " \u5DF2\u53D1\u8D77\uFF0C\u672A\u7B49\u5F85\u5BA2\u6237\u7AEF\u56DE\u8C03", data || {});
+          resolve([{ code: 200, fireAndForget: true }]);
+        }
+      });
+    }
+    function callDirectNativeBridge(method, data, options2) {
+      const Task = createHupuJsBridgeTask();
+      if (method === "hupu.common.setValue") {
+        return Task.storage.setValue(data || {}, options2);
+      }
+      if (method === "hupu.common.getValue") {
+        return Task.storage.getValue(data || {}, options2);
+      }
+      return Promise.reject(new Error("Unsupported storage bridge method: " + method));
+    }
+    function callClientBridge(method, data, options2) {
+      if (!shouldUseBridge()) {
+        return Promise.resolve(null);
+      }
+      const hasParent = !!(window.parent && window.parent !== window);
+      let caller = callDirectNativeBridge;
+      if (hasParent) {
+        if (hasParentShellBridge()) {
+          caller = callFrameBridge;
+        } else if (hasDirectNativeBridge()) {
+          logInfo(method + " \u7236\u7EA7 AI shell \u4E0D\u53EF\u7528\uFF0C\u6539\u7528 iframe \u539F\u751F bridge", {
+            source: "bridge",
+            data: data || {}
+          });
+        } else {
+          logInfo(method + " \u7236\u7EA7 AI shell \u4E0D\u53EF\u7528\u4E14 iframe \u539F\u751F bridge \u4E0D\u53EF\u7528\uFF0C\u56DE\u9000 localStorage", {
+            source: "bridge",
+            data: data || {}
+          });
+          return Promise.resolve(null);
+        }
+      }
+      return caller(method, data, options2).catch(function(error) {
+        if (options2 && options2.fallbackToLocalStorage) {
+          logInfo(method + " bridge \u8BFB\u53D6\u5931\u8D25\uFF0C\u56DE\u9000 localStorage", {
+            ok: false,
+            source: "bridge",
+            message: error && error.message || String(error)
+          });
+        } else {
+          logError("Bridge call failed: " + method, error);
+        }
+        return null;
+      });
+    }
+    function pickBridgeValue(raw, key) {
+      const first = Array.isArray(raw) ? raw[0] : raw;
+      const candidates = [first];
+      if (first && typeof first === "object") {
+        candidates.push(first.data);
+        if (first.data && typeof first.data === "object") {
+          candidates.push(first.data.data);
+        }
+      }
+      for (let i = 0; i < candidates.length; i += 1) {
+        const item = candidates[i];
+        if (typeof item === "string") return item;
+        if (item && typeof item === "object") {
+          if (item[key] != null) return item[key];
+          if (item.value != null) return item.value;
+          if (item.key != null) return item.key;
+        }
+      }
+      return null;
+    }
+    function safeStringify(val) {
+      try {
+        return JSON.stringify(val);
+      } catch (e) {
+        return String(val);
+      }
+    }
+    function readBridgeValue(scopedKey) {
+      logInfo("[ColorboxAI.Storage.readBridgeValue] querying bridge, key: " + scopedKey, { scopedKey });
+      return callClientBridge("hupu.common.getValue", { keys: [scopedKey] }, { fallbackToLocalStorage: true }).then(function(raw) {
+        logInfo("[ColorboxAI.Storage.readBridgeValue] raw response received from HupuBridge. raw: " + safeStringify(raw), {
+          scopedKey,
+          rawResponse: raw
+        });
+        const bridgeValue = pickBridgeValue(raw, scopedKey);
+        logInfo("[ColorboxAI.Storage.readBridgeValue] picked value from response. value: " + safeStringify(bridgeValue), {
+          scopedKey,
+          pickedValuePreview: typeof bridgeValue === "string" ? bridgeValue.slice(0, 150) : bridgeValue
+        });
+        if (bridgeValue != null) {
+          writeLocalStorageValue(scopedKey, bridgeValue);
+          const parsed = parseStorageValue(bridgeValue, scopedKey);
+          logInfo("hupu.common.getValue bridge \u8BFB\u53D6\u6210\u529F. result: " + safeStringify(parsed), {
+            ok: true,
+            source: "bridge",
+            scopedKey,
+            result: parsed
+          });
+        } else if (raw != null) {
+          logInfo("hupu.common.getValue bridge \u65E0\u6570\u636E\uFF0C\u56DE\u9000 localStorage", {
+            ok: false,
+            source: "bridge",
+            scopedKey,
+            result: raw
+          });
+        }
+        return parseStorageValue(bridgeValue, scopedKey);
+      });
+    }
+    function writeBridgeValues(payload) {
+      if (!shouldUseBridge()) {
+        logInfo("hupu.common.setValue bridge \u5199\u5165\u8DF3\u8FC7", {
+          ok: false,
+          source: "bridge",
+          reason: "bridge_unavailable",
+          payload
+        });
+        return Promise.resolve(null);
+      }
+      return callClientBridge("hupu.common.setValue", payload, { fireAndForget: true }).then(function(result) {
+        logInfo("hupu.common.setValue bridge \u5199\u5165\u5DF2\u53D1\u8D77", {
+          ok: result !== null,
+          source: "bridge",
+          payload,
+          result
+        });
+        return result;
+      });
+    }
+    function setValue(values) {
+      return Promise.resolve().then(function() {
+        if (!isRecord(values)) {
+          throw new Error('ColorboxAI.storage.setValue requires an object like { key: "value" }');
+        }
+        const scopedEntries = [];
+        const bridgePayload = {};
+        Object.keys(values).forEach(function(key) {
+          const scopedKey = resolveScopedKey(key);
+          const serialized = serializeStorageValue(values[key]);
+          scopedEntries.push({
+            key,
+            scopedKey,
+            value: values[key],
+            serialized
+          });
+          bridgePayload[scopedKey] = serialized;
+        });
+        const size = assertStorageSize(stringifyStorageData(bridgePayload));
+        return writeBridgeValues(bridgePayload).then(function(bridgeResult) {
+          const localStorageResults = scopedEntries.map(function(entry) {
+            return {
+              key: entry.scopedKey,
+              ok: writeLocalStorageValue(entry.scopedKey, entry.value)
+            };
+          });
+          logInfo("localStorage \u5199\u5165\u5B8C\u6210", {
+            ok: localStorageResults.every(function(item) {
+              return item.ok;
+            }),
+            source: "localStorage",
+            results: localStorageResults
+          });
+          const result = {
+            ok: true,
+            key: scopedEntries[0] && scopedEntries[0].scopedKey || "",
+            keys: scopedEntries.map(function(entry) {
+              return entry.scopedKey;
+            }),
+            size,
+            bridgeSynced: bridgeResult !== null
+          };
+          logInfo("\u5199\u5165\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId2(),
+            input: values,
+            payload: bridgePayload,
+            result
+          });
+          return result;
+        });
+      }).catch(function(error) {
+        logError("\u5199\u5165\u5B58\u50A8\u6570\u636E\u5931\u8D25", error);
+        return Promise.reject(error);
+      });
+    }
+    function getValue(key) {
+      const hasKey = key != null && key !== "";
+      const storageKey = hasKey ? String(key) : "";
+      return Promise.resolve().then(function() {
+        if (!hasKey) {
+          const allValues = readLocalStorageAll();
+          logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId2(),
+            key: "",
+            scopedKey: "",
+            source: "localStorage",
+            result: allValues
+          });
+          return allValues;
+        }
+        const scopedKey = resolveScopedKey(storageKey);
+        if (!shouldUseBridge()) {
+          const localOnlyValue = readLocalStorageValue(scopedKey);
+          logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId2(),
+            key: storageKey,
+            scopedKey,
+            source: "localStorage",
+            result: localOnlyValue
+          });
+          return localOnlyValue;
+        }
+        return readBridgeValue(scopedKey).then(function(bridgeValue) {
+          if (bridgeValue != null) {
+            logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+              projectId: resolveProjectId2(),
+              key: storageKey,
+              scopedKey,
+              source: "hupu.common.getValue",
+              result: bridgeValue
+            });
+            return bridgeValue;
+          }
+          const localValue = readLocalStorageValue(scopedKey);
+          logInfo("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u6210\u529F", {
+            projectId: resolveProjectId2(),
+            key: storageKey,
+            scopedKey,
+            source: "localStorage",
+            result: localValue
+          });
+          return localValue;
+        });
+      }).catch(function(error) {
+        logError("\u8BFB\u53D6\u5B58\u50A8\u6570\u636E\u5931\u8D25", error);
+        return hasKey ? null : {};
+      });
+    }
+    return {
+      maxBytes: MAX_STORAGE_BYTES,
+      setValue,
+      getValue,
+      set: setValue,
+      get: getValue
+    };
+  }
+  window.createColorboxStorageApi = createColorboxStorageApi;
+})();
+
+  "use strict";
+(() => {
+  // src/standalone/transport.ts
+  function resolveProjectId() {
+    try {
+      if (window.ColorboxAI && window.ColorboxAI.project && window.ColorboxAI.project.id) {
+        return String(window.ColorboxAI.project.id);
+      }
+    } catch (error) {
+    }
+    return "default";
+  }
+  function postMessageToParent(type, payload, projectIdOverride) {
+    if (!window.parent || window.parent === window) {
+      return;
+    }
+    const projectId = projectIdOverride || resolveProjectId();
+    window.parent.postMessage({
+      protocol: "colorbox-ai-bridge",
+      version: 1,
+      direction: "frame-to-host",
+      projectId,
+      type,
+      payload,
+      timestamp: Date.now()
+    }, "*");
+  }
+
+  // src/standalone/request-core.ts
+  function createColorboxRequestApi() {
+    const pendingRequests = {};
+    let isMessageListenerReady = false;
+    function ensureMessageListener() {
+      if (isMessageListenerReady) return;
+      isMessageListenerReady = true;
+      window.addEventListener("message", function(event) {
+        const msg = event && event.data;
+        if (msg && msg.protocol === "colorbox-ai-bridge" && msg.direction === "host-to-frame") {
+          if (msg.type === "http.response") {
+            const payload = msg.payload || {};
+            const requestId = payload.requestId;
+            const response = payload.response || {};
+            const pending = pendingRequests[requestId];
+            if (pending) {
+              delete pendingRequests[requestId];
+              if (response.error) {
+                pending.reject(new Error(response.error));
+              } else {
+                pending.resolve({
+                  statusCode: response.statusCode || 200,
+                  data: response.data,
+                  headers: response.headers || {}
+                });
+              }
+            }
+          }
+        }
+      });
+    }
+    return function request(config) {
+      config = config || {};
+      if (!config.url) {
+        return Promise.reject(new Error("ColorboxAI.request: url parameter is required"));
+      }
+      ensureMessageListener();
+      const requestId = "req_" + Date.now() + "_" + Math.random().toString(36).slice(2, 9);
+      return new Promise(function(resolve, reject) {
+        pendingRequests[requestId] = { resolve, reject };
+        if (window.parent && window.parent !== window) {
+          postMessageToParent("http.request", {
+            requestId,
+            config: {
+              url: config.url,
+              method: config.method || "GET",
+              headers: config.headers || {},
+              data: config.data,
+              timeout: config.timeout
+            }
+          });
+        } else {
+          delete pendingRequests[requestId];
+          reject(new Error("ColorboxAI.request: Parent host shell is not available"));
+        }
+      });
+    };
+  }
+  window.createColorboxRequestApi = createColorboxRequestApi;
+})();
+
+  "use strict";
+(() => {
+  // src/standalone/transport.ts
+  function resolveProjectId() {
+    try {
+      if (window.ColorboxAI && window.ColorboxAI.project && window.ColorboxAI.project.id) {
+        return String(window.ColorboxAI.project.id);
+      }
+    } catch (error) {
+    }
+    return "default";
+  }
+  function postMessageToParent(type, payload, projectIdOverride) {
+    if (!window.parent || window.parent === window) {
+      return;
+    }
+    const projectId = projectIdOverride || resolveProjectId();
+    window.parent.postMessage({
+      protocol: "colorbox-ai-bridge",
+      version: 1,
+      direction: "frame-to-host",
+      projectId,
+      type,
+      payload,
+      timestamp: Date.now()
+    }, "*");
+  }
+
+  // src/standalone/auth-core.ts
+  (function() {
+    let callbackCounter = 0;
+    const pendingCallbacks = {};
+    function isHupuApp() {
+      const ua = navigator.userAgent || "";
+      const hasKanqiu = /kanqiu/i.test(ua);
+      const hasHupuBridge = !!window.HupuBridge;
+      const hasIosBridge = !!(window.webkit && window.webkit.messageHandlers && window.webkit.messageHandlers.ClientBridge);
+      const hasAndroidBridge = !!(window.androidBridge && window.androidBridge.callNativeAsync);
+      return hasKanqiu || hasHupuBridge || hasIosBridge || hasAndroidBridge;
+    }
+    if (typeof window !== "undefined") {
+      window.addEventListener("message", function(event) {
+        const data = event && event.data;
+        if (!data || data.protocol !== "colorbox-ai-bridge" || data.direction !== "host-to-frame") return;
+        if (data.type === "bridge.callback") {
+          const payload = data.payload || {};
+          const callbackName = payload.callbackName;
+          const args = payload.args || [];
+          if (callbackName && pendingCallbacks[callbackName]) {
+            console.log("[ColorboxAI.Auth] Received bridge.callback message from parent shell:", callbackName, JSON.stringify(args));
+            const cb = pendingCallbacks[callbackName];
+            delete pendingCallbacks[callbackName];
+            try {
+              cb.apply(null, args);
+            } catch (e) {
+              console.error("[ColorboxAI.Auth] Callback error:", e);
+            }
+          }
+        }
+      });
+    }
+    function callBridgeAsync(method, data) {
+      return new Promise(function(resolve, reject) {
+        if (!window.parent || window.parent === window) {
+          console.warn("[ColorboxAI.Auth] Cannot call bridge: window.parent is empty or equal to window.");
+          resolve(null);
+          return;
+        }
+        const callbackId = "_colorbox_ai_auth_cb_" + ++callbackCounter + "_" + Date.now() + "_";
+        pendingCallbacks[callbackId] = function(res) {
+          console.log("[ColorboxAI.Auth] Callback invoked for callbackId:", callbackId, "Result:", JSON.stringify(res));
+          resolve(res || null);
+        };
+        setTimeout(function() {
+          if (pendingCallbacks[callbackId]) {
+            console.warn("[ColorboxAI.Auth] Callback timed out for callbackId:", callbackId);
+            delete pendingCallbacks[callbackId];
+            resolve(null);
+          }
+        }, 2e3);
+        try {
+          console.log("[ColorboxAI.Auth] Posting bridge.call message to parent shell:", method, callbackId);
+          postMessageToParent("bridge.call", {
+            platform: "ios",
+            payload: {
+              method,
+              data: data || {},
+              successcb: callbackId,
+              errorcb: callbackId
+            }
+          });
+        } catch (err) {
+          console.error("[ColorboxAI.Auth] postMessage threw error:", err.message || String(err));
+          delete pendingCallbacks[callbackId];
+          reject(err);
+        }
+      });
+    }
+    function getUserInfo() {
+      console.log("[ColorboxAI.Auth] getUserInfo called.");
+      const syncInfo = window.userInfo || window.HupuBridge && window.HupuBridge.nainfo;
+      if (syncInfo && (syncInfo.authToken || syncInfo.token)) {
+        console.log("[ColorboxAI.Auth] Sync check succeeded. Info found:", JSON.stringify(syncInfo));
+        return Promise.resolve(syncInfo);
+      }
+      console.log("[ColorboxAI.Auth] Sync check returned no token. userInfo exists:", !!window.userInfo, "HupuBridge exists:", !!window.HupuBridge);
+      if (isHupuApp()) {
+        console.log("[ColorboxAI.Auth] Detected inside App. Invoking bridgeReady asynchronously...");
+        return callBridgeAsync("bridgeReady", {}).then(function(res) {
+          return res || null;
+        });
+      }
+      console.log("[ColorboxAI.Auth] Not in App environment. Skipping bridgeReady.");
+      return Promise.resolve(null);
+    }
+    function getAuthToken() {
+      return getUserInfo().then(function(info) {
+        if (!info) {
+          console.log("[ColorboxAI.Auth] getAuthToken resolved to empty string (no info)");
+          return "";
+        }
+        const token = info.authToken || info.token || "";
+        console.log("[ColorboxAI.Auth] getAuthToken resolved to token. Length:", token.length);
+        return token;
+      });
+    }
+    window.ColorboxAI = window.ColorboxAI || {};
+    window.ColorboxAI.__auth = {
+      getUserInfo,
+      getAuthToken
+    };
+    window.ColorboxAI.auth = window.ColorboxAI.auth || {
+      getUserInfo: function() {
+        return window.ColorboxAI.__auth.getUserInfo();
+      },
+      getAuthToken: function() {
+        return window.ColorboxAI.__auth.getAuthToken();
+      }
+    };
+  })();
+})();
+
+  window.ColorboxAI.bbs = window.ColorboxAI.bbs || createColorboxBbsApi();
+  
+  window.ColorboxAI.__security = window.ColorboxAI.__security || createColorboxSecurityApi();
+  window.ColorboxAI.security = window.ColorboxAI.security || {
+    checkAudit: function (params) { return window.ColorboxAI.__security.checkAudit(params); }
+  };
+  
+  window.ColorboxAI.__score = window.ColorboxAI.__score || createColorboxScoreApi();
+  window.ColorboxAI.score = window.ColorboxAI.score || {
+    getScore: function (params) { return window.ColorboxAI.__score.getScore(params); },
+    addScore: function (params) { return window.ColorboxAI.__score.addScore(params); },
+    listByBizKeys: function (params) { return window.ColorboxAI.__score.listByBizKeys(params); }
+  };
+  
+  window.ColorboxAI.__storage = window.ColorboxAI.__storage || createColorboxStorageApi();
+  window.ColorboxAI.storage = window.ColorboxAI.storage || {
+    setValue: function (params) { return window.ColorboxAI.__storage.setValue(params); },
+    getValue: function (params) { return window.ColorboxAI.__storage.getValue(params); }
+  };
+  
+  window.ColorboxAI.request = window.ColorboxAI.request || createColorboxRequestApi();
+})();
+"use strict";
+(() => {
+  var __defProp = Object.defineProperty;
+  var __defProps = Object.defineProperties;
+  var __getOwnPropDescs = Object.getOwnPropertyDescriptors;
+  var __getOwnPropNames = Object.getOwnPropertyNames;
+  var __getOwnPropSymbols = Object.getOwnPropertySymbols;
+  var __hasOwnProp = Object.prototype.hasOwnProperty;
+  var __propIsEnum = Object.prototype.propertyIsEnumerable;
+  var __defNormalProp = (obj, key, value) => key in obj ? __defProp(obj, key, { enumerable: true, configurable: true, writable: true, value }) : obj[key] = value;
+  var __spreadValues = (a, b) => {
+    for (var prop in b || (b = {}))
+      if (__hasOwnProp.call(b, prop))
+        __defNormalProp(a, prop, b[prop]);
+    if (__getOwnPropSymbols)
+      for (var prop of __getOwnPropSymbols(b)) {
+        if (__propIsEnum.call(b, prop))
+          __defNormalProp(a, prop, b[prop]);
+      }
+    return a;
+  };
+  var __spreadProps = (a, b) => __defProps(a, __getOwnPropDescs(b));
+  var __require = /* @__PURE__ */ ((x) => typeof require !== "undefined" ? require : typeof Proxy !== "undefined" ? new Proxy(x, {
+    get: (a, b) => (typeof require !== "undefined" ? require : a)[b]
+  }) : x)(function(x) {
+    if (typeof require !== "undefined") return require.apply(this, arguments);
+    throw Error('Dynamic require of "' + x + '" is not supported');
+  });
+  var __commonJS = (cb, mod) => function __require2() {
+    try {
+      return mod || (0, cb[__getOwnPropNames(cb)[0]])((mod = { exports: {} }).exports, mod), mod.exports;
+    } catch (e) {
+      throw mod = 0, e;
+    }
+  };
+  var __async = (__this, __arguments, generator) => {
+    return new Promise((resolve, reject) => {
+      var fulfilled = (value) => {
+        try {
+          step(generator.next(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var rejected = (value) => {
+        try {
+          step(generator.throw(value));
+        } catch (e) {
+          reject(e);
+        }
+      };
+      var step = (x) => x.done ? resolve(x.value) : Promise.resolve(x.value).then(fulfilled, rejected);
+      step((generator = generator.apply(__this, __arguments)).next());
+    });
+  };
+
+  // ../../node_modules/.pnpm/compare-versions@6.1.1/node_modules/compare-versions/lib/umd/index.js
+  var require_umd = __commonJS({
+    "../../node_modules/.pnpm/compare-versions@6.1.1/node_modules/compare-versions/lib/umd/index.js"(exports, module) {
+      (function(global, factory) {
+        typeof exports === "object" && typeof module !== "undefined" ? factory(exports) : typeof define === "function" && define.amd ? define(["exports"], factory) : (global = typeof globalThis !== "undefined" ? globalThis : global || self, factory(global.compareVersions = {}));
+      })(exports, (function(exports2) {
+        "use strict";
+        const semver = /^[v^~<>=]*?(\d+)(?:\.([x*]|\d+)(?:\.([x*]|\d+)(?:\.([x*]|\d+))?(?:-([\da-z\-]+(?:\.[\da-z\-]+)*))?(?:\+[\da-z\-]+(?:\.[\da-z\-]+)*)?)?)?$/i;
+        const validateAndParse = (version) => {
+          if (typeof version !== "string") {
+            throw new TypeError("Invalid argument expected string");
+          }
+          const match = version.match(semver);
+          if (!match) {
+            throw new Error(`Invalid argument not valid semver ('${version}' received)`);
+          }
+          match.shift();
+          return match;
+        };
+        const isWildcard = (s) => s === "*" || s === "x" || s === "X";
+        const tryParse = (v) => {
+          const n = parseInt(v, 10);
+          return isNaN(n) ? v : n;
+        };
+        const forceType = (a, b) => typeof a !== typeof b ? [String(a), String(b)] : [a, b];
+        const compareStrings = (a, b) => {
+          if (isWildcard(a) || isWildcard(b))
+            return 0;
+          const [ap, bp] = forceType(tryParse(a), tryParse(b));
+          if (ap > bp)
+            return 1;
+          if (ap < bp)
+            return -1;
+          return 0;
+        };
+        const compareSegments = (a, b) => {
+          for (let i = 0; i < Math.max(a.length, b.length); i++) {
+            const r = compareStrings(a[i] || "0", b[i] || "0");
+            if (r !== 0)
+              return r;
+          }
+          return 0;
+        };
+        const compareVersions2 = (v1, v2) => {
+          const n1 = validateAndParse(v1);
+          const n2 = validateAndParse(v2);
+          const p1 = n1.pop();
+          const p2 = n2.pop();
+          const r = compareSegments(n1, n2);
+          if (r !== 0)
+            return r;
+          if (p1 && p2) {
+            return compareSegments(p1.split("."), p2.split("."));
+          } else if (p1 || p2) {
+            return p1 ? -1 : 1;
+          }
+          return 0;
+        };
+        const compare = (v1, v2, operator) => {
+          assertValidOperator(operator);
+          const res = compareVersions2(v1, v2);
+          return operatorResMap[operator].includes(res);
+        };
+        const operatorResMap = {
+          ">": [1],
+          ">=": [0, 1],
+          "=": [0],
+          "<=": [-1, 0],
+          "<": [-1],
+          "!=": [-1, 1]
+        };
+        const allowedOperators = Object.keys(operatorResMap);
+        const assertValidOperator = (op) => {
+          if (typeof op !== "string") {
+            throw new TypeError(`Invalid operator type, expected string but got ${typeof op}`);
+          }
+          if (allowedOperators.indexOf(op) === -1) {
+            throw new Error(`Invalid operator, expected one of ${allowedOperators.join("|")}`);
+          }
+        };
+        const satisfies = (version, range) => {
+          range = range.replace(/([><=]+)\s+/g, "$1");
+          if (range.includes("||")) {
+            return range.split("||").some((r4) => satisfies(version, r4));
+          } else if (range.includes(" - ")) {
+            const [a, b] = range.split(" - ", 2);
+            return satisfies(version, `>=${a} <=${b}`);
+          } else if (range.includes(" ")) {
+            return range.trim().replace(/\s{2,}/g, " ").split(" ").every((r4) => satisfies(version, r4));
+          }
+          const m = range.match(/^([<>=~^]+)/);
+          const op = m ? m[1] : "=";
+          if (op !== "^" && op !== "~")
+            return compare(version, range, op);
+          const [v1, v2, v3, , vp] = validateAndParse(version);
+          const [r1, r2, r3, , rp] = validateAndParse(range);
+          const v = [v1, v2, v3];
+          const r = [r1, r2 !== null && r2 !== void 0 ? r2 : "x", r3 !== null && r3 !== void 0 ? r3 : "x"];
+          if (rp) {
+            if (!vp)
+              return false;
+            if (compareSegments(v, r) !== 0)
+              return false;
+            if (compareSegments(vp.split("."), rp.split(".")) === -1)
+              return false;
+          }
+          const nonZero = r.findIndex((v4) => v4 !== "0") + 1;
+          const i = op === "~" ? 2 : nonZero > 1 ? nonZero : 1;
+          if (compareSegments(v.slice(0, i), r.slice(0, i)) !== 0)
+            return false;
+          if (compareSegments(v.slice(i), r.slice(i)) === -1)
+            return false;
+          return true;
+        };
+        const validate = (version) => typeof version === "string" && /^[v\d]/.test(version) && semver.test(version);
+        const validateStrict = (version) => typeof version === "string" && /^(0|[1-9]\d*)\.(0|[1-9]\d*)\.(0|[1-9]\d*)(?:-((?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*)(?:\.(?:0|[1-9]\d*|\d*[a-zA-Z-][0-9a-zA-Z-]*))*))?(?:\+([0-9a-zA-Z-]+(?:\.[0-9a-zA-Z-]+)*))?$/.test(version);
+        exports2.compare = compare;
+        exports2.compareVersions = compareVersions2;
+        exports2.satisfies = satisfies;
+        exports2.validate = validate;
+        exports2.validateStrict = validateStrict;
+      }));
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/max.js
+  var require_max = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/max.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _default = exports.default = "ffffffff-ffff-ffff-ffff-ffffffffffff";
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/nil.js
+  var require_nil = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/nil.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _default = exports.default = "00000000-0000-0000-0000-000000000000";
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/regex.js
+  var require_regex = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/regex.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _default = exports.default = /^(?:[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}|00000000-0000-0000-0000-000000000000|ffffffff-ffff-ffff-ffff-ffffffffffff)$/i;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/validate.js
+  var require_validate = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/validate.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _regex = _interopRequireDefault(require_regex());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function validate(uuid2) {
+        return typeof uuid2 === "string" && _regex.default.test(uuid2);
+      }
+      var _default = exports.default = validate;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/parse.js
+  var require_parse = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/parse.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _validate = _interopRequireDefault(require_validate());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function parse(uuid2) {
+        if (!(0, _validate.default)(uuid2)) {
+          throw TypeError("Invalid UUID");
+        }
+        var v;
+        var arr = new Uint8Array(16);
+        arr[0] = (v = parseInt(uuid2.slice(0, 8), 16)) >>> 24;
+        arr[1] = v >>> 16 & 255;
+        arr[2] = v >>> 8 & 255;
+        arr[3] = v & 255;
+        arr[4] = (v = parseInt(uuid2.slice(9, 13), 16)) >>> 8;
+        arr[5] = v & 255;
+        arr[6] = (v = parseInt(uuid2.slice(14, 18), 16)) >>> 8;
+        arr[7] = v & 255;
+        arr[8] = (v = parseInt(uuid2.slice(19, 23), 16)) >>> 8;
+        arr[9] = v & 255;
+        arr[10] = (v = parseInt(uuid2.slice(24, 36), 16)) / 1099511627776 & 255;
+        arr[11] = v / 4294967296 & 255;
+        arr[12] = v >>> 24 & 255;
+        arr[13] = v >>> 16 & 255;
+        arr[14] = v >>> 8 & 255;
+        arr[15] = v & 255;
+        return arr;
+      }
+      var _default = exports.default = parse;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/stringify.js
+  var require_stringify = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/stringify.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      exports.unsafeStringify = unsafeStringify;
+      var _validate = _interopRequireDefault(require_validate());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      var byteToHex = [];
+      for (i = 0; i < 256; ++i) {
+        byteToHex.push((i + 256).toString(16).slice(1));
+      }
+      var i;
+      function unsafeStringify(arr, offset = 0) {
+        return (byteToHex[arr[offset + 0]] + byteToHex[arr[offset + 1]] + byteToHex[arr[offset + 2]] + byteToHex[arr[offset + 3]] + "-" + byteToHex[arr[offset + 4]] + byteToHex[arr[offset + 5]] + "-" + byteToHex[arr[offset + 6]] + byteToHex[arr[offset + 7]] + "-" + byteToHex[arr[offset + 8]] + byteToHex[arr[offset + 9]] + "-" + byteToHex[arr[offset + 10]] + byteToHex[arr[offset + 11]] + byteToHex[arr[offset + 12]] + byteToHex[arr[offset + 13]] + byteToHex[arr[offset + 14]] + byteToHex[arr[offset + 15]]).toLowerCase();
+      }
+      function stringify(arr, offset = 0) {
+        var uuid2 = unsafeStringify(arr, offset);
+        if (!(0, _validate.default)(uuid2)) {
+          throw TypeError("Stringified UUID is invalid");
+        }
+        return uuid2;
+      }
+      var _default = exports.default = stringify;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/rng.js
+  var require_rng = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/rng.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = rng;
+      var getRandomValues;
+      var rnds8 = new Uint8Array(16);
+      function rng() {
+        if (!getRandomValues) {
+          getRandomValues = typeof crypto !== "undefined" && crypto.getRandomValues && crypto.getRandomValues.bind(crypto);
+          if (!getRandomValues) {
+            throw new Error("crypto.getRandomValues() not supported. See https://github.com/uuidjs/uuid#getrandomvalues-not-supported");
+          }
+        }
+        return getRandomValues(rnds8);
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v1.js
+  var require_v1 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v1.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _rng = _interopRequireDefault(require_rng());
+      var _stringify = require_stringify();
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      var _nodeId;
+      var _clockseq;
+      var _lastMSecs = 0;
+      var _lastNSecs = 0;
+      function v1(options, buf, offset) {
+        var i = buf && offset || 0;
+        var b = buf || new Array(16);
+        options = options || {};
+        var node = options.node;
+        var clockseq = options.clockseq;
+        if (!options._v6) {
+          if (!node) {
+            node = _nodeId;
+          }
+          if (clockseq == null) {
+            clockseq = _clockseq;
+          }
+        }
+        if (node == null || clockseq == null) {
+          var seedBytes = options.random || (options.rng || _rng.default)();
+          if (node == null) {
+            node = [seedBytes[0], seedBytes[1], seedBytes[2], seedBytes[3], seedBytes[4], seedBytes[5]];
+            if (!_nodeId && !options._v6) {
+              node[0] |= 1;
+              _nodeId = node;
+            }
+          }
+          if (clockseq == null) {
+            clockseq = (seedBytes[6] << 8 | seedBytes[7]) & 16383;
+            if (_clockseq === void 0 && !options._v6) {
+              _clockseq = clockseq;
+            }
+          }
+        }
+        var msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+        var nsecs = options.nsecs !== void 0 ? options.nsecs : _lastNSecs + 1;
+        var dt = msecs - _lastMSecs + (nsecs - _lastNSecs) / 1e4;
+        if (dt < 0 && options.clockseq === void 0) {
+          clockseq = clockseq + 1 & 16383;
+        }
+        if ((dt < 0 || msecs > _lastMSecs) && options.nsecs === void 0) {
+          nsecs = 0;
+        }
+        if (nsecs >= 1e4) {
+          throw new Error("uuid.v1(): Can't create more than 10M uuids/sec");
+        }
+        _lastMSecs = msecs;
+        _lastNSecs = nsecs;
+        _clockseq = clockseq;
+        msecs += 122192928e5;
+        var tl = ((msecs & 268435455) * 1e4 + nsecs) % 4294967296;
+        b[i++] = tl >>> 24 & 255;
+        b[i++] = tl >>> 16 & 255;
+        b[i++] = tl >>> 8 & 255;
+        b[i++] = tl & 255;
+        var tmh = msecs / 4294967296 * 1e4 & 268435455;
+        b[i++] = tmh >>> 8 & 255;
+        b[i++] = tmh & 255;
+        b[i++] = tmh >>> 24 & 15 | 16;
+        b[i++] = tmh >>> 16 & 255;
+        b[i++] = clockseq >>> 8 | 128;
+        b[i++] = clockseq & 255;
+        for (var n = 0; n < 6; ++n) {
+          b[i + n] = node[n];
+        }
+        return buf || (0, _stringify.unsafeStringify)(b);
+      }
+      var _default = exports.default = v1;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v1ToV6.js
+  var require_v1ToV6 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v1ToV6.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = v1ToV6;
+      var _parse = _interopRequireDefault(require_parse());
+      var _stringify = require_stringify();
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function v1ToV6(uuid2) {
+        var v1Bytes = typeof uuid2 === "string" ? (0, _parse.default)(uuid2) : uuid2;
+        var v6Bytes = _v1ToV6(v1Bytes);
+        return typeof uuid2 === "string" ? (0, _stringify.unsafeStringify)(v6Bytes) : v6Bytes;
+      }
+      function _v1ToV6(v1Bytes, randomize = false) {
+        return Uint8Array.of((v1Bytes[6] & 15) << 4 | v1Bytes[7] >> 4 & 15, (v1Bytes[7] & 15) << 4 | (v1Bytes[4] & 240) >> 4, (v1Bytes[4] & 15) << 4 | (v1Bytes[5] & 240) >> 4, (v1Bytes[5] & 15) << 4 | (v1Bytes[0] & 240) >> 4, (v1Bytes[0] & 15) << 4 | (v1Bytes[1] & 240) >> 4, (v1Bytes[1] & 15) << 4 | (v1Bytes[2] & 240) >> 4, 96 | v1Bytes[2] & 15, v1Bytes[3], v1Bytes[8], v1Bytes[9], v1Bytes[10], v1Bytes[11], v1Bytes[12], v1Bytes[13], v1Bytes[14], v1Bytes[15]);
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v35.js
+  var require_v35 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v35.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.URL = exports.DNS = void 0;
+      exports.default = v35;
+      var _stringify = require_stringify();
+      var _parse = _interopRequireDefault(require_parse());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function stringToBytes(str) {
+        str = unescape(encodeURIComponent(str));
+        var bytes = [];
+        for (var i = 0; i < str.length; ++i) {
+          bytes.push(str.charCodeAt(i));
+        }
+        return bytes;
+      }
+      var DNS = exports.DNS = "6ba7b810-9dad-11d1-80b4-00c04fd430c8";
+      var URL2 = exports.URL = "6ba7b811-9dad-11d1-80b4-00c04fd430c8";
+      function v35(name, version, hashfunc) {
+        function generateUUID(value, namespace, buf, offset) {
+          var _namespace;
+          if (typeof value === "string") {
+            value = stringToBytes(value);
+          }
+          if (typeof namespace === "string") {
+            namespace = (0, _parse.default)(namespace);
+          }
+          if (((_namespace = namespace) === null || _namespace === void 0 ? void 0 : _namespace.length) !== 16) {
+            throw TypeError("Namespace must be array-like (16 iterable integer values, 0-255)");
+          }
+          var bytes = new Uint8Array(16 + value.length);
+          bytes.set(namespace);
+          bytes.set(value, namespace.length);
+          bytes = hashfunc(bytes);
+          bytes[6] = bytes[6] & 15 | version;
+          bytes[8] = bytes[8] & 63 | 128;
+          if (buf) {
+            offset = offset || 0;
+            for (var i = 0; i < 16; ++i) {
+              buf[offset + i] = bytes[i];
+            }
+            return buf;
+          }
+          return (0, _stringify.unsafeStringify)(bytes);
+        }
+        try {
+          generateUUID.name = name;
+        } catch (err) {
+        }
+        generateUUID.DNS = DNS;
+        generateUUID.URL = URL2;
+        return generateUUID;
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/md5.js
+  var require_md5 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/md5.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      function md5(bytes) {
+        if (typeof bytes === "string") {
+          var msg = unescape(encodeURIComponent(bytes));
+          bytes = new Uint8Array(msg.length);
+          for (var i = 0; i < msg.length; ++i) {
+            bytes[i] = msg.charCodeAt(i);
+          }
+        }
+        return md5ToHexEncodedArray(wordsToMd5(bytesToWords(bytes), bytes.length * 8));
+      }
+      function md5ToHexEncodedArray(input) {
+        var output = [];
+        var length32 = input.length * 32;
+        var hexTab = "0123456789abcdef";
+        for (var i = 0; i < length32; i += 8) {
+          var x = input[i >> 5] >>> i % 32 & 255;
+          var hex = parseInt(hexTab.charAt(x >>> 4 & 15) + hexTab.charAt(x & 15), 16);
+          output.push(hex);
+        }
+        return output;
+      }
+      function getOutputLength(inputLength8) {
+        return (inputLength8 + 64 >>> 9 << 4) + 14 + 1;
+      }
+      function wordsToMd5(x, len) {
+        x[len >> 5] |= 128 << len % 32;
+        x[getOutputLength(len) - 1] = len;
+        var a = 1732584193;
+        var b = -271733879;
+        var c = -1732584194;
+        var d = 271733878;
+        for (var i = 0; i < x.length; i += 16) {
+          var olda = a;
+          var oldb = b;
+          var oldc = c;
+          var oldd = d;
+          a = md5ff(a, b, c, d, x[i], 7, -680876936);
+          d = md5ff(d, a, b, c, x[i + 1], 12, -389564586);
+          c = md5ff(c, d, a, b, x[i + 2], 17, 606105819);
+          b = md5ff(b, c, d, a, x[i + 3], 22, -1044525330);
+          a = md5ff(a, b, c, d, x[i + 4], 7, -176418897);
+          d = md5ff(d, a, b, c, x[i + 5], 12, 1200080426);
+          c = md5ff(c, d, a, b, x[i + 6], 17, -1473231341);
+          b = md5ff(b, c, d, a, x[i + 7], 22, -45705983);
+          a = md5ff(a, b, c, d, x[i + 8], 7, 1770035416);
+          d = md5ff(d, a, b, c, x[i + 9], 12, -1958414417);
+          c = md5ff(c, d, a, b, x[i + 10], 17, -42063);
+          b = md5ff(b, c, d, a, x[i + 11], 22, -1990404162);
+          a = md5ff(a, b, c, d, x[i + 12], 7, 1804603682);
+          d = md5ff(d, a, b, c, x[i + 13], 12, -40341101);
+          c = md5ff(c, d, a, b, x[i + 14], 17, -1502002290);
+          b = md5ff(b, c, d, a, x[i + 15], 22, 1236535329);
+          a = md5gg(a, b, c, d, x[i + 1], 5, -165796510);
+          d = md5gg(d, a, b, c, x[i + 6], 9, -1069501632);
+          c = md5gg(c, d, a, b, x[i + 11], 14, 643717713);
+          b = md5gg(b, c, d, a, x[i], 20, -373897302);
+          a = md5gg(a, b, c, d, x[i + 5], 5, -701558691);
+          d = md5gg(d, a, b, c, x[i + 10], 9, 38016083);
+          c = md5gg(c, d, a, b, x[i + 15], 14, -660478335);
+          b = md5gg(b, c, d, a, x[i + 4], 20, -405537848);
+          a = md5gg(a, b, c, d, x[i + 9], 5, 568446438);
+          d = md5gg(d, a, b, c, x[i + 14], 9, -1019803690);
+          c = md5gg(c, d, a, b, x[i + 3], 14, -187363961);
+          b = md5gg(b, c, d, a, x[i + 8], 20, 1163531501);
+          a = md5gg(a, b, c, d, x[i + 13], 5, -1444681467);
+          d = md5gg(d, a, b, c, x[i + 2], 9, -51403784);
+          c = md5gg(c, d, a, b, x[i + 7], 14, 1735328473);
+          b = md5gg(b, c, d, a, x[i + 12], 20, -1926607734);
+          a = md5hh(a, b, c, d, x[i + 5], 4, -378558);
+          d = md5hh(d, a, b, c, x[i + 8], 11, -2022574463);
+          c = md5hh(c, d, a, b, x[i + 11], 16, 1839030562);
+          b = md5hh(b, c, d, a, x[i + 14], 23, -35309556);
+          a = md5hh(a, b, c, d, x[i + 1], 4, -1530992060);
+          d = md5hh(d, a, b, c, x[i + 4], 11, 1272893353);
+          c = md5hh(c, d, a, b, x[i + 7], 16, -155497632);
+          b = md5hh(b, c, d, a, x[i + 10], 23, -1094730640);
+          a = md5hh(a, b, c, d, x[i + 13], 4, 681279174);
+          d = md5hh(d, a, b, c, x[i], 11, -358537222);
+          c = md5hh(c, d, a, b, x[i + 3], 16, -722521979);
+          b = md5hh(b, c, d, a, x[i + 6], 23, 76029189);
+          a = md5hh(a, b, c, d, x[i + 9], 4, -640364487);
+          d = md5hh(d, a, b, c, x[i + 12], 11, -421815835);
+          c = md5hh(c, d, a, b, x[i + 15], 16, 530742520);
+          b = md5hh(b, c, d, a, x[i + 2], 23, -995338651);
+          a = md5ii(a, b, c, d, x[i], 6, -198630844);
+          d = md5ii(d, a, b, c, x[i + 7], 10, 1126891415);
+          c = md5ii(c, d, a, b, x[i + 14], 15, -1416354905);
+          b = md5ii(b, c, d, a, x[i + 5], 21, -57434055);
+          a = md5ii(a, b, c, d, x[i + 12], 6, 1700485571);
+          d = md5ii(d, a, b, c, x[i + 3], 10, -1894986606);
+          c = md5ii(c, d, a, b, x[i + 10], 15, -1051523);
+          b = md5ii(b, c, d, a, x[i + 1], 21, -2054922799);
+          a = md5ii(a, b, c, d, x[i + 8], 6, 1873313359);
+          d = md5ii(d, a, b, c, x[i + 15], 10, -30611744);
+          c = md5ii(c, d, a, b, x[i + 6], 15, -1560198380);
+          b = md5ii(b, c, d, a, x[i + 13], 21, 1309151649);
+          a = md5ii(a, b, c, d, x[i + 4], 6, -145523070);
+          d = md5ii(d, a, b, c, x[i + 11], 10, -1120210379);
+          c = md5ii(c, d, a, b, x[i + 2], 15, 718787259);
+          b = md5ii(b, c, d, a, x[i + 9], 21, -343485551);
+          a = safeAdd(a, olda);
+          b = safeAdd(b, oldb);
+          c = safeAdd(c, oldc);
+          d = safeAdd(d, oldd);
+        }
+        return [a, b, c, d];
+      }
+      function bytesToWords(input) {
+        if (input.length === 0) {
+          return [];
+        }
+        var length8 = input.length * 8;
+        var output = new Uint32Array(getOutputLength(length8));
+        for (var i = 0; i < length8; i += 8) {
+          output[i >> 5] |= (input[i / 8] & 255) << i % 32;
+        }
+        return output;
+      }
+      function safeAdd(x, y) {
+        var lsw = (x & 65535) + (y & 65535);
+        var msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return msw << 16 | lsw & 65535;
+      }
+      function bitRotateLeft(num, cnt) {
+        return num << cnt | num >>> 32 - cnt;
+      }
+      function md5cmn(q, a, b, x, s, t) {
+        return safeAdd(bitRotateLeft(safeAdd(safeAdd(a, q), safeAdd(x, t)), s), b);
+      }
+      function md5ff(a, b, c, d, x, s, t) {
+        return md5cmn(b & c | ~b & d, a, b, x, s, t);
+      }
+      function md5gg(a, b, c, d, x, s, t) {
+        return md5cmn(b & d | c & ~d, a, b, x, s, t);
+      }
+      function md5hh(a, b, c, d, x, s, t) {
+        return md5cmn(b ^ c ^ d, a, b, x, s, t);
+      }
+      function md5ii(a, b, c, d, x, s, t) {
+        return md5cmn(c ^ (b | ~d), a, b, x, s, t);
+      }
+      var _default = exports.default = md5;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v3.js
+  var require_v3 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v3.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _v = _interopRequireDefault(require_v35());
+      var _md = _interopRequireDefault(require_md5());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      var v3 = (0, _v.default)("v3", 48, _md.default);
+      var _default = exports.default = v3;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/native.js
+  var require_native = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/native.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var randomUUID = typeof crypto !== "undefined" && crypto.randomUUID && crypto.randomUUID.bind(crypto);
+      var _default = exports.default = {
+        randomUUID
+      };
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v4.js
+  var require_v4 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v4.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _native = _interopRequireDefault(require_native());
+      var _rng = _interopRequireDefault(require_rng());
+      var _stringify = require_stringify();
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function v4(options, buf, offset) {
+        if (_native.default.randomUUID && !buf && !options) {
+          return _native.default.randomUUID();
+        }
+        options = options || {};
+        var rnds = options.random || (options.rng || _rng.default)();
+        rnds[6] = rnds[6] & 15 | 64;
+        rnds[8] = rnds[8] & 63 | 128;
+        if (buf) {
+          offset = offset || 0;
+          for (var i = 0; i < 16; ++i) {
+            buf[offset + i] = rnds[i];
+          }
+          return buf;
+        }
+        return (0, _stringify.unsafeStringify)(rnds);
+      }
+      var _default = exports.default = v4;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/sha1.js
+  var require_sha1 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/sha1.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      function f(s, x, y, z) {
+        switch (s) {
+          case 0:
+            return x & y ^ ~x & z;
+          case 1:
+            return x ^ y ^ z;
+          case 2:
+            return x & y ^ x & z ^ y & z;
+          case 3:
+            return x ^ y ^ z;
+        }
+      }
+      function ROTL(x, n) {
+        return x << n | x >>> 32 - n;
+      }
+      function sha1(bytes) {
+        var K = [1518500249, 1859775393, 2400959708, 3395469782];
+        var H = [1732584193, 4023233417, 2562383102, 271733878, 3285377520];
+        if (typeof bytes === "string") {
+          var msg = unescape(encodeURIComponent(bytes));
+          bytes = [];
+          for (var i = 0; i < msg.length; ++i) {
+            bytes.push(msg.charCodeAt(i));
+          }
+        } else if (!Array.isArray(bytes)) {
+          bytes = Array.prototype.slice.call(bytes);
+        }
+        bytes.push(128);
+        var l = bytes.length / 4 + 2;
+        var N = Math.ceil(l / 16);
+        var M = new Array(N);
+        for (var _i = 0; _i < N; ++_i) {
+          var arr = new Uint32Array(16);
+          for (var j = 0; j < 16; ++j) {
+            arr[j] = bytes[_i * 64 + j * 4] << 24 | bytes[_i * 64 + j * 4 + 1] << 16 | bytes[_i * 64 + j * 4 + 2] << 8 | bytes[_i * 64 + j * 4 + 3];
+          }
+          M[_i] = arr;
+        }
+        M[N - 1][14] = (bytes.length - 1) * 8 / Math.pow(2, 32);
+        M[N - 1][14] = Math.floor(M[N - 1][14]);
+        M[N - 1][15] = (bytes.length - 1) * 8 & 4294967295;
+        for (var _i2 = 0; _i2 < N; ++_i2) {
+          var W = new Uint32Array(80);
+          for (var t = 0; t < 16; ++t) {
+            W[t] = M[_i2][t];
+          }
+          for (var _t = 16; _t < 80; ++_t) {
+            W[_t] = ROTL(W[_t - 3] ^ W[_t - 8] ^ W[_t - 14] ^ W[_t - 16], 1);
+          }
+          var a = H[0];
+          var b = H[1];
+          var c = H[2];
+          var d = H[3];
+          var e = H[4];
+          for (var _t2 = 0; _t2 < 80; ++_t2) {
+            var s = Math.floor(_t2 / 20);
+            var T = ROTL(a, 5) + f(s, b, c, d) + e + K[s] + W[_t2] >>> 0;
+            e = d;
+            d = c;
+            c = ROTL(b, 30) >>> 0;
+            b = a;
+            a = T;
+          }
+          H[0] = H[0] + a >>> 0;
+          H[1] = H[1] + b >>> 0;
+          H[2] = H[2] + c >>> 0;
+          H[3] = H[3] + d >>> 0;
+          H[4] = H[4] + e >>> 0;
+        }
+        return [H[0] >> 24 & 255, H[0] >> 16 & 255, H[0] >> 8 & 255, H[0] & 255, H[1] >> 24 & 255, H[1] >> 16 & 255, H[1] >> 8 & 255, H[1] & 255, H[2] >> 24 & 255, H[2] >> 16 & 255, H[2] >> 8 & 255, H[2] & 255, H[3] >> 24 & 255, H[3] >> 16 & 255, H[3] >> 8 & 255, H[3] & 255, H[4] >> 24 & 255, H[4] >> 16 & 255, H[4] >> 8 & 255, H[4] & 255];
+      }
+      var _default = exports.default = sha1;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v5.js
+  var require_v5 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v5.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _v = _interopRequireDefault(require_v35());
+      var _sha = _interopRequireDefault(require_sha1());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      var v5 = (0, _v.default)("v5", 80, _sha.default);
+      var _default = exports.default = v5;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v6.js
+  var require_v6 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v6.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = v6;
+      var _stringify = require_stringify();
+      var _v = _interopRequireDefault(require_v1());
+      var _v1ToV = _interopRequireDefault(require_v1ToV6());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function ownKeys(e, r) {
+        var t = Object.keys(e);
+        if (Object.getOwnPropertySymbols) {
+          var o = Object.getOwnPropertySymbols(e);
+          r && (o = o.filter(function(r2) {
+            return Object.getOwnPropertyDescriptor(e, r2).enumerable;
+          })), t.push.apply(t, o);
+        }
+        return t;
+      }
+      function _objectSpread(e) {
+        for (var r = 1; r < arguments.length; r++) {
+          var t = null != arguments[r] ? arguments[r] : {};
+          r % 2 ? ownKeys(Object(t), true).forEach(function(r2) {
+            _defineProperty(e, r2, t[r2]);
+          }) : Object.getOwnPropertyDescriptors ? Object.defineProperties(e, Object.getOwnPropertyDescriptors(t)) : ownKeys(Object(t)).forEach(function(r2) {
+            Object.defineProperty(e, r2, Object.getOwnPropertyDescriptor(t, r2));
+          });
+        }
+        return e;
+      }
+      function _defineProperty(e, r, t) {
+        return (r = _toPropertyKey(r)) in e ? Object.defineProperty(e, r, { value: t, enumerable: true, configurable: true, writable: true }) : e[r] = t, e;
+      }
+      function _toPropertyKey(t) {
+        var i = _toPrimitive(t, "string");
+        return "symbol" == typeof i ? i : i + "";
+      }
+      function _toPrimitive(t, r) {
+        if ("object" != typeof t || !t) return t;
+        var e = t[Symbol.toPrimitive];
+        if (void 0 !== e) {
+          var i = e.call(t, r || "default");
+          if ("object" != typeof i) return i;
+          throw new TypeError("@@toPrimitive must return a primitive value.");
+        }
+        return ("string" === r ? String : Number)(t);
+      }
+      function v6(options = {}, buf, offset = 0) {
+        var bytes = (0, _v.default)(_objectSpread(_objectSpread({}, options), {}, {
+          _v6: true
+        }), new Uint8Array(16));
+        bytes = (0, _v1ToV.default)(bytes);
+        if (buf) {
+          for (var i = 0; i < 16; i++) {
+            buf[offset + i] = bytes[i];
+          }
+          return buf;
+        }
+        return (0, _stringify.unsafeStringify)(bytes);
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v6ToV1.js
+  var require_v6ToV1 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v6ToV1.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = v6ToV1;
+      var _parse = _interopRequireDefault(require_parse());
+      var _stringify = require_stringify();
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function v6ToV1(uuid2) {
+        var v6Bytes = typeof uuid2 === "string" ? (0, _parse.default)(uuid2) : uuid2;
+        var v1Bytes = _v6ToV1(v6Bytes);
+        return typeof uuid2 === "string" ? (0, _stringify.unsafeStringify)(v1Bytes) : v1Bytes;
+      }
+      function _v6ToV1(v6Bytes) {
+        return Uint8Array.of((v6Bytes[3] & 15) << 4 | v6Bytes[4] >> 4 & 15, (v6Bytes[4] & 15) << 4 | (v6Bytes[5] & 240) >> 4, (v6Bytes[5] & 15) << 4 | v6Bytes[6] & 15, v6Bytes[7], (v6Bytes[1] & 15) << 4 | (v6Bytes[2] & 240) >> 4, (v6Bytes[2] & 15) << 4 | (v6Bytes[3] & 240) >> 4, 16 | (v6Bytes[0] & 240) >> 4, (v6Bytes[0] & 15) << 4 | (v6Bytes[1] & 240) >> 4, v6Bytes[8], v6Bytes[9], v6Bytes[10], v6Bytes[11], v6Bytes[12], v6Bytes[13], v6Bytes[14], v6Bytes[15]);
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v7.js
+  var require_v7 = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/v7.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _rng = _interopRequireDefault(require_rng());
+      var _stringify = require_stringify();
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      var _seqLow = null;
+      var _seqHigh = null;
+      var _msecs = 0;
+      function v7(options, buf, offset) {
+        options = options || {};
+        var i = buf && offset || 0;
+        var b = buf || new Uint8Array(16);
+        var rnds = options.random || (options.rng || _rng.default)();
+        var msecs = options.msecs !== void 0 ? options.msecs : Date.now();
+        var seq = options.seq !== void 0 ? options.seq : null;
+        var seqHigh = _seqHigh;
+        var seqLow = _seqLow;
+        if (msecs > _msecs && options.msecs === void 0) {
+          _msecs = msecs;
+          if (seq !== null) {
+            seqHigh = null;
+            seqLow = null;
+          }
+        }
+        if (seq !== null) {
+          if (seq > 2147483647) {
+            seq = 2147483647;
+          }
+          seqHigh = seq >>> 19 & 4095;
+          seqLow = seq & 524287;
+        }
+        if (seqHigh === null || seqLow === null) {
+          seqHigh = rnds[6] & 127;
+          seqHigh = seqHigh << 8 | rnds[7];
+          seqLow = rnds[8] & 63;
+          seqLow = seqLow << 8 | rnds[9];
+          seqLow = seqLow << 5 | rnds[10] >>> 3;
+        }
+        if (msecs + 1e4 > _msecs && seq === null) {
+          if (++seqLow > 524287) {
+            seqLow = 0;
+            if (++seqHigh > 4095) {
+              seqHigh = 0;
+              _msecs++;
+            }
+          }
+        } else {
+          _msecs = msecs;
+        }
+        _seqHigh = seqHigh;
+        _seqLow = seqLow;
+        b[i++] = _msecs / 1099511627776 & 255;
+        b[i++] = _msecs / 4294967296 & 255;
+        b[i++] = _msecs / 16777216 & 255;
+        b[i++] = _msecs / 65536 & 255;
+        b[i++] = _msecs / 256 & 255;
+        b[i++] = _msecs & 255;
+        b[i++] = seqHigh >>> 4 & 15 | 112;
+        b[i++] = seqHigh & 255;
+        b[i++] = seqLow >>> 13 & 63 | 128;
+        b[i++] = seqLow >>> 5 & 255;
+        b[i++] = seqLow << 3 & 255 | rnds[10] & 7;
+        b[i++] = rnds[11];
+        b[i++] = rnds[12];
+        b[i++] = rnds[13];
+        b[i++] = rnds[14];
+        b[i++] = rnds[15];
+        return buf || (0, _stringify.unsafeStringify)(b);
+      }
+      var _default = exports.default = v7;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/version.js
+  var require_version = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/version.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      exports.default = void 0;
+      var _validate = _interopRequireDefault(require_validate());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+      function version(uuid2) {
+        if (!(0, _validate.default)(uuid2)) {
+          throw TypeError("Invalid UUID");
+        }
+        return parseInt(uuid2.slice(14, 15), 16);
+      }
+      var _default = exports.default = version;
+    }
+  });
+
+  // ../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/index.js
+  var require_commonjs_browser = __commonJS({
+    "../../node_modules/.pnpm/uuid@10.0.0/node_modules/uuid/dist/commonjs-browser/index.js"(exports) {
+      "use strict";
+      Object.defineProperty(exports, "__esModule", {
+        value: true
+      });
+      Object.defineProperty(exports, "MAX", {
+        enumerable: true,
+        get: function get() {
+          return _max.default;
+        }
+      });
+      Object.defineProperty(exports, "NIL", {
+        enumerable: true,
+        get: function get() {
+          return _nil.default;
+        }
+      });
+      Object.defineProperty(exports, "parse", {
+        enumerable: true,
+        get: function get() {
+          return _parse.default;
+        }
+      });
+      Object.defineProperty(exports, "stringify", {
+        enumerable: true,
+        get: function get() {
+          return _stringify.default;
+        }
+      });
+      Object.defineProperty(exports, "v1", {
+        enumerable: true,
+        get: function get() {
+          return _v.default;
+        }
+      });
+      Object.defineProperty(exports, "v1ToV6", {
+        enumerable: true,
+        get: function get() {
+          return _v1ToV.default;
+        }
+      });
+      Object.defineProperty(exports, "v3", {
+        enumerable: true,
+        get: function get() {
+          return _v2.default;
+        }
+      });
+      Object.defineProperty(exports, "v4", {
+        enumerable: true,
+        get: function get() {
+          return _v3.default;
+        }
+      });
+      Object.defineProperty(exports, "v5", {
+        enumerable: true,
+        get: function get() {
+          return _v4.default;
+        }
+      });
+      Object.defineProperty(exports, "v6", {
+        enumerable: true,
+        get: function get() {
+          return _v5.default;
+        }
+      });
+      Object.defineProperty(exports, "v6ToV1", {
+        enumerable: true,
+        get: function get() {
+          return _v6ToV.default;
+        }
+      });
+      Object.defineProperty(exports, "v7", {
+        enumerable: true,
+        get: function get() {
+          return _v6.default;
+        }
+      });
+      Object.defineProperty(exports, "validate", {
+        enumerable: true,
+        get: function get() {
+          return _validate.default;
+        }
+      });
+      Object.defineProperty(exports, "version", {
+        enumerable: true,
+        get: function get() {
+          return _version.default;
+        }
+      });
+      var _max = _interopRequireDefault(require_max());
+      var _nil = _interopRequireDefault(require_nil());
+      var _parse = _interopRequireDefault(require_parse());
+      var _stringify = _interopRequireDefault(require_stringify());
+      var _v = _interopRequireDefault(require_v1());
+      var _v1ToV = _interopRequireDefault(require_v1ToV6());
+      var _v2 = _interopRequireDefault(require_v3());
+      var _v3 = _interopRequireDefault(require_v4());
+      var _v4 = _interopRequireDefault(require_v5());
+      var _v5 = _interopRequireDefault(require_v6());
+      var _v6ToV = _interopRequireDefault(require_v6ToV1());
+      var _v6 = _interopRequireDefault(require_v7());
+      var _validate = _interopRequireDefault(require_validate());
+      var _version = _interopRequireDefault(require_version());
+      function _interopRequireDefault(e) {
+        return e && e.__esModule ? e : { default: e };
+      }
+    }
+  });
+
+  // ../../node_modules/.pnpm/protocols@2.0.1/node_modules/protocols/lib/index.js
+  var require_lib = __commonJS({
+    "../../node_modules/.pnpm/protocols@2.0.1/node_modules/protocols/lib/index.js"(exports, module) {
+      "use strict";
+      module.exports = function protocols(input, first) {
+        if (first === true) {
+          first = 0;
+        }
+        var prots = "";
+        if (typeof input === "string") {
+          try {
+            prots = new URL(input).protocol;
+          } catch (e) {
+          }
+        } else if (input && input.constructor === URL) {
+          prots = input.protocol;
+        }
+        var splits = prots.split(/\:|\+/).filter(Boolean);
+        if (typeof first === "number") {
+          return splits[first];
+        }
+        return splits;
+      };
+    }
+  });
+
+  // ../../node_modules/.pnpm/parse-path@7.0.0/node_modules/parse-path/lib/index.js
+  var require_lib2 = __commonJS({
+    "../../node_modules/.pnpm/parse-path@7.0.0/node_modules/parse-path/lib/index.js"(exports, module) {
+      "use strict";
+      var protocols = require_lib();
+      function parsePath(url) {
+        var output = {
+          protocols: [],
+          protocol: null,
+          port: null,
+          resource: "",
+          host: "",
+          user: "",
+          password: "",
+          pathname: "",
+          hash: "",
+          search: "",
+          href: url,
+          query: {},
+          parse_failed: false
+        };
+        try {
+          var parsed = new URL(url);
+          output.protocols = protocols(parsed);
+          output.protocol = output.protocols[0];
+          output.port = parsed.port;
+          output.resource = parsed.hostname;
+          output.host = parsed.host;
+          output.user = parsed.username || "";
+          output.password = parsed.password || "";
+          output.pathname = parsed.pathname;
+          output.hash = parsed.hash.slice(1);
+          output.search = parsed.search.slice(1);
+          output.href = parsed.href;
+          output.query = Object.fromEntries(parsed.searchParams);
+        } catch (e) {
+          output.protocols = ["file"];
+          output.protocol = output.protocols[0];
+          output.port = "";
+          output.resource = "";
+          output.user = "";
+          output.pathname = "";
+          output.hash = "";
+          output.search = "";
+          output.href = url;
+          output.query = {};
+          output.parse_failed = true;
+        }
+        return output;
+      }
+      module.exports = parsePath;
+    }
+  });
+
+  // ../../node_modules/.pnpm/parse-url@9.2.0/node_modules/parse-url/dist/index.js
+  var require_dist = __commonJS({
+    "../../node_modules/.pnpm/parse-url@9.2.0/node_modules/parse-url/dist/index.js"(exports, module) {
+      "use strict";
+      var require$$1 = require_lib2();
+      function _interopDefaultLegacy(e) {
+        return e && typeof e === "object" && "default" in e ? e : { "default": e };
+      }
+      var require$$1__default = /* @__PURE__ */ _interopDefaultLegacy(require$$1);
+      function getAugmentedNamespace(n) {
+        if (n.__esModule) return n;
+        var f = n.default;
+        if (typeof f == "function") {
+          var a = function a2() {
+            if (this instanceof a2) {
+              var args = [null];
+              args.push.apply(args, arguments);
+              var Ctor = Function.bind.apply(f, args);
+              return new Ctor();
+            }
+            return f.apply(this, arguments);
+          };
+          a.prototype = f.prototype;
+        } else a = {};
+        Object.defineProperty(a, "__esModule", { value: true });
+        Object.keys(n).forEach(function(k) {
+          var d = Object.getOwnPropertyDescriptor(n, k);
+          Object.defineProperty(a, k, d.get ? d : {
+            enumerable: true,
+            get: function() {
+              return n[k];
+            }
+          });
+        });
+        return a;
+      }
+      var src = {};
+      var DATA_URL_DEFAULT_MIME_TYPE = "text/plain";
+      var DATA_URL_DEFAULT_CHARSET = "us-ascii";
+      var testParameter = (name, filters) => filters.some((filter) => filter instanceof RegExp ? filter.test(name) : filter === name);
+      var normalizeDataURL = (urlString, { stripHash }) => {
+        const match = new RegExp("^data:(?<type>[^,]*?),(?<data>[^#]*?)(?:#(?<hash>.*))?$").exec(urlString);
+        if (!match) {
+          throw new Error(`Invalid URL: ${urlString}`);
+        }
+        let { type, data, hash } = match.groups;
+        const mediaType = type.split(";");
+        hash = stripHash ? "" : hash;
+        let isBase64 = false;
+        if (mediaType[mediaType.length - 1] === "base64") {
+          mediaType.pop();
+          isBase64 = true;
+        }
+        const mimeType = (mediaType.shift() || "").toLowerCase();
+        const attributes = mediaType.map((attribute) => {
+          let [key, value = ""] = attribute.split("=").map((string) => string.trim());
+          if (key === "charset") {
+            value = value.toLowerCase();
+            if (value === DATA_URL_DEFAULT_CHARSET) {
+              return "";
+            }
+          }
+          return `${key}${value ? `=${value}` : ""}`;
+        }).filter(Boolean);
+        const normalizedMediaType = [
+          ...attributes
+        ];
+        if (isBase64) {
+          normalizedMediaType.push("base64");
+        }
+        if (normalizedMediaType.length > 0 || mimeType && mimeType !== DATA_URL_DEFAULT_MIME_TYPE) {
+          normalizedMediaType.unshift(mimeType);
+        }
+        return `data:${normalizedMediaType.join(";")},${isBase64 ? data.trim() : data}${hash ? `#${hash}` : ""}`;
+      };
+      function normalizeUrl(urlString, options) {
+        options = __spreadValues({
+          defaultProtocol: "http:",
+          normalizeProtocol: true,
+          forceHttp: false,
+          forceHttps: false,
+          stripAuthentication: true,
+          stripHash: false,
+          stripTextFragment: true,
+          stripWWW: true,
+          removeQueryParameters: [/^utm_\w+/i],
+          removeTrailingSlash: true,
+          removeSingleSlash: true,
+          removeDirectoryIndex: false,
+          sortQueryParameters: true
+        }, options);
+        urlString = urlString.trim();
+        if (/^data:/i.test(urlString)) {
+          return normalizeDataURL(urlString, options);
+        }
+        if (/^view-source:/i.test(urlString)) {
+          throw new Error("`view-source:` is not supported as it is a non-standard protocol");
+        }
+        const hasRelativeProtocol = urlString.startsWith("//");
+        const isRelativeUrl = !hasRelativeProtocol && /^\.*\//.test(urlString);
+        if (!isRelativeUrl) {
+          urlString = urlString.replace(/^(?!(?:\w+:)?\/\/)|^\/\//, options.defaultProtocol);
+        }
+        const urlObject = new URL(urlString);
+        if (options.forceHttp && options.forceHttps) {
+          throw new Error("The `forceHttp` and `forceHttps` options cannot be used together");
+        }
+        if (options.forceHttp && urlObject.protocol === "https:") {
+          urlObject.protocol = "http:";
+        }
+        if (options.forceHttps && urlObject.protocol === "http:") {
+          urlObject.protocol = "https:";
+        }
+        if (options.stripAuthentication) {
+          urlObject.username = "";
+          urlObject.password = "";
+        }
+        if (options.stripHash) {
+          urlObject.hash = "";
+        } else if (options.stripTextFragment) {
+          urlObject.hash = urlObject.hash.replace(/#?:~:text.*?$/i, "");
+        }
+        if (urlObject.pathname) {
+          const protocolRegex = /\b[a-z][a-z\d+\-.]{1,50}:\/\//g;
+          let lastIndex = 0;
+          let result = "";
+          for (; ; ) {
+            const match = protocolRegex.exec(urlObject.pathname);
+            if (!match) {
+              break;
+            }
+            const protocol = match[0];
+            const protocolAtIndex = match.index;
+            const intermediate = urlObject.pathname.slice(lastIndex, protocolAtIndex);
+            result += intermediate.replace(/\/{2,}/g, "/");
+            result += protocol;
+            lastIndex = protocolAtIndex + protocol.length;
+          }
+          const remnant = urlObject.pathname.slice(lastIndex, urlObject.pathname.length);
+          result += remnant.replace(/\/{2,}/g, "/");
+          urlObject.pathname = result;
+        }
+        if (urlObject.pathname) {
+          try {
+            urlObject.pathname = decodeURI(urlObject.pathname);
+          } catch (e) {
+          }
+        }
+        if (options.removeDirectoryIndex === true) {
+          options.removeDirectoryIndex = [/^index\.[a-z]+$/];
+        }
+        if (Array.isArray(options.removeDirectoryIndex) && options.removeDirectoryIndex.length > 0) {
+          let pathComponents = urlObject.pathname.split("/");
+          const lastComponent = pathComponents[pathComponents.length - 1];
+          if (testParameter(lastComponent, options.removeDirectoryIndex)) {
+            pathComponents = pathComponents.slice(0, -1);
+            urlObject.pathname = pathComponents.slice(1).join("/") + "/";
+          }
+        }
+        if (urlObject.hostname) {
+          urlObject.hostname = urlObject.hostname.replace(/\.$/, "");
+          if (options.stripWWW && /^www\.(?!www\.)[a-z\-\d]{1,63}\.[a-z.\-\d]{2,63}$/.test(urlObject.hostname)) {
+            urlObject.hostname = urlObject.hostname.replace(/^www\./, "");
+          }
+        }
+        if (Array.isArray(options.removeQueryParameters)) {
+          for (const key of [...urlObject.searchParams.keys()]) {
+            if (testParameter(key, options.removeQueryParameters)) {
+              urlObject.searchParams.delete(key);
+            }
+          }
+        }
+        if (options.removeQueryParameters === true) {
+          urlObject.search = "";
+        }
+        if (options.sortQueryParameters) {
+          urlObject.searchParams.sort();
+          try {
+            urlObject.search = decodeURIComponent(urlObject.search);
+          } catch (e) {
+          }
+        }
+        if (options.removeTrailingSlash) {
+          urlObject.pathname = urlObject.pathname.replace(/\/$/, "");
+        }
+        const oldUrlString = urlString;
+        urlString = urlObject.toString();
+        if (!options.removeSingleSlash && urlObject.pathname === "/" && !oldUrlString.endsWith("/") && urlObject.hash === "") {
+          urlString = urlString.replace(/\/$/, "");
+        }
+        if ((options.removeTrailingSlash || urlObject.pathname === "/") && urlObject.hash === "" && options.removeSingleSlash) {
+          urlString = urlString.replace(/\/$/, "");
+        }
+        if (hasRelativeProtocol && !options.normalizeProtocol) {
+          urlString = urlString.replace(/^http:\/\//, "//");
+        }
+        if (options.stripProtocol) {
+          urlString = urlString.replace(/^(?:https?:)?\/\//, "");
+        }
+        return urlString;
+      }
+      var normalizeUrl$1 = /* @__PURE__ */ Object.freeze({
+        __proto__: null,
+        "default": normalizeUrl
+      });
+      var require$$0 = /* @__PURE__ */ getAugmentedNamespace(normalizeUrl$1);
+      Object.defineProperty(src, "__esModule", {
+        value: true
+      });
+      var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function(obj) {
+        return typeof obj;
+      } : function(obj) {
+        return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj;
+      };
+      var _normalizeUrl = require$$0;
+      var _normalizeUrl2 = _interopRequireDefault(_normalizeUrl);
+      var _parsePath = require$$1__default["default"];
+      var _parsePath2 = _interopRequireDefault(_parsePath);
+      function _interopRequireDefault(obj) {
+        return obj && obj.__esModule ? obj : { default: obj };
+      }
+      var parseUrl = function parseUrl2(url) {
+        var normalize = arguments.length > 1 && arguments[1] !== void 0 ? arguments[1] : false;
+        var GIT_RE = /^(?:([a-zA-Z_][a-zA-Z0-9_-]{0,31})@|https?:\/\/)([\w\.\-@]+)[\/:](([\~,\.\w,\-,\_,\/,\s]|%[0-9A-Fa-f]{2})+?(?:\.git|\/)?)$/;
+        var throwErr = function throwErr2(msg) {
+          var err = new Error(msg);
+          err.subject_url = url;
+          throw err;
+        };
+        if (typeof url !== "string" || !url.trim()) {
+          throwErr("Invalid url.");
+        }
+        if (url.length > parseUrl2.MAX_INPUT_LENGTH) {
+          throwErr("Input exceeds maximum length. If needed, change the value of parseUrl.MAX_INPUT_LENGTH.");
+        }
+        if (normalize) {
+          if ((typeof normalize === "undefined" ? "undefined" : _typeof(normalize)) !== "object") {
+            normalize = {
+              stripHash: false
+            };
+          }
+          url = (0, _normalizeUrl2.default)(url, normalize);
+        }
+        var parsed = (0, _parsePath2.default)(url);
+        if (parsed.parse_failed) {
+          var matched = parsed.href.match(GIT_RE);
+          if (matched) {
+            parsed.protocols = ["ssh"];
+            parsed.protocol = "ssh";
+            parsed.resource = matched[2];
+            parsed.host = matched[2];
+            parsed.user = matched[1];
+            parsed.pathname = "/" + matched[3];
+            parsed.parse_failed = false;
+          } else {
+            throwErr("URL parsing failed.");
+          }
+        }
+        return parsed;
+      };
+      parseUrl.MAX_INPUT_LENGTH = 2048;
+      var _default = src.default = parseUrl;
+      module.exports = _default;
+    }
+  });
+
+  // ../../node_modules/.pnpm/@hupu+shared@0.0.12/node_modules/@hupu/shared/cjs/index.js
+  var require_cjs = __commonJS({
+    "../../node_modules/.pnpm/@hupu+shared@0.0.12/node_modules/@hupu/shared/cjs/index.js"(exports, module) {
+      "use strict";
+      function _array_like_to_array(arr, len) {
+        if (len == null || len > arr.length) len = arr.length;
+        for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
+        return arr2;
+      }
+      function _array_with_holes(arr) {
+        if (Array.isArray(arr)) return arr;
+      }
+      function _array_without_holes(arr) {
+        if (Array.isArray(arr)) return _array_like_to_array(arr);
+      }
+      function _construct(Parent, args, Class) {
+        if (_is_native_reflect_construct()) {
+          _construct = Reflect.construct;
+        } else {
+          _construct = function construct(Parent2, args2, Class2) {
+            var a = [
+              null
+            ];
+            a.push.apply(a, args2);
+            var Constructor = Function.bind.apply(Parent2, a);
+            var instance = new Constructor();
+            if (Class2) _set_prototype_of(instance, Class2.prototype);
+            return instance;
+          };
+        }
+        return _construct.apply(null, arguments);
+      }
+      function _define_property(obj, key, value) {
+        if (key in obj) {
+          Object.defineProperty(obj, key, {
+            value,
+            enumerable: true,
+            configurable: true,
+            writable: true
+          });
+        } else {
+          obj[key] = value;
+        }
+        return obj;
+      }
+      function _iterable_to_array(iter) {
+        if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
+      }
+      function _iterable_to_array_limit(arr, i) {
+        var _i = arr == null ? null : typeof Symbol !== "undefined" && arr[Symbol.iterator] || arr["@@iterator"];
+        if (_i == null) return;
+        var _arr = [];
+        var _n = true;
+        var _d = false;
+        var _s, _e;
+        try {
+          for (_i = _i.call(arr); !(_n = (_s = _i.next()).done); _n = true) {
+            _arr.push(_s.value);
+            if (i && _arr.length === i) break;
+          }
+        } catch (err) {
+          _d = true;
+          _e = err;
+        } finally {
+          try {
+            if (!_n && _i["return"] != null) _i["return"]();
+          } finally {
+            if (_d) throw _e;
+          }
+        }
+        return _arr;
+      }
+      function _non_iterable_rest() {
+        throw new TypeError("Invalid attempt to destructure non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      }
+      function _non_iterable_spread() {
+        throw new TypeError("Invalid attempt to spread non-iterable instance.\\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
+      }
+      function _object_spread(target) {
+        for (var i = 1; i < arguments.length; i++) {
+          var source = arguments[i] != null ? arguments[i] : {};
+          var ownKeys = Object.keys(source);
+          if (typeof Object.getOwnPropertySymbols === "function") {
+            ownKeys = ownKeys.concat(Object.getOwnPropertySymbols(source).filter(function(sym) {
+              return Object.getOwnPropertyDescriptor(source, sym).enumerable;
+            }));
+          }
+          ownKeys.forEach(function(key) {
+            _define_property(target, key, source[key]);
+          });
+        }
+        return target;
+      }
+      function _set_prototype_of(o, p) {
+        _set_prototype_of = Object.setPrototypeOf || function setPrototypeOf(o2, p2) {
+          o2.__proto__ = p2;
+          return o2;
+        };
+        return _set_prototype_of(o, p);
+      }
+      function _sliced_to_array(arr, i) {
+        return _array_with_holes(arr) || _iterable_to_array_limit(arr, i) || _unsupported_iterable_to_array(arr, i) || _non_iterable_rest();
+      }
+      function _to_consumable_array(arr) {
+        return _array_without_holes(arr) || _iterable_to_array(arr) || _unsupported_iterable_to_array(arr) || _non_iterable_spread();
+      }
+      function _type_of(obj) {
+        "@swc/helpers - typeof";
+        return obj && typeof Symbol !== "undefined" && obj.constructor === Symbol ? "symbol" : typeof obj;
+      }
+      function _unsupported_iterable_to_array(o, minLen) {
+        if (!o) return;
+        if (typeof o === "string") return _array_like_to_array(o, minLen);
+        var n = Object.prototype.toString.call(o).slice(8, -1);
+        if (n === "Object" && o.constructor) n = o.constructor.name;
+        if (n === "Map" || n === "Set") return Array.from(n);
+        if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _array_like_to_array(o, minLen);
+      }
+      function _is_native_reflect_construct() {
+        if (typeof Reflect === "undefined" || !Reflect.construct) return false;
+        if (Reflect.construct.sham) return false;
+        if (typeof Proxy === "function") return true;
+        try {
+          Boolean.prototype.valueOf.call(Reflect.construct(Boolean, [], function() {
+          }));
+          return true;
+        } catch (e) {
+          return false;
+        }
+      }
+      var __create = Object.create;
+      var __defProp2 = Object.defineProperty;
+      var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
+      var __getOwnPropNames2 = Object.getOwnPropertyNames;
+      var __getProtoOf = Object.getPrototypeOf;
+      var __hasOwnProp2 = Object.prototype.hasOwnProperty;
+      var __export = function(target, all) {
+        for (var name in all) __defProp2(target, name, {
+          get: all[name],
+          enumerable: true
+        });
+      };
+      var __copyProps = function(to, from, except, desc) {
+        if (from && (typeof from === "undefined" ? "undefined" : _type_of(from)) === "object" || typeof from === "function") {
+          var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+          try {
+            var _loop = function() {
+              var key = _step.value;
+              if (!__hasOwnProp2.call(to, key) && key !== except) __defProp2(to, key, {
+                get: function() {
+                  return from[key];
+                },
+                enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+              });
+            };
+            for (var _iterator = __getOwnPropNames2(from)[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) _loop();
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        }
+        return to;
+      };
+      var __toESM = function(mod, isNodeMode, target) {
+        return target = mod != null ? __create(__getProtoOf(mod)) : {}, __copyProps(
+          // If the importer is in node compatibility mode or this is not an ESM
+          // file that has been converted to a CommonJS file using a Babel-
+          // compatible transform (i.e. "__esModule" has not been set), then set
+          // "default" to the CommonJS "module.exports" for node compatibility.
+          isNodeMode || !mod || !mod.__esModule ? __defProp2(target, "default", {
+            value: mod,
+            enumerable: true
+          }) : target,
+          mod
+        );
+      };
+      var __toCommonJS = function(mod) {
+        return __copyProps(__defProp2({}, "__esModule", {
+          value: true
+        }), mod);
+      };
+      var src_exports = {};
+      __export(src_exports, {
+        compareVersions: function() {
+          return import_compare_versions.compare;
+        },
+        getEnv: function() {
+          return getEnv;
+        },
+        getQueryParams: function() {
+          return getQueryParams;
+        },
+        isAndroid: function() {
+          return isAndroid;
+        },
+        isBrowser: function() {
+          return isBrowser;
+        },
+        isHupu: function() {
+          return isHupu;
+        },
+        isIOS: function() {
+          return isIOS;
+        },
+        isValidUrl: function() {
+          return isValidUrl;
+        },
+        isWeChat: function() {
+          return isWeChat;
+        },
+        qs: function() {
+          return query_string_default;
+        },
+        request: function() {
+          return request;
+        },
+        singleton: function() {
+          return singleton;
+        },
+        uuid: function() {
+          return import_uuid.v4;
+        }
+      });
+      module.exports = __toCommonJS(src_exports);
+      var base_exports = {};
+      __export(base_exports, {
+        exclude: function() {
+          return exclude;
+        },
+        extract: function() {
+          return extract;
+        },
+        parse: function() {
+          return parse;
+        },
+        parseUrl: function() {
+          return parseUrl;
+        },
+        pick: function() {
+          return pick;
+        },
+        stringify: function() {
+          return stringify;
+        },
+        stringifyUrl: function() {
+          return stringifyUrl;
+        }
+      });
+      var token = "%[a-f0-9]{2}";
+      var singleMatcher = new RegExp("(" + token + ")|([^%]+?)", "gi");
+      var multiMatcher = new RegExp("(" + token + ")+", "gi");
+      function decodeComponents(components, split) {
+        try {
+          return [
+            decodeURIComponent(components.join(""))
+          ];
+        } catch (e) {
+        }
+        if (components.length === 1) {
+          return components;
+        }
+        split = split || 1;
+        var left = components.slice(0, split);
+        var right = components.slice(split);
+        return Array.prototype.concat.call([], decodeComponents(left), decodeComponents(right));
+      }
+      function decode(input) {
+        try {
+          return decodeURIComponent(input);
+        } catch (e) {
+          var tokens = input.match(singleMatcher) || [];
+          for (var i = 1; i < tokens.length; i++) {
+            input = decodeComponents(tokens, i).join("");
+            tokens = input.match(singleMatcher) || [];
+          }
+          return input;
+        }
+      }
+      function customDecodeURIComponent(input) {
+        var replaceMap = {
+          "%FE%FF": "\uFFFD\uFFFD",
+          "%FF%FE": "\uFFFD\uFFFD"
+        };
+        var match = multiMatcher.exec(input);
+        while (match) {
+          try {
+            replaceMap[match[0]] = decodeURIComponent(match[0]);
+          } catch (e) {
+            var result = decode(match[0]);
+            if (result !== match[0]) {
+              replaceMap[match[0]] = result;
+            }
+          }
+          match = multiMatcher.exec(input);
+        }
+        replaceMap["%C2"] = "\uFFFD";
+        var entries = Object.keys(replaceMap);
+        var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+        try {
+          for (var _iterator = entries[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+            var key = _step.value;
+            input = input.replace(new RegExp(key, "g"), replaceMap[key]);
+          }
+        } catch (err) {
+          _didIteratorError = true;
+          _iteratorError = err;
+        } finally {
+          try {
+            if (!_iteratorNormalCompletion && _iterator.return != null) {
+              _iterator.return();
+            }
+          } finally {
+            if (_didIteratorError) {
+              throw _iteratorError;
+            }
+          }
+        }
+        return input;
+      }
+      function decodeUriComponent(encodedURI) {
+        if (typeof encodedURI !== "string") {
+          throw new TypeError("Expected `encodedURI` to be of type `string`, got `" + (typeof encodedURI === "undefined" ? "undefined" : _type_of(encodedURI)) + "`");
+        }
+        try {
+          return decodeURIComponent(encodedURI);
+        } catch (e) {
+          return customDecodeURIComponent(encodedURI);
+        }
+      }
+      function includeKeys(object, predicate) {
+        var result = {};
+        if (Array.isArray(predicate)) {
+          var _iteratorNormalCompletion = true, _didIteratorError = false, _iteratorError = void 0;
+          try {
+            for (var _iterator = predicate[Symbol.iterator](), _step; !(_iteratorNormalCompletion = (_step = _iterator.next()).done); _iteratorNormalCompletion = true) {
+              var key = _step.value;
+              var descriptor = Object.getOwnPropertyDescriptor(object, key);
+              if (descriptor === null || descriptor === void 0 ? void 0 : descriptor.enumerable) {
+                Object.defineProperty(result, key, descriptor);
+              }
+            }
+          } catch (err) {
+            _didIteratorError = true;
+            _iteratorError = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion && _iterator.return != null) {
+                _iterator.return();
+              }
+            } finally {
+              if (_didIteratorError) {
+                throw _iteratorError;
+              }
+            }
+          }
+        } else {
+          var _iteratorNormalCompletion1 = true, _didIteratorError1 = false, _iteratorError1 = void 0;
+          try {
+            for (var _iterator1 = Reflect.ownKeys(object)[Symbol.iterator](), _step1; !(_iteratorNormalCompletion1 = (_step1 = _iterator1.next()).done); _iteratorNormalCompletion1 = true) {
+              var key1 = _step1.value;
+              var descriptor1 = Object.getOwnPropertyDescriptor(object, key1);
+              if (descriptor1.enumerable) {
+                var value = object[key1];
+                if (predicate(key1, value, object)) {
+                  Object.defineProperty(result, key1, descriptor1);
+                }
+              }
+            }
+          } catch (err) {
+            _didIteratorError1 = true;
+            _iteratorError1 = err;
+          } finally {
+            try {
+              if (!_iteratorNormalCompletion1 && _iterator1.return != null) {
+                _iterator1.return();
+              }
+            } finally {
+              if (_didIteratorError1) {
+                throw _iteratorError1;
+              }
+            }
+          }
+        }
+        return result;
+      }
+      function splitOnFirst(string, separator) {
+        if (!(typeof string === "string" && typeof separator === "string")) {
+          throw new TypeError("Expected the arguments to be of type `string`");
+        }
+        if (string === "" || separator === "") {
+          return [];
+        }
+        var separatorIndex = string.indexOf(separator);
+        if (separatorIndex === -1) {
+          return [];
+        }
+        return [
+          string.slice(0, separatorIndex),
+          string.slice(separatorIndex + separator.length)
+        ];
+      }
+      var isNullOrUndefined = function(value) {
+        return value === null || value === void 0;
+      };
+      var strictUriEncode = function(string) {
+        return encodeURIComponent(string).replaceAll(/[!'()*]/g, function(x) {
+          return "%".concat(x.charCodeAt(0).toString(16).toUpperCase());
+        });
+      };
+      var encodeFragmentIdentifier = /* @__PURE__ */ Symbol("encodeFragmentIdentifier");
+      function encoderForArrayFormat(options) {
+        switch (options.arrayFormat) {
+          case "index": {
+            return function(key) {
+              return function(result, value) {
+                var index = result.length;
+                if (value === void 0 || options.skipNull && value === null || options.skipEmptyString && value === "") {
+                  return result;
+                }
+                if (value === null) {
+                  return _to_consumable_array(result).concat([
+                    [
+                      encode(key, options),
+                      "[",
+                      index,
+                      "]"
+                    ].join("")
+                  ]);
+                }
+                return _to_consumable_array(result).concat([
+                  [
+                    encode(key, options),
+                    "[",
+                    encode(index, options),
+                    "]=",
+                    encode(value, options)
+                  ].join("")
+                ]);
+              };
+            };
+          }
+          case "bracket": {
+            return function(key) {
+              return function(result, value) {
+                if (value === void 0 || options.skipNull && value === null || options.skipEmptyString && value === "") {
+                  return result;
+                }
+                if (value === null) {
+                  return _to_consumable_array(result).concat([
+                    [
+                      encode(key, options),
+                      "[]"
+                    ].join("")
+                  ]);
+                }
+                return _to_consumable_array(result).concat([
+                  [
+                    encode(key, options),
+                    "[]=",
+                    encode(value, options)
+                  ].join("")
+                ]);
+              };
+            };
+          }
+          case "colon-list-separator": {
+            return function(key) {
+              return function(result, value) {
+                if (value === void 0 || options.skipNull && value === null || options.skipEmptyString && value === "") {
+                  return result;
+                }
+                if (value === null) {
+                  return _to_consumable_array(result).concat([
+                    [
+                      encode(key, options),
+                      ":list="
+                    ].join("")
+                  ]);
+                }
+                return _to_consumable_array(result).concat([
+                  [
+                    encode(key, options),
+                    ":list=",
+                    encode(value, options)
+                  ].join("")
+                ]);
+              };
+            };
+          }
+          case "comma":
+          case "separator":
+          case "bracket-separator": {
+            var keyValueSeparator = options.arrayFormat === "bracket-separator" ? "[]=" : "=";
+            return function(key) {
+              return function(result, value) {
+                if (value === void 0 || options.skipNull && value === null || options.skipEmptyString && value === "") {
+                  return result;
+                }
+                value = value === null ? "" : value;
+                if (result.length === 0) {
+                  return [
+                    [
+                      encode(key, options),
+                      keyValueSeparator,
+                      encode(value, options)
+                    ].join("")
+                  ];
+                }
+                return [
+                  [
+                    result,
+                    encode(value, options)
+                  ].join(options.arrayFormatSeparator)
+                ];
+              };
+            };
+          }
+          default: {
+            return function(key) {
+              return function(result, value) {
+                if (value === void 0 || options.skipNull && value === null || options.skipEmptyString && value === "") {
+                  return result;
+                }
+                if (value === null) {
+                  return _to_consumable_array(result).concat([
+                    encode(key, options)
+                  ]);
+                }
+                return _to_consumable_array(result).concat([
+                  [
+                    encode(key, options),
+                    "=",
+                    encode(value, options)
+                  ].join("")
+                ]);
+              };
+            };
+          }
+        }
+      }
+      function parserForArrayFormat(options) {
+        var result;
+        switch (options.arrayFormat) {
+          case "index": {
+            return function(key, value, accumulator) {
+              result = /\[(\d*)]$/.exec(key);
+              key = key.replace(/\[\d*]$/, "");
+              if (!result) {
+                accumulator[key] = value;
+                return;
+              }
+              if (accumulator[key] === void 0) {
+                accumulator[key] = {};
+              }
+              accumulator[key][result[1]] = value;
+            };
+          }
+          case "bracket": {
+            return function(key, value, accumulator) {
+              result = /(\[])$/.exec(key);
+              key = key.replace(/\[]$/, "");
+              if (!result) {
+                accumulator[key] = value;
+                return;
+              }
+              if (accumulator[key] === void 0) {
+                accumulator[key] = [
+                  value
+                ];
+                return;
+              }
+              accumulator[key] = _to_consumable_array(accumulator[key]).concat([
+                value
+              ]);
+            };
+          }
+          case "colon-list-separator": {
+            return function(key, value, accumulator) {
+              result = /(:list)$/.exec(key);
+              key = key.replace(/:list$/, "");
+              if (!result) {
+                accumulator[key] = value;
+                return;
+              }
+              if (accumulator[key] === void 0) {
+                accumulator[key] = [
+                  value
+                ];
+                return;
+              }
+              accumulator[key] = _to_consumable_array(accumulator[key]).concat([
+                value
+              ]);
+            };
+          }
+          case "comma":
+          case "separator": {
+            return function(key, value, accumulator) {
+              var isArray = typeof value === "string" && value.includes(options.arrayFormatSeparator);
+              var isEncodedArray = typeof value === "string" && !isArray && decode2(value, options).includes(options.arrayFormatSeparator);
+              value = isEncodedArray ? decode2(value, options) : value;
+              var newValue = isArray || isEncodedArray ? value.split(options.arrayFormatSeparator).map(function(item) {
+                return decode2(item, options);
+              }) : value === null ? value : decode2(value, options);
+              accumulator[key] = newValue;
+            };
+          }
+          case "bracket-separator": {
+            return function(key, value, accumulator) {
+              var isArray = /(\[])$/.test(key);
+              key = key.replace(/\[]$/, "");
+              if (!isArray) {
+                accumulator[key] = value ? decode2(value, options) : value;
+                return;
+              }
+              var arrayValue = value === null ? [] : decode2(value, options).split(options.arrayFormatSeparator);
+              if (accumulator[key] === void 0) {
+                accumulator[key] = arrayValue;
+                return;
+              }
+              accumulator[key] = _to_consumable_array(accumulator[key]).concat(_to_consumable_array(arrayValue));
+            };
+          }
+          default: {
+            return function(key, value, accumulator) {
+              if (accumulator[key] === void 0) {
+                accumulator[key] = value;
+                return;
+              }
+              accumulator[key] = _to_consumable_array([
+                accumulator[key]
+              ].flat()).concat([
+                value
+              ]);
+            };
+          }
+        }
+      }
+  
