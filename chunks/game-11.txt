@@ -3222,7 +3222,7 @@ function showTeamRoster(team) {
   const rosterArea = document.getElementById('br-roster-area');
   if (!rosterArea) return;
   
-  const players = NBA2K_DATA[team];
+  const players = (NBA2K_DATA[team] || []).concat(getHistoricalPlayersForTeam(team));
   const available = players.filter(p => !STATE.usedPlayers.includes(p.name));
   
   if (available.length === 0) {
@@ -3293,7 +3293,7 @@ function renderRosterPlayers(team, shown, allAvailable) {
 function rerollTeamPlayers() {
   if (!STATE.currentTeam) return;
   
-  const players = NBA2K_DATA[STATE.currentTeam];
+  const players = (NBA2K_DATA[STATE.currentTeam] || []).concat(getHistoricalPlayersForTeam(STATE.currentTeam));
   const available = players.filter(p => !STATE.usedPlayers.includes(p.name));
   
   const notShown = available.filter(p => !STATE._shownThisTeam.includes(p.name));
@@ -3318,7 +3318,7 @@ function rerollTeamPlayers() {
 function pickPlayer(name) {
   
   if (STATE._locking || !STATE.currentTeam) return;
-  const players = NBA2K_DATA[STATE.currentTeam];
+  const players = (NBA2K_DATA[STATE.currentTeam] || []).concat(getHistoricalPlayersForTeam(STATE.currentTeam));
   const player = players.find(p => p.name === name);
   if (!player) return;
   
@@ -4573,12 +4573,4 @@ function getConferenceSorted(conf) {
     .sort((a, b) => {
       const apct = a.wins + a.losses > 0 ? a.wins / (a.wins + a.losses) : 0;
       const bpct = b.wins + b.losses > 0 ? b.wins / (b.wins + b.losses) : 0;
-      return bpct - apct || b.wins - a.wins;
-    });
-}
-
-// ==================== 6. 赛季模拟（新引擎）====================
-function startSeason() {
-  showScreen('screen-season');
-  clearLineupCache();
-  var
+      return bpct - apct || 
