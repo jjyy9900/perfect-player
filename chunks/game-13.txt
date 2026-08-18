@@ -1,12 +1,4 @@
- = poAvg.fga > 0 ? (poAvg.fgm / poAvg.fga * 100).toFixed(1) : '—';
-    const poThreePct = poAvg.threeA > 0 ? (poAvg.threeM / poAvg.threeA * 100).toFixed(1) : '—';
-    
-    playoffStatsHtml = `<div class="sr-section">
-      <div class="sr-section-title">🏀 季后赛数据 · ${poG}场</div>
-      <div class="sr-stats-grid">
-        <div class="sr-stat"><span class="sr-stat-val">${poAvg.pts}</span><span class="sr-stat-lbl">得分</span></div>
-        <div class="sr-stat"><span class="sr-stat-val">${poAvg.reb}</span><span class="sr-stat-lbl">篮板</span></div>
-        <div class="sr-stat"><span class="sr-stat-val">${poAvg.ast}</span><span class="sr-stat-lbl">助攻</span></div>
+poAvg.ast}</span><span class="sr-stat-lbl">助攻</span></div>
         <div class="sr-stat"><span class="sr-stat-val">${poAvg.stl}</span><span class="sr-stat-lbl">抢断</span></div>
         <div class="sr-stat"><span class="sr-stat-val">${poAvg.blk}</span><span class="sr-stat-lbl">盖帽</span></div>
         <div class="sr-stat"><span class="sr-stat-val">${poAvg.tov}</span><span class="sr-stat-lbl">失误</span></div>
@@ -3901,4 +3893,15 @@ const STAGED_BRANCH_EVENTS = [
     body: '从“被谈论”到“亲自下场”，是球迷文化线最关键的转折。',
     requires: function() {
       var node = getBranchNode('fan_culture');
-      return node === 'sc
+      return node === 'score_mirror' || node === 'score_meme' || node === 'score_own' || node === 'score_report';
+    },
+    choices: [
+      { label: '亲自回帖', hint: '真实感上升，风评变活', apply: function() {
+        setBranchNode('fan_culture', 'community_reply', { action: 'reply' });
+        addProfileDelta('fanSupport', 3);
+        addProfileDelta('mediaTrust', 1);
+        return '你挑了几条热评逐条回复，包括一条骂你的。骂你的那条被你回复后，楼主反而成了你粉丝。<br><br>效果：球迷支持+3；媒体好感+1。';
+      }},
+      { label: '空降直播', hint: '互动最高，风险也高', apply: function() {
+        setBranchNode('fan_culture', 'community_live', { action: 'live' });
+        addProfileDelta('fame
