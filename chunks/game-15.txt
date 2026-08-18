@@ -1,4 +1,6 @@
-，让{longestTeam}的旗帜多了一层含义。百大名单只是把这件事写了下来。",
+媒体开始盘点你的名场面。{achievement}。你最想让他们盘点的，是那些没人看见的训练馆清晨。",
+    "历史百大的名单里，你的名字和传奇排在一起。{achievement}。你没有觉得配不上，因为每一座城市的更衣室都记得你是怎么走进来的。",
+    "{achievement}。你让{lastTeam}的球迷相信小城也能出历史级球星，让{longestTeam}的旗帜多了一层含义。百大名单只是把这件事写了下来。",
     "你入选历史百大，可你仍然记得被裁掉边缘的那年夏天。{achievement}。你从那里一路走到这里，名单上的名字是你，路上的脚印也是你。",
     "百大名单是给后来人看的索引。{achievement}。翻到你的名字，就能读到{teamList}，读到 {teamCount} 段旅程，读到很长的一段热爱。",
     "你被写进历史百大。{achievement}。有人问你排第几，你回答：重要的是，我让很多人第一次明白，篮球可以这样打。",
@@ -3830,10 +3832,4 @@ EVENT_REGISTRY.push({
 });
 
 // ── 24. "发型不错" ──
-EVENT_REGISTRY.push({
-  id: 'trash_bald',
-  name: '"发型不错"',
-  weight: 2,
-  condition: (ctx) => true,
-  execute: (ctx) => {
-    return { emoji:'🧑‍🦲', title:'"发型不错"', body:'你在
+EVENT
