@@ -2863,7 +2863,7 @@ function renderModeSelect() {
 
 function startGame() {
   ensureHupuUser(true);
-  if (STATE.mode === 'current' || STATE.mode === 'legend') {showScreen('screen-position');
+  if (STATE.mode === 'current' || STATE.mode === 'legend') {showScreen('screen-position'); renderPositionSelect();
   } else {
     alert('该模式开发中');
   }
@@ -4574,5 +4574,4 @@ function startSeason() {
   STATE.season = {
     wins: 0, losses: 0,
     games: [],
-    playerStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, games: 0, mins: 0 },
-    
+    playerStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, ga
