@@ -1,15 +1,4 @@
-ore_mirror' || node === 'score_meme' || node === 'score_own' || node === 'score_report';
-    },
-    choices: [
-      { label: '亲自回帖', hint: '真实感上升，风评变活', apply: function() {
-        setBranchNode('fan_culture', 'community_reply', { action: 'reply' });
-        addProfileDelta('fanSupport', 3);
-        addProfileDelta('mediaTrust', 1);
-        return '你挑了几条热评逐条回复，包括一条骂你的。骂你的那条被你回复后，楼主反而成了你粉丝。<br><br>效果：球迷支持+3；媒体好感+1。';
-      }},
-      { label: '空降直播', hint: '互动最高，风险也高', apply: function() {
-        setBranchNode('fan_culture', 'community_live', { action: 'live' });
-        addProfileDelta('fame', 3);
+', 3);
         addProfileDelta('controversy', 1);
         return '你在虎扑直播间聊了一个小时，从训练聊到夜宵。弹幕从“黑”变“真性情”只用了十分钟。<br><br>效果：人气+3；争议+1。';
       }},
@@ -3755,4 +3744,11 @@ var TOP100_COPY = [
     "历史百大公布时，你正在整理旧球衣。{achievement}。你翻出{firstTeam}的球衣，又翻出{lastTeam}的，中间隔着 {teamCount} 支球队和很长一段青春。",
     "你被写进历史百大，不是因为天赋，是因为没有停下。{achievement}。伤病、换队、低谷，你一样都没躲过，但你也一样都没让它们赢到最后。",
     "百大名单念到你时，播音员多停了一秒。{achievement}。那一秒里，{teamList}的球迷都在屏幕前挺直了背。",
-    "你入选NBA历史百大，
+    "你入选NBA历史百大，媒体开始盘点你的名场面。{achievement}。你最想让他们盘点的，是那些没人看见的训练馆清晨。",
+    "历史百大的名单里，你的名字和传奇排在一起。{achievement}。你没有觉得配不上，因为每一座城市的更衣室都记得你是怎么走进来的。",
+    "{achievement}。你让{lastTeam}的球迷相信小城也能出历史级球星，让{longestTeam}的旗帜多了一层含义。百大名单只是把这件事写了下来。",
+    "你入选历史百大，可你仍然记得被裁掉边缘的那年夏天。{achievement}。你从那里一路走到这里，名单上的名字是你，路上的脚印也是你。",
+    "百大名单是给后来人看的索引。{achievement}。翻到你的名字，就能读到{teamList}，读到 {teamCount} 段旅程，读到很长的一段热爱。",
+    "你被写进历史百大。{achievement}。有人问你排第几，你回答：重要的是，我让很多人第一次明白，篮球可以这样打。",
+    "历史百大公布，你的名字出现在中段。{achievement}。你把手机放下，去训练馆投了一组篮。历史不会等你，但你一直没停。",
+    "{achievement}。你打了 {games} 场，走过{teamList}，在{lastTeam}谢幕。百大名单把你放进去，是因为你把篮球这件事，认真做了
