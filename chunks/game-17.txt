@@ -4068,6 +4068,7 @@ function closeArchiveDetail() {
   function getHistoricalPlayersForTeam(team){
     return (HISTORICAL_SURPRISE_DATA[team] || []).map(function(player){ return JSON.parse(JSON.stringify(player)); });
   }
+  window.getHistoricalPlayersForTeam = getHistoricalPlayersForTeam;
   function __buildHistoricalSurpriseSelection(team, available, shownNames){
     var normal = available.filter(function(p){ return !p.isHistorical && shownNames.indexOf(p.name) < 0; });
     if (!normal.length) normal = available.filter(function(p){ return !p.isHistorical; });
