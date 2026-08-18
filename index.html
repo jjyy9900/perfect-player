@@ -15,7 +15,34 @@
       }))).then((html) => {
         // 用 Blob URL 进行一次真正的页面导航，让原游戏按正常的
         // HTML 解析、脚本执行和 DOMContentLoaded 生命周期启动。
-        const page = new Blob([html.join('')], { type: 'text/html;charset=utf-8' });
+        const fallback = `<script>
+          (function () {
+            function ensureGameEntry() {
+              const container = document.getElementById('feature-grid');
+              if (!container || container.children.length) return;
+              if (typeof renderModeSelect === 'function') {
+                try { renderModeSelect(); } catch (e) {}
+                if (container.children.length) return;
+              }
+              container.innerHTML = '<div class="feature-card selected"><span class="fc-tag gold">Current</span><div class="fc-title">生涯模式</div><div class="fc-sub">从现役球员中夺取属性，组建我的球员</div><button class="fc-btn" id="fallback-start-game">🎮 进入活动</button></div>';
+              const button = document.getElementById('fallback-start-game');
+              if (button) button.onclick = function () {
+                try {
+                  if (typeof STATE !== 'undefined') STATE.mode = 'current';
+                  if (typeof startGame === 'function') startGame();
+                } catch (error) {
+                  console.error('游戏入口启动失败', error);
+                  alert('游戏初始化失败，请刷新后重试');
+                }
+              };
+            }
+            if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', ensureGameEntry);
+            else ensureGameEntry();
+            setTimeout(ensureGameEntry, 1200);
+          }());
+        <\/script>`;
+        const fullPage = html.join('').replace('</body>', fallback + '</body>');
+        const page = new Blob([fullPage], { type: 'text/html;charset=utf-8' });
         location.replace(URL.createObjectURL(page));
       }).catch((error) => {
       document.getElementById('loading').textContent = error.message;
