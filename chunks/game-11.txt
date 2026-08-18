@@ -2863,19 +2863,7 @@ function renderModeSelect() {
 
 function startGame() {
   ensureHupuUser(true);
-  if (STATE.mode === 'current' || STATE.mode === 'legend') {
-    // 输出灰熊(MEM)和凯尔特人(BOS)全阵容
-    console.log('========== 🏀 灰熊(MEM) 全阵容 ==========');
-    (NBA2K_DATA['MEM'] || []).forEach(function(p) {
-      console.log(p.cname + ' (' + p.name + ')', '| OVR:', p.ovr, '| 位置:', p.pos, '| 类型:', p.type);
-    });
-    console.log('==========================================');
-    console.log('========== 🏀 凯尔特人(BOS) 全阵容 ==========');
-    (NBA2K_DATA['BOS'] || []).forEach(function(p) {
-      console.log(p.cname + ' (' + p.name + ')', '| OVR:', p.ovr, '| 位置:', p.pos, '| 类型:', p.type);
-    });
-    console.log('==========================================');
-    showScreen('screen-position');
+  if (STATE.mode === 'current' || STATE.mode === 'legend') {showScreen('screen-position');
   } else {
     alert('该模式开发中');
   }
@@ -4573,4 +4561,18 @@ function getConferenceSorted(conf) {
     .sort((a, b) => {
       const apct = a.wins + a.losses > 0 ? a.wins / (a.wins + a.losses) : 0;
       const bpct = b.wins + b.losses > 0 ? b.wins / (b.wins + b.losses) : 0;
-      return bpct - apct || 
+      return bpct - apct || b.wins - a.wins;
+    });
+}
+
+// ==================== 6. 赛季模拟（新引擎）====================
+function startSeason() {
+  showScreen('screen-season');
+  clearLineupCache();
+  var currentStarterStatus = STATE.careerTeam && STATE.finalOVR ? !!calcTeamLineup(STATE.careerTeam).isUserStarter : true;
+  if (STATE.career && STATE.career.flags && STATE.career.flags.startBench) currentStarterStatus = false;
+  STATE.season = {
+    wins: 0, losses: 0,
+    games: [],
+    playerStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, games: 0, mins: 0 },
+    
