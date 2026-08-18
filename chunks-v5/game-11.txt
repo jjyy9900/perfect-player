@@ -1,0 +1,4577 @@
+IN: 86, DNK: 75, HAN: 80, PAS: 70, PDEF: 77, IDEF: 80, BLK: 63, REB: 54, ATH: 77, STR: 79, CLU: 50 },
+    samples: ['Maxi Kleber'],
+  },
+  'Glass Guardian Crafty Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '篮板守护灵巧终结者',
+    avgOVR: 82,
+    positions: ['C'],
+    attrs: { threePT: 76, MID: 78, FIN: 98, DNK: 70, HAN: 95, PAS: 58, PDEF: 37, IDEF: 79, BLK: 94, REB: 91, ATH: 31, STR: 84, CLU: 65 },
+    samples: ['Zach Edey'],
+  },
+  'Wing-Running Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '侧翼跑动终结者',
+    avgOVR: 80,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 76, MID: 69, FIN: 92, DNK: 80, HAN: 80, PAS: 68, PDEF: 73, IDEF: 58, BLK: 55, REB: 73, ATH: 84, STR: 57, CLU: 98 },
+    samples: ['Cedric Coward'],
+  },
+  'Rim-Rocking Mid-Range Slasher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '震撼中距离突破手',
+    avgOVR: 80,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 76, MID: 89, FIN: 88, DNK: 85, HAN: 95, PAS: 59, PDEF: 58, IDEF: 58, BLK: 73, REB: 68, ATH: 79, STR: 62, CLU: 90 },
+    samples: ['GG Jackson'],
+  },
+  'Diming Crafty Sharpshooter': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '组织灵巧神射手',
+    avgOVR: 79,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 88, MID: 86, FIN: 97, DNK: 55, HAN: 85, PAS: 84, PDEF: 59, IDEF: 44, BLK: 40, REB: 47, ATH: 73, STR: 45, CLU: 75 },
+    samples: ['Cam Spencer'],
+  },
+  '2-Way Pick & Popper': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体挡拆外切',
+    avgOVR: 78,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 77, MID: 77, FIN: 92, DNK: 70, HAN: 70, PAS: 44, PDEF: 67, IDEF: 84, BLK: 91, REB: 66, ATH: 71, STR: 89, CLU: 60 },
+    samples: ['Isaiah Stewart'],
+  },
+  'Rim-Running Paint Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '快下内线终结者',
+    avgOVR: 78,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 57, MID: 78, FIN: 97, DNK: 84, HAN: 80, PAS: 59, PDEF: 75, IDEF: 80, BLK: 65, REB: 68, ATH: 83, STR: 64, CLU: 60 },
+    samples: ['Brandon Clarke'],
+  },
+  'Chaos General': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '混乱统帅',
+    avgOVR: 77,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 75, MID: 79, FIN: 74, DNK: 65, HAN: 72, PAS: 85, PDEF: 62, IDEF: 31, BLK: 62, REB: 39, ATH: 82, STR: 39, CLU: 80 },
+    samples: ['Scotty Pippen Jr.'],
+  },
+  'Mid-Range-Scoring Crasher': {
+    count: 1,
+    icon: '🏀',
+    category: 'iso_scorer',
+    cn: '中距离得分冲击者',
+    avgOVR: 70,
+    positions: ['C'],
+    attrs: { threePT: 50, MID: 82, FIN: 77, DNK: 65, HAN: 77, PAS: 33, PDEF: 58, IDEF: 69, BLK: 60, REB: 70, ATH: 57, STR: 83, CLU: 30 },
+    samples: ['Taj Gibson'],
+  },
+  '2-Way Crafty PlaySlash Cleaner': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体灵巧组织突破清扫者',
+    avgOVR: 97,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 76, MID: 59, FIN: 96, DNK: 91, HAN: 95, PAS: 84, PDEF: 87, IDEF: 90, BLK: 62, REB: 90, ATH: 86, STR: 94, CLU: 85 },
+    samples: ['Giannis Antetokounmpo'],
+  },
+  '2-Way Paint-Finishing Cleaner': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '攻防一体内线终结清扫者',
+    avgOVR: 89,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 74, MID: 79, FIN: 87, DNK: 80, HAN: 90, PAS: 72, PDEF: 88, IDEF: 90, BLK: 57, REB: 87, ATH: 84, STR: 85, CLU: 70 },
+    samples: ['Bam Adebayo'],
+  },
+  'Inside-Out Rim-Rocking Slasher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '内外兼备震撼突破手',
+    avgOVR: 81,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 86, MID: 73, FIN: 88, DNK: 85, HAN: 85, PAS: 62, PDEF: 74, IDEF: 55, BLK: 71, REB: 52, ATH: 82, STR: 57, CLU: 85 },
+    samples: ['Andrew Wiggins'],
+  },
+  '3 & D Creator': {
+    count: 1,
+    icon: '✨',
+    category: 'skill_creator',
+    cn: '3D创造者',
+    avgOVR: 79,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 83, MID: 74, FIN: 98, DNK: 40, HAN: 95, PAS: 75, PDEF: 87, IDEF: 44, BLK: 37, REB: 45, ATH: 88, STR: 60, CLU: 65 },
+    samples: ['Davion Mitchell'],
+  },
+  'Board-Hunting 3PT Sniper': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '篮板三分狙击手',
+    avgOVR: 75,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 83, MID: 72, FIN: 88, DNK: 70, HAN: 84, PAS: 69, PDEF: 69, IDEF: 45, BLK: 48, REB: 78, ATH: 78, STR: 62, CLU: 65 },
+    samples: ['Myron Gardner'],
+  },
+  'Crafty Inside-Out Point Center': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '灵巧内外兼备组织中锋',
+    avgOVR: 74,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 73, MID: 70, FIN: 80, DNK: 60, HAN: 90, PAS: 69, PDEF: 62, IDEF: 59, BLK: 57, REB: 68, ATH: 68, STR: 44, CLU: 95 },
+    samples: ['Nikola Jovic'],
+  },
+  'Physical Combo Guard': {
+    count: 1,
+    icon: '🎮',
+    category: 'playmaker',
+    cn: '力量双能卫',
+    avgOVR: 68,
+    positions: ['SG'],
+    attrs: { threePT: 71, MID: 68, FIN: 71, DNK: 70, HAN: 72, PAS: 74, PDEF: 60, IDEF: 37, BLK: 51, REB: 47, ATH: 74, STR: 60, CLU: 30 },
+    samples: ['Trevor Keels'],
+  },
+  'Ball-Hawking Mid-Paint Scorer': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '抢断中近距离得分手',
+    avgOVR: 82,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 76, MID: 94, FIN: 79, DNK: 80, HAN: 80, PAS: 82, PDEF: 69, IDEF: 44, BLK: 53, REB: 62, ATH: 75, STR: 52, CLU: 70 },
+    samples: ['Kevin Porter Jr.'],
+  },
+  'Board-Hunting Stretch Dunker': {
+    count: 1,
+    icon: '🏀',
+    category: 'stretch_big',
+    cn: '篮板空间扣将',
+    avgOVR: 80,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 82, MID: 64, FIN: 77, DNK: 86, HAN: 90, PAS: 37, PDEF: 37, IDEF: 75, BLK: 82, REB: 91, ATH: 68, STR: 66, CLU: 60 },
+    samples: ['Kel’el Ware'],
+  },
+  'Drive & Rise Bully': {
+    count: 1,
+    icon: '💪',
+    category: 'big',
+    cn: '急停干拔好手',
+    avgOVR: 80,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 78, MID: 79, FIN: 84, DNK: 75, HAN: 95, PAS: 66, PDEF: 75, IDEF: 66, BLK: 55, REB: 66, ATH: 74, STR: 74, CLU: 60 },
+    samples: ['Kyle Kuzma'],
+  },
+  '2-Way Stretch Five': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体空间中锋',
+    avgOVR: 78,
+    positions: ['C'],
+    attrs: { threePT: 82, MID: 88, FIN: 85, DNK: 65, HAN: 85, PAS: 31, PDEF: 70, IDEF: 87, BLK: 87, REB: 69, ATH: 66, STR: 80, CLU: 35 },
+    samples: ['Myles Turner'],
+  },
+  '3PT-Sniping Lob Threat': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '三分空接威胁',
+    avgOVR: 76,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 84, MID: 79, FIN: 73, DNK: 70, HAN: 85, PAS: 68, PDEF: 74, IDEF: 64, BLK: 47, REB: 53, ATH: 78, STR: 60, CLU: 60 },
+    samples: ['Taurean Prince'],
+  },
+  'Sharpshooter': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '神射手',
+    avgOVR: 75,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 82, MID: 95, FIN: 73, DNK: 75, HAN: 73, PAS: 70, PDEF: 61, IDEF: 50, BLK: 30, REB: 37, ATH: 76, STR: 58, CLU: 65 },
+    samples: ['Gary Trent Jr.'],
+  },
+  '3 & D Dime Dropper': {
+    count: 1,
+    icon: '🎮',
+    category: 'playmaker',
+    cn: '3D妙传手',
+    avgOVR: 73,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 87, MID: 79, FIN: 85, DNK: 50, HAN: 75, PAS: 75, PDEF: 80, IDEF: 68, BLK: 50, REB: 46, ATH: 80, STR: 53, CLU: 50 },
+    samples: ['Gary Harris'],
+  },
+  'Crafty Blow-By Dual Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '灵巧一步突破双重终结者',
+    avgOVR: 69,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 66, MID: 66, FIN: 71, DNK: 85, HAN: 64, PAS: 54, PDEF: 59, IDEF: 42, BLK: 51, REB: 61, ATH: 75, STR: 42, CLU: 65 },
+    samples: ['Thanasis Antetokounmpo'],
+  },
+  'Bouncy Dual Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '弹跳双重终结者',
+    avgOVR: 69,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 66, MID: 66, FIN: 74, DNK: 80, HAN: 80, PAS: 59, PDEF: 66, IDEF: 66, BLK: 56, REB: 57, ATH: 74, STR: 60, CLU: 75 },
+    samples: ['Enrique Freeman'],
+  },
+  '3PT-Sniping Layup Bully': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '三分上篮碾压者',
+    avgOVR: 84,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 82, MID: 64, FIN: 87, DNK: 75, HAN: 95, PAS: 64, PDEF: 69, IDEF: 64, BLK: 32, REB: 60, ATH: 72, STR: 74, CLU: 80 },
+    samples: ['Saddiq Bey'],
+  },
+  'Break-Starting Crafty Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '快攻灵巧终结者',
+    avgOVR: 80,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 66, MID: 71, FIN: 85, DNK: 70, HAN: 90, PAS: 79, PDEF: 52, IDEF: 69, BLK: 73, REB: 83, ATH: 54, STR: 80, CLU: 70 },
+    samples: ['Derik Queen'],
+  },
+  'Rim-Running Putback Eraser': {
+    count: 1,
+    icon: '🏀',
+    category: 'big',
+    cn: '快下补篮扣将',
+    avgOVR: 78,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 30, MID: 42, FIN: 78, DNK: 80, HAN: 90, PAS: 29, PDEF: 48, IDEF: 75, BLK: 92, REB: 67, ATH: 67, STR: 72, CLU: 75 },
+    samples: ['Yves Missi'],
+  },
+  'Physical Glass Guardian': {
+    count: 1,
+    icon: '🏀',
+    category: 'all_around',
+    cn: '力量篮板守护者',
+    avgOVR: 76,
+    positions: ['C'],
+    attrs: { threePT: 25, MID: 25, FIN: 75, DNK: 75, HAN: 90, PAS: 25, PDEF: 57, IDEF: 70, BLK: 85, REB: 94, ATH: 62, STR: 85, CLU: 75 },
+    samples: ['DeAndre Jordan'],
+  },
+  'Shot-Erasing Stretch Riser': {
+    count: 1,
+    icon: '🎯',
+    category: 'stretch_big',
+    cn: '封盖空间跃升者',
+    avgOVR: 76,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 84, MID: 75, FIN: 78, DNK: 75, HAN: 80, PAS: 50, PDEF: 41, IDEF: 73, BLK: 87, REB: 72, ATH: 51, STR: 77, CLU: 70 },
+    samples: ['Karlo Matkovic'],
+  },
+  'Board-Hunting Stretch Five': {
+    count: 1,
+    icon: '🏀',
+    category: 'stretch_big',
+    cn: '篮板空间中锋',
+    avgOVR: 74,
+    positions: ['C'],
+    attrs: { threePT: 69, MID: 44, FIN: 74, DNK: 70, HAN: 66, PAS: 55, PDEF: 46, IDEF: 72, BLK: 70, REB: 77, ATH: 69, STR: 74, CLU: 40 },
+    samples: ['Kevon Looney'],
+  },
+  'Board-Hunting Middy Scorer': {
+    count: 1,
+    icon: '🏀',
+    category: 'iso_scorer',
+    cn: '篮板中距离得分手',
+    avgOVR: 68,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 66, MID: 70, FIN: 74, DNK: 65, HAN: 64, PAS: 62, PDEF: 58, IDEF: 66, BLK: 52, REB: 70, ATH: 58, STR: 66, CLU: 50 },
+    samples: ['Josh Oduro'],
+  },
+  'Inside-Out Break Starter': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '内外兼备快攻发起者',
+    avgOVR: 91,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 83, MID: 69, FIN: 93, DNK: 75, HAN: 98, PAS: 75, PDEF: 50, IDEF: 71, BLK: 57, REB: 93, ATH: 76, STR: 87, CLU: 85 },
+    samples: ['Karl-Anthony Towns'],
+  },
+  '2-Way 3PT-Sniping High Flyer': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '攻防一体三分投射飞天流',
+    avgOVR: 88,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 85, MID: 76, FIN: 81, DNK: 85, HAN: 90, PAS: 58, PDEF: 90, IDEF: 81, BLK: 62, REB: 59, ATH: 91, STR: 68, CLU: 80 },
+    samples: ['OG Anunoby'],
+  },
+  '2-Way Combo Guard Creator': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体双能卫创造者',
+    avgOVR: 84,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 82, MID: 89, FIN: 92, DNK: 75, HAN: 80, PAS: 78, PDEF: 88, IDEF: 69, BLK: 63, REB: 49, ATH: 87, STR: 68, CLU: 50 },
+    samples: ['Mikal Bridges'],
+  },
+  '2-Way Skilled Stretch Cleaner': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体技术空间清扫者',
+    avgOVR: 82,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 84, MID: 82, FIN: 94, DNK: 70, HAN: 95, PAS: 73, PDEF: 86, IDEF: 78, BLK: 47, REB: 82, ATH: 86, STR: 64, CLU: 80 },
+    samples: ['Josh Hart'],
+  },
+  'Crafty Laymaking Point Four': {
+    count: 1,
+    icon: '✨',
+    category: 'skill_creator',
+    cn: '灵巧上篮组织内线',
+    avgOVR: 74,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 70, MID: 45, FIN: 92, DNK: 80, HAN: 70, PAS: 79, PDEF: 74, IDEF: 65, BLK: 52, REB: 63, ATH: 74, STR: 60, CLU: 60 },
+    samples: ['Jeremy Sochan'],
+  },
+  'Rim-Rocking Stretch Four': {
+    count: 1,
+    icon: '🏀',
+    category: 'big',
+    cn: '震撼空间内线',
+    avgOVR: 74,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 83, MID: 88, FIN: 81, DNK: 85, HAN: 85, PAS: 54, PDEF: 60, IDEF: 64, BLK: 50, REB: 61, ATH: 69, STR: 69, CLU: 60 },
+    samples: ['Mohamed Diawara'],
+  },
+  'Ball-Snatching Rim Rocker': {
+    count: 1,
+    icon: '🏀',
+    category: 'big',
+    cn: '抢断篮筐震撼者',
+    avgOVR: 71,
+    positions: ['C'],
+    attrs: { threePT: 29, MID: 50, FIN: 83, DNK: 75, HAN: 80, PAS: 44, PDEF: 37, IDEF: 71, BLK: 76, REB: 65, ATH: 52, STR: 76, CLU: 50 },
+    samples: ['Trey Jemison III'],
+  },
+  '3-Level-Diming Crasher': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '三威胁组织冲击者',
+    avgOVR: 71,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 74, MID: 75, FIN: 76, DNK: 75, HAN: 85, PAS: 68, PDEF: 72, IDEF: 52, BLK: 63, REB: 55, ATH: 82, STR: 55, CLU: 40 },
+    samples: ['Kevin McCullar Jr.'],
+  },
+  'Speedy Point Four': {
+    count: 1,
+    icon: '🚀',
+    category: 'all_around',
+    cn: '速度组织内线',
+    avgOVR: 69,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 57, MID: 70, FIN: 63, DNK: 65, HAN: 89, PAS: 68, PDEF: 69, IDEF: 67, BLK: 42, REB: 67, ATH: 82, STR: 70, CLU: 55 },
+    samples: ['Dillon Jones'],
+  },
+  '2-Way Mid-Paint Playmaker': {
+    count: 1,
+    icon: '💪',
+    category: 'two_way',
+    cn: '攻防一体中近距离组织者',
+    avgOVR: 98,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 82, MID: 99, FIN: 97, DNK: 75, HAN: 98, PAS: 97, PDEF: 86, IDEF: 69, BLK: 62, REB: 54, ATH: 86, STR: 62, CLU: 90 },
+    samples: ['Shai Gilgeous-Alexander'],
+  },
+  'Backline Crafty 3-Level Scorer': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '底线灵巧三威胁得分手',
+    avgOVR: 87,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 80, MID: 87, FIN: 92, DNK: 75, HAN: 95, PAS: 60, PDEF: 75, IDEF: 90, BLK: 89, REB: 86, ATH: 75, STR: 45, CLU: 70 },
+    samples: ['Chet Holmgren'],
+  },
+  '2-Way Point Forward': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体组织前锋',
+    avgOVR: 87,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 77, MID: 79, FIN: 87, DNK: 80, HAN: 87, PAS: 78, PDEF: 92, IDEF: 85, BLK: 50, REB: 61, ATH: 92, STR: 68, CLU: 60 },
+    samples: ['Jalen Williams'],
+  },
+  '2-Way 3PT-Sniping Layup Artist': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '攻防一体三分上篮艺术家',
+    avgOVR: 83,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 83, MID: 73, FIN: 70, DNK: 70, HAN: 95, PAS: 75, PDEF: 91, IDEF: 72, BLK: 52, REB: 47, ATH: 91, STR: 55, CLU: 70 },
+    samples: ['Cason Wallace'],
+  },
+  '2-Way Mid-Paint Bully': {
+    count: 1,
+    icon: '💪',
+    category: 'two_way',
+    cn: '攻防一体中近距离碾压者',
+    avgOVR: 80,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 77, MID: 86, FIN: 64, DNK: 85, HAN: 85, PAS: 67, PDEF: 94, IDEF: 75, BLK: 55, REB: 51, ATH: 94, STR: 70, CLU: 50 },
+    samples: ['Luguentz Dort'],
+  },
+  'Shot-Erasing Stretch Five': {
+    count: 1,
+    icon: '🎯',
+    category: 'stretch_big',
+    cn: '封盖空间中锋',
+    avgOVR: 73,
+    positions: ['C'],
+    attrs: { threePT: 78, MID: 72, FIN: 82, DNK: 60, HAN: 85, PAS: 47, PDEF: 30, IDEF: 52, BLK: 82, REB: 72, ATH: 30, STR: 60, CLU: 85 },
+    samples: ['Branden Carlson'],
+  },
+  'Crafty Mid-Paint Point Forward': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '灵巧中近距离组织前锋',
+    avgOVR: 87,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 80, MID: 90, FIN: 85, DNK: 80, HAN: 95, PAS: 80, PDEF: 73, IDEF: 56, BLK: 50, REB: 64, ATH: 73, STR: 65, CLU: 75 },
+    samples: ['Franz Wagner'],
+  },
+  '2-Way Crafty Laymaker': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体灵巧上篮高手',
+    avgOVR: 82,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 77, MID: 75, FIN: 82, DNK: 75, HAN: 90, PAS: 80, PDEF: 84, IDEF: 63, BLK: 60, REB: 53, ATH: 85, STR: 58, CLU: 90 },
+    samples: ['Anthony Black'],
+  },
+  '2-Way Mid-Range Slasher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '攻防一体中距离突破手',
+    avgOVR: 81,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 76, MID: 90, FIN: 87, DNK: 80, HAN: 84, PAS: 75, PDEF: 91, IDEF: 55, BLK: 63, REB: 60, ATH: 92, STR: 59, CLU: 50 },
+    samples: ['Jalen Suggs'],
+  },
+  'Putback Power-Finishing Eraser': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '补篮暴力终结者',
+    avgOVR: 77,
+    positions: ['C'],
+    attrs: { threePT: 69, MID: 72, FIN: 98, DNK: 65, HAN: 70, PAS: 54, PDEF: 25, IDEF: 78, BLK: 86, REB: 76, ATH: 37, STR: 88, CLU: 60 },
+    samples: ['Goga Bitadze'],
+  },
+  '3PT High-Flying Ball Hawk': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '三分飞天抢断手',
+    avgOVR: 68,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 76, MID: 69, FIN: 70, DNK: 75, HAN: 80, PAS: 69, PDEF: 73, IDEF: 64, BLK: 32, REB: 64, ATH: 75, STR: 60, CLU: 30 },
+    samples: ['Alex Morales'],
+  },
+  'Ankle Taker': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '脚踝终结者',
+    avgOVR: 93,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 86, MID: 87, FIN: 84, DNK: 70, HAN: 98, PAS: 80, PDEF: 79, IDEF: 54, BLK: 60, REB: 52, ATH: 90, STR: 44, CLU: 98 },
+    samples: ['Tyrese Maxey'],
+  },
+  'Physical 2-Way 3-Level Cleaner': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '力量攻防一体三威胁清扫者',
+    avgOVR: 92,
+    positions: ['C'],
+    attrs: { threePT: 79, MID: 91, FIN: 94, DNK: 80, HAN: 90, PAS: 74, PDEF: 68, IDEF: 84, BLK: 73, REB: 90, ATH: 59, STR: 96, CLU: 60 },
+    samples: ['Joel Embiid'],
+  },
+  'Ball-Hawking PlayShot': {
+    count: 1,
+    icon: '🎯',
+    category: 'all_around',
+    cn: '抢断组织投篮',
+    avgOVR: 83,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 83, MID: 90, FIN: 90, DNK: 80, HAN: 80, PAS: 78, PDEF: 79, IDEF: 71, BLK: 55, REB: 68, ATH: 84, STR: 70, CLU: 85 },
+    samples: ['Paul George'],
+  },
+  'Board-Hunting Stretch Riser': {
+    count: 1,
+    icon: '🏀',
+    category: 'stretch_big',
+    cn: '篮板空间跃升者',
+    avgOVR: 76,
+    positions: ['C'],
+    attrs: { threePT: 79, MID: 60, FIN: 85, DNK: 80, HAN: 85, PAS: 52, PDEF: 52, IDEF: 75, BLK: 78, REB: 91, ATH: 58, STR: 94, CLU: 40 },
+    samples: ['Andre Drummond'],
+  },
+  'Crafty Putback Pro': {
+    count: 1,
+    icon: '✨',
+    category: 'skill_creator',
+    cn: '灵巧补篮高手',
+    avgOVR: 76,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 70, MID: 44, FIN: 87, DNK: 75, HAN: 85, PAS: 51, PDEF: 55, IDEF: 59, BLK: 67, REB: 59, ATH: 68, STR: 62, CLU: 85 },
+    samples: ['Dominick Barlow'],
+  },
+  'Shot Eraser': {
+    count: 1,
+    icon: '🎯',
+    category: 'all_around',
+    cn: '盖帽王',
+    avgOVR: 75,
+    positions: ['C'],
+    attrs: { threePT: 54, MID: 57, FIN: 77, DNK: 80, HAN: 70, PAS: 40, PDEF: 37, IDEF: 70, BLK: 90, REB: 66, ATH: 68, STR: 73, CLU: 80 },
+    samples: ['Adem Bona'],
+  },
+  'Ball-Hawking PlaySlash': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '抢断组织突破',
+    avgOVR: 73,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 79, MID: 72, FIN: 62, DNK: 80, HAN: 85, PAS: 76, PDEF: 69, IDEF: 43, BLK: 67, REB: 56, ATH: 76, STR: 58, CLU: 75 },
+    samples: ['Dalen Terry'],
+  },
+  'Shot-Erasing Middy Crasher': {
+    count: 1,
+    icon: '🎯',
+    category: 'iso_scorer',
+    cn: '封盖中距离冲击者',
+    avgOVR: 70,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 69, MID: 75, FIN: 75, DNK: 60, HAN: 90, PAS: 69, PDEF: 60, IDEF: 70, BLK: 72, REB: 69, ATH: 62, STR: 71, CLU: 40 },
+    samples: ['Johni Broome'],
+  },
+  'Bullmashing Putback Pro': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '蛮牛补篮高手',
+    avgOVR: 82,
+    positions: ['C'],
+    attrs: { threePT: 36, MID: 60, FIN: 97, DNK: 75, HAN: 85, PAS: 44, PDEF: 44, IDEF: 75, BLK: 76, REB: 84, ATH: 64, STR: 86, CLU: 80 },
+    samples: ['Mark Williams'],
+  },
+  '3 & D Crasher': {
+    count: 1,
+    icon: '🏀',
+    category: 'all_around',
+    cn: '3D冲击者',
+    avgOVR: 77,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 79, MID: 75, FIN: 79, DNK: 35, HAN: 90, PAS: 78, PDEF: 76, IDEF: 57, BLK: 47, REB: 63, ATH: 84, STR: 49, CLU: 85 },
+    samples: ['Jordan Goodwin'],
+  },
+  'Rim-Running Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '快下终结者',
+    avgOVR: 77,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 35, MID: 60, FIN: 97, DNK: 80, HAN: 80, PAS: 58, PDEF: 47, IDEF: 62, BLK: 67, REB: 69, ATH: 74, STR: 64, CLU: 90 },
+    samples: ['Oso Ighodaro'],
+  },
+  'Perimeter Lock': {
+    count: 1,
+    icon: '🛡️',
+    category: 'big',
+    cn: '外线大锁',
+    avgOVR: 75,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 76, MID: 70, FIN: 77, DNK: 80, HAN: 80, PAS: 60, PDEF: 80, IDEF: 76, BLK: 60, REB: 66, ATH: 88, STR: 65, CLU: 70 },
+    samples: ['Ryan Dunn'],
+  },
+  'Shot-Erasing Rim Wrecker': {
+    count: 1,
+    icon: '🎯',
+    category: 'big',
+    cn: '封盖篮筐破坏者',
+    avgOVR: 75,
+    positions: ['C'],
+    attrs: { threePT: 50, MID: 66, FIN: 70, DNK: 80, HAN: 85, PAS: 51, PDEF: 63, IDEF: 81, BLK: 94, REB: 80, ATH: 63, STR: 70, CLU: 50 },
+    samples: ['Khaman Maluach'],
+  },
+  'Disruptive Blow-By Ace': {
+    count: 1,
+    icon: '🚀',
+    category: 'slasher',
+    cn: '破坏一步突破王牌',
+    avgOVR: 74,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 72, MID: 67, FIN: 85, DNK: 45, HAN: 75, PAS: 75, PDEF: 68, IDEF: 42, BLK: 66, REB: 52, ATH: 83, STR: 41, CLU: 90 },
+    samples: ['Jamaree Bouyea'],
+  },
+  'Crafty Mid-Paint Maestro': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '灵巧中近距离大师',
+    avgOVR: 88,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 75, MID: 89, FIN: 85, DNK: 75, HAN: 85, PAS: 79, PDEF: 80, IDEF: 62, BLK: 56, REB: 74, ATH: 81, STR: 65, CLU: 80 },
+    samples: ['Deni Avdija'],
+  },
+  'Ball-Hawking 3 & D Point': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '抢断3D控卫',
+    avgOVR: 82,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 84, MID: 81, FIN: 91, DNK: 65, HAN: 98, PAS: 80, PDEF: 90, IDEF: 66, BLK: 32, REB: 55, ATH: 90, STR: 49, CLU: 35 },
+    samples: ['Jrue Holiday'],
+  },
+  'Crafty Inside-Out Creator': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '灵巧内外兼备创造者',
+    avgOVR: 81,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 82, MID: 62, FIN: 80, DNK: 80, HAN: 95, PAS: 69, PDEF: 69, IDEF: 70, BLK: 58, REB: 48, ATH: 77, STR: 69, CLU: 70 },
+    samples: ['Jerami Grant'],
+  },
+  'Paint-Finishing Board Enforcer': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '内线终结篮板悍将',
+    avgOVR: 80,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 74, MID: 69, FIN: 98, DNK: 75, HAN: 75, PAS: 57, PDEF: 40, IDEF: 83, BLK: 95, REB: 91, ATH: 64, STR: 83, CLU: 40 },
+    samples: ['Robert Williams III'],
+  },
+  'Ball-Hawking 3 & D Two Guard': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '抢断3D后卫',
+    avgOVR: 76,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 83, MID: 48, FIN: 62, DNK: 70, HAN: 70, PAS: 55, PDEF: 85, IDEF: 60, BLK: 68, REB: 52, ATH: 85, STR: 59, CLU: 80 },
+    samples: ['Matisse Thybulle'],
+  },
+  'Rim-Wrecking Distributor': {
+    count: 1,
+    icon: '🏀',
+    category: 'big',
+    cn: '篮筐破坏分配者',
+    avgOVR: 70,
+    positions: ['C'],
+    attrs: { threePT: 63, MID: 66, FIN: 62, DNK: 70, HAN: 68, PAS: 67, PDEF: 40, IDEF: 69, BLK: 66, REB: 67, ATH: 37, STR: 65, CLU: 70 },
+    samples: ['Yang Hansen'],
+  },
+  'Crafty Mid-Post Break Starter': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '灵巧中低位快攻发起者',
+    avgOVR: 86,
+    positions: ['C'],
+    attrs: { threePT: 70, MID: 86, FIN: 91, DNK: 75, HAN: 98, PAS: 82, PDEF: 49, IDEF: 70, BLK: 40, REB: 93, ATH: 49, STR: 82, CLU: 70 },
+    samples: ['Domantas Sabonis'],
+  },
+  'Physical Mid-Post Creator': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '力量中低位创造者',
+    avgOVR: 84,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 74, MID: 95, FIN: 97, DNK: 80, HAN: 85, PAS: 73, PDEF: 64, IDEF: 58, BLK: 45, REB: 47, ATH: 80, STR: 73, CLU: 50 },
+    samples: ['DeMar DeRozan'],
+  },
+  'Explosive Blow-By High Flyer': {
+    count: 1,
+    icon: '🚀',
+    category: 'slasher',
+    cn: '爆发一步突破飞天流',
+    avgOVR: 81,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 77, MID: 70, FIN: 93, DNK: 80, HAN: 85, PAS: 80, PDEF: 74, IDEF: 42, BLK: 37, REB: 67, ATH: 89, STR: 75, CLU: 80 },
+    samples: ['Russell Westbrook'],
+  },
+  'Mid-Range Scoring Cleaner': {
+    count: 1,
+    icon: '🎯',
+    category: 'iso_scorer',
+    cn: '中距离得分清扫者',
+    avgOVR: 81,
+    positions: ['C'],
+    attrs: { threePT: 72, MID: 85, FIN: 98, DNK: 75, HAN: 90, PAS: 50, PDEF: 32, IDEF: 59, BLK: 57, REB: 85, ATH: 52, STR: 69, CLU: 85 },
+    samples: ['Maxime Raynaud'],
+  },
+  'Inside-Out Combo Guard': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '内外兼备双能卫',
+    avgOVR: 80,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 83, MID: 79, FIN: 83, DNK: 75, HAN: 95, PAS: 75, PDEF: 60, IDEF: 45, BLK: 55, REB: 46, ATH: 80, STR: 48, CLU: 75 },
+    samples: ['Malik Monk'],
+  },
+  'Crafty Putback Masher': {
+    count: 1,
+    icon: '💪',
+    category: 'big',
+    cn: '灵巧补篮粉碎机',
+    avgOVR: 79,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 73, MID: 60, FIN: 94, DNK: 80, HAN: 75, PAS: 36, PDEF: 56, IDEF: 79, BLK: 66, REB: 78, ATH: 74, STR: 78, CLU: 75 },
+    samples: ['Precious Achiuwa'],
+  },
+  'Crafty 2-Way Middy Scorer': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '灵巧攻防一体中距离得分手',
+    avgOVR: 79,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 73, MID: 92, FIN: 94, DNK: 70, HAN: 85, PAS: 67, PDEF: 82, IDEF: 63, BLK: 37, REB: 63, ATH: 83, STR: 65, CLU: 60 },
+    samples: ['De’Andre Hunter'],
+  },
+  'Shot-Erasing Crafty Stretch': {
+    count: 1,
+    icon: '🎯',
+    category: 'stretch_big',
+    cn: '封盖灵巧空间内线',
+    avgOVR: 75,
+    positions: ['C'],
+    attrs: { threePT: 77, MID: 73, FIN: 97, DNK: 70, HAN: 75, PAS: 42, PDEF: 47, IDEF: 74, BLK: 89, REB: 78, ATH: 62, STR: 68, CLU: 60 },
+    samples: ['Drew Eubanks'],
+  },
+  '2-Way Playmaker': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体组织者',
+    avgOVR: 72,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 72, MID: 65, FIN: 65, DNK: 60, HAN: 85, PAS: 82, PDEF: 73, IDEF: 49, BLK: 51, REB: 64, ATH: 79, STR: 56, CLU: 60 },
+    samples: ['Killian Hayes'],
+  },
+  'Backline Stretch Post Scorer': {
+    count: 1,
+    icon: '💪',
+    category: 'big',
+    cn: '底线空间背身得分手',
+    avgOVR: 97,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 83, MID: 78, FIN: 92, DNK: 85, HAN: 98, PAS: 72, PDEF: 80, IDEF: 96, BLK: 99, REB: 98, ATH: 69, STR: 69, CLU: 95 },
+    samples: ['Victor Wembanyama'],
+  },
+  '2-Way Slashing Combo Guard': {
+    count: 1,
+    icon: '🛡️',
+    category: 'two_way',
+    cn: '攻防一体突破双能卫',
+    avgOVR: 88,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 79, MID: 77, FIN: 91, DNK: 88, HAN: 85, PAS: 84, PDEF: 83, IDEF: 64, BLK: 47, REB: 58, ATH: 93, STR: 59, CLU: 95 },
+    samples: ['Stephon Castle'],
+  },
+  'Shot-Creating Point Forward': {
+    count: 1,
+    icon: '🎯',
+    category: 'all_around',
+    cn: '投篮创造组织前锋',
+    avgOVR: 82,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 86, MID: 97, FIN: 80, DNK: 60, HAN: 80, PAS: 76, PDEF: 80, IDEF: 62, BLK: 51, REB: 54, ATH: 80, STR: 60, CLU: 60 },
+    samples: ['Devin Vassell'],
+  },
+  'Power Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '暴力终结者',
+    avgOVR: 81,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 81, MID: 83, FIN: 97, DNK: 75, HAN: 95, PAS: 74, PDEF: 73, IDEF: 67, BLK: 35, REB: 67, ATH: 78, STR: 70, CLU: 70 },
+    samples: ['Keldon Johnson'],
+  },
+  'Shot-Erasing Post Crasher': {
+    count: 1,
+    icon: '🎯',
+    category: 'big',
+    cn: '封盖背身冲击者',
+    avgOVR: 78,
+    positions: ['C'],
+    attrs: { threePT: 70, MID: 66, FIN: 85, DNK: 60, HAN: 85, PAS: 50, PDEF: 32, IDEF: 74, BLK: 81, REB: 68, ATH: 37, STR: 66, CLU: 65 },
+    samples: ['Luke Kornet'],
+  },
+  'Break-Starting Paint Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '快攻内线终结者',
+    avgOVR: 76,
+    positions: ['C'],
+    attrs: { threePT: 58, MID: 60, FIN: 85, DNK: 80, HAN: 81, PAS: 75, PDEF: 46, IDEF: 74, BLK: 75, REB: 89, ATH: 48, STR: 80, CLU: 35 },
+    samples: ['Mason Plumlee'],
+  },
+  'Crafty Stretch Five Dimer': {
+    count: 1,
+    icon: '🎮',
+    category: 'playmaker',
+    cn: '灵巧空间中锋妙传手',
+    avgOVR: 75,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 74, MID: 70, FIN: 93, DNK: 60, HAN: 78, PAS: 70, PDEF: 50, IDEF: 70, BLK: 60, REB: 71, ATH: 35, STR: 70, CLU: 40 },
+    samples: ['Kelly Olynyk'],
+  },
+  'Diming Inside-Out Scorer': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '组织内外得分手',
+    avgOVR: 71,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 76, MID: 70, FIN: 76, DNK: 75, HAN: 70, PAS: 74, PDEF: 65, IDEF: 48, BLK: 52, REB: 59, ATH: 76, STR: 59, CLU: 85 },
+    samples: ['David Jones Garcia'],
+  },
+  'Blow-By Bully': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '一步突破碾压者',
+    avgOVR: 69,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 74, MID: 73, FIN: 73, DNK: 75, HAN: 80, PAS: 62, PDEF: 62, IDEF: 60, BLK: 39, REB: 60, ATH: 75, STR: 73, CLU: 30 },
+    samples: ['Harrison Ingram'],
+  },
+  'Mid-Paint Playmaking Eraser': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '中近距离组织扣将',
+    avgOVR: 89,
+    positions: ['PF', 'PG'],
+    attrs: { threePT: 77, MID: 87, FIN: 97, DNK: 80, HAN: 95, PAS: 82, PDEF: 80, IDEF: 80, BLK: 81, REB: 73, ATH: 82, STR: 74, CLU: 80 },
+    samples: ['Scottie Barnes'],
+  },
+  'Ball-Hawking Blow-By Laymaker': {
+    count: 1,
+    icon: '🚀',
+    category: 'slasher',
+    cn: '抢断一步突破上篮高手',
+    avgOVR: 81,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 77, MID: 70, FIN: 94, DNK: 75, HAN: 85, PAS: 67, PDEF: 74, IDEF: 72, BLK: 80, REB: 58, ATH: 86, STR: 70, CLU: 95 },
+    samples: ['Collin Murray-Boyles'],
+  },
+  'Crafty Mid-Post Scorer': {
+    count: 1,
+    icon: '💪',
+    category: 'iso_scorer',
+    cn: '灵巧中低位得分手',
+    avgOVR: 80,
+    positions: ['C'],
+    attrs: { threePT: 45, MID: 79, FIN: 97, DNK: 60, HAN: 85, PAS: 69, PDEF: 45, IDEF: 81, BLK: 67, REB: 80, ATH: 37, STR: 80, CLU: 75 },
+    samples: ['Jakob Poeltl'],
+  },
+  'Crafty Stretch Four Cleaner': {
+    count: 1,
+    icon: '📏',
+    category: 'stretch_big',
+    cn: '灵巧空间内线清扫者',
+    avgOVR: 79,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 82, MID: 70, FIN: 90, DNK: 65, HAN: 85, PAS: 62, PDEF: 50, IDEF: 65, BLK: 63, REB: 71, ATH: 59, STR: 73, CLU: 95 },
+    samples: ['Sandro Mamukelashvili'],
+  },
+  'Ball-Hawking 3PT Sniper': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '抢断三分狙击手',
+    avgOVR: 78,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 83, MID: 78, FIN: 84, DNK: 75, HAN: 80, PAS: 69, PDEF: 66, IDEF: 47, BLK: 47, REB: 50, ATH: 82, STR: 57, CLU: 90 },
+    samples: ['Ja’Kobe Walter'],
+  },
+  'Board-Hunting Rim Runner': {
+    count: 1,
+    icon: '🏀',
+    category: 'big',
+    cn: '篮板快下终结者',
+    avgOVR: 74,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 70, MID: 53, FIN: 89, DNK: 80, HAN: 64, PAS: 66, PDEF: 64, IDEF: 64, BLK: 66, REB: 78, ATH: 79, STR: 68, CLU: 70 },
+    samples: ['Jonathan Mogbo'],
+  },
+  'Ball-Hawking Wing Runner': {
+    count: 1,
+    icon: '⭐',
+    category: 'athlete',
+    cn: '抢断侧翼跑锋',
+    avgOVR: 71,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 76, MID: 76, FIN: 77, DNK: 85, HAN: 80, PAS: 67, PDEF: 74, IDEF: 48, BLK: 56, REB: 44, ATH: 88, STR: 62, CLU: 50 },
+    samples: ['Alijah Martin'],
+  },
+  'Crafty Post-Scoring 3PT Sniper': {
+    count: 1,
+    icon: '🎯',
+    category: 'shooter',
+    cn: '灵巧背身三分狙击手',
+    avgOVR: 87,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 82, MID: 72, FIN: 96, DNK: 80, HAN: 95, PAS: 67, PDEF: 65, IDEF: 66, BLK: 52, REB: 66, ATH: 65, STR: 61, CLU: 80 },
+    samples: ['Lauri Markkanen'],
+  },
+  '2-Way Paint Pounder': {
+    count: 1,
+    icon: '💪',
+    category: 'two_way',
+    cn: '攻防一体禁区霸主',
+    avgOVR: 86,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 79, MID: 57, FIN: 97, DNK: 80, HAN: 80, PAS: 45, PDEF: 80, IDEF: 93, BLK: 83, REB: 67, ATH: 80, STR: 82, CLU: 75 },
+    samples: ['Jaren Jackson Jr.'],
+  },
+  'Ball-Snatching Popper': {
+    count: 1,
+    icon: '⭐',
+    category: 'all_around',
+    cn: '抢断外切',
+    avgOVR: 82,
+    positions: ['C'],
+    attrs: { threePT: 79, MID: 88, FIN: 97, DNK: 65, HAN: 85, PAS: 70, PDEF: 45, IDEF: 71, BLK: 56, REB: 93, ATH: 49, STR: 90, CLU: 85 },
+    samples: ['Jusuf Nurkic'],
+  },
+  'Playmaker': {
+    count: 1,
+    icon: '🎮',
+    category: 'playmaker',
+    cn: '组织者',
+    avgOVR: 82,
+    positions: ['PG', 'SG'],
+    attrs: { threePT: 73, MID: 68, FIN: 94, DNK: 75, HAN: 95, PAS: 90, PDEF: 62, IDEF: 30, BLK: 52, REB: 48, ATH: 88, STR: 60, CLU: 80 },
+    samples: ['Isaiah Collier'],
+  },
+  'Crafty Blow-By High Flyer': {
+    count: 1,
+    icon: '🚀',
+    category: 'slasher',
+    cn: '灵巧一步突破飞天流',
+    avgOVR: 81,
+    positions: ['SG', 'SF'],
+    attrs: { threePT: 78, MID: 74, FIN: 97, DNK: 80, HAN: 80, PAS: 66, PDEF: 68, IDEF: 59, BLK: 62, REB: 52, ATH: 84, STR: 61, CLU: 95 },
+    samples: ['Ace Bailey'],
+  },
+  'Disruptive Crafty Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '破坏灵巧终结者',
+    avgOVR: 76,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 69, MID: 73, FIN: 97, DNK: 55, HAN: 85, PAS: 74, PDEF: 62, IDEF: 54, BLK: 72, REB: 65, ATH: 69, STR: 40, CLU: 95 },
+    samples: ['John Konchar'],
+  },
+  'Rim-Running Putback Pro': {
+    count: 1,
+    icon: '🏀',
+    category: 'big',
+    cn: '快下补篮高手',
+    avgOVR: 73,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 37, MID: 69, FIN: 97, DNK: 75, HAN: 95, PAS: 42, PDEF: 48, IDEF: 69, BLK: 45, REB: 80, ATH: 67, STR: 69, CLU: 40 },
+    samples: ['Oscar Tshiebwe'],
+  },
+  'Ball-Hawking Table Setter': {
+    count: 1,
+    icon: '🎮',
+    category: 'playmaker',
+    cn: '抢断场上指挥官',
+    avgOVR: 68,
+    positions: ['SG', 'PG'],
+    attrs: { threePT: 74, MID: 72, FIN: 73, DNK: 55, HAN: 85, PAS: 74, PDEF: 70, IDEF: 50, BLK: 40, REB: 44, ATH: 78, STR: 62, CLU: 50 },
+    samples: ['Hayden Gray'],
+  },
+  'Backline Post Bully': {
+    count: 1,
+    icon: '💪',
+    category: 'big',
+    cn: '底线背身碾压者',
+    avgOVR: 92,
+    positions: ['PF', 'C'],
+    attrs: { threePT: 71, MID: 70, FIN: 91, DNK: 85, HAN: 85, PAS: 60, PDEF: 80, IDEF: 90, BLK: 82, REB: 87, ATH: 78, STR: 92, CLU: 80 },
+    samples: ['Anthony Davis'],
+  },
+  'Shot-Erasing Versatile Slasher': {
+    count: 1,
+    icon: '🎯',
+    category: 'slasher',
+    cn: '封盖全能突破手',
+    avgOVR: 84,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 76, MID: 71, FIN: 84, DNK: 85, HAN: 80, PAS: 65, PDEF: 72, IDEF: 78, BLK: 96, REB: 77, ATH: 72, STR: 67, CLU: 95 },
+    samples: ['Alex Sarr'],
+  },
+  'Blow-By Laymaking Four': {
+    count: 1,
+    icon: '🚀',
+    category: 'slasher',
+    cn: '一步突破上篮内线',
+    avgOVR: 81,
+    positions: ['PF', 'SF'],
+    attrs: { threePT: 76, MID: 68, FIN: 88, DNK: 70, HAN: 95, PAS: 66, PDEF: 62, IDEF: 60, BLK: 35, REB: 49, ATH: 65, STR: 45, CLU: 95 },
+    samples: ['Will Riley'],
+  },
+  'High Flyer': {
+    count: 1,
+    icon: '🚀',
+    category: 'athlete',
+    cn: '飞天流',
+    avgOVR: 79,
+    positions: ['SF', 'SG'],
+    attrs: { threePT: 73, MID: 70, FIN: 65, DNK: 85, HAN: 80, PAS: 69, PDEF: 80, IDEF: 67, BLK: 71, REB: 62, ATH: 85, STR: 63, CLU: 75 },
+    samples: ['Bilal Coulibaly'],
+  },
+  'Board-Hunting Crafty Finisher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '篮板灵巧终结者',
+    avgOVR: 76,
+    positions: ['C', 'PF'],
+    attrs: { threePT: 30, MID: 66, FIN: 73, DNK: 70, HAN: 60, PAS: 47, PDEF: 59, IDEF: 67, BLK: 51, REB: 87, ATH: 64, STR: 76, CLU: 60 },
+    samples: ['Julian Reese'],
+  },
+  'Ball-Hawking Slasher': {
+    count: 1,
+    icon: '💪',
+    category: 'slasher',
+    cn: '抢断突破手',
+    avgOVR: 76,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 71, MID: 78, FIN: 80, DNK: 85, HAN: 80, PAS: 68, PDEF: 69, IDEF: 67, BLK: 62, REB: 63, ATH: 85, STR: 59, CLU: 50 },
+    samples: ['Jamir Watkins'],
+  },
+  'Athletic Blow-By Ace': {
+    count: 1,
+    icon: '🚀',
+    category: 'slasher',
+    cn: '运动一步突破王牌',
+    avgOVR: 75,
+    positions: ['SF', 'PF'],
+    attrs: { threePT: 70, MID: 76, FIN: 61, DNK: 80, HAN: 80, PAS: 68, PDEF: 67, IDEF: 57, BLK: 53, REB: 54, ATH: 84, STR: 68, CLU: 50 },
+    samples: ['Cam Whitmore'],
+  },
+};
+
+// Total: 308 archetypes
+</script>
+<script>
+// Inlined public dependency: https://activity-static.hoopchina.com.cn/files/2678-mdo4zerc-upload-1783494754597-21.js
+// 8 sprite sheets, 300px per headshot, 6x6 grid
+const SPRITE_FILES = ["https://activity-static.hoopchina.com.cn/files/2675-de4d6mrc-upload-1783259359927-12.png", "https://activity-static.hoopchina.com.cn/files/2675-jjjnqarc-upload-1783259359927-15.png", "https://activity-static.hoopchina.com.cn/files/2675-3zj01hrc-upload-1783259359927-18.png", "https://activity-static.hoopchina.com.cn/files/2675-0o5f6nrc-upload-1783259359927-21.png", "https://activity-static.hoopchina.com.cn/files/2675-66txhkrc-upload-1783259359927-24.png", "https://activity-static.hoopchina.com.cn/files/2675-lr54mqrc-upload-1783259359927-27.png", "https://activity-static.hoopchina.com.cn/files/2675-hrt1vurc-upload-1783259359927-30.png", "https://activity-static.hoopchina.com.cn/files/2675-77rz2prc-upload-1783259359927-33.png"];
+const SPRITE_SIZE = 300;
+const SPRITE_COLS = 6;
+const SPRITE_ROWS = 6;
+const SPRITE_POS = {
+  'A.J. Lawson': { sheet: 0, x: 0, y: 0 },
+  'AJ Green': { sheet: 0, x: 1200, y: 0 },
+  'AJ Johnson': { sheet: 0, x: 0, y: 0 },
+  'Aaron Gordon': { sheet: 0, x: 300, y: 0 },
+  'Aaron Holiday': { sheet: 0, x: 0, y: 0 },
+  'Aaron Nesmith': { sheet: 0, x: 600, y: 0 },
+  'Aaron Wiggins': { sheet: 0, x: 300, y: 600 },
+  'Ace Bailey': { sheet: 0, x: 900, y: 0 },
+  'Adama Bal': { sheet: 0, x: 0, y: 0 },
+  'Adem Bona': { sheet: 0, x: 0, y: 0 },
+  'Adou Thiero': { sheet: 0, x: 0, y: 0 },
+  'Ajay Mitchell': { sheet: 0, x: 1500, y: 0 },
+  'Al Horford': { sheet: 0, x: 0, y: 300 },
+  'Alex Antetokounmpo': { sheet: 0, x: 0, y: 0 },
+  'Alex Caruso': { sheet: 0, x: 300, y: 300 },
+  'Alex Morales': { sheet: 0, x: 0, y: 0 },
+  'Alex Sarr': { sheet: 0, x: 600, y: 300 },
+  'Alijah Martin': { sheet: 0, x: 0, y: 0 },
+  'Alperen Sengun': { sheet: 0, x: 900, y: 300 },
+  'Amari Williams': { sheet: 0, x: 0, y: 0 },
+  'Amen Thompson': { sheet: 0, x: 1200, y: 300 },
+  'Amir Coffey': { sheet: 0, x: 0, y: 0 },
+  'Andre Drummond': { sheet: 0, x: 1500, y: 300 },
+  'Andre Jackson Jr.': { sheet: 0, x: 0, y: 0 },
+  'Andrew Nembhard': { sheet: 0, x: 0, y: 600 },
+  'Andrew Wiggins': { sheet: 0, x: 300, y: 600 },
+  'Anfernee Simons': { sheet: 0, x: 600, y: 600 },
+  'Anthony Black': { sheet: 0, x: 900, y: 600 },
+  'Anthony Davis': { sheet: 0, x: 1200, y: 600 },
+  'Anthony Edwards': { sheet: 0, x: 1500, y: 600 },
+  'Anthony Gill': { sheet: 0, x: 0, y: 0 },
+  'Antonio Reeves': { sheet: 0, x: 0, y: 0 },
+  'Ariel Hukporti': { sheet: 0, x: 0, y: 0 },
+  'Asa Newell': { sheet: 0, x: 0, y: 0 },
+  'Ausar Thompson': { sheet: 0, x: 0, y: 900 },
+  'Austin Reaves': { sheet: 0, x: 300, y: 900 },
+  'Ayo Dosunmu': { sheet: 0, x: 600, y: 900 },
+  'Bam Adebayo': { sheet: 0, x: 900, y: 900 },
+  'Baylor Scheierman': { sheet: 0, x: 0, y: 0 },
+  'Ben Saraf': { sheet: 0, x: 0, y: 0 },
+  'Ben Sheppard': { sheet: 0, x: 0, y: 0 },
+  'Bennedict Mathurin': { sheet: 0, x: 1200, y: 900 },
+  'Bez Mbeng': { sheet: 0, x: 0, y: 0 },
+  'Bilal Coulibaly': { sheet: 0, x: 1500, y: 900 },
+  'Bismack Biyombo': { sheet: 0, x: 0, y: 1200 },
+  'Blake Hinson': { sheet: 0, x: 0, y: 0 },
+  'Blake Wesley': { sheet: 0, x: 0, y: 0 },
+  'Bobby Portis': { sheet: 0, x: 300, y: 1200 },
+  'Bogdan Bogdanovic': { sheet: 0, x: 600, y: 1200 },
+  'Bones Hyland': { sheet: 0, x: 900, y: 1200 },
+  'Bradley Beal': { sheet: 0, x: 1200, y: 1200 },
+  'Branden Carlson': { sheet: 0, x: 0, y: 0 },
+  'Brandin Podziemski': { sheet: 0, x: 1500, y: 1200 },
+  'Brandon Clarke': { sheet: 0, x: 0, y: 1500 },
+  'Brandon Ingram': { sheet: 0, x: 300, y: 1500 },
+  'Brandon Miller': { sheet: 0, x: 600, y: 1500 },
+  'Brandon Williams': { sheet: 0, x: 0, y: 0 },
+  'Brice Sensabaugh': { sheet: 0, x: 0, y: 0 },
+  'Bronny James': { sheet: 0, x: 900, y: 1500 },
+  'Brook Lopez': { sheet: 0, x: 1200, y: 1500 },
+  'Brooks Barnhizer': { sheet: 0, x: 0, y: 0 },
+  'Bruce Brown': { sheet: 0, x: 1500, y: 1500 },
+  'Bryce McGowens': { sheet: 0, x: 0, y: 0 },
+  'Bub Carrington': { sheet: 1, x: 0, y: 0 },
+  'Buddy Hield': { sheet: 1, x: 300, y: 0 },
+  'CJ Huntley': { sheet: 0, x: 0, y: 0 },
+  'CJ McCollum': { sheet: 1, x: 1200, y: 300 },
+  'Cade Cunningham': { sheet: 1, x: 600, y: 0 },
+  'Caleb Love': { sheet: 0, x: 0, y: 0 },
+  'Caleb Martin': { sheet: 1, x: 900, y: 0 },
+  'Cam Christie': { sheet: 0, x: 0, y: 0 },
+  'Cam Spencer': { sheet: 0, x: 0, y: 0 },
+  'Cam Whitmore': { sheet: 1, x: 1200, y: 0 },
+  'Cameron Johnson': { sheet: 1, x: 1500, y: 0 },
+  'Caris LeVert': { sheet: 1, x: 0, y: 300 },
+  'Carter Bryant': { sheet: 0, x: 0, y: 0 },
+  'Cason Wallace': { sheet: 1, x: 300, y: 300 },
+  'Cedric Coward': { sheet: 0, x: 0, y: 0 },
+  'Chaney Johnson': { sheet: 1, x: 1500, y: 0 },
+  'Charles Bassey': { sheet: 0, x: 0, y: 0 },
+  'Chaz Lanier': { sheet: 0, x: 0, y: 0 },
+  'Chet Holmgren': { sheet: 1, x: 600, y: 300 },
+  'Chris Manon': { sheet: 0, x: 0, y: 0 },
+  'Chris Youngblood': { sheet: 0, x: 0, y: 0 },
+  'Christian Braun': { sheet: 1, x: 900, y: 300 },
+  'Christian Koloko': { sheet: 0, x: 0, y: 0 },
+  'Chucky Hepburn': { sheet: 0, x: 0, y: 0 },
+  'Clint Capela': { sheet: 1, x: 1500, y: 300 },
+  'Coby White': { sheet: 1, x: 0, y: 600 },
+  'Cody Williams': { sheet: 0, x: 0, y: 0 },
+  'Colin Castleton': { sheet: 0, x: 0, y: 0 },
+  'Collin Gillespie': { sheet: 1, x: 300, y: 600 },
+  'Collin Murray-Boyles': { sheet: 0, x: 0, y: 0 },
+  'Collin Sexton': { sheet: 1, x: 600, y: 600 },
+  'Cooper Flagg': { sheet: 1, x: 900, y: 600 },
+  'Corey Kispert': { sheet: 0, x: 0, y: 0 },
+  'Cormac Ryan': { sheet: 0, x: 0, y: 0 },
+  'Craig Porter Jr.': { sheet: 0, x: 0, y: 0 },
+  'Curtis Jones': { sheet: 0, x: 0, y: 0 },
+  'DaRon Holmes II': { sheet: 1, x: 0, y: 1500 },
+  'Daeqwon Plowden': { sheet: 0, x: 0, y: 0 },
+  'Dalano Banton': { sheet: 0, x: 0, y: 0 },
+  'Dalen Terry': { sheet: 0, x: 0, y: 0 },
+  'Dalton Knecht': { sheet: 1, x: 1200, y: 600 },
+  'Damian Lillard': { sheet: 1, x: 1500, y: 600 },
+  'Daniel Gafford': { sheet: 1, x: 300, y: 900 },
+  'Daniss Jenkins': { sheet: 0, x: 0, y: 0 },
+  'Danny Wolf': { sheet: 0, x: 0, y: 0 },
+  'Dariq Whitehead': { sheet: 0, x: 0, y: 0 },
+  'Darius Garland': { sheet: 1, x: 600, y: 900 },
+  'David Jones Garcia': { sheet: 0, x: 0, y: 0 },
+  'David Roddy': { sheet: 0, x: 0, y: 0 },
+  'Davion Mitchell': { sheet: 1, x: 900, y: 900 },
+  'Day’Ron Sharpe': { sheet: 0, x: 0, y: 0 },
+  'DeAndre Jordan': { sheet: 1, x: 300, y: 1200 },
+  'DeMar DeRozan': { sheet: 1, x: 1200, y: 1200 },
+  'Dean Wade': { sheet: 2, x: 1500, y: 300 },
+  'Deandre Ayton': { sheet: 1, x: 1500, y: 900 },
+  'Dejounte Murray': { sheet: 1, x: 900, y: 1200 },
+  'Deni Avdija': { sheet: 1, x: 1500, y: 1200 },
+  'Dennis Schroder': { sheet: 0, x: 0, y: 0 },
+  'Dereck Lively II': { sheet: 1, x: 0, y: 1500 },
+  'Derik Queen': { sheet: 1, x: 300, y: 1500 },
+  'Derrick Jones Jr.': { sheet: 1, x: 600, y: 1500 },
+  'Derrick White': { sheet: 1, x: 900, y: 1500 },
+  'Desmond Bane': { sheet: 1, x: 1200, y: 1500 },
+  'Devin Booker': { sheet: 1, x: 1500, y: 1500 },
+  'Devin Carter': { sheet: 0, x: 0, y: 0 },
+  'Devin Vassell': { sheet: 2, x: 0, y: 0 },
+  'De’Aaron Fox': { sheet: 1, x: 1200, y: 900 },
+  'De’Andre Hunter': { sheet: 1, x: 0, y: 1200 },
+  'De’Anthony Melton': { sheet: 1, x: 600, y: 1200 },
+  'Dillon Brooks': { sheet: 2, x: 300, y: 0 },
+  'Dillon Jones': { sheet: 0, x: 0, y: 0 },
+  'Domantas Sabonis': { sheet: 2, x: 600, y: 0 },
+  'Dominick Barlow': { sheet: 2, x: 900, y: 0 },
+  'Donovan Clingan': { sheet: 2, x: 1200, y: 0 },
+  'Donovan Mitchell': { sheet: 2, x: 1500, y: 0 },
+  'Donte DiVincenzo': { sheet: 2, x: 0, y: 300 },
+  'Dorian Finney-Smith': { sheet: 2, x: 300, y: 300 },
+  'Doug McDermott': { sheet: 0, x: 0, y: 0 },
+  'Drake Powell': { sheet: 0, x: 0, y: 0 },
+  'Draymond Green': { sheet: 2, x: 600, y: 300 },
+  'Drew Eubanks': { sheet: 0, x: 0, y: 0 },
+  'Drew Timme': { sheet: 0, x: 0, y: 0 },
+  'Dru Smith': { sheet: 0, x: 0, y: 0 },
+  'Duncan Robinson': { sheet: 2, x: 900, y: 300 },
+  'Dwight Powell': { sheet: 2, x: 1200, y: 300 },
+  'Dylan Cardwell': { sheet: 0, x: 0, y: 0 },
+  'Dylan Harper': { sheet: 2, x: 0, y: 600 },
+  'Dyson Daniels': { sheet: 2, x: 300, y: 600 },
+  'D’Angelo Russell': { sheet: 1, x: 0, y: 900 },
+  'E.J. Liddell': { sheet: 0, x: 0, y: 0 },
+  'Egor Demin': { sheet: 0, x: 0, y: 0 },
+  'Elijah Harkless': { sheet: 0, x: 0, y: 0 },
+  'Emanuel Miller': { sheet: 0, x: 0, y: 0 },
+  'Enrique Freeman': { sheet: 0, x: 0, y: 0 },
+  'Ethan Thompson': { sheet: 0, x: 0, y: 0 },
+  'Evan Mobley': { sheet: 2, x: 600, y: 600 },
+  'Franz Wagner': { sheet: 2, x: 900, y: 600 },
+  'Fred VanVleet': { sheet: 2, x: 1200, y: 600 },
+  'GG Jackson': { sheet: 2, x: 900, y: 900 },
+  'Gabe Vincent': { sheet: 2, x: 1500, y: 600 },
+  'Garrett Temple': { sheet: 0, x: 0, y: 0 },
+  'Gary Harris': { sheet: 2, x: 0, y: 900 },
+  'Gary Payton II': { sheet: 2, x: 300, y: 900 },
+  'Gary Trent Jr.': { sheet: 2, x: 600, y: 900 },
+  'Giannis Antetokounmpo': { sheet: 2, x: 1200, y: 900 },
+  'Goga Bitadze': { sheet: 0, x: 0, y: 0 },
+  'Gradey Dick': { sheet: 2, x: 1500, y: 900 },
+  'Grant Williams': { sheet: 2, x: 0, y: 1200 },
+  'Grayson Allen': { sheet: 2, x: 300, y: 1200 },
+  'Guerschon Yabusele': { sheet: 0, x: 0, y: 0 },
+  'Gui Santos': { sheet: 0, x: 0, y: 0 },
+  'Harrison Barnes': { sheet: 2, x: 600, y: 1200 },
+  'Harrison Ingram': { sheet: 0, x: 0, y: 0 },
+  'Hayden Gray': { sheet: 0, x: 0, y: 0 },
+  'Haywood Highsmith': { sheet: 0, x: 0, y: 0 },
+  'Herbert Jones': { sheet: 2, x: 900, y: 1200 },
+  'Hugo Gonzalez': { sheet: 0, x: 0, y: 0 },
+  'Hunter Dickinson': { sheet: 0, x: 0, y: 0 },
+  'Immanuel Quickley': { sheet: 2, x: 1200, y: 1200 },
+  'Isaac Jones': { sheet: 0, x: 0, y: 0 },
+  'Isaac Okoro': { sheet: 2, x: 1500, y: 1200 },
+  'Isaiah Collier': { sheet: 0, x: 0, y: 0 },
+  'Isaiah Crawford': { sheet: 0, x: 0, y: 0 },
+  'Isaiah Hartenstein': { sheet: 2, x: 0, y: 1500 },
+  'Isaiah Jackson': { sheet: 2, x: 300, y: 1500 },
+  'Isaiah Joe': { sheet: 2, x: 600, y: 1500 },
+  'Isaiah Livers': { sheet: 0, x: 0, y: 0 },
+  'Isaiah Stevens': { sheet: 0, x: 0, y: 0 },
+  'Isaiah Stewart': { sheet: 2, x: 900, y: 1500 },
+  'Ivica Zubac': { sheet: 2, x: 1200, y: 1500 },
+  'JD Davison': { sheet: 0, x: 0, y: 0 },
+  'Ja Morant': { sheet: 2, x: 1500, y: 1500 },
+  'Jabari Smith Jr.': { sheet: 3, x: 0, y: 0 },
+  'Jabari Walker': { sheet: 3, x: 300, y: 0 },
+  'Jaden Hardy': { sheet: 0, x: 0, y: 0 },
+  'Jaden McDaniels': { sheet: 3, x: 600, y: 0 },
+  'Jae’Sean Tate': { sheet: 3, x: 900, y: 0 },
+  'Jahmai Mashack': { sheet: 0, x: 0, y: 0 },
+  'Jahmir Young': { sheet: 0, x: 0, y: 0 },
+  'Jaime Jaquez Jr.': { sheet: 3, x: 1200, y: 0 },
+  'Jake LaRavia': { sheet: 0, x: 0, y: 0 },
+  'Jakob Poeltl': { sheet: 3, x: 1500, y: 0 },
+  'Jalen Brunson': { sheet: 3, x: 0, y: 300 },
+  'Jalen Duren': { sheet: 3, x: 300, y: 300 },
+  'Jalen Green': { sheet: 3, x: 600, y: 300 },
+  'Jalen Johnson': { sheet: 3, x: 900, y: 300 },
+  'Jalen Pickett': { sheet: 0, x: 0, y: 0 },
+  'Jalen Slawson': { sheet: 0, x: 0, y: 0 },
+  'Jalen Smith': { sheet: 3, x: 1200, y: 300 },
+  'Jalen Suggs': { sheet: 3, x: 1500, y: 300 },
+  'Jalen Williams': { sheet: 3, x: 0, y: 600 },
+  'Jalen Wilson': { sheet: 0, x: 0, y: 0 },
+  'Jamal Cain': { sheet: 0, x: 0, y: 0 },
+  'Jamal Murray': { sheet: 3, x: 300, y: 600 },
+  'Jamal Shead': { sheet: 0, x: 0, y: 0 },
+  'Jamaree Bouyea': { sheet: 0, x: 0, y: 0 },
+  'James Harden': { sheet: 3, x: 600, y: 600 },
+  'Jamir Watkins': { sheet: 0, x: 0, y: 0 },
+  'Jamison Battle': { sheet: 0, x: 0, y: 0 },
+  'Jarace Walker': { sheet: 3, x: 900, y: 600 },
+  'Jared McCain': { sheet: 3, x: 1200, y: 600 },
+  'Jaren Jackson Jr.': { sheet: 3, x: 1500, y: 600 },
+  'Jarred Vanderbilt': { sheet: 3, x: 0, y: 900 },
+  'Jarrett Allen': { sheet: 3, x: 300, y: 900 },
+  'Jase Richardson': { sheet: 3, x: 600, y: 900 },
+  'Javon Small': { sheet: 0, x: 0, y: 0 },
+  'Javonte Green': { sheet: 3, x: 600, y: 300 },
+  'Jaxson Hayes': { sheet: 0, x: 0, y: 0 },
+  'Jay Huff': { sheet: 3, x: 900, y: 900 },
+  'Jaylen Brown': { sheet: 3, x: 1200, y: 900 },
+  'Jaylen Clark': { sheet: 0, x: 0, y: 0 },
+  'Jaylen Wells': { sheet: 0, x: 0, y: 0 },
+  'Jaylin Williams': { sheet: 3, x: 1500, y: 900 },
+  'Jaylon Tyson': { sheet: 3, x: 0, y: 1200 },
+  'Jayson Kent': { sheet: 0, x: 0, y: 0 },
+  'Jayson Tatum': { sheet: 3, x: 300, y: 1200 },
+  'Ja’Kobe Walter': { sheet: 0, x: 0, y: 0 },
+  'Jeff Green': { sheet: 3, x: 600, y: 1200 },
+  'Jerami Grant': { sheet: 3, x: 900, y: 1200 },
+  'Jeremiah Fears': { sheet: 0, x: 0, y: 0 },
+  'Jeremy Sochan': { sheet: 3, x: 1200, y: 1200 },
+  'Jericho Sims': { sheet: 3, x: 1500, y: 1200 },
+  'Jett Howard': { sheet: 0, x: 0, y: 0 },
+  'Jevon Carter': { sheet: 3, x: 0, y: 1500 },
+  'Jimmy Butler': { sheet: 3, x: 300, y: 1500 },
+  'Joan Beringer': { sheet: 0, x: 0, y: 0 },
+  'Jock Landale': { sheet: 0, x: 0, y: 0 },
+  'Joe Ingles': { sheet: 3, x: 600, y: 1500 },
+  'Joel Embiid': { sheet: 3, x: 900, y: 1500 },
+  'John Collins': { sheet: 3, x: 1200, y: 1500 },
+  'John Konchar': { sheet: 0, x: 0, y: 0 },
+  'John Poulakidas': { sheet: 0, x: 0, y: 0 },
+  'John Tonje': { sheet: 0, x: 0, y: 0 },
+  'Johni Broome': { sheet: 0, x: 0, y: 0 },
+  'Johnny Furphy': { sheet: 0, x: 0, y: 0 },
+  'Jonas Valanciunas': { sheet: 0, x: 0, y: 0 },
+  'Jonathan Isaac': { sheet: 0, x: 0, y: 0 },
+  'Jonathan Kuminga': { sheet: 3, x: 1500, y: 1500 },
+  'Jonathan Mogbo': { sheet: 0, x: 0, y: 0 },
+  'Jordan Clarkson': { sheet: 4, x: 0, y: 0 },
+  'Jordan Goodwin': { sheet: 0, x: 0, y: 0 },
+  'Jordan Hawkins': { sheet: 4, x: 300, y: 0 },
+  'Jordan McLaughlin': { sheet: 0, x: 0, y: 0 },
+  'Jordan Miller': { sheet: 0, x: 0, y: 0 },
+  'Jordan Poole': { sheet: 4, x: 600, y: 0 },
+  'Jordan Walsh': { sheet: 0, x: 0, y: 0 },
+  'Jose Alvarado': { sheet: 4, x: 900, y: 0 },
+  'Josh Giddey': { sheet: 4, x: 1200, y: 0 },
+  'Josh Green': { sheet: 4, x: 1500, y: 0 },
+  'Josh Hart': { sheet: 4, x: 0, y: 300 },
+  'Josh Minott': { sheet: 0, x: 0, y: 0 },
+  'Josh Oduro': { sheet: 0, x: 0, y: 0 },
+  'Josh Okogie': { sheet: 0, x: 0, y: 0 },
+  'Jrue Holiday': { sheet: 4, x: 300, y: 300 },
+  'Julian Champagnie': { sheet: 4, x: 600, y: 300 },
+  'Julian Phillips': { sheet: 0, x: 0, y: 0 },
+  'Julian Reese': { sheet: 0, x: 0, y: 0 },
+  'Julian Strawther': { sheet: 0, x: 0, y: 0 },
+  'Julius Randle': { sheet: 4, x: 900, y: 300 },
+  'Justin Champagnie': { sheet: 4, x: 600, y: 300 },
+  'Justin Edwards': { sheet: 0, x: 0, y: 0 },
+  'Jusuf Nurkic': { sheet: 4, x: 1200, y: 300 },
+  'KJ Simpson': { sheet: 0, x: 0, y: 0 },
+  'Kam Jones': { sheet: 0, x: 0, y: 0 },
+  'Karl-Anthony Towns': { sheet: 4, x: 1500, y: 300 },
+  'Karlo Matkovic': { sheet: 0, x: 0, y: 0 },
+  'Kasparas Jakucionis': { sheet: 0, x: 0, y: 0 },
+  'Kawhi Leonard': { sheet: 4, x: 0, y: 600 },
+  'Keaton Wallace': { sheet: 0, x: 0, y: 0 },
+  'Keegan Murray': { sheet: 4, x: 300, y: 600 },
+  'Keldon Johnson': { sheet: 4, x: 600, y: 600 },
+  'Kelly Olynyk': { sheet: 4, x: 1200, y: 600 },
+  'Kelly Oubre Jr.': { sheet: 4, x: 1500, y: 600 },
+  'Kel’el Ware': { sheet: 4, x: 900, y: 600 },
+  'Kenrich Williams': { sheet: 0, x: 0, y: 0 },
+  'Kentavious Caldwell-Pope': { sheet: 4, x: 0, y: 900 },
+  'Keon Ellis': { sheet: 4, x: 300, y: 900 },
+  'Keshad Johnson': { sheet: 4, x: 600, y: 600 },
+  'Keshon Gilbert': { sheet: 0, x: 0, y: 0 },
+  'Kevin Durant': { sheet: 4, x: 600, y: 900 },
+  'Kevin Huerter': { sheet: 4, x: 900, y: 900 },
+  'Kevin Love': { sheet: 4, x: 1200, y: 900 },
+  'Kevin McCullar Jr.': { sheet: 4, x: 1500, y: 600 },
+  'Kevin Porter Jr.': { sheet: 4, x: 1500, y: 900 },
+  'Kevon Looney': { sheet: 4, x: 0, y: 1200 },
+  'Keyonte George': { sheet: 4, x: 300, y: 1200 },
+  'Khaman Maluach': { sheet: 0, x: 0, y: 0 },
+  'Khris Middleton': { sheet: 4, x: 600, y: 1200 },
+  'Killian Hayes': { sheet: 4, x: 900, y: 1200 },
+  'Klay Thompson': { sheet: 4, x: 1200, y: 1200 },
+  'Kobe Brown': { sheet: 0, x: 0, y: 0 },
+  'Kobe Sanders': { sheet: 0, x: 0, y: 0 },
+  'Koby Brea': { sheet: 0, x: 0, y: 0 },
+  'Kon Knueppel': { sheet: 4, x: 1500, y: 1200 },
+  'Kris Dunn': { sheet: 4, x: 0, y: 1500 },
+  'Kris Murray': { sheet: 4, x: 300, y: 600 },
+  'Kristaps Porzingis': { sheet: 0, x: 0, y: 0 },
+  'KyShawn George': { sheet: 4, x: 1500, y: 1500 },
+  'Kyle Anderson': { sheet: 4, x: 300, y: 1500 },
+  'Kyle Filipowski': { sheet: 0, x: 0, y: 0 },
+  'Kyle Kuzma': { sheet: 4, x: 600, y: 1500 },
+  'Kyle Lowry': { sheet: 4, x: 900, y: 1500 },
+  'Kyrie Irving': { sheet: 4, x: 1200, y: 1500 },
+  'LJ Cryer': { sheet: 0, x: 0, y: 0 },
+  'LaMelo Ball': { sheet: 5, x: 0, y: 0 },
+  'Lachlan Olbrich': { sheet: 0, x: 0, y: 0 },
+  'Landry Shamet': { sheet: 5, x: 300, y: 0 },
+  'Larry Nance Jr.': { sheet: 5, x: 600, y: 0 },
+  'Lauri Markkanen': { sheet: 5, x: 900, y: 0 },
+  'LeBron James': { sheet: 5, x: 1200, y: 0 },
+  'Leaky Black': { sheet: 0, x: 0, y: 0 },
+  'Leonard Miller': { sheet: 0, x: 0, y: 0 },
+  'Liam McNeeley': { sheet: 0, x: 0, y: 0 },
+  'Lindy Waters III': { sheet: 0, x: 0, y: 0 },
+  'Luguentz Dort': { sheet: 5, x: 1500, y: 0 },
+  'Luka Doncic': { sheet: 0, x: 0, y: 0 },
+  'Luka Garza': { sheet: 0, x: 0, y: 0 },
+  'Luke Kennard': { sheet: 5, x: 0, y: 300 },
+  'Luke Kornet': { sheet: 5, x: 300, y: 300 },
+  'Mac McClung': { sheet: 5, x: 600, y: 300 },
+  'Malachi Smith': { sheet: 0, x: 0, y: 0 },
+  'Malevy Leons': { sheet: 0, x: 0, y: 0 },
+  'Malik Monk': { sheet: 5, x: 900, y: 300 },
+  'MarJon Beauchamp': { sheet: 0, x: 0, y: 0 },
+  'Marcus Sasser': { sheet: 0, x: 0, y: 0 },
+  'Marcus Smart': { sheet: 5, x: 1200, y: 300 },
+  'Mark Williams': { sheet: 5, x: 1500, y: 300 },
+  'Marvin Bagley III': { sheet: 5, x: 0, y: 600 },
+  'Mason Plumlee': { sheet: 5, x: 300, y: 600 },
+  'Matas Buzelis': { sheet: 5, x: 600, y: 600 },
+  'Matisse Thybulle': { sheet: 5, x: 900, y: 600 },
+  'Max Christie': { sheet: 0, x: 0, y: 0 },
+  'Max Shulga': { sheet: 0, x: 0, y: 0 },
+  'Max Strus': { sheet: 5, x: 1200, y: 600 },
+  'Maxi Kleber': { sheet: 5, x: 1500, y: 600 },
+  'Maxime Raynaud': { sheet: 0, x: 0, y: 0 },
+  'Micah Peavy': { sheet: 0, x: 0, y: 0 },
+  'Micah Potter': { sheet: 0, x: 0, y: 0 },
+  'Michael Porter Jr.': { sheet: 5, x: 0, y: 900 },
+  'Mikal Bridges': { sheet: 5, x: 300, y: 900 },
+  'Mike Conley': { sheet: 5, x: 600, y: 900 },
+  'Miles Bridges': { sheet: 5, x: 900, y: 900 },
+  'Miles McBride': { sheet: 5, x: 1200, y: 900 },
+  'Mitchell Robinson': { sheet: 5, x: 1500, y: 900 },
+  'Mohamed Diawara': { sheet: 0, x: 0, y: 0 },
+  'Moritz Wagner': { sheet: 5, x: 0, y: 1200 },
+  'Moses Moody': { sheet: 5, x: 300, y: 1200 },
+  'Mouhamadou Gueye': { sheet: 0, x: 0, y: 0 },
+  'Mouhamed Gueye': { sheet: 0, x: 0, y: 0 },
+  'Moussa Cisse': { sheet: 0, x: 0, y: 0 },
+  'Moussa Diabate': { sheet: 5, x: 600, y: 1200 },
+  'Myles Turner': { sheet: 5, x: 900, y: 1200 },
+  'Myron Gardner': { sheet: 0, x: 0, y: 0 },
+  'Nae’Qwan Tomlin': { sheet: 0, x: 0, y: 0 },
+  'Naji Marshall': { sheet: 0, x: 0, y: 0 },
+  'Nate Williams': { sheet: 0, x: 0, y: 0 },
+  'Naz Reid': { sheet: 5, x: 1200, y: 1200 },
+  'Neemias Queta': { sheet: 5, x: 1500, y: 1200 },
+  'Nic Claxton': { sheet: 5, x: 0, y: 1500 },
+  'Nick Richards': { sheet: 0, x: 0, y: 0 },
+  'Nick Smith Jr.': { sheet: 0, x: 0, y: 0 },
+  'Nickeil Alexander-Walker': { sheet: 5, x: 300, y: 1500 },
+  'Nicolas Batum': { sheet: 5, x: 600, y: 1500 },
+  'Nikola Jokic': { sheet: 5, x: 900, y: 1500 },
+  'Nikola Jovic': { sheet: 0, x: 0, y: 0 },
+  'Nikola Topic': { sheet: 0, x: 0, y: 0 },
+  'Nikola Vucevic': { sheet: 0, x: 0, y: 0 },
+  'Nique Clifford': { sheet: 0, x: 0, y: 0 },
+  'Noa Essengue': { sheet: 0, x: 0, y: 0 },
+  'Noah Clowney': { sheet: 0, x: 0, y: 0 },
+  'Noah Penda': { sheet: 0, x: 0, y: 0 },
+  'Nolan Traore': { sheet: 0, x: 0, y: 0 },
+  'Norchad Omier': { sheet: 0, x: 0, y: 0 },
+  'Norman Powell': { sheet: 5, x: 1200, y: 1500 },
+  'OG Anunoby': { sheet: 6, x: 0, y: 0 },
+  'Obi Toppin': { sheet: 5, x: 1500, y: 1500 },
+  'Ochai Agbaji': { sheet: 0, x: 0, y: 0 },
+  'Olivier Sarr': { sheet: 0, x: 0, y: 0 },
+  'Olivier-Maxence Prosper': { sheet: 0, x: 0, y: 0 },
+  'Onyeka Okongwu': { sheet: 6, x: 300, y: 0 },
+  'Oscar Tshiebwe': { sheet: 0, x: 0, y: 0 },
+  'Oso Ighodaro': { sheet: 6, x: 600, y: 0 },
+  'Ousmane Dieng': { sheet: 0, x: 0, y: 0 },
+  'P.J. Washington': { sheet: 6, x: 1500, y: 300 },
+  'PJ Hall': { sheet: 0, x: 0, y: 0 },
+  'Pacome Dadiet': { sheet: 0, x: 0, y: 0 },
+  'Paolo Banchero': { sheet: 6, x: 900, y: 0 },
+  'Pascal Siakam': { sheet: 6, x: 1200, y: 0 },
+  'Pat Connaughton': { sheet: 6, x: 1500, y: 0 },
+  'Pat Spencer': { sheet: 0, x: 0, y: 0 },
+  'Patrick Baldwin Jr.': { sheet: 0, x: 0, y: 0 },
+  'Patrick Williams': { sheet: 6, x: 0, y: 300 },
+  'Paul George': { sheet: 6, x: 300, y: 300 },
+  'Paul Reed': { sheet: 6, x: 600, y: 300 },
+  'Payton Pritchard': { sheet: 6, x: 900, y: 300 },
+  'Payton Sandfort': { sheet: 0, x: 0, y: 0 },
+  'Pelle Larsson': { sheet: 0, x: 0, y: 0 },
+  'Pete Nance': { sheet: 0, x: 0, y: 0 },
+  'Peyton Watson': { sheet: 6, x: 1200, y: 300 },
+  'Precious Achiuwa': { sheet: 6, x: 0, y: 600 },
+  'Quentin Grimes': { sheet: 6, x: 300, y: 600 },
+  'Quenton Jackson': { sheet: 0, x: 0, y: 0 },
+  'Quinten Post': { sheet: 0, x: 0, y: 0 },
+  'RJ Barrett': { sheet: 6, x: 1200, y: 600 },
+  'Rasheer Fleming': { sheet: 0, x: 0, y: 0 },
+  'RayJ Dennis': { sheet: 0, x: 0, y: 0 },
+  'Rayan Rupert': { sheet: 0, x: 0, y: 0 },
+  'Reed Sheppard': { sheet: 6, x: 600, y: 600 },
+  'Riley Minix': { sheet: 0, x: 0, y: 0 },
+  'Rob Dillingham': { sheet: 0, x: 0, y: 0 },
+  'Robert Williams III': { sheet: 6, x: 1500, y: 600 },
+  'Rocco Zikarsky': { sheet: 0, x: 0, y: 0 },
+  'Ron Harper Jr.': { sheet: 6, x: 900, y: 600 },
+  'Ronald Holland II': { sheet: 6, x: 0, y: 900 },
+  'Royce O’Neale': { sheet: 6, x: 300, y: 900 },
+  'Rudy Gobert': { sheet: 6, x: 600, y: 900 },
+  'Rui Hachimura': { sheet: 6, x: 900, y: 900 },
+  'Russell Westbrook': { sheet: 6, x: 1200, y: 900 },
+  'Ryan Dunn': { sheet: 6, x: 1500, y: 900 },
+  'Ryan Kalkbrenner': { sheet: 6, x: 0, y: 1200 },
+  'Ryan Nembhard': { sheet: 6, x: 300, y: 1200 },
+  'Ryan Rollins': { sheet: 6, x: 600, y: 1200 },
+  'Saddiq Bey': { sheet: 6, x: 900, y: 1200 },
+  'Sam Hauser': { sheet: 6, x: 1200, y: 1200 },
+  'Sam Merrill': { sheet: 0, x: 0, y: 0 },
+  'Sandro Mamukelashvili': { sheet: 0, x: 0, y: 0 },
+  'Santi Aldama': { sheet: 6, x: 1500, y: 1200 },
+  'Scoot Henderson': { sheet: 6, x: 0, y: 1500 },
+  'Scottie Barnes': { sheet: 6, x: 300, y: 1500 },
+  'Scotty Pippen Jr.': { sheet: 6, x: 600, y: 1500 },
+  'Sean Pedulla': { sheet: 0, x: 0, y: 0 },
+  'Seth Curry': { sheet: 6, x: 900, y: 1500 },
+  'Shaedon Sharpe': { sheet: 6, x: 1200, y: 1500 },
+  'Shai Gilgeous-Alexander': { sheet: 6, x: 1500, y: 1500 },
+  'Sharife Cooper': { sheet: 0, x: 0, y: 0 },
+  'Sidy Cissoko': { sheet: 0, x: 0, y: 0 },
+  'Simone Fontecchio': { sheet: 0, x: 0, y: 0 },
+  'Sion James': { sheet: 0, x: 0, y: 0 },
+  'Spencer Jones': { sheet: 0, x: 0, y: 0 },
+  'Stephen Curry': { sheet: 7, x: 0, y: 0 },
+  'Stephon Castle': { sheet: 7, x: 300, y: 0 },
+  'Steven Adams': { sheet: 7, x: 600, y: 0 },
+  'Svi Mykhailiuk': { sheet: 0, x: 0, y: 0 },
+  'T.J. McConnell': { sheet: 7, x: 600, y: 300 },
+  'Taelon Peter': { sheet: 0, x: 0, y: 0 },
+  'Taj Gibson': { sheet: 7, x: 900, y: 0 },
+  'Tari Eason': { sheet: 7, x: 1200, y: 0 },
+  'Taurean Prince': { sheet: 7, x: 1500, y: 0 },
+  'Taylor Hendricks': { sheet: 0, x: 0, y: 0 },
+  'Terance Mann': { sheet: 7, x: 0, y: 300 },
+  'Terrence Shannon Jr.': { sheet: 7, x: 300, y: 300 },
+  'Thanasis Antetokounmpo': { sheet: 0, x: 0, y: 0 },
+  'Thomas Bryant': { sheet: 0, x: 0, y: 0 },
+  'Thomas Sorber': { sheet: 0, x: 0, y: 0 },
+  'Tidjane Salaun': { sheet: 0, x: 0, y: 0 },
+  'Tim Hardaway Jr.': { sheet: 7, x: 300, y: 300 },
+  'Tobias Harris': { sheet: 7, x: 900, y: 300 },
+  'Tolu Smith': { sheet: 0, x: 0, y: 0 },
+  'Tony Bradley': { sheet: 0, x: 0, y: 0 },
+  'Tosan Evbuomwan': { sheet: 0, x: 0, y: 0 },
+  'Toumani Camara': { sheet: 7, x: 1200, y: 300 },
+  'Trae Young': { sheet: 7, x: 1500, y: 300 },
+  'Trayce Jackson-Davis': { sheet: 7, x: 0, y: 600 },
+  'Tre Johnson': { sheet: 7, x: 300, y: 600 },
+  'Tre Jones': { sheet: 7, x: 600, y: 600 },
+  'Tre Mann': { sheet: 7, x: 900, y: 600 },
+  'Trendon Watford': { sheet: 0, x: 0, y: 0 },
+  'Trevon Scott': { sheet: 0, x: 0, y: 0 },
+  'Trevor Keels': { sheet: 0, x: 0, y: 0 },
+  'Trey Alexander': { sheet: 0, x: 0, y: 0 },
+  'Trey Jemison III': { sheet: 7, x: 1200, y: 600 },
+  'Trey Murphy III': { sheet: 7, x: 1200, y: 600 },
+  'Tristan Enaruna': { sheet: 0, x: 0, y: 0 },
+  'Tristan Vukcevic': { sheet: 0, x: 0, y: 0 },
+  'Tristan da Silva': { sheet: 0, x: 0, y: 0 },
+  'Tristen Newton': { sheet: 0, x: 0, y: 0 },
+  'Ty Jerome': { sheet: 7, x: 1500, y: 600 },
+  'TyTy Washington Jr.': { sheet: 7, x: 300, y: 300 },
+  'Tyler Herro': { sheet: 7, x: 0, y: 900 },
+  'Tyler Kolek': { sheet: 0, x: 0, y: 0 },
+  'Tyler Smith': { sheet: 0, x: 0, y: 0 },
+  'Tyrese Haliburton': { sheet: 7, x: 300, y: 900 },
+  'Tyrese Martin': { sheet: 0, x: 0, y: 0 },
+  'Tyrese Maxey': { sheet: 7, x: 600, y: 900 },
+  'Tyrese Proctor': { sheet: 0, x: 0, y: 0 },
+  'Tyson Etienne': { sheet: 0, x: 0, y: 0 },
+  'Tyus Jones': { sheet: 7, x: 900, y: 900 },
+  'VJ Edgecombe': { sheet: 7, x: 1500, y: 900 },
+  'Victor Wembanyama': { sheet: 7, x: 1200, y: 900 },
+  'Vit Krejci': { sheet: 0, x: 0, y: 0 },
+  'Vladislav Goldin': { sheet: 0, x: 0, y: 0 },
+  'Walker Kessler': { sheet: 7, x: 0, y: 1200 },
+  'Walter Clayton Jr.': { sheet: 7, x: 300, y: 1200 },
+  'Wendell Carter Jr.': { sheet: 7, x: 300, y: 1200 },
+  'Wendell Moore Jr.': { sheet: 7, x: 300, y: 1200 },
+  'Will Richard': { sheet: 0, x: 0, y: 0 },
+  'Will Riley': { sheet: 0, x: 0, y: 0 },
+  'Xavier Tillman': { sheet: 7, x: 600, y: 1200 },
+  'Yang Hansen': { sheet: 0, x: 0, y: 0 },
+  'Yanic Konan Niederhauser': { sheet: 0, x: 0, y: 0 },
+  'Yuki Kawamura': { sheet: 0, x: 0, y: 0 },
+  'Yves Missi': { sheet: 7, x: 900, y: 1200 },
+  'Zaccharie Risacher': { sheet: 7, x: 1200, y: 1200 },
+  'Zach Collins': { sheet: 7, x: 1500, y: 1200 },
+  'Zach Edey': { sheet: 7, x: 0, y: 1500 },
+  'Zach LaVine': { sheet: 7, x: 300, y: 1500 },
+  'Zeke Nnaji': { sheet: 0, x: 0, y: 0 },
+  'Ziaire Williams': { sheet: 0, x: 0, y: 0 },
+  'Zion Williamson': { sheet: 7, x: 600, y: 1500 },
+  'Zyon Pullin': { sheet: 0, x: 0, y: 0 },
+};
+
+function getHeadshotStyle(playerName, displaySize = 30) {
+  const pos = SPRITE_POS[playerName];
+  if (!pos) return "";
+  const scale = displaySize / 300;
+  const sheetW = 1800;
+  const sheetH = 1800;
+  const file = SPRITE_FILES[pos.sheet];
+  const bgX = Math.round(pos.x * scale) + 1;
+  const bgY = Math.round(pos.y * scale);
+  const bgW = Math.round(sheetW * scale);
+  return `background-image:url(${file});background-size:${bgW}px ${bgW}px;background-position:-${bgX}px -${bgY}px;background-repeat:no-repeat;width:${displaySize}px;height:${displaySize}px;`;
+}
+</script>
+<script>
+// Inlined public dependency: https://activity-static.hoopchina.com.cn/files/2678-qlg35lrc-upload-1783494754597-24.js
+/**
+ * ============================================================
+ *  BuildPlayer 模拟配置模块
+ *  所有可调参数集中在此，方便你以后调整游戏平衡
+ * ============================================================
+ */
+const SIM_CONFIG = {
+
+  // ============================================================
+  // 1. 建球员阶段参数
+  // ============================================================
+  BUILD: {
+    /** 总属性数 */
+    TOTAL_ATTRS: 13,
+
+    /** Classic 模式重roll次数 */
+    CLASSIC_REROLLS: Infinity,
+
+    /** 每支球队 roster 展示上限（不够的用实际人数） */
+    ROSTER_SHOW_MAX: 15,
+
+    /** 属性值范围 */
+    ATTR_MIN: 25,
+    ATTR_MAX: 99,
+  },
+
+  // ============================================================
+  // 1.5 各位置属性平均值（从真实NBA2K数据计算，用于跨位置衰减）
+  // 公式: 衰减系数 = min(1.0, 你的位置该属性平均值 / 来源位置该属性平均值)
+  // ============================================================
+  POS_AVG: {
+    PG: { threePT: 79.2, MID: 79.5, FIN: 82.5, DNK: 57.9, HAN: 85.2, PAS: 79.4, PDEF: 69.5, IDEF: 42.0, BLK: 44.6, REB: 52.2, ATH: 82.1, STR: 50.7, CLU: 73.6 },
+    SG: { threePT: 79.8, MID: 77.2, FIN: 82.5, DNK: 71.3, HAN: 83.0, PAS: 71.7, PDEF: 69.6, IDEF: 48.3, BLK: 45.5, REB: 51.9, ATH: 79.6, STR: 53.7, CLU: 70.5 },
+    SF: { threePT: 78.4, MID: 75.6, FIN: 82.5, DNK: 73.5, HAN: 82.8, PAS: 65.2, PDEF: 71.1, IDEF: 58.7, BLK: 50.5, REB: 57.3, ATH: 77.3, STR: 58.2, CLU: 62.5 },
+    PF: { threePT: 76.2, MID: 71.4, FIN: 83.4, DNK: 75.8, HAN: 83.4, PAS: 62.4, PDEF: 67.6, IDEF: 68.1, BLK: 59.7, REB: 66.4, ATH: 73.7, STR: 66.4, CLU: 71.1 },
+    C:  { threePT: 62.4, MID: 70.7, FIN: 86.4, DNK: 73.2, HAN: 80.3, PAS: 53.0, PDEF: 50.8, IDEF: 72.8, BLK: 72.7, REB: 77.0, ATH: 59.4, STR: 74.7, CLU: 64.9 },
+  },
+
+  // ============================================================
+  // 2. 属性中文名映射
+  // ============================================================
+  ATTR_CN: {
+    threePT: '三分',
+    MID:     '中投',
+    FIN:     '终结',
+    DNK:     '扣篮',
+    HAN:     '手感',
+    PAS:     '传球',
+    PDEF:    '外防',
+    IDEF:    '内防',
+    BLK:     '盖帽',
+    REB:     '篮板',
+    ATH:     '运动',
+    STR:     '力量',
+    CLU:     '关键',
+  },
+
+  /** 属性简短说明（hover 时显示） */
+  ATTR_DESC: {
+    threePT: '三分投篮能力',
+    MID:     '中距离投篮能力',
+    FIN:     '篮下终结能力',
+    DNK:     '扣篮能力',
+    HAN:     '控球与接球手感',
+    PAS:     '传球精准度',
+    PDEF:    '外线防守能力',
+    IDEF:    '内线防守能力',
+    BLK:     '盖帽能力',
+    REB:     '篮板能力',
+    ATH:     '运动能力（速度/敏捷）',
+    STR:     '力量对抗能力',
+    CLU:     '关键球能力',
+  },
+
+  /** 属性列表（顺序决定 UI 排列） */
+  ATTR_LIST: [
+    'threePT', 'MID', 'FIN', 'DNK', 'HAN', 'PAS',
+    'PDEF', 'IDEF', 'BLK', 'REB', 'ATH', 'STR', 'CLU'
+  ],
+
+  /** 数字→字母等级转换 */
+  GRADE: {
+    /** 根据数值返回 { letter, color } */
+    getGrade(val) {
+      if (val >= 95) return { letter: 'A+', color: '#ff6b6b' };
+      if (val >= 90) return { letter: 'A',  color: '#ff8787' };
+      if (val >= 85) return { letter: 'A-', color: '#ffa07a' };
+      if (val >= 80) return { letter: 'B+', color: '#ffd43b' };
+      if (val >= 75) return { letter: 'B',  color: '#ffd43b' };
+      if (val >= 70) return { letter: 'B-', color: '#ffd43b' };
+      if (val >= 65) return { letter: 'C+', color: '#69db7c' };
+      if (val >= 60) return { letter: 'C',  color: '#69db7c' };
+      if (val >= 55) return { letter: 'C-', color: '#69db7c' };
+      if (val >= 50) return { letter: 'D+', color: '#74c0fc' };
+      if (val >= 45) return { letter: 'D',  color: '#74c0fc' };
+      if (val >= 40) return { letter: 'D-', color: '#74c0fc' };
+      return { letter: 'F', color: '#868e96' };
+    },
+    /** OVR 等级 */
+    getOvrGrade(ovr) {
+      if (ovr >= 95) return '超级巨星';
+      if (ovr >= 85) return '全明星';
+      if (ovr >= 75) return '首发';
+      if (ovr >= 65) return '轮换';
+      return '边缘';
+    },
+  },
+
+  // ============================================================
+  // 3. 位置与 Archetype 判定
+  // ============================================================
+  POSITIONS: {
+    PG: '控球后卫',
+    SG: '得分后卫',
+    SF: '小前锋',
+    PF: '大前锋',
+    C:  '中锋',
+  },
+
+  POS_LIST: ['PG', 'SG', 'SF', 'PF', 'C'],
+
+  /** OVR 计算公式：各属性对每个位置的权重 */
+  OVR_WEIGHTS: {
+    PG: { threePT: 0.10, MID: 0.10, FIN: 0.08, DNK: 0.04, HAN: 0.14, PAS: 0.14, PDEF: 0.10, IDEF: 0.04, BLK: 0.02, REB: 0.04, ATH: 0.08, STR: 0.04, CLU: 0.08 },
+    SG: { threePT: 0.12, MID: 0.12, FIN: 0.10, DNK: 0.06, HAN: 0.10, PAS: 0.08, PDEF: 0.10, IDEF: 0.04, BLK: 0.02, REB: 0.04, ATH: 0.08, STR: 0.04, CLU: 0.10 },
+    SF: { threePT: 0.10, MID: 0.10, FIN: 0.10, DNK: 0.08, HAN: 0.08, PAS: 0.06, PDEF: 0.10, IDEF: 0.08, BLK: 0.04, REB: 0.06, ATH: 0.08, STR: 0.06, CLU: 0.06 },
+    PF: { threePT: 0.08, MID: 0.06, FIN: 0.12, DNK: 0.06, HAN: 0.06, PAS: 0.04, PDEF: 0.10, IDEF: 0.12, BLK: 0.08, REB: 0.10, ATH: 0.06, STR: 0.08, CLU: 0.04 },
+    C:  { threePT: 0.04, MID: 0.04, FIN: 0.14, DNK: 0.06, HAN: 0.04, PAS: 0.04, PDEF: 0.08, IDEF: 0.14, BLK: 0.12, REB: 0.12, ATH: 0.04, STR: 0.10, CLU: 0.04 },
+  },
+
+  // ============================================================
+  // 4. 赛季模拟参数 — 你可以随意调整
+  // ============================================================
+  SEASON: {
+    /** 常规赛总场次 */
+    GAMES: 82,
+
+    /** 单节分钟数（用于统计） */
+    QUARTER_MINUTES: 12,
+
+    /** 模拟速度（毫秒/场） */
+    SIM_SPEED_FAST: 50,
+    SIM_SPEED_NORMAL: 800,
+    SIM_SPEED_DETAIL: 2500,
+
+    /** 季后赛晋级条件（胜场数） */
+    PLAYOFF_WIN_REQUIRED: 4,
+  },
+
+  /** 球队实力维度权重 */
+  TEAM_POWER: {
+    offense:  { threePT: 0.20, MID: 0.15, FIN: 0.20, PAS: 0.15, HAN: 0.10, DNK: 0.10, ATH: 0.10 },
+    defense:  { PDEF: 0.25, IDEF: 0.25, BLK: 0.15, REB: 0.15, ATH: 0.10, STR: 0.10 },
+    athletic: { ATH: 0.30, DNK: 0.20, STR: 0.20, FIN: 0.15, threePT: 0.15 },
+    clutch:   { CLU: 0.40, threePT: 0.20, MID: 0.20, PAS: 0.20 },
+    depth:    {},  // 板凳平均 OVR，特殊处理
+  },
+
+  /** 单节分数计算基础值 */
+  QUARTER_BASE_PTS: 24,
+
+  /** 各维度对得分的影响系数 */
+  QUARTER_FACTORS: {
+    offense:  1.0,
+    defense:  -0.7,
+    athletic: 0.3,
+    clutch:   0.2,
+    home:     0.05,  // 主场加成
+  },
+
+  /** 随机事件概率（每节） */
+  EVENTS: {
+    /** 球员爆发概率 */
+    HOT_STREAK_CHANCE: 0.08,
+    /** 爆发时单节得分加成 */
+    HOT_STREAK_BONUS: { min: 4, max: 12 },
+    
+    /** 主力受伤概率（每场） */
+    INJURY_CHANCE: 0.03,
+    /** 受伤缺席场次 */
+    INJURY_GAMES: { min: 3, max: 15 },
+    
+    /** 交易概率（每10场检测一次） */
+    TRADE_CHANCE: 0.02,
+    
+    /** 冷门概率（弱队赢强队） */
+    UPSET_CHANCE: 0.10,
+    /** 冷门时弱队加成 */
+    UPSET_BONUS: 0.15,
+
+    /** 绝杀概率 */
+    BUZZER_BEATER_CHANCE: 0.05,
+  },
+
+  /** 你的球员数据生成系数 */
+  PLAYER_STATS: {
+    /** 各位置球权占比 */
+    USAGE: { PG: 0.18, SG: 0.17, SF: 0.16, PF: 0.14, C: 0.15 },
+
+    /** 各位置的数据缩放（pts基准=1.0，其他数据相对pts的比例） */
+    POS_SCALE: {
+      PG: { pts: 1.0, reb: 0.35, ast: 0.90, stl: 0.18, blk: 0.04, tov: 1.0 },
+      SG: { pts: 1.0, reb: 0.35, ast: 0.60, stl: 0.18, blk: 0.06, tov: 1.0 },
+      SF: { pts: 1.0, reb: 0.60, ast: 0.55, stl: 0.16, blk: 0.08, tov: 1.0 },
+      PF: { pts: 1.0, reb: 0.85, ast: 0.55, stl: 0.12, blk: 0.12, tov: 1.0 },
+      C:  { pts: 1.0, reb: 1.00, ast: 0.55, stl: 0.08, blk: 0.15, tov: 1.0 },
+    },
+
+    /** 按位置的属性→数据映射（不同位置权重不同） */
+    FACTORS: {
+      PG: {
+        pts: { FIN: 0.25, threePT: 0.20, MID: 0.20, DNK: 0.10, ATH: 0.10, PAS: 0.15 },
+        reb: { REB: 0.40, STR: 0.20, ATH: 0.20 },
+        ast: { PAS: 0.45, HAN: 0.25, ATH: 0.15, threePT: 0.15 },
+        stl: { PDEF: 0.40, ATH: 0.25, HAN: 0.20 },
+        blk: { BLK: 0.30, IDEF: 0.20, ATH: 0.10 },
+        tov: { HAN: -0.35, PAS: -0.30, ATH: -0.15 },
+      },
+      SG: {
+        pts: { FIN: 0.28, threePT: 0.22, MID: 0.20, DNK: 0.12, ATH: 0.10, PAS: 0.08 },
+        reb: { REB: 0.40, STR: 0.20, ATH: 0.20 },
+        ast: { PAS: 0.35, HAN: 0.20, ATH: 0.15, threePT: 0.10 },
+        stl: { PDEF: 0.40, ATH: 0.25, HAN: 0.15 },
+        blk: { BLK: 0.30, IDEF: 0.20, ATH: 0.10 },
+        tov: { HAN: -0.35, PAS: -0.30, ATH: -0.15 },
+      },
+      SF: {
+        pts: { FIN: 0.28, threePT: 0.18, MID: 0.18, DNK: 0.15, ATH: 0.12, STR: 0.09 },
+        reb: { REB: 0.45, STR: 0.25, ATH: 0.15 },
+        ast: { PAS: 0.25, HAN: 0.15, ATH: 0.10 },
+        stl: { PDEF: 0.40, ATH: 0.20, HAN: 0.15 },
+        blk: { BLK: 0.35, IDEF: 0.25, ATH: 0.10 },
+        tov: { HAN: -0.30, PAS: -0.25, ATH: -0.15 },
+      },
+      PF: {
+        pts: { FIN: 0.32, DNK: 0.18, MID: 0.15, threePT: 0.12, STR: 0.13, ATH: 0.10 },
+        reb: { REB: 0.45, STR: 0.25, ATH: 0.15, IDEF: 0.15 },
+        ast: { PAS: 0.15, HAN: 0.08, ATH: 0.05 },
+        stl: { PDEF: 0.30, ATH: 0.15, HAN: 0.10 },
+        blk: { BLK: 0.40, IDEF: 0.30, ATH: 0.10 },
+        tov: { STR: -0.20, HAN: -0.20, PAS: -0.15 },
+      },
+      C: {
+        pts: { FIN: 0.35, DNK: 0.20, MID: 0.12, STR: 0.15, threePT: 0.08, ATH: 0.10 },
+        reb: { REB: 0.50, STR: 0.25, ATH: 0.10, IDEF: 0.15 },
+        ast: { PAS: 0.15, HAN: 0.08, ATH: 0.05 },
+        stl: { PDEF: 0.20, ATH: 0.10, HAN: 0.08 },
+        blk: { BLK: 0.45, IDEF: 0.30, ATH: 0.08 },
+        tov: { STR: -0.20, HAN: -0.15, PAS: -0.10 },
+      },
+    },
+
+    /** 数据随机浮动范围 */
+    RANDOM_RANGE: 0.20,
+  },
+
+  /** 奖项判定阈值 */
+  AWARDS: {
+    MVP:       { stat: 'pts', weight: 0.6, teamWeight: 0.4 },
+    DPOY:      { stat: 'blk', weight: 0.4, teamWeight: 0.3, secondary: 'stl', weight2: 0.3 },
+    SCORING:   { stat: 'pts', weight: 1.0 },
+    CLUTCH:    { stat: 'clutch_pct', weight: 1.0 },
+    ROOKIE:    { stat: 'pts', weight: 0.6, teamWeight: 0.4 },
+  },
+
+  // ============================================================
+  // 5. 联盟结构 — NBA东西部+分区
+  // ============================================================
+  CONFERENCE: {
+    EAST: ['ATL','BOS','BKN','CHA','CHI','CLE','DET','IND','MIA','MIL','NYK','ORL','PHI','TOR','WAS'],
+    WEST: ['DAL','DEN','GSW','HOU','LAC','LAL','MEM','MIN','NOP','OKC','PHX','POR','SAC','SAS','UTA'],
+  },
+
+  DIVISIONS: {
+    Atlantic:    ['BOS','NYK','PHI','TOR','BKN'],
+    Central:     ['CHI','CLE','DET','IND','MIL'],
+    Southeast:   ['ATL','CHA','MIA','ORL','WAS'],
+    Northwest:   ['DEN','MIN','OKC','POR','UTA'],
+    Pacific:     ['GSW','LAC','LAL','PHX','SAC'],
+    Southwest:   ['DAL','HOU','MEM','NOP','SAS'],
+  },
+
+  /** 各球队缩写→全名 */
+  TEAM_NAMES: {
+    ATL:'老鹰', BOS:'凯尔特人', BKN:'篮网', CHA:'黄蜂', CHI:'公牛',
+    CLE:'骑士', DAL:'独行侠', DEN:'掘金', DET:'活塞', GSW:'勇士',
+    HOU:'火箭', IND:'步行者', LAC:'快船', LAL:'湖人', MEM:'灰熊',
+    MIA:'热火', MIL:'雄鹿', MIN:'森林狼', NOP:'鹈鹕', NYK:'尼克斯',
+    OKC:'雷霆', ORL:'魔术', PHI:'76人', PHX:'太阳', POR:'开拓者',
+    SAC:'国王', SAS:'马刺', TOR:'猛龙', UTA:'爵士', WAS:'奇才',
+  },
+
+  // ============================================================
+  // 6. 新模拟引擎参数
+  // ============================================================
+  /** 比赛节奏 — 决定每队场均回合数 */
+  PACE: {
+    base: 100,          // 联盟平均节奏
+    teamRange: 8,       // 各队节奏差异 ±8
+  },
+
+  /** 命中率基准（基于属性） */
+  SHOOTING: {
+    threePT: { base: 0.36, attrFactor: 0.0025, max: 0.45, min: 0.28 },
+    MID:     { base: 0.42, attrFactor: 0.0025, max: 0.52, min: 0.32 },
+    FIN:     { base: 0.58, attrFactor: 0.0025, max: 0.70, min: 0.45 },
+    FT:      { base: 0.75, attrFactor: 0.0020, max: 0.90, min: 0.55 },
+  },
+
+  /** 投篮分布（各位置出手占比） */
+  SHOT_DIST: {
+    PG: { threePT: 0.35, MID: 0.25, FIN: 0.25, FT: 0.15 },
+    SG: { threePT: 0.38, MID: 0.22, FIN: 0.22, FT: 0.18 },
+    SF: { threePT: 0.30, MID: 0.20, FIN: 0.30, FT: 0.20 },
+    PF: { threePT: 0.20, MID: 0.18, FIN: 0.38, FT: 0.24 },
+    C:  { threePT: 0.08, MID: 0.18, FIN: 0.48, FT: 0.25 },
+  },
+
+  /** 每节时长（秒）*/
+  QUARTER_SECONDS: 720,
+
+  /** 节奏事件 */
+  MOMENTUM: {
+    /** 最大 momentum 加成 */
+    maxBonus: 1.15,
+    /** 每节 momentum 衰减 */
+    decayPerQuarter: 0.3,
+    /** 大比分领先时的松懈 */
+    complacencyThreshold: 15,
+    complacencyFactor: 0.92,
+  },
+};
+
+// 确保 SIM_CONFIG 全局可用
+if (typeof module !== 'undefined' && module.exports) {
+  module.exports = SIM_CONFIG;
+}
+
+</script>
+<script>
+// ── 中文名修正 ──
+(function fixPlayerCN() {
+  var fixMap = { 'Tamar Bates': '塔马尔贝茨', 'Trey Lyles': '特雷-莱尔斯' };
+  if (typeof NBA2K_TEAMS !== 'undefined' && typeof NBA2K_DATA !== 'undefined') {
+    NBA2K_TEAMS.forEach(function(t) {
+      (NBA2K_DATA[t] || []).forEach(function(p) {
+        if (fixMap[p.name]) p.cname = fixMap[p.name];
+      });
+    });
+  }
+})();
+</script>
+<script>
+// Inlined public dependency: https://activity-static.hoopchina.com.cn/files/26630-uq56cnrc-upload-1782786826635-12.js
+var VaFuSDK=(function(e){Object.defineProperty(e,Symbol.toStringTag,{value:`Module`});async function t(e){var t;if(!n(e))return{ok:!1,code:`INVALID_PARAMS`,message:`post editor params is required`};let r=typeof window<`u`?(t=window.ColorboxAI)==null?void 0:t.bbs:void 0;if(!(r!=null&&r.openPostEditor))return{ok:!1,code:`BRIDGE_UNAVAILABLE`,message:`window.ColorboxAI.bbs.openPostEditor is not available`};try{await r.openPostEditor(e)}catch(e){return{ok:!1,code:`OPEN_FAILED`,message:e instanceof Error?e.message:`open post editor failed`}}return{ok:!0}}function n(e){return typeof e==`object`&&!!e&&!Array.isArray(e)&&Object.keys(e).length>0}let r=typeof window<`u`&&window.navigator?window.navigator.userAgent:``,i=/iPhone|iPad|iPod/i.test(r),a=/Android/i.test(r),o=/Harmony/i.test(r),s=r.includes(`kanqiu`);function c(){if(!(typeof window>`u`)){try{let e=window.top;if(e&&e!==window.self)return e.location.href,e}catch(e){}return window}}function l(e,t){var n;if(typeof window>`u`||!((n=window.ColorboxAI)!=null&&n.navigateTo))throw Error(`window.ColorboxAI.navigateTo is not available`);window.ColorboxAI.navigateTo(e,t)}function u(e,t=!1,n){if(e.startsWith(`huputiyu://`)){l(e,n);return}l(p(e,t),n)}function d(e,t){let n=h(e);if(!n)throw Error(`tagId is required`);l(m(n),t)}function f(){let e=p(g(),!1);l(`https://games.mobileapi.hupu.com/s?u=transmitV3&biz_code=default&schema=${encodeURIComponent(e)}`)}function p(e,t){return`huputiyu://webview/openencodeurl?url=${encodeURIComponent(e)}${t?`&fullscreen=1`:``}`}function m(e){return`huputiyu://bbs/topicTag?tagId=${encodeURIComponent(e)}`}function h(e){return e==null?``:String(e).trim()}function g(){let e=c();return e?e.location.href:``}let _=new WeakSet,v=new WeakMap,y=0;function b(){let{current:e,host:t}=S(),n=C(t,e),r=C(e,t);for(let e of n){let t=e.HupuBridge;if(t!=null&&t.send)return x(e,t.send.bind(t))}for(let e of r){let t=ee(e);if(t)return x(e,t)}for(let e of n){let t=e.ColorboxAIHost;if(t!=null&&t.bridgeSend){let n=t.bridgeSend.bind(t);return x(e,(e,t)=>Promise.resolve(n(e,t)))}}let i=n.find(e=>e.HupuBridge);return i?x(i):void 0}function x(e,t){var n,r;let i=e.HupuBridge;return{...i,send:t,register:(n=i==null?void 0:i.register)==null?k(e):n,unregister:(r=i==null?void 0:i.unregister)==null?A(e):r}}function S(){return{current:typeof window>`u`?void 0:window,host:c()}}function C(...e){return e.filter((t,n)=>!!t&&e.indexOf(t)===n)}function ee(e){var t;let n=(t=e.webkit)==null||(t=t.messageHandlers)==null?void 0:t.ClientBridge,r=e.androidBridge;if(!(!n&&!r))return(t,i)=>new Promise((a,o)=>{j(e);let s=w(`success`),c=w(`error`),l=!1,u=()=>{clearTimeout(p),delete e[s],delete e[c]},d=e=>{l||(l=!0,u(),a(P(e)))},f=e=>{l||(l=!0,u(),o(te(e)))};e[s]=(...e)=>{d(e.length>1?e:e[0])},e[c]=(...e)=>{f(e.length>1?e:e[0])};let p=setTimeout(()=>{f(Error(`Bridge call timed out: ${t}`))},3e3);try{let e=i==null?{}:i;if(n){n.postMessage({method:t,data:e,successcb:s,errorcb:c});return}r==null||r.callNativeAsync(t,JSON.stringify({code:200,data:e}),s)}catch(e){f(e)}})}function w(e){return y+=1,`_va_h5_sdk_${e}_${Date.now()}_${y}_`}function T(){let e=b();return e!=null&&e.send?e.send(`bridgeReady`).catch(()=>void 0):Promise.resolve(void 0)}async function E(){if(!s)return!1;let e=await T();return(e==null?void 0:e.islogin)===1}function D(){let e=b();return e!=null&&e.send?e.send(`hupu.user.login`).catch(()=>void 0):Promise.resolve(void 0)}async function O(){return await E()?!0:(s?D():f(),!1)}function k(e){return(t,n)=>{j(e);let r=M(e);r.has(t)||r.set(t,e[t]),e[t]=n}}function A(e){return t=>{let n=M(e);if(n.has(t)){let r=n.get(t);n.delete(t),r===void 0?delete e[t]:e[t]=r;return}delete e[t]}}function j(e){var t,n;if(_.has(e))return;_.add(e);let r=(t=e.HupuBridge)==null?{}:t;e.HupuBridge=r;let i=typeof r._handle_==`function`?r._handle_:void 0,a=(t,n)=>{let a=e[t];if(typeof a==`function`){a(N(n));return}i==null||i.call(r,t,n)};typeof r.bridgePatch==`function`?r.bridgePatch({_handle_:a}):r._handle_=a,(n=e.addEventListener)==null||n.call(e,`onHupuJSBridgeHandle`,e=>{let t=e.detail;typeof(t==null?void 0:t.method)==`string`&&a(t.method,t.result)})}function M(e){let t=v.get(e);return t||(t=new Map,v.set(e,t)),t}function N(e){if(typeof e!=`string`)return e;try{return JSON.parse(e)}catch(t){return e}}function P(e){let t=N(e);return Array.isArray(t)&&t.length===1&&(t=N(t[0])),typeof t==`object`&&t&&`data`in t&&typeof t.data==`object`&&t.data!==null?t.data:t}function te(e){let t=P(e);return t instanceof Error?t:typeof t==`object`&&t&&`message`in t&&typeof t.message==`string`?Error(t.message):Error(`Native bridge call failed`)}let ne={"image/png":`png`,"image/jpeg":`jpg`,"image/webp":`webp`,"image/gif":`gif`,"video/mp4":`mp4`};async function re(e){var t;let n=e==null?void 0:e.file;if(!ie(n))return{ok:!1,code:`INVALID_FILE`,message:`file must be a standard File or Blob`};let r=typeof window<`u`?(t=window.ColorboxAI)==null?void 0:t.oss:void 0;if(!(r!=null&&r.uploadFile))return{ok:!1,code:`BRIDGE_UNAVAILABLE`,message:`window.ColorboxAI.oss.uploadFile is not available`};let i=ae(n,e.filename),a;try{a=await r.uploadFile({file:n,filename:i})}catch(e){return{ok:!1,code:`UPLOAD_FAILED`,message:e instanceof Error?e.message:`OSS upload failed`}}let o=F(a,`downloadUrl`);return o?{ok:!0,downloadUrl:o,name:F(a,`name`)||i}:{ok:!1,code:`INVALID_RESPONSE`,message:`OSS upload response missing downloadUrl`}}function ie(e){return typeof Blob<`u`&&e instanceof Blob}function ae(e,t){if(typeof t==`string`&&t.trim())return t.trim();if(typeof File<`u`&&e instanceof File&&e.name.trim())return e.name.trim();let n=ne[e.type]||`bin`;return`upload-${Date.now()}.${n}`}function F(e,t){if(typeof e!=`object`||!e)return``;let n=e[t];return typeof n==`string`?n.trim():``}async function oe(e){if(!se(e))return{ok:!1,code:`INVALID_SHARE_CONFIG`,message:`share config is required`};if(!s)return{ok:!0,enabled:!1};let t=b();if(!(t!=null&&t.send))return{ok:!1,code:`BRIDGE_UNAVAILABLE`,message:`native share bridge is not available`};try{await t.send(`hupu.share.setNative`,e)}catch(e){return{ok:!1,code:`SET_SHARE_FAILED`,message:e instanceof Error?e.message:`native share setup failed`}}if(t.openShare)try{await t.openShare({open:!0})}catch(e){return{ok:!1,code:`OPEN_SHARE_FAILED`,message:e instanceof Error?e.message:`native share open failed`}}return{ok:!0,enabled:!0}}function se(e){return typeof e==`object`&&!!e&&!Array.isArray(e)&&Object.keys(e).length>0}let I=`hupu.adver.rewardFlowStatusCallBack`,L=new Set([`onReqError`,`onLoadError`,`onShowError`]),R=new Set,z=new Map,B=!1;async function V(e){let t=W(e==null?void 0:e.activityId);if(!t)return{ok:!1,code:`INVALID_ACTIVITY_ID`,message:`activityId is required`};let n=await q(t);return n.ok?{ok:!0,state:n.state}:n}async function H(e){let t=W(e==null?void 0:e.activityId);if(!t)return{ok:!1,code:`INVALID_ACTIVITY_ID`,message:`activityId is required`};if(R.has(t))return{ok:!1,code:`CONSUME_IN_PROGRESS`,message:`Task chance consume is already in progress`};R.add(t);try{if(!await Z())return{ok:!1,code:`LOGIN_REQUIRED`,message:`Login is required before consuming task chance`};let e=await fetch(K(t),{method:`POST`,headers:await $()});if(!e.ok)return{ok:!1,code:`CONSUME_FAILED`,message:`Task chance consume failed with status ${e.status}`};let n=await V({activityId:t});return n.ok?{ok:!0,state:n.state}:{ok:!1,code:`STATE_SYNC_FAILED`,message:n.message}}catch(e){return{ok:!1,code:`CONSUME_FAILED`,message:e instanceof Error?e.message:`Task chance consume failed`}}finally{R.delete(t)}}async function U(e){let t=W(e==null?void 0:e.activityId);if(!t)return{ok:!1,code:`INVALID_ACTIVITY_ID`,message:`activityId 不能为空`};if(B)return{ok:!1,code:`IN_PROGRESS`,message:`激励视频进行中，请稍候`};B=!0;try{if(!s)return _e(),{ok:!1,code:`APP_REQUIRED`,message:`请在虎扑 App 内参与`};if(o)return{ok:!1,code:`UNAVAILABLE`,message:`抽奖功能暂未适配鸿蒙系统，敬请谅解`};let e=Q();if(!e)return{ok:!1,code:`UNAVAILABLE`,message:`激励视频能力不可用`};if(!await Z())return{ok:!1,code:`LOGIN_REQUIRED`,message:`请先登录后参与`};let n=await q(t);if(!n.ok)return console.log(n.message),{ok:!1,code:`FAILED`,message:`任务状态获取失败，请稍后再试`};let r=pe(n.data);if(!r)return{ok:!1,code:`UNAVAILABLE`,message:`暂无可参与任务`};if(r.status===`done`)return{ok:!1,code:`UNAVAILABLE`,message:`任务已完成`};let i=X(r.id);if(!i)return{ok:!1,code:`UNAVAILABLE`,message:`暂无可参与任务`};let a=me(r);return he(a)?await ve({activityId:t,bridge:e,pid:a,reportUrl:le(i)}):{ok:!1,code:`UNAVAILABLE`,message:`暂无可用视频`}}catch(e){return console.log(e),{ok:!1,code:`FAILED`,message:`获取广告失败，请稍后再试`}}finally{B=!1}}function W(e){return e==null?``:String(e).trim()}function G(e){let t=new URL(`https://enterprise.hupu.com/api/cj/machine`);return t.searchParams.set(`id`,e),t.toString()}function K(e){let t=new URL(`https://enterprise.hupu.com/api/cj/machine/cj`);return t.searchParams.set(`id`,e),t.toString()}function ce(e){let t=new URL(`https://enterprise.hupu.com/api/task/complete`);return t.searchParams.set(`taskId`,e),t.toString()}function le(e){let t=new URL(`https://enterprise.hupu.com/api/cj/needpuid/increaseDrawCount`);return t.searchParams.set(`taskId`,e),t.searchParams.set(`winprice`,`__WIN_PRICE__`),t.toString()}async function q(e){let t=await J(e);if(!t.ok)return t;let n=await ue(e,t.data);return n.ok?n.completed?J(e):t:n}async function ue(e,t){let n=fe(t);if(!n||n.status===`done`||!await ge())return{ok:!0,completed:!1};let r=X(n.id);if(!r)return{ok:!1,code:`INVALID_RESPONSE`,message:`check_in task id is invalid`};let i=z.get(e);if(i)return i;let a=de(r).finally(()=>{z.delete(e)});return z.set(e,a),a}async function de(e){try{let t=await fetch(ce(e),{method:`POST`,headers:await $()});return t.ok?{ok:!0,completed:!0}:{ok:!1,code:`REQUEST_FAILED`,message:`Task check_in complete failed with status ${t.status}`}}catch(e){return{ok:!1,code:`REQUEST_FAILED`,message:e instanceof Error?e.message:`Task check_in complete failed`}}}async function J(e){try{var t;let n=await fetch(G(e),{method:`GET`,headers:await $()});if(!n.ok)return{ok:!1,code:`REQUEST_FAILED`,message:`Task state request failed with status ${n.status}`};let r=await n.json();return r.code===0?typeof((t=r.data)==null?void 0:t.drawCount)==`number`?{ok:!0,state:{remainCount:r.data.drawCount},data:r.data}:{ok:!1,code:`INVALID_RESPONSE`,message:`Task state response missing drawCount`}:{ok:!1,code:`REQUEST_FAILED`,message:r.message||`Task state request failed`}}catch(e){return{ok:!1,code:`REQUEST_FAILED`,message:e instanceof Error?e.message:`Task state request failed`}}}function fe(e){var t;let n=(t=e.taskInfo)==null?void 0:t.taskList;if(Array.isArray(n))return n.find(e=>Y(e)&&e.taskCode===`check_in`)}function pe(e){var t;let n=(t=e.taskInfo)==null?void 0:t.taskList;if(Array.isArray(n))return n.find(e=>Y(e)&&e.taskCode===`reward`)}function Y(e){return typeof e==`object`&&!!e}function me(e){if(Array.isArray(e.targetIdList))return e.targetIdList[0]}function he(e){return e!=null&&String(e).trim()!==``}function X(e){return e==null?``:String(e).trim()}async function ge(){try{return await E()}catch(e){return console.log(e),!1}}async function Z(){try{return await O()}catch(e){return console.log(e),!1}}function _e(){try{f()}catch(e){console.log(e)}}function Q(){let e=b();if(!(!(e!=null&&e.send)||!e.register||!e.unregister))return e}function ve({activityId:e,bridge:t,pid:n,reportUrl:r}){return new Promise(i=>{let a=!1,o=()=>be(t),s=e=>{a||(a=!0,o(),i(e))},c=()=>{a||(a=!0,o(),xe(e).then(i).catch(e=>{console.log(e),i({ok:!0,stateSyncError:`任务状态同步失败，请刷新页面查看`})}))};try{t.register(I,e=>{ye(e,s,c)})}catch(e){console.log(e),i({ok:!1,code:`UNAVAILABLE`,message:`激励视频能力不可用`});return}try{t.send(`hupu.adver.beginRewardFlow`,{pid:n,reportUrl:r}).catch(e=>{console.log(e),s({ok:!1,code:`FAILED`,message:`获取广告失败，请稍后再试`})})}catch(e){console.log(e),s({ok:!1,code:`FAILED`,message:`获取广告失败，请稍后再试`})}})}function ye(e,t,n){if(!Se(e))return;let r=typeof e.callbackName==`string`?e.callbackName:``,i=!!e.rewardStatus;if(r===`onRewardArrived`||i){n();return}if(L.has(r)){t({ok:!1,code:`FAILED`,message:`获取广告失败，请稍后再试`});return}r===`onClose`&&t({ok:!1,code:`NOT_REWARDED`,message:`需完成观看才能参与抽奖`})}function be(e){try{e.unregister(I)}catch(e){console.log(e)}}async function xe(e){let t=await V({activityId:e});return t.ok?{ok:!0,state:t.state}:(console.log(t.message),{ok:!0,stateSyncError:`任务状态同步失败，请刷新页面查看`})}function Se(e){return typeof e==`object`&&!!e}async function $(){let e={};if(!s)return e;try{let t=await T();t!=null&&t.authToken&&(e[`X-Hupu-Token`]=t.authToken)}catch(e){console.log(e)}return e}function Ce(){if(!(typeof window>`u`))return window.ColorboxAI}function we(e){let t=Ce();if(t!=null&&t.track){t.track(e);return}console.warn(`[va-h5-sdk] window.ColorboxAI.track 不可用，本次埋点已忽略`)}return e.checkLogin=O,e.completeRewardVideoTask=U,e.consumeTaskChance=H,e.getBridgeHostWindow=c,e.getIsLogin=E,e.getTaskState=V,e.getUserInfo=T,e.isAndroid=a,e.isHarmony=o,e.isIOS=i,e.isInApp=s,e.jump=u,e.jumpTopicTag=d,e.login=D,e.navigateTo=l,e.openPostEditor=t,e.setShare=oe,e.track=we,e.uploadFile=re,e.wakeApp=f,e})({});
+</script>
+<script>
+// 不在控制台输出调试日志
+try { console.log = function(){}; console.warn = function(){}; console.error = function(){}; } catch(e) {}
+// == use-va-h5-sdk：虎扑用户信息只请求一次 ==
+var DEFAULT_HUPU_AVATAR = 'https://i3.hoopchina.com.cn/newsPost/de00f9a83014c2b3196d831d4be1adb9_w_300_h_300_.png';
+var DEFAULT_HUPU_NICKNAME = '未登录JR';
+var HUPU_USER = {
+  requested: false,
+  loaded: false,
+  promise: null,
+  raw: null,
+  isLogin: false,
+  nickname: DEFAULT_HUPU_NICKNAME,
+  avatar: DEFAULT_HUPU_AVATAR,
+  source: 'fallback',
+  requestCount: 0
+};
+window.__HUPU_USER__ = HUPU_USER;
+
+function parseHupuMaybeJson(value) {
+  if (typeof value !== 'string') return value;
+  var text = value.trim();
+  if (!text || (!text.startsWith('{') && !text.startsWith('['))) return value;
+  try { return JSON.parse(text); } catch (e) { return value; }
+}
+
+function normalizeHupuAvatarUrl(value) {
+  if (value === undefined || value === null) return '';
+  var url = String(value).trim();
+  if (!url) return '';
+  if (url.startsWith('//')) url = 'https:' + url;
+  if (/^data:image\//i.test(url) || /^https?:\/\//i.test(url)) return url;
+  return '';
+}
+
+function findHupuField(raw, keys, depth, seen) {
+  if (depth === undefined) depth = 0;
+  if (seen === undefined) seen = new Set();
+  raw = parseHupuMaybeJson(raw);
+  if (!raw || depth > 7 || typeof raw !== 'object' || seen.has(raw)) return undefined;
+  seen.add(raw);
+  var keyMap = new Map(Object.keys(raw).map(function(key) { return [key.toLowerCase(), key]; }));
+  for (var wi = 0; wi < keys.length; wi++) {
+    var wanted = keys[wi];
+    var actual = keyMap.get(String(wanted).toLowerCase());
+    if (!actual) continue;
+    var value = parseHupuMaybeJson(raw[actual]);
+    if (value !== undefined && value !== null && value !== '') return value;
+  }
+  var objKeys = Object.keys(raw);
+  for (var oi = 0; oi < objKeys.length; oi++) {
+    var found = findHupuField(raw[objKeys[oi]], keys, depth + 1, seen);
+    if (found !== undefined && found !== null && found !== '') return found;
+  }
+  return undefined;
+}
+
+function findHupuString(raw, keys) {
+  var value = findHupuField(raw, keys);
+  if (typeof value === 'string' || typeof value === 'number') return String(value).trim();
+  if (value && typeof value === 'object') {
+    var nested = findHupuField(value, ['url', 'src', 'value', 'text', 'name']);
+    if (typeof nested === 'string' || typeof nested === 'number') return String(nested).trim();
+  }
+  return '';
+}
+
+function normalizeHupuUserInfo(userInfo) {
+  var raw = parseHupuMaybeJson(userInfo) || {};
+  var nickname = findHupuString(raw, ['nickname', 'nickName', 'nick', 'userName', 'username', 'displayName', 'display_name']);
+  var avatarValue = findHupuField(raw, [
+    'avatar', 'avatarUrl', 'avatar_url', 'userAvatar', 'userAvatarUrl', 'head', 'header', 'headerUrl', 'headUrl',
+    'headImg', 'headImgUrl', 'headimgurl', 'profileImg', 'profileImage', 'profileImageUrl', 'profilePic', 'profilePicUrl',
+    'face', 'faceUrl', 'icon', 'iconUrl', 'photo', 'photoUrl', 'img', 'imgUrl', 'image', 'imageUrl', 'smallAvatar', 'bigAvatar'
+  ]);
+  if (avatarValue && typeof avatarValue === 'object')
+    avatarValue = findHupuField(avatarValue, ['url', 'src', 'imageUrl', 'avatarUrl']);
+  var avatar = normalizeHupuAvatarUrl(avatarValue);
+  var loginValue = findHupuField(raw, ['islogin', 'isLogin', 'loggedIn', 'login', 'hasLogin']);
+  var explicitlyLoggedIn = loginValue === 1 || loginValue === '1' || loginValue === true || loginValue === 'true' || loginValue === 'yes';
+  var isLogin = explicitlyLoggedIn || !!nickname || !!avatar;
+  return {
+    isLogin: isLogin,
+    nickname: isLogin && nickname ? nickname : DEFAULT_HUPU_NICKNAME,
+    avatar: avatar || DEFAULT_HUPU_AVATAR,
+    raw: userInfo || null
+  };
+}
+
+function getInjectedVaUserInfo() {
+  var candidates = [
+    window.__HUPU_USER_INFO__, window.__USER_INFO__, window.hupuUserInfo, window.userInfo,
+    window.VaFuSDK && window.VaFuSDK.userInfo, window.VaFuSDK && window.VaFuSDK.currentUser, window.VaFuSDK && window.VaFuSDK.user && window.VaFuSDK.user.info
+  ];
+  for (var ci = 0; ci < candidates.length; ci++) {
+    var value = parseHupuMaybeJson(candidates[ci]);
+    if (value && typeof value === 'object') return value;
+  }
+  return null;
+}
+
+function getVaUserInfoGetter() {
+  var candidates = [
+    [window.VaFuSDK, 'getUserInfo', 'VaFuSDK.getUserInfo'],
+    [window.VaFuSDK, 'getCurrentUser', 'VaFuSDK.getCurrentUser'],
+    [window.VaFuSDK, 'getUserProfile', 'VaFuSDK.getUserProfile'],
+    [window.VaFuSDK && window.VaFuSDK.user, 'getUserInfo', 'VaFuSDK.user.getUserInfo']
+  ];
+  for (var gi = 0; gi < candidates.length; gi++) {
+    var owner = candidates[gi][0], key = candidates[gi][1], label = candidates[gi][2];
+    if (owner && typeof owner[key] === 'function') return { owner: owner, fn: owner[key], label: label };
+  }
+  return null;
+}
+
+function waitForVaUserBridge(timeout) {
+  if (timeout === undefined) timeout = 8000;
+  var started = Date.now();
+  return new Promise(function(resolve) {
+    function check() {
+      var injected = getInjectedVaUserInfo();
+      if (injected) { resolve({ injected: injected }); return; }
+      var getter = getVaUserInfoGetter();
+      if (getter) { resolve({ getter: getter }); return; }
+      if (Date.now() - started < timeout) {
+        setTimeout(check, 120);
+      } else {
+        var finalInjected = getInjectedVaUserInfo();
+        if (finalInjected) { resolve({ injected: finalInjected }); return; }
+        var finalGetter = getVaUserInfoGetter();
+        resolve(finalGetter ? { getter: finalGetter } : null);
+      }
+    }
+    check();
+  });
+}
+
+function invokeVaUserInfoGetter(getter, timeout) {
+  if (timeout === undefined) timeout = 5000;
+  return new Promise(function(resolve, reject) {
+    if (!getter) { resolve(null); return; }
+    var settled = false;
+    function finish(value) { if (settled) return; settled = true; clearTimeout(timer); resolve(value); }
+    function fail(error) { if (settled) return; settled = true; clearTimeout(timer); reject(error); }
+    function callback() {
+      if (arguments.length > 1 && arguments[1] !== undefined && arguments[1] !== null) finish(arguments[1]);
+      else finish(arguments[0]);
+    }
+    var timer = setTimeout(function() { finish(null); }, timeout);
+    try {
+      HUPU_USER.requestCount += 1;
+      var returned = getter.fn.length > 0 ? getter.fn.call(getter.owner, callback) : getter.fn.call(getter.owner);
+      if (returned && typeof returned.then === 'function') returned.then(finish, fail);
+      else if (returned !== undefined && returned !== null) finish(returned);
+    } catch (e) { fail(e); }
+  });
+}
+
+async function _fetchHupuUser() {
+  try {
+    var bridge = await waitForVaUserBridge(8000);
+    var raw = null;
+    if (bridge && bridge.injected) { raw = bridge.injected; HUPU_USER.source = 'VaFuSDK.injected'; }
+    else if (bridge && bridge.getter) { raw = await invokeVaUserInfoGetter(bridge.getter, 5000); HUPU_USER.source = bridge.getter.label; }
+    var normalized = normalizeHupuUserInfo(raw);
+    HUPU_USER.raw = normalized.raw;
+    HUPU_USER.isLogin = normalized.isLogin;
+    HUPU_USER.nickname = normalized.nickname;
+    HUPU_USER.avatar = normalized.avatar;
+    try { console.log('[hupu]', normalized.isLogin ? '已登录' : '未登录', normalized.nickname, HUPU_USER.source); } catch(e) {}
+  } catch (e) {
+    HUPU_USER.isLogin = false;
+    HUPU_USER.nickname = DEFAULT_HUPU_NICKNAME;
+    HUPU_USER.avatar = DEFAULT_HUPU_AVATAR;
+    HUPU_USER.source = 'fallback_error';
+  } finally {
+    HUPU_USER.loaded = true;
+  }
+  return HUPU_USER;
+}
+
+var _hupuRetryCount = 0;
+function ensureHupuUser(forceRetry) {
+  // 强制重试：之前已加载但未登录，或加载超时
+  if (forceRetry) {
+    if (HUPU_USER.isLogin || _hupuRetryCount >= 3) return Promise.resolve(HUPU_USER);
+    _hupuRetryCount++;
+    HUPU_USER.loaded = false;
+    HUPU_USER.requested = true;
+    HUPU_USER.promise = _fetchHupuUser();
+    return HUPU_USER.promise;
+  }
+  if (HUPU_USER.loaded) return Promise.resolve(HUPU_USER);
+  if (!HUPU_USER.requested) { HUPU_USER.requested = true; HUPU_USER.promise = _fetchHupuUser(); }
+  return HUPU_USER.promise;
+}
+
+function getHupuDisplayName() {
+  var custom = getCustomPlayerName();
+  if (custom) return custom;
+  return (HUPU_USER.isLogin && HUPU_USER.nickname) ? HUPU_USER.nickname : '自建球员';
+}
+function getHupuAvatarUrl() {
+  return HUPU_USER.avatar || '';
+}
+function isHupuLoggedIn() {
+  return !!HUPU_USER.isLogin;
+}
+
+function getCustomPlayerName() {
+  try { return localStorage.getItem('buildplayer_nickname') || ''; } catch(e) { return ''; }
+}
+function setCustomPlayerName(name) {
+  try { localStorage.setItem('buildplayer_nickname', name); } catch(e) {}
+}
+
+function openEditProfile() {
+  var existing = document.getElementById('editProfileModal');
+  if (existing) existing.remove();
+  var currentName = getHupuDisplayName();
+  var avatarUrl = getHupuAvatarUrl();
+  var defaultAvatar = 'https://i3.hoopchina.com.cn/newsPost/de00f9a83014c2b3196d831d4be1adb9_w_300_h_300_.png';
+  var M = document.createElement('div');
+  M.id = 'editProfileModal';
+  M.style.cssText = 'position:fixed;inset:0;z-index:9999;background:rgba(0,0,0,0.45);display:flex;align-items:center;justify-content:center;padding:16px;';
+  M.onclick = function(e) { if (e.target === M) M.remove(); };
+  var C = document.createElement('div');
+  C.style.cssText = 'background:#faf5eb;border:2px solid #f0e0cc;border-radius:16px;width:100%;max-width:300px;max-height:80vh;overflow-y:auto;box-shadow:0 8px 48px rgba(0,0,0,0.25);text-align:center;padding:28px 20px 20px;position:relative;';
+  M.appendChild(C);
+  var closeBtn = document.createElement('button');
+  closeBtn.style.cssText = 'position:absolute;top:10px;right:10px;width:30px;height:30px;border-radius:8px;border:1.5px solid #f0e0cc;background:#fffaf2;cursor:pointer;font-size:14px;display:flex;align-items:center;justify-content:center;color:#8a7a66;';
+  closeBtn.textContent = '✕';
+  closeBtn.onclick = function() { M.remove(); };
+  C.appendChild(closeBtn);
+  var avatarWrap = document.createElement('div');
+  avatarWrap.style.cssText = 'width:72px;height:72px;border-radius:50%;margin:0 auto 14px;overflow:hidden;border:3px solid #ff6b35;background:#fffaf2;';
+  C.appendChild(avatarWrap);
+  var img = document.createElement('img');
+  img.style.cssText = 'width:100%;height:100%;object-fit:cover;display:block;';
+  img.src = avatarUrl;
+  img.onerror = function() { this.onerror = null; this.src = defaultAvatar; };
+  avatarWrap.appendChild(img);
+  var label = document.createElement('div');
+  label.style.cssText = 'font-family:Fredoka,"Noto Sans SC",sans-serif;font-size:13px;color:#8a7a66;margin-bottom:6px;';
+  label.textContent = '昵称';
+  C.appendChild(label);
+  var input = document.createElement('input');
+  input.id = 'editNicknameInput';
+  input.type = 'text';
+  input.maxLength = '20';
+  input.value = currentName;
+  input.style.cssText = 'width:100%;padding:10px 14px;border:2px solid #f0e0cc;border-radius:10px;font-family:Nunito,"Noto Sans SC",sans-serif;font-size:15px;text-align:center;outline:none;background:#fffaf2;color:#2d1f0e;';
+  C.appendChild(input);
+  var btnRow = document.createElement('div');
+  btnRow.style.cssText = 'display:flex;gap:10px;margin-top:18px;';
+  C.appendChild(btnRow);
+  var cancelBtn = document.createElement('button');
+  cancelBtn.style.cssText = 'flex:1;padding:12px 0;border:2px solid #f0e0cc;border-radius:12px;background:#fffaf2;font-family:Fredoka,"Noto Sans SC",sans-serif;font-size:14px;font-weight:600;color:#8a7a66;cursor:pointer;';
+  cancelBtn.textContent = '取消';
+  cancelBtn.onclick = function() { M.remove(); };
+  btnRow.appendChild(cancelBtn);
+  var saveBtn = document.createElement('button');
+  saveBtn.style.cssText = 'flex:1;padding:14px 0;border:none;border-radius:12px;background:#ff6b35;color:#fff;font-family:Fredoka,"Noto Sans SC",sans-serif;font-size:15px;font-weight:700;cursor:pointer;';
+  saveBtn.textContent = '保存';
+  saveBtn.onclick = function() { saveEditProfile(); };
+  btnRow.appendChild(saveBtn);
+  document.body.appendChild(M);
+}
+function saveEditProfile() {
+  try{console.log('[edit] save clicked')}catch(e){}
+  var inp = document.getElementById('editNicknameInput');
+  if (!inp) { try{console.warn('[edit] input not found')}catch(e){} return; }
+  var name = inp.value.trim();
+  if (!name) { alert('昵称不能为空'); return; }
+  function doSave() {
+    try{console.log('[edit] saving name:', name)}catch(e){}
+    setCustomPlayerName(name);
+    var m = document.getElementById('editProfileModal');
+    if (m) m.remove();
+  }
+  if (window.ColorboxAI && window.ColorboxAI.security && typeof window.ColorboxAI.security.checkAudit === 'function') {
+    try{console.log('[edit] checkAudit available, calling...')}catch(e){}
+    var timedOut = false;
+    var timer = setTimeout(function() { timedOut = true; try{console.warn('[edit] checkAudit timeout')}catch(e){} doSave(); }, 1000);
+    try {
+      var p = window.ColorboxAI.security.checkAudit(name);
+      if (p && typeof p.then === 'function') {
+        p.then(function(res) {
+          if (timedOut) return;
+          clearTimeout(timer);
+          try{console.log('[edit] checkAudit result', res)}catch(e){}
+          if (res && res.code === 200 && res.data === true) {
+            doSave();
+          } else if (res && res.code === 401) {
+            alert('请先登录');
+          } else if (res && res.data === false) {
+            alert('检测到敏感词');
+          } else {
+            try{console.warn('[edit] checkAudit unexpected', res)}catch(e){}
+            alert('安全检查异常，请稍后再试');
+          }
+        }).catch(function(e) {
+          if (timedOut) return;
+          clearTimeout(timer);
+          try{console.warn('[edit] checkAudit promise error', e)}catch(ex){}
+          doSave();
+        });
+      } else {
+        clearTimeout(timer);
+        try{console.warn('[edit] checkAudit not promise, fallback')}catch(e){}
+        doSave();
+      }
+    } catch(e) {
+      clearTimeout(timer);
+      try{console.warn('[edit] checkAudit sync error', e)}catch(ex){}
+      doSave();
+    }
+  } else {
+    try{console.warn('[edit] checkAudit unavailable, save directly')}catch(e){}
+    doSave();
+  }
+}
+</script>
+<script>
+// ── Storage 工具 ──
+var Storage = {
+  _ready: null,
+  waitForReady: function(cb) {
+    if (!Storage._ready) {
+      Storage._ready = new Promise(function(resolve) {
+        function check() {
+          if (window.ColorboxAI && window.ColorboxAI.storage) { resolve(); return; }
+          setTimeout(check, 100);
+        }
+        check();
+      });
+    }
+    if (typeof cb === 'function') { Storage._ready.then(cb).catch(function(){}); }
+    return Storage._ready;
+  },
+  _validateKey: function(key) {
+    if (typeof key !== 'string') return false;
+    var k = key.trim();
+    return k.length > 0 && /^[a-zA-Z0-9_-]+$/.test(k);
+  },
+  setValue: function(data) {
+    try {
+      if (!window.ColorboxAI || !window.ColorboxAI.storage) return Promise.resolve();
+      for (var key in data) {
+        if (!data.hasOwnProperty(key)) continue;
+        if (!Storage._validateKey(key)) { return Promise.resolve(); }
+      }
+      var serialized = JSON.stringify(data);
+      if (serialized.length > 200 * 1024) {
+        return Promise.resolve();
+      }
+      return window.ColorboxAI.storage.setValue(data).catch(function(){});
+    } catch(e) {}
+    return Promise.resolve();
+  },
+  getValue: function(key) {
+    try {
+      if (!window.ColorboxAI || !window.ColorboxAI.storage) return Promise.resolve(null);
+      if (key !== undefined && !Storage._validateKey(key)) return Promise.resolve(null);
+      if (key === undefined) return window.ColorboxAI.storage.getValue().catch(function(){ return null; });
+      return window.ColorboxAI.storage.getValue(key).catch(function(){ return null; });
+    } catch(e) { return Promise.resolve(null); }
+  },
+  savePlayer: function(playerData) {
+    if (!window.ColorboxAI || !window.ColorboxAI.storage) return;
+    Storage.getValue('players').then(function(raw) {
+      var arr = [];
+      if (raw != null) {
+        if (Array.isArray(raw)) { arr = raw; }
+        else if (typeof raw === 'string') { try { arr = JSON.parse(raw); } catch(e) { arr = []; } }
+        if (!Array.isArray(arr)) arr = [];
+      }
+      arr.push(playerData);
+      Storage.setValue({ players: arr });
+    }).catch(function() {
+      Storage.setValue({ players: [playerData] });
+    });
+  }
+};
+</script>
+<script >/* ============================================================
+   BuildPlayer - 核心游戏逻辑
+   ============================================================ */
+
+// ==================== 游戏状态 ====================
+const STATE = {
+  mode: null,           // 'current' | 'legend'
+  position: null,       // 'PG' | 'SG' | 'SF' | 'PF' | 'C'
+  
+  // 建球员
+  attrs: {},            // { threePT: 75, ... } 锁定后的值
+  attrSlots: {},        // { threePT: { player, team, value }, ... }
+  lockedCount: 0,
+  usedPlayers: [],      // 已选球员名列表
+  _mustLockAfterSpin: false, // 已展示球员未锁定属性时禁用随机球队
+  
+  // Build phase state
+  buildStep: 'select',  // 'select' | 'spin' | 'pick'
+  selectedAttr: null,   // currently selected attribute key
+  
+  // 当前 spin
+  currentTeam: null,    // 'LAL'
+  currentRoster: [],    // 该队球员列表
+  _shownThisTeam: [],   // 当前球队已展示过的球员名
+  _rerollsLeft: Infinity,    // 全局还可换球员次数（整个建球员阶段共3次，不重置）
+  _teamsVisited: [],  // 抽到过的球队列表
+  
+  // 选中球员状态
+  selectedPlayer: null, // 当前选中球员
+  _locking: false,      // 防止连点
+  
+  // 揭幕后
+  finalOVR: 0,
+  finalPosition: null,
+  finalArchetype: null,
+  careerTeam: null,     // 分配到的球队
+  
+  // 赛季
+  season: {
+    games: [],          // 所有比赛结果
+    wins: 0,
+    losses: 0,
+    playerStats: {},    // { pts, reb, ast, stl, blk }
+    playoffStats: {},   // { pts, reb, ast, stl, blk, games: 0 } 季后赛单独统计
+    awards: [],
+    playoffResult: null,
+    standings: {},      // { team: { wins, losses } }
+    isPlayoffs: false,
+    playoffBracket: null,
+    events: { suspensionGamesLeft: 0, suspensionReason: '', injuryGamesLeft: 0, injuryReason: '', triggeredIds: [], storyTimeline: [], lastTriggerGameNum: null, playoffEventCount: 0, injuryRiskBonus: 0, majorInjuryThisSeason: false, playThroughPrompted: {}, regularPlayThroughPromptCount: 0 },
+  },
+
+  // 生涯
+  career: {
+    seasonCount: 0,
+    currentAge: 22,
+    contract: 4,
+    seasons: [],
+    totalStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, games: 0, mins: 0 },
+    playoffStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, games: 0, mins: 0 },
+    honors: [],
+    offseasonHistory: [],
+    branchHistory: [],
+    branches: {},
+    profile: { fame: 0, businessValue: 0, mediaTrust: 0, controversy: 0, chinaPopularity: 0, loyalty: 0, leadership: 0, coachTrust: 0, lockerRoomTrust: 0, fanSupport: 0, legacyBonus: 0 },
+    relationships: {},
+    flags: {},
+    draft: null,
+    mobility: null,
+    nextSeasonMods: { injuryRiskBonus: 0, formVariance: 0, teamChemistry: 0, moraleBonus: 0, mediaPressure: 0, staminaLoad: 0 },
+    annualChangeSeason: 0,
+    offseasonEventSeason: 0,
+  },
+};
+
+// ==================== UI 工具 ====================
+function $(sel) { return document.querySelector(sel); }
+function $$(sel) { return document.querySelectorAll(sel); }
+
+function getSeasonLabel(seasonNum) {
+  var n = Math.max(1, parseInt(seasonNum) || 1);
+  var start = 2025 + n;
+  return start + '-' + String((start + 1) % 100) + '赛季';
+}
+
+function getCurrentSeasonLabel() {
+  var count = STATE.career && STATE.career.seasonCount ? STATE.career.seasonCount : 0;
+  return getSeasonLabel(count + 1);
+}
+
+function getNextSeasonMods() {
+  if (!STATE.career) return { injuryRiskBonus: 0, formVariance: 0, teamChemistry: 0 };
+  if (!STATE.career.nextSeasonMods) {
+    STATE.career.nextSeasonMods = { injuryRiskBonus: 0, formVariance: 0, teamChemistry: 0 };
+  }
+  return STATE.career.nextSeasonMods;
+}
+
+function updateSeasonBadge(activeId) {
+  var el = document.getElementById('seasonBadge');
+  if (!el) return;
+  if (!activeId) {
+    var cur = document.querySelector('.screen.active');
+    activeId = cur ? cur.id : '';
+  }
+  if (activeId === 'screen-season' || activeId === 'screen-menu') { el.style.display = 'none'; return; }
+  el.style.display = '';
+  var label = '2025-26赛季';
+  try { label = getCurrentSeasonLabel(); } catch(e) {}
+  el.innerHTML = '<span style="display:inline-block;background:var(--bg-card);border:1px solid var(--border);border-radius:999px;padding:4px 12px;box-shadow:var(--shadow);">🏀 ' + label + '</span>';
+}
+
+function showScreen(id) {
+  $$('.screen').forEach(s => s.classList.remove('active'));
+  const el = document.getElementById(id);
+  if (el) el.classList.add('active');
+  updateSeasonBadge(id);
+}
+
+function html(id, content) {
+  const el = document.getElementById(id);
+  if (el && content !== undefined) el.innerHTML = content;
+  return el;
+}
+
+var _trackedExposureKeys = {};
+function trackEvent(params) {
+  try {
+    if (window.ColorboxAI && typeof window.ColorboxAI.track === 'function') {
+      window.ColorboxAI.track(params);
+    }
+  } catch(e) {}
+}
+
+function trackExposureOnce(el, params) {
+  if (!el || !params) return;
+  var key = [params.act, params.blk, params.pos, params.label || ''].join('|');
+  if (_trackedExposureKeys[key]) return;
+  function report() {
+    if (_trackedExposureKeys[key]) return;
+    _trackedExposureKeys[key] = true;
+    trackEvent(params);
+  }
+  if (!('IntersectionObserver' in window)) { report(); return; }
+  var observer = new IntersectionObserver(function(entries) {
+    entries.forEach(function(entry) {
+      if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+        report();
+        observer.disconnect();
+      }
+    });
+  }, { threshold: [0.5] });
+  observer.observe(el);
+}
+
+// ==================== 属性工具 ====================
+const ATTR_KEYS = SIM_CONFIG.ATTR_LIST;
+const ATTR_CN = SIM_CONFIG.ATTR_CN;
+ATTR_CN.HAN = '护球';
+const ATTR_DESC = SIM_CONFIG.ATTR_DESC;
+const GRADE = SIM_CONFIG.GRADE;
+
+function attrCN(key) { return ATTR_CN[key] || key; }
+function attrDesc(key) { return ATTR_DESC[key] || ''; }
+function getGrade(val) { return GRADE.getGrade(val); }
+function getOvrGrade(ovr) { return GRADE.getOvrGrade(ovr); }
+
+// ==================== 跨位置衰减 ====================
+/** 计算跨位置衰减系数：你建的位置 vs 来源球员位置 */
+function getPosPenalty(userPos, srcPos, attrKey) {
+  const srcAvg = SIM_CONFIG.POS_AVG[srcPos] && SIM_CONFIG.POS_AVG[srcPos][attrKey];
+  const userAvg = SIM_CONFIG.POS_AVG[userPos] && SIM_CONFIG.POS_AVG[userPos][attrKey];
+  if (!srcAvg || srcAvg <= 0) return 1.0;
+  return Math.min(1.0, userAvg / srcAvg);
+}
+
+/** 从球员的 pos 字段提取主位置（'PG / SG' → 'PG'） */
+function getPlayerMainPos(player) {
+  const pos = (player.pos || 'SG').split('/')[0].trim();
+  return (SIM_CONFIG.POS_AVG[pos] ? pos : 'SF');
+}
+// ==================== 初始化 ====================
+
+/** 安全返回赛季页面：重新渲染后再显示，防止状态异常 */
+function backToSeason() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC20",label:"返回赛季"});
+  const schedule = STATE.season?.schedule;
+  const hasGames = schedule && schedule.length > 0;
+  if (!hasGames) { showScreen('screen-menu'); return; }
+  // 重新渲染赛季UI确保状态同步
+  if (typeof renderSeasonUI === 'function') renderSeasonUI();
+  if (typeof renderCalendar === 'function') renderCalendar();
+  showScreen('screen-season');
+}
+
+/** 从 storage 读取上次保存的球员数据并输出到控制台 */
+function logSavedPlayerData() {
+  Storage.waitForReady().then(function() {
+    Storage.getValue('players').then(function(raw) {
+      if (raw == null) { console.log('📦 暂无保存的球员数据'); return; }
+      var arr = Array.isArray(raw) ? raw : (typeof raw === 'string' ? JSON.parse(raw) : null);
+      if (Array.isArray(arr) && arr.length > 0) {
+        console.log('📦 已保存的球员列表 (共' + arr.length + '个):');
+        arr.forEach(function(data, i) {
+          console.log('  #' + (i+1), '位置:', data.position, '| 球队:', data.team, '| OVR:', data.finalOVR, '| 属性:', data.attrs);
+        });
+      } else { console.log('📦 暂无保存的球员数据'); }
+    });
+  });
+}
+setTimeout(logSavedPlayerData, 500);
+
+/** 验证 ColorboxAI.storage 读写回路 */
+function verifyStorage() {
+  Storage.waitForReady().then(function(){
+    Storage.setValue({ _ping: 'pong' }).then(function(){
+      Storage.getValue('_ping').then(function(v){
+        console.log('[StorageTest] setValue/getValue 回路:', v === 'pong' ? '✅ 通过' : '❌ 失败', v);
+      });
+    });
+  });
+}
+setTimeout(verifyStorage, 1000);
+
+/** 生成全局唯一游戏局ID */
+function generateGameId() {
+  return Date.now().toString(36) + '-' + Math.random().toString(36).slice(2, 8) + '-' + Math.random().toString(36).slice(2, 6);
+}
+
+var _baseLeagueRosterSnapshot = null;
+
+function cloneLeagueData(obj) {
+  return JSON.parse(JSON.stringify(obj || {}));
+}
+
+function captureBaseLeagueRoster() {
+  if (_baseLeagueRosterSnapshot || typeof NBA2K_DATA === 'undefined' || typeof NBA2K_TEAMS === 'undefined') return;
+  _baseLeagueRosterSnapshot = {};
+  NBA2K_TEAMS.forEach(function(t) {
+    _baseLeagueRosterSnapshot[t] = cloneLeagueData(NBA2K_DATA[t] || []);
+  });
+}
+
+function restoreBaseLeagueRoster() {
+  captureBaseLeagueRoster();
+  if (!_baseLeagueRosterSnapshot || typeof NBA2K_DATA === 'undefined' || typeof NBA2K_TEAMS === 'undefined') return;
+  NBA2K_TEAMS.forEach(function(t) {
+    NBA2K_DATA[t] = cloneLeagueData(_baseLeagueRosterSnapshot[t] || []);
+  });
+  delete NBA2K_DATA._draftClass2026Applied;
+}
+
+function createFreshCareer() {
+  return {
+    seasonCount: 0,
+    currentAge: 22,
+    contract: 4,
+    seasons: [],
+    totalStats: { pts:0, reb:0, ast:0, stl:0, blk:0, tov:0, fgm:0, fga:0, ftm:0, fta:0, threeM:0, threeA:0, games:0, mins:0 },
+    playoffStats: { pts:0, reb:0, ast:0, stl:0, blk:0, tov:0, fgm:0, fga:0, ftm:0, fta:0, threeM:0, threeA:0, games:0, mins:0 },
+    honors: [],
+    offseasonHistory: [],
+    branchHistory: [],
+    branches: {},
+    profile: { fame:0, businessValue:0, mediaTrust:0, controversy:0, chinaPopularity:0, loyalty:0, leadership:0, coachTrust:0, lockerRoomTrust:0, fanSupport:0, legacyBonus:0 },
+    relationships: {},
+    flags: {},
+    draft: null,
+    mobility: null,
+    nextSeasonMods: { injuryRiskBonus:0, formVariance:0, teamChemistry:0, moraleBonus:0, mediaPressure:0, staminaLoad:0 },
+    annualChangeSeason: 0,
+    offseasonEventSeason: 0
+  };
+}
+
+function initGame() {
+  restoreBaseLeagueRoster();
+  _rngState = null;
+  _rookieNameSeq = 0;
+  // 重置状态（保留 gameId 持久不变，直到下一次显式重置）
+  Object.assign(STATE, {
+    mode: null, position: null,
+    attrs: {}, attrSlots: {}, lockedCount: 0,
+    usedPlayers: [], _mustLockAfterSpin: false,
+    buildStep: 'select', noPlayerSelected: true,
+    currentTeam: null, currentRoster: [],
+    _shownThisTeam: [], _rerollsLeft: Infinity, _teamsVisited: [],
+    selectedPlayer: null, _locking: false,
+    finalOVR: 0, finalPosition: null, finalArchetype: null,
+    careerTeam: null,
+    gameId: generateGameId(),
+    career: createFreshCareer(),
+    season: { games: [], wins: 0, losses: 0, playerStats: {}, playoffStats: { pts:0, reb:0, ast:0, stl:0, blk:0, tov:0, fgm:0, fga:0, ftm:0, fta:0, threeM:0, threeA:0, mins:0, games:0 }, awards: [], playoffResult: null, playoffEliminated: false, standings: {}, isPlayoffs: false, playoffBracket: null, otherBracket: null, _viewConf: null },
+  });
+  delete STATE._tpPending;
+  delete STATE._careerSaved;
+  delete STATE._offseasonQueue;
+  delete STATE._offseasonEventIdx;
+  delete STATE._seasonBranchEvent;
+  delete STATE._postCareerEvent;
+  delete STATE._postCareerScenePage;
+  delete STATE._countdownLegacyEvent;
+  delete STATE._countdownLegacyScenePage;
+  delete STATE._userAwardStreak;
+  delete STATE._userAwardRankStreak;
+  delete STATE._contractsInited;
+  delete STATE._leagueChanges;
+  delete STATE._freeAgentPool;
+  delete STATE._draftPending;
+  delete STATE._draftSelfPick;
+  delete STATE._draftModalStep;
+  delete STATE._draftSceneStep;
+  delete STATE._draftResultDone;
+  delete STATE._mobilityChoice;
+  clearLineupCache();
+  
+  try { applyDraftClass2026(); } catch(e) {}
+
+  // 属性槽初始化为空
+  ATTR_KEYS.forEach(k => { STATE.attrs[k] = null; STATE.attrSlots[k] = null; });
+  
+  showScreen('screen-menu');
+  renderModeSelect();
+}
+
+// ==================== 玩法说明弹窗 ====================
+var _helpPage = 0;
+var _helpPages = [
+  { title: '建球员', content: '选择我的位置后进入抽签选队，随机抽取球队后从该队球员列表中选一人，点击左侧属性槽锁定一项属性。锁定后自动进入下一轮，可继续抽新球队选人锁属性。每局限换三次球员，用完只能重新随机球队。跨位置选人会触发属性衰减，集满十三项属性后自动揭晓总评、模板风格和相似球员。' },
+  { title: '赛季', content: '抽签决定我的生涯球队后进入赛季。系统根据我与队内同位置球员的总评比较判定首发或替补。每场比赛可点单场推进，也可点击日历日期批量模拟到当天。比赛数据根据属性和位置动态生成，方差较大，有爆发也有低迷。赛季中可随时点我的数据查看场均表现。' },
+  { title: '季后赛', content: '常规赛结束后根据排名决定季后赛或附加赛资格。附加赛在七到十名之间进行，逐场淘汰。季后赛每轮七场四胜，我的系列赛会一场一场模拟，每场生成简报。点击简报可展开查看详细比分、我的数据和全队数据。一路赢下去直到总冠军。' },
+  { title: '海报分享', content: '赛季结果页或我的数据页中点生成海报可生成球员纪念海报，包含总评、赛季数据、模板风格和最终属性。海报支持一键发帖到虎扑，也可查看其他用户创建的建模作品。每次发帖都会带上我的专属标签。' },
+  { title: '征服联盟', content: '荣誉墙支持我挑战带领全部30支NBA球队夺冠的终极目标。每次我赢得总冠军，系统会自动记录该球队、赛季数据、季后赛数据以及我的最终属性和模板。已夺冠的球队会在荣誉墙上以金色边框和队标展示，点击可查看历次夺冠详情。' },
+];
+
+function showHelpModal() {
+  _helpPage = 0;
+  var modal = document.getElementById('helpModal');
+  modal.style.display = 'flex';
+  modal.onclick = function(e) { if (e.target === modal) closeHelpModal(); };
+  renderHelpPage();
+}
+
+function closeHelpModal() {
+  document.getElementById('helpModal').style.display = 'none';
+}
+
+/** 虎扑App环境检测 */
+function getIsInApp() { return true; }
+
+/** 显示下载引导弹窗 */
+function showDownloadModal() {
+  document.getElementById('downloadModal').style.display = 'flex';
+}
+
+function renderHelpPage() {
+  var page = _helpPages[_helpPage];
+  document.getElementById('helpPageIndicator').textContent = (_helpPage + 1) + '/' + _helpPages.length;
+  document.getElementById('helpPrevBtn').disabled = _helpPage === 0;
+  document.getElementById('helpNextBtn').disabled = _helpPage >= _helpPages.length - 1;
+  document.getElementById('helpBody').innerHTML = '<div style="font-family:var(--font-body);font-size:14px;line-height:1.7;color:var(--text);padding:4px 2px;">' + page.content + '</div>';
+  var tabsHtml = '';
+  _helpPages.forEach(function(p, i) {
+    tabsHtml += '<button class="' + (i === _helpPage ? 'active' : '') + '" onclick="helpGoTo(' + i + ')">' + p.title + '</button>';
+  });
+  document.getElementById('helpTabs').innerHTML = tabsHtml;
+}
+
+function helpPrevPage() {
+  if (_helpPage > 0) { _helpPage--; renderHelpPage(); }
+}
+
+function helpNextPage() {
+  if (_helpPage < _helpPages.length - 1) { _helpPage++; renderHelpPage(); }
+}
+
+function helpGoTo(idx) {
+  _helpPage = idx;
+  renderHelpPage();
+}
+
+// ==================== 1. 模式选择 ====================
+function renderModeSelect() {
+  const container = html('feature-grid');
+  container.innerHTML = '';
+  
+  // Two feature cards like build-a-player.com
+  const cards = [
+    {
+      tag: 'Current',
+      tagClass: 'gold',
+      title: '生涯模式',
+      sub: '从现役球员中夺取属性，组建我的球员',
+      btnLabel: '🎮 进入活动',
+      mode: 'current',
+    },
+    {
+      tag: 'NEW',
+      tagClass: 'new',
+      title: '传奇模式',
+      sub: '从历史名宿中组建我的球员',
+      btnLabel: '即将上线，敬请期待',
+      mode: 'legend',
+      disabled: true,
+    },
+  ];
+  
+  cards.forEach((c) => {
+    const card = document.createElement('div');
+    card.className = 'feature-card';
+    if (c.disabled) card.classList.add('disabled-card');
+    if (c.mode === 'current') card.classList.add('selected');
+    card.innerHTML = `
+      <span class="fc-tag ${c.tagClass}">${c.tag}</span>
+      <div class="fc-title">${c.title}</div>
+      <div class="fc-sub">${c.sub}</div>
+      <button class="fc-btn" ${c.disabled ? 'disabled' : ''}>
+        ${c.btnLabel}
+      </button>
+      
+    `;
+    const btn = card.querySelector('.fc-btn');
+    if (!c.disabled) {
+      btn.onclick = (e) => {
+        trackEvent({act:"click",blk:"BMC098",pos:"TC1",label:"开始游戏"});
+        e.stopPropagation();
+        if (!getIsInApp()) {
+          showDownloadModal();
+          return;
+        }
+        STATE.mode = c.mode;
+        startGame();
+      };
+    }
+    container.appendChild(card);
+    if (c.mode === 'current') {
+      var mainBtn = card.querySelector('.fc-btn');
+      if (mainBtn) {
+        mainBtn.insertAdjacentHTML('afterend', '<button class="fc-btn" id="continue-activity-btn" style="margin-top:10px;background:#2f6fed;box-shadow:0 4px 0 #1d4fb8;" onclick="event.stopPropagation();manualLoadGame(1)">▶ 继续活动</button>');
+      }
+    }
+  });
+
+  STATE.mode = 'current';
+  refreshContinueActivityButton();
+}
+
+function startGame() {
+  ensureHupuUser(true);
+  if (STATE.mode === 'current' || STATE.mode === 'legend') {showScreen('screen-position'); renderPositionSelect();
+  } else {
+    alert('该模式开发中');
+  }
+}
+
+// ==================== 2. 位置选择 ====================
+function renderPositionSelect() {
+  const grid = html('pos-grid');
+  grid.innerHTML = '';
+  
+  const icons = { PG: '🎯', SG: '🔥', SF: '🏃', PF: '💪', C: '🧱' };
+  SIM_CONFIG.POS_LIST.forEach(pos => {
+    const card = document.createElement('div');
+    card.className = 'pos-card';
+    card.innerHTML = `
+      <div class="pos-label">${SIM_CONFIG.POSITIONS[pos]}</div>
+      <div class="pos-en">${icons[pos] || ''} ${pos}</div>
+    `;
+    card.onclick = () => {
+      $$('.pos-card').forEach(c => c.classList.remove('selected'));
+      card.classList.add('selected');
+      STATE.position = pos;
+    };
+    grid.appendChild(card);
+  });
+}
+
+function confirmPosition() {
+  if (!STATE.position) {
+    return;
+  }
+  STATE.selectedPlayer = null;
+  STATE.currentTeam = null;
+  showScreen('screen-build');
+  renderBuildUI();
+  renderTeamPicker();
+}
+
+// ==================== 3. 建球员 - LEFT-RIGHT SPLIT ====================
+
+function renderBuildUI() {
+  var pi = document.getElementById('build-pos-indicator');
+  if (pi) pi.textContent = '我选择的位置：' + (SIM_CONFIG.POSITIONS[STATE.position] || STATE.position) + '（' + STATE.position + '）';
+  renderLeftAttrs();
+  renderProgress();
+}
+
+function renderProgress() {
+  const p = document.getElementById('build-progress-area');
+  if (!p) return;
+  const pct = Math.round((STATE.lockedCount / 13) * 100);
+  p.innerHTML = `
+    <div class="build-progress">
+      <div class="progress-bar"><div class="progress-fill" style="width:${pct}%"></div></div>
+      <div class="progress-text">${STATE.lockedCount}/13</div>
+    </div>
+  `;
+}
+
+/** Render left attribute sidebar */
+function renderLeftAttrs() {
+  // OVR
+  const ovrEl = document.getElementById('bl-ovr');
+  if (ovrEl) {
+    let ovr = STATE.finalOVR || 0;
+    if (!ovr && STATE.position) {
+      const w = SIM_CONFIG.OVR_WEIGHTS[STATE.position];
+      if (w) {
+        // 先算已锁定属性的加权平均值
+        let lockedSum = 0, lockedWeight = 0;
+        ATTR_KEYS.forEach(k => {
+          const val = STATE.attrs[k];
+          const weight = w[k] || 0.07;
+          if (val !== null) { lockedSum += val * weight; lockedWeight += weight; }
+        });
+        // 未锁定任何属性时显示 --
+        if (lockedWeight === 0) { ovr = 0; }
+        else {
+          const fillAvg = lockedSum / lockedWeight;
+          // 用填充值计算完整OVR
+          let c = 0;
+          ATTR_KEYS.forEach(k => {
+            const val = STATE.attrs[k] !== null ? STATE.attrs[k] : Math.round(fillAvg);
+            c += val * (w[k] || 0.07);
+          });
+          ovr = Math.round(c);
+        }
+      }
+    }
+    ovrEl.textContent = ovr > 0 ? ovr : '--';
+  }
+
+  // Attributes
+  const container = document.getElementById('bl-attrs');
+  if (!container) return;
+  container.innerHTML = '';
+  
+  ATTR_KEYS.forEach(key => {
+    const val = STATE.attrs[key];
+    const isLocked = val !== null;
+    const div = document.createElement('div');
+    
+    let cls = 'ba-slot';
+    if (isLocked) cls += ' locked';
+    else if (STATE.selectedPlayer) {
+      cls += ' clickable';
+      div.onclick = () => lockAttr(key);
+    }
+    div.className = cls;
+    
+    if (isLocked) {
+      const g = getGrade(val);
+      const slot = STATE.attrSlots[key];
+      const hadPenalty = slot && slot.penalty < 1.0;
+      div.innerHTML = `
+        <span class="ba-label">${attrCN(key)}</span>
+        <span class="ba-grade" style="color:${g.color}">${g.letter}</span>
+        <span class="ba-owner" title="${hadPenalty ? `原始${slot.raw} × ${slot.penalty.toFixed(2)}` : ''}" 
+             style="${hadPenalty ? 'color:var(--accent);' : ''}">${slot?.player ? getPlayerDisplayName(slot.player) : ''}</span>
+      `;
+    } else if (STATE.selectedPlayer) {
+      const pv = parseInt(STATE.selectedPlayer[key]) || 50;
+      // 计算跨位置衰减后的值
+      const playerPos = getPlayerMainPos(STATE.selectedPlayer);
+      const penalty = getPosPenalty(STATE.position, playerPos, key);
+      const adjustedVal = Math.round(pv * penalty);
+      const hasPenalty = penalty < 1.0;
+      const pg = getGrade(adjustedVal);
+      div.innerHTML = `
+        <span class="ba-label">${attrCN(key)}</span>
+        <span class="ba-grade" style="color:${pg.color}">${pg.letter}</span>
+        <span class="ba-owner"${hasPenalty ? ` style="color:var(--accent);font-size:9px;"` : ''}>${hasPenalty ? `${adjustedVal}▼` : adjustedVal}</span>
+      `;
+    } else {
+      div.innerHTML = `
+        <span class="ba-label">${attrCN(key)}</span>
+        <span class="ba-empty">+</span>
+      `;
+    }
+    container.appendChild(div);
+  });
+
+  // Footer — 已隐藏
+  const footer = document.getElementById('bl-footer');
+  if (footer) footer.innerHTML = '';
+}
+
+/** Render slot machine — 3 buttons (no reroll limit, forced choice) */
+function renderTeamPicker() {
+  const slotArea = document.getElementById('br-slot-area');
+  if (!slotArea) return;
+  
+  const sorted = [...NBA2K_TEAMS].sort();
+  const copies = 5;
+  const allItems = [];
+  for (let c = 0; c < copies; c++) {
+    sorted.forEach(t => allItems.push(t));
+  }
+  
+  let itemsHtml = '';
+  allItems.forEach(t => {
+    const cn = SIM_CONFIG.TEAM_NAMES[t] || t;
+    itemsHtml += `<div class="br-slot-item" data-team="${t}">${cn}</div>`;
+  });
+  
+  slotArea.innerHTML = buildSlotHTML(itemsHtml);
+  
+  const reel = document.getElementById('slot-reel');
+  if (reel) {
+    const offset = sorted.length * 38;
+    reel.style.transition = 'none';
+    reel.style.transform = `translateY(-${offset}px)`;
+    void reel.offsetHeight;
+    reel.style.transition = '';
+  }
+  
+  const rosterArea = document.getElementById('br-roster-area');
+  if (rosterArea) rosterArea.innerHTML = '';
+}
+
+/** 只更新按钮状态，不重建老虎机HTML（防止跳动）*/
+/** 更换球员按钮（三态：有次数 / 广告加载中 / 看广告获得次数） */
+function getRerollButtonHtml() {
+  var hasTeam = !!STATE.currentTeam;
+  if (true) {
+    // 计数器有次数 → 展示正常文案（未选队时禁用）
+    return '<button class="btn btn-sm slot-btn" onclick="rerollTeamPlayers()"' +
+      (hasTeam ? '' : ' disabled style="opacity:0.3;"') +
+      '>👥 更换球员（不限次数）</button>';
+  }
+  var loading = !!window._adRerollLoading;
+  var canClick = hasTeam && !loading;
+  return '<button class="btn btn-sm slot-btn" onclick="if(typeof watchAdToReroll===\'function\')watchAdToReroll()"' +
+    (canClick ? '' : ' disabled') +
+    ' style="' + (canClick ? 'background:linear-gradient(135deg,#3a2a1a,#2a2015);color:#f5d060;border-color:#d4af37;' : 'opacity:0.3;') + '">' +
+    (loading ? '📺 加载中...' : '📺 看广告换球员') +
+    '</button>';
+}
+
+function updateSlotButtons() {
+  const slotArea = document.getElementById('br-slot-area');
+  if (!slotArea) return;
+  
+  const hasTeam = !!STATE.currentTeam;
+  const canSpin = !STATE._mustLockAfterSpin && !_slotSpinning;
+  
+  // Rebuild only the actions area, keep reel intact
+  const actionsEl = slotArea.querySelector('.br-slot-actions');
+  const warnEl = slotArea.querySelector('.br-slot-warn');
+  if (actionsEl) {
+    actionsEl.innerHTML = `
+      <button class="btn btn-sm slot-btn" onclick="pullHandle()"
+        ${canSpin ? '' : 'disabled'}
+        style="background:var(--orange);color:#fff;${canSpin ? '' : 'opacity:0.3;'}">
+        🎲 随机球队
+      </button>
+      ${getRerollButtonHtml()}
+    `;
+  }
+  if (warnEl) {
+    warnEl.textContent = STATE._mustLockAfterSpin ? '⚠️ 先选择一名球员并锁定属性才能再次随机' : '';
+  }
+}
+
+function buildSlotHTML(itemsHtml) {
+  const hasTeam = !!STATE.currentTeam;
+  const canSpin = !STATE._mustLockAfterSpin && !_slotSpinning;
+  return `
+    <div class="br-slot-area">
+      <div class="br-slot-label">🎰 随机选队</div>
+      <div class="br-slot-wrapper">
+        <div class="br-slot-machine">
+          <div class="br-slot-reel" id="slot-reel">
+            ${itemsHtml}
+          </div>
+        </div>
+      </div>
+      <div class="br-slot-actions">
+        <button class="btn btn-sm slot-btn" onclick="pullHandle()"
+          ${canSpin ? '' : 'disabled'}
+          style="background:var(--orange);color:#fff;${canSpin ? '' : 'opacity:0.3;'}">
+          🎲 随机球队
+        </button>
+        ${getRerollButtonHtml()}
+      </div>
+      <div class="br-slot-warn" style="font-size:10px;color:var(--orange);margin-top:6px;min-height:16px;">${STATE._mustLockAfterSpin ? '⚠️ 先选择一名球员并锁定属性才能再次随机' : ''}</div>
+    </div>
+  `;
+}
+
+let _slotSpinning = false;
+
+function pullHandle() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC3",label:"随机球队-建球员"});
+  if (_slotSpinning || STATE._mustLockAfterSpin) return;
+  
+  // Visual: flash the reel to show it's spinning
+  const reel = document.getElementById('slot-reel');
+  if (reel) reel.classList.add('spinning');
+  
+  setTimeout(spinSlotMachine, 200);
+}
+
+function spinSlotMachine() {
+  if (_slotSpinning) return;
+  _slotSpinning = true;
+  
+  const reel = document.getElementById('slot-reel');
+  if (!reel) { _slotSpinning = false; return; }
+  
+  const sorted = [...NBA2K_TEAMS].sort();
+  const teamCount = sorted.length;
+  const itemH = 38;
+  const copyLen = teamCount * itemH; // 一个完整复制的高度
+  
+  // 随机目标球队
+  const targetIdx = Math.floor(Math.random() * teamCount);
+  const targetTeam = sorted[targetIdx];
+  
+  // 目标位置：让 target 出现在窗口中间（第2个可见位）
+  // 窗口显示3项，中间项索引=1，所以偏移到 targetIdx-1
+  const snapIdx = (targetIdx - 1 + teamCount) % teamCount;
+  
+  // 落到第3个复制块（索引2），留出上下缓冲
+  const targetY = copyLen * 2 + snapIdx * itemH;
+  
+  // 获取当前位置
+  const curMatch = reel.style.transform.match(/([\d.]+)/);
+  const curY = curMatch ? parseFloat(curMatch[0]) : copyLen;
+  
+  // 保证至少转半圈
+  let finalY = targetY;
+  const minSpin = copyLen * 0.5;
+  while (finalY <= curY + minSpin) finalY += copyLen;
+  
+  // 防止超出边界（5个复制块上限）
+  const maxY = copyLen * 4 - itemH * 2;
+  if (finalY > maxY) {
+    reel.style.transition = 'none';
+    reel.style.transform = `translateY(-${copyLen}px)`;
+    void reel.offsetHeight;
+    reel.style.transition = '';
+    finalY = targetY + copyLen;
+  }
+  
+  // 执行旋转动画
+  reel.classList.add('spinning');
+  reel.style.transform = `translateY(-${finalY}px)`;
+  
+  // 动画结束后，精确回正到目标位置（去掉过渡，直接对齐）
+  setTimeout(() => {
+    reel.classList.remove('spinning');
+    
+    // ★ 关键修复：无过渡跳转到精确位置，确保显示正确
+    const exactY = copyLen * 3 + snapIdx * itemH; // 落到第4复制块中间区
+    reel.style.transition = 'none';
+    reel.style.transform = `translateY(-${exactY}px)`;
+    void reel.offsetHeight;
+    reel.style.transition = '';
+    
+    // ★ 高亮中间项（窗口3项，snapIdx为顶部，中间=snapIdx+1）
+    var middleIdx = teamCount * 3 + snapIdx + 1;
+    highlightSlotItem('slot-reel', middleIdx);
+    
+    // 同步状态
+    STATE.currentTeam = targetTeam;
+    if (STATE._teamsVisited.indexOf(targetTeam) === -1) {
+      STATE._teamsVisited.push(targetTeam);
+      console.log('[Build] 已访问球队:', STATE._teamsVisited.join(', '));
+    }
+    STATE.selectedPlayer = null;
+    STATE._shownThisTeam = [];
+    STATE._mustLockAfterSpin = true;
+    _slotSpinning = false;
+    
+    renderLeftAttrs();
+    updateSlotButtons();
+    showTeamRoster(targetTeam);
+  }, 2800);
+}
+
+/** Show team roster — 5 random players (below the slot machine) */
+function showTeamRoster(team) {
+  const rosterArea = document.getElementById('br-roster-area');
+  if (!rosterArea) return;
+  
+  const players = (NBA2K_DATA[team] || []).concat(getHistoricalPlayersForTeam(team));
+  const available = players.filter(p => !STATE.usedPlayers.includes(p.name));
+  
+  if (available.length === 0) {
+    rosterArea.innerHTML = `<div class="br-hint">❌ 都已选过</div>`;
+    return;
+  }
+  
+  // 从剩余未展示过的球员中随机抽5人
+  const notShown = available.filter(p => !STATE._shownThisTeam.includes(p.name));
+  const pool = notShown.length > 0 ? notShown : available; // 如果都展示过了，从全部重新抽
+  const shuffled = shuffleArr([...pool]);
+  const shown = __buildHistoricalSurpriseSelectionFallback(team, available, STATE._shownThisTeam, shuffled.slice(0, Math.min(5, shuffled.length)));
+  
+  // 记录本次展示的球员
+  shown.forEach(p => {
+    if (!STATE._shownThisTeam.includes(p.name)) STATE._shownThisTeam.push(p.name);
+  });
+  
+  renderRosterPlayers(team, shown, available);
+}
+
+/** 渲染球员列表 */
+function renderRosterPlayers(team, shown, allAvailable) {
+  const rosterArea = document.getElementById('br-roster-area');
+  if (!rosterArea) return;
+  
+  let listHtml = `<div style="display:flex;align-items:center;gap:6px;padding-bottom:4px;flex-wrap:wrap;">
+    <span style="font-size:13px;font-weight:700;font-family:var(--font-display);letter-spacing:1px;">${getTeamName(team)}</span>
+    <span style="font-size:11px;color:var(--text-dim);">展示 ${shown.length}人 · 剩余 ${allAvailable.length}人</span>
+  </div><div class="br-roster-list" style="max-height:none;">`;
+  
+  shown.forEach(p => {
+    const sel = STATE.selectedPlayer?.name === p.name;
+    const playerPos = getPlayerMainPos(p);
+    const hsStyle = getPlayerHeadshotStyle(p.name, 32);
+    const ovrGrade = getOvrGrade(parseInt(p.ovr) || 50);
+    listHtml += `<div class="br-player${sel ? ' selected' : ''}" onclick="pickPlayer('${p.name.replace(/'/g, "\\'")}')">
+      <div class="bp-left">
+        <div class="bp-headshot" style="${hsStyle}"></div>
+        <div>
+          <div class="bp-name">${p.cname || p.name}${p.isHistorical ? '<span class="legendary-surprise">传奇巨星</span>' : ''}</div>
+          <div class="bp-detail">${playerPos}</div>
+        </div>
+      </div>
+      <div class="bp-meta">
+        <span class="bp-ovr">${p.ovr}</span>
+      </div>
+    </div>`;
+  });
+  
+  listHtml += '</div>';
+  
+  // 跨位置衰减提示 + 强制选择提示
+  const hasAnyPenalty = shown.some(p => getPlayerMainPos(p) !== STATE.position);
+  listHtml += `<div style="display:flex;gap:6px;padding:4px 0;flex-wrap:wrap;align-items:center;">
+    <span style="font-size:9px;color:var(--text-dim);">
+      ${hasAnyPenalty ? '⚠️ 跨位置衰减生效' : '✅ 同位置属性无衰减'}
+    </span>
+    <span style="font-size:10px;color:var(--accent);margin-left:auto;font-weight:600;">
+      👆 选球员 → 点击左侧属性锁定
+    </span>
+  </div>`;
+  
+  rosterArea.innerHTML = listHtml;
+}
+
+/** 当前球队内换一批球员 */
+function rerollTeamPlayers() {
+  if (!STATE.currentTeam) return;
+  
+  const players = (NBA2K_DATA[STATE.currentTeam] || []).concat(getHistoricalPlayersForTeam(STATE.currentTeam));
+  const available = players.filter(p => !STATE.usedPlayers.includes(p.name));
+  
+  const notShown = available.filter(p => !STATE._shownThisTeam.includes(p.name));
+  if (notShown.length === 0) {
+    return;
+  }
+  
+  STATE._rerollsLeft = Infinity;
+  const shuffled = shuffleArr([...notShown]);
+  const shown = __buildHistoricalSurpriseSelectionFallback(STATE.currentTeam, available, STATE._shownThisTeam, shuffled.slice(0, Math.min(5, shuffled.length)));
+  
+  shown.forEach(p => {
+    if (!STATE._shownThisTeam.includes(p.name)) STATE._shownThisTeam.push(p.name);
+  });
+  
+  STATE.selectedPlayer = null;
+  renderLeftAttrs();
+  updateSlotButtons();
+  renderRosterPlayers(STATE.currentTeam, shown, available);
+}
+
+function pickPlayer(name) {
+  
+  if (STATE._locking || !STATE.currentTeam) return;
+  const players = (NBA2K_DATA[STATE.currentTeam] || []).concat(getHistoricalPlayersForTeam(STATE.currentTeam));
+  const player = players.find(p => p.name === name);
+  if (!player) return;
+  
+  STATE.selectedPlayer = player;
+  
+  document.querySelectorAll('.br-player').forEach(r => {
+    r.classList.toggle('selected', r.textContent.includes(player.cname || player.name));
+  });
+  
+  renderLeftAttrs();
+}
+
+function lockAttr(key) {
+  if (STATE._locking || !STATE.selectedPlayer || STATE.attrs[key] !== null) return;
+  STATE._locking = true;
+  
+  const player = STATE.selectedPlayer;
+  const rawVal = parseInt(player[key]) || 50;
+  
+  // 跨位置衰减计算
+  const playerPos = getPlayerMainPos(player);
+  const penalty = getPosPenalty(STATE.position, playerPos, key);
+  const adjustedVal = Math.round(rawVal * penalty);
+  
+  STATE.attrs[key] = adjustedVal;
+  STATE.attrSlots[key] = { player: player.name, team: STATE.currentTeam, value: adjustedVal, raw: rawVal, penalty: penalty };
+  STATE.lockedCount++;
+  STATE.usedPlayers.push(player.name);
+  STATE.selectedPlayer = null;
+  STATE._mustLockAfterSpin = false; // 已锁定属性，可以再次随机
+  
+  if (STATE.lockedCount >= 13) {
+    renderLeftAttrs();
+    renderProgress();
+    setTimeout(() => { STATE._locking = false; revealPlayer(); }, 500);
+    return;
+  }
+  
+  const g = getGrade(adjustedVal);
+  const penaltyMsg = penalty < 1.0 ? ` (原始${rawVal}×${penalty.toFixed(2)})` : '';
+  
+  setTimeout(() => {
+    STATE._locking = false;
+    // ★ 清空当前球队和阵容，强制用户重新随机
+    STATE.currentTeam = null;
+    STATE.selectedPlayer = null;
+    STATE._shownThisTeam = [];
+    const rosterArea = document.getElementById('br-roster-area');
+    if (rosterArea) rosterArea.innerHTML = '';
+    renderLeftAttrs();
+    updateSlotButtons();
+    renderProgress();
+  }, 700);
+}
+
+function showToast(msg) {
+  // Toast 已关闭
+}
+
+function unselectPlayer() {
+  STATE.selectedPlayer = null;
+  document.querySelectorAll('.roster-row').forEach(r => r.classList.remove('selected'));
+  html('player-info-area').innerHTML = '';
+  renderAttrSlots();
+}
+
+function confirmLock(playerName, attrKey, value) {
+  // 防止连点
+  if (STATE._locking) return;
+  STATE._locking = true;
+  
+  // 记录锁定
+  STATE.attrs[attrKey] = value;
+  STATE.attrSlots[attrKey] = { player: playerName, team: STATE.currentTeam, value };
+  STATE.lockedCount++;
+  STATE.usedPlayers.push(playerName);
+  STATE.selectedPlayer = null;
+  
+  // 清除球员信息
+  html('player-info-area').innerHTML = '';
+  
+  // 更新 UI
+  renderAttrSlots();
+  
+  if (STATE.lockedCount >= 13) {
+    revealPlayer();
+    return;
+  }
+  
+  // 显示成功提示并自动下一轮
+  html('roster-area').innerHTML = `<div class="locked-msg">
+    <div class="locked-icon">✅</div>
+    <div class="locked-title">${attrCN(attrKey)}（${value}）来自 ${playerName}</div>
+    <div class="locked-sub">${13 - STATE.lockedCount > 0 ? `剩余 ${13 - STATE.lockedCount} 项属性` : '全部属性已锁定！'} · 自动进入下一轮...</div>
+  </div>`;
+  
+  setTimeout(() => {
+    STATE._locking = false;
+    if (STATE.lockedCount < 13) {
+      html('roster-area').innerHTML = '';
+      spinTeam();
+    }
+  }, 1000);
+}
+
+// ==================== 4. 相似球员匹配 ====================
+function findSimilarPlayers(attrs, pos, topN = 3) {
+  const posAvg = SIM_CONFIG.POS_AVG[pos];
+  if (!posAvg) return [];
+  
+  // 用户属性相对位置平均值的偏差向量
+  const userVec = ATTR_KEYS.map(k => (attrs[k] || 50) - (posAvg[k] || 50));
+  const userNorm = Math.sqrt(userVec.reduce((s, v) => s + v * v, 1));
+  
+  // 遍历所有 NBA 球员
+  const scores = [];
+  NBA2K_TEAMS.forEach(team => {
+    (NBA2K_DATA[team] || []).forEach(player => {
+      // 该球员属性相对同一位置平均值的偏差向量
+      const hisVec = ATTR_KEYS.map(k => (parseInt(player[k]) || 50) - (posAvg[k] || 50));
+      const hisNorm = Math.sqrt(hisVec.reduce((s, v) => s + v * v, 1));
+      
+      // 点积
+      let dot = 0;
+      for (let i = 0; i < ATTR_KEYS.length; i++) {
+        dot += userVec[i] * hisVec[i];
+      }
+      
+      // 余弦相似度（偏差向量）
+      const similarity = Math.round((dot / (userNorm * hisNorm)) * 100);
+      scores.push({ player, team, similarity });
+    });
+  });
+  
+  // 按相似度降序排列，取 Top N
+  scores.sort((a, b) => b.similarity - a.similarity);
+  return scores.slice(0, topN);
+}
+
+/**
+ * 按 OVR 分三档（85-100、75-85、<75），每档取最相似球员
+ */
+function findTieredPlayers(attrs, pos) {
+  const posAvg = SIM_CONFIG.POS_AVG[pos];
+  if (!posAvg) return [];
+  
+  // 同位置组过滤：只匹配相同或相近位置的球员
+  const POS_GROUP = {
+    'PG': ['PG', 'SG'],
+    'SG': ['SG', 'PG', 'SF'],
+    'SF': ['SF', 'SG', 'PF'],
+    'PF': ['PF', 'SF', 'C'],
+    'C':  ['C', 'PF'],
+  };
+  const allowedPositions = POS_GROUP[pos] || ['PG', 'SG', 'SF', 'PF', 'C'];
+  
+  const userVec = ATTR_KEYS.map(k => (attrs[k] || 50) - (posAvg[k] || 50));
+  const userNorm = Math.sqrt(userVec.reduce((s, v) => s + v * v, 1));
+  
+  const tiers = [
+    { min: 85, max: 100, label: '精英', result: null, bestSim: -1 },
+    { min: 75, max: 85, label: '主力', result: null, bestSim: -1 },
+    { min: 0,  max: 75, label: '轮换', result: null, bestSim: -1 },
+  ];
+  
+  NBA2K_TEAMS.forEach(team => {
+    (NBA2K_DATA[team] || []).forEach(player => {
+      const playerMainPos = getPlayerMainPos(player);
+      if (!allowedPositions.includes(playerMainPos)) return;
+      
+      const ovr = parseInt(player.ovr) || 0;
+      const tier = tiers.find(t => ovr >= t.min && ovr < t.max);
+      if (!tier) return;
+      
+      const hisVec = ATTR_KEYS.map(k => (parseInt(player[k]) || 50) - (posAvg[k] || 50));
+      const hisNorm = Math.sqrt(hisVec.reduce((s, v) => s + v * v, 1));
+      let dot = 0;
+      for (let i = 0; i < ATTR_KEYS.length; i++) {
+        dot += userVec[i] * hisVec[i];
+      }
+      const similarity = Math.round((dot / (userNorm * hisNorm)) * 100);
+      
+      if (similarity > tier.bestSim) {
+        tier.bestSim = similarity;
+        tier.result = { player, team, similarity, ovr };
+      }
+    });
+  });
+  
+  return tiers.map(t => t.result).filter(Boolean);
+}
+
+// ==================== 4.5 Archetype 推导匹配 ====================
+/** 同类位置分组：匹配时只找同组球员 */
+const POS_GROUP = {
+  'PG': ['PG', 'SG'],
+  'SG': ['SG', 'PG', 'SF'],
+  'SF': ['SF', 'SG', 'PF'],
+  'PF': ['PF', 'SF', 'C'],
+  'C':  ['C', 'PF'],
+};
+
+/**
+ * 按位置筛选 → 余弦匹配最相似球员 → 输出其 archetype
+ */
+function matchPlayerArchetype(attrs, topN = 3) {
+  const ATTRS = ['threePT', 'MID', 'FIN', 'DNK', 'HAN', 'PAS', 'PDEF', 'IDEF', 'BLK', 'REB', 'ATH', 'STR', 'CLU'];
+  const userPos = STATE.position || 'SF';
+  const allowedPositions = POS_GROUP[userPos] || ['PG', 'SG', 'SF', 'PF', 'C'];
+  
+  // 用户属性向量
+  const userVec = ATTRS.map(k => attrs[k] || 50);
+  const userNorm = Math.sqrt(userVec.reduce((s, v) => s + v * v, 1));
+  
+  // 遍历所有 NBA 球员，只算同位置组的余弦相似度
+  const playerScores = [];
+  NBA2K_TEAMS.forEach(team => {
+    (NBA2K_DATA[team] || []).forEach(player => {
+      const playerMainPos = getPlayerMainPos(player);
+      // 不在同位置组内 → 跳过
+      if (!allowedPositions.includes(playerMainPos)) return;
+      
+      const playerVec = ATTRS.map(k => parseInt(player[k]) || 50);
+      const playerNorm = Math.sqrt(playerVec.reduce((s, v) => s + v * v, 1));
+      
+      let dot = 0;
+      for (let i = 0; i < ATTRS.length; i++) {
+        dot += userVec[i] * playerVec[i];
+      }
+      
+      const similarity = Math.round((dot / (userNorm * playerNorm)) * 1000) / 10;
+      
+      playerScores.push({
+        similarity,
+        player,
+        team,
+        archetype: player.type || 'Unknown',
+        playerPos: playerMainPos,
+      });
+    });
+  });
+  
+  // 按相似度降序，取 Top N
+  playerScores.sort((a, b) => b.similarity - a.similarity);
+  const topPlayers = playerScores.slice(0, topN);
+  
+  // 直接输出匹配球员的 archetype 信息
+  return topPlayers.map(item => {
+    const p = item.player;
+    const meta = NBA2K_ARCHETYPES ? NBA2K_ARCHETYPES[item.archetype] : null;
+    return {
+      archetype: item.archetype,
+      cn: meta?.cn || item.archetype,
+      icon: meta?.icon || '⭐',
+      category: meta?.category || 'all_around',
+      similarity: item.similarity,
+      avgOVR: meta?.avgOVR || 0,
+      archCount: meta?.count || 0,
+      player: p,
+      playerName: p.cname || p.name,
+      playerPos: item.playerPos,
+      playerTeam: item.team,
+      playerOVR: parseInt(p.ovr) || 0,
+    };
+  });
+}
+
+/** 获取 archetype 的中文分类名称 */
+function getArchCategoryCN(category) {
+  const map = {
+    'shooter': '射手型',
+    'slasher': '突破型',
+    'two_way': '攻防一体',
+    'playmaker': '组织型',
+    'iso_scorer': '单打型',
+    'big': '内线型',
+    'athlete': '运动型',
+    'stretch_big': '空间内线',
+    'skill_creator': '技术流',
+    'all_around': '全能型',
+  };
+  return map[category] || '全能型';
+}
+
+// ==================== 4. 揭幕 ====================
+function revealPlayer() {
+  STATE.finalOVR = calcOVR(STATE.attrs, STATE.position);
+  STATE.finalPosition = STATE.position;
+  
+  showScreen('screen-reveal');
+
+  // ★ Archetype 匹配 → 仅展示最终模板
+  const archMatches = matchPlayerArchetype(STATE.attrs, 1);
+  let archHtml = '';
+  if (archMatches.length > 0) {
+    const best = archMatches[0];
+    STATE.finalArchetype = best.archetype;  // ← 记录模板，供成就系统使用
+    
+    archHtml = `<div class="rv-item" style="animation-delay:1.0s;margin:8px 10px 0;padding:10px 10px;background:var(--bg-card);border:2px solid var(--orange);border-radius:var(--radius);">
+      <div style="display:flex;align-items:center;gap:8px;padding:6px 8px;background:var(--orange-bg);border-radius:10px;">
+        <span style="font-size:22px;">${best.icon}</span>
+        <div style="flex:1;min-width:0;">
+          <div style="font-family:var(--font-display);font-size:15px;font-weight:700;color:var(--text);">${best.cn}</div>
+        </div>
+      </div>
+    </div>`;
+  }
+  
+  // 按 OVR 分三档展示最相似球员
+  const tiered = findTieredPlayers(STATE.attrs, STATE.position);
+  let top3Html = '';
+  if (tiered.length > 0) {
+    
+    top3Html = `<div class="rv-item" style="animation-delay:1.3s;margin:8px 10px 0;padding:8px 10px;background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius);">
+      <div style="font-family:var(--font-display);font-size:12px;color:var(--orange);margin-bottom:6px;letter-spacing:1px;">🔍 球员模板</div>`;
+    tiered.forEach((item, i) => {
+      const p = item.player;
+      const hsStyle = getPlayerHeadshotStyle(p.name, 28);
+      top3Html += `<div class="rv-item" style="animation-delay:${1.4 + i * 0.12}s;display:flex;align-items:center;gap:6px;padding:4px 0;${i < tiered.length-1 ? 'border-bottom:1px solid var(--border-light);' : ''}">
+        <div class="bp-headshot" style="${hsStyle};border-radius:50%;border:2px solid var(--border);"></div>
+        <div style="flex:1;text-align:center;font-family:var(--font-display);font-size:12px;font-weight:600;">${p.cname || p.name}</div>
+      </div>`;
+    });
+    top3Html += '</div>';
+  }
+  
+  // 给每个 reveal-stat 加渐入延迟
+  let statsHtmlWithDelay = '';
+  ATTR_KEYS.forEach((k, i) => {
+    const val = STATE.attrs[k] || 50;
+    const g = getGrade(val);
+    statsHtmlWithDelay += `<div class="reveal-stat" style="animation-delay:${0.5 + i * 0.06}s">
+      <div class="label">${attrCN(k)}</div>
+      <div class="value" style="color:${g.color}">${g.letter}</div>
+    </div>`;
+  });
+  
+  html('reveal-content').innerHTML = `
+    <div class="rv-card-wrap">
+      <div class="reveal-card">
+        <div class="rv-item" style="animation-delay:0.1s"><div class="reveal-label">我的球员</div></div>
+         <div class="rv-item" style="animation-delay:0.2s"><div class="big-cname">${getHupuDisplayName()}</div></div>
+        <div class="rv-ovr" style="animation-delay:0.3s"><div class="big-ovr">${STATE.finalOVR}</div></div>
+        <div class="rv-item" style="animation-delay:0.4s"><div class="big-pos">${SIM_CONFIG.POSITIONS[STATE.position]}</div></div>
+      </div>
+    </div>
+    <div class="reveal-stats">${statsHtmlWithDelay}</div>
+    ${archHtml}
+    ${top3Html}
+  `;
+}
+
+function goToCareer() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC4",label:"开始生涯"});
+  showScreen('screen-career');
+  if (shouldRunDraftStory()) {
+    showDraftStory();
+  } else {
+    renderCareerSpin();
+  }
+}
+
+// ==================== 选秀夜 DAG（draft_night） ====================
+function shouldRunDraftStory() {
+  var c = STATE.career;
+  if (!c) return false;
+  if (c.flags && c.flags.draftDone) return false;
+  if ((c.seasonCount || 0) > 0) return false;
+  if (c.draft && c.draft.pick) return false;
+  return true;
+}
+
+function getDraftPickLabel(d) {
+  if (!d) return '未知';
+  if (d.type === 'undrafted') return '落选';
+  if (d.round === 2) return '次轮第' + d.pick + '顺位';
+  return '首轮第' + d.pick + '顺位';
+}
+
+function recordDraftChoice(stepId, stepTitle, label, result) {
+  var c = STATE.career;
+  if (!c) return;
+  c.branchHistory = c.branchHistory || [];
+  c.branchHistory.push({
+    seasonNum: 0,
+    phase: 'career_start',
+    branch: 'draft_night',
+    eventId: stepId,
+    event: stepTitle,
+    choice: label,
+    result: result || ''
+  });
+}
+
+function showDraftChoiceModal(stepId, title, scene, choices, onDone) {
+  var old = document.getElementById('draft-modal');
+  if (old) old.remove();
+  var html = '<div class="team-picker-overlay" id="draft-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + title + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">剧情</div>';
+  html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px;">' + sanitizePlayerFacingText(scene) + '</div>';
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">选择</div>';
+  choices.forEach(function(ch, ci) {
+    html += '<button class="btn btn-secondary btn-sm" style="width:100%;margin-bottom:8px;justify-content:flex-start;text-align:left;" onclick="chooseDraftChoice(' + ci + ')">' + ch.label + '<span style="display:block;font-size:11px;font-family:var(--font-body);font-weight:400;opacity:.75;margin-left:4px;">' + sanitizePlayerFacingText(ch.hint || '') + '</span></button>';
+  });
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+  STATE._draftModalStep = { stepId: stepId, title: title, choices: choices, onDone: onDone };
+}
+
+function chooseDraftChoice(idx) {
+  var modal = STATE._draftModalStep;
+  if (!modal) return;
+  var ch = modal.choices[idx];
+  if (!ch) return;
+  var msg = '';
+  try { msg = ch.apply ? ch.apply() : ''; } catch(e) { msg = ''; }
+  msg = sanitizePlayerFacingText(msg || '');
+  recordDraftChoice(modal.stepId, modal.title, ch.label, msg);
+  var done = modal.onDone;
+  var overlay = document.getElementById('draft-modal');
+  if (overlay) overlay.remove();
+  STATE._draftModalStep = null;
+  if (msg) showDraftResultModal(modal.title, msg, done);
+  else if (done) done();
+}
+
+function showDraftSceneModal(title, scene, btnText, onNext) {
+  var old = document.getElementById('draft-modal');
+  if (old) old.remove();
+  var html = '<div class="team-picker-overlay" id="draft-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + title + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  html += '<div style="font-size:11px;color:var(--orange);font-weight:700;margin-bottom:6px;">剧情</div>';
+  html += '<div style="font-size:13px;color:var(--text-dim);line-height:1.65;margin-bottom:14px;">' + sanitizePlayerFacingText(scene) + '</div>';
+  html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="closeDraftScene()">' + (btnText || '继续') + '</button>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+  STATE._draftSceneStep = { onNext: onNext };
+}
+
+function closeDraftScene() {
+  var s = STATE._draftSceneStep;
+  var overlay = document.getElementById('draft-modal');
+  if (overlay) overlay.remove();
+  STATE._draftSceneStep = null;
+  if (s && s.onNext) s.onNext();
+}
+
+function showDraftResultModal(title, msg, onNext) {
+  var old = document.getElementById('draft-result-modal');
+  if (old) old.remove();
+  STATE._draftResultDone = typeof onNext === 'function' ? onNext : null;
+  var html = '<div class="team-picker-overlay" id="draft-result-modal">';
+  html += '<div class="team-picker-modal">';
+  html += '<div class="team-picker-header"><span>' + title + '</span></div>';
+  html += '<div style="padding:14px 14px 8px;">';
+  html += formatBranchResultText(msg);
+  html += '<button class="btn btn-primary btn-sm" style="width:100%;" onclick="continueDraftResult()">继续</button>';
+  html += '</div></div></div>';
+  document.body.insertAdjacentHTML('beforeend', html);
+}
+
+function continueDraftResult() {
+  var modal = document.getElementById('draft-result-modal');
+  if (modal) modal.remove();
+  var done = STATE._draftResultDone;
+  STATE._draftResultDone = null;
+  if (typeof done === 'function') done();
+}
+
+function showDraftStory() {
+  STATE._draftPending = {
+    agent: null, prep: null, type: null, round: 1, pick: 1,
+    twoWay: false, contractYears: 4, selfPicked: false
+  };
+  STATE.career.branches = STATE.career.branches || {};
+  setBranchNode('draft_night', 'draft_entry');
+  showDraftChoiceModal('draft_entry', '选秀前夜',
+    '选秀大会前一晚，你躺在酒店的床上看球探报告。报告里的形容词很分裂：有天赋、有空白、上限高、下限低。经纪人打电话来，只问了一句：明天你想让联盟先记住你什么？',
+    [
+      { label: '仔细看球探报告', hint: '更清楚自己的定位', apply: function() {
+        addProfileDelta('mediaTrust', 1);
+        return '你把每条优缺点都背了下来。第二天走上台时，你至少知道自己不是来碰运气的。<br><br>效果：媒体好感+1。';
+      }},
+      { label: '关掉手机睡觉', hint: '让身体先休息', apply: function() {
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你关掉手机，把明天的自己交给睡眠。窗外城市还在亮，你已经先一步安静下来。<br><br>效果：状态波动-1。';
+      }}
+    ],
+    function() {
+      setBranchNode('draft_night', 'draft_agent');
+      showDraftAgentStep();
+    });
+}
+
+function showDraftAgentStep() {
+  showDraftChoiceModal('draft_agent', '经纪团队',
+    '经纪人把三种选择摊在桌上：大牌公司、中型团队、还是让家里人帮忙。他说这不是签一份合同，是选一种未来十年的说话方式。',
+    [
+      { label: '大牌经纪公司', hint: '曝光更高，压力也更大', apply: function() {
+        STATE._draftPending.agent = 'big';
+        addProfileDelta('fame', 2);
+        addProfileDelta('businessValue', 1);
+        addSeasonMod('mediaPressure', 1, -10, 10);
+        return '公司第一周就给你排满了采访和商业拍摄。曝光来得很快，快到你开始重新学习怎么在镜头前呼吸。<br><br>效果：人气+2；商业价值+1；媒体压力+1。';
+      }},
+      { label: '中型团队', hint: '更关注你这个人', apply: function() {
+        STATE._draftPending.agent = 'mid';
+        addProfileDelta('coachTrust', 1);
+        return '团队不大，但每个人都叫得出你高中教练的名字。他们更关心你的下一步，而不是下一条热搜。<br><br>效果：教练信任+1。';
+      }},
+      { label: '家人朋友团队', hint: '最信任的人陪你走', apply: function() {
+        STATE._draftPending.agent = 'family';
+        addProfileDelta('loyalty', 2);
+        addProfileDelta('businessValue', -1);
+        return '合同谈判桌上坐着的是你表哥和从小看你打球的朋友。他们不够专业，但每一个条款都会先问你一句：你开心吗。<br><br>效果：忠诚+2；商业价值-1。';
+      }}
+    ],
+    function() {
+      showDraftPrepStep();
+    });
+}
+
+function showDraftPrepStep() {
+  showDraftChoiceModal('draft_prep', '试训策略',
+    '经纪团队把一份试训安排放在你面前：联合试训、几支球队的单独邀请，或者什么都不去。他说：联合试训是最大的舞台，也是最大的放大镜。',
+    [
+      { label: '参加联合试训', hint: '曝光最高，也有状态风险', apply: function() {
+        STATE._draftPending.prep = 'combine';
+        setBranchNode('draft_night', 'draft_combine');
+        if (Math.random() < 0.1) {
+          STATE._draftPending.combineHurt = true;
+          addSeasonMod('formVariance', 1, -10, 10);
+          addSeasonMod('mediaPressure', 1, -10, 10);
+        }
+        return '你走进联合试训的球馆。所有球队的球探坐在同一排，你每投进一球，就有人低头记笔记。';
+      }},
+      { label: '只参加单独试训', hint: '更稳，教练好感小幅上升', apply: function() {
+        STATE._draftPending.prep = 'workouts';
+        setBranchNode('draft_night', 'draft_workouts');
+        addProfileDelta('coachTrust', 1);
+        return '你只接受了几支球队的单独试训，把每一分钟都用在真正感兴趣的球队面前。<br><br>效果：教练信任+1。';
+      }},
+      { label: '不试训', hint: '保留神秘感，顺位可能下滑', apply: function() {
+        STATE._draftPending.prep = 'skip';
+        setBranchNode('draft_night', 'draft_skip');
+        addProfileDelta('controversy', 1);
+        addProfileDelta('mediaTrust', -1);
+        return '你把试训邀请全部推掉。新闻里开始有人问：他到底在躲什么？你只是照常训练。<br><br>效果：争议+1；媒体好感-1。';
+      }}
+    ],
+    function() {
+      if (STATE._draftPending.combineHurt) {
+        showDraftResultModal('试训策略',
+          '联合试训的最后一场，你在一次变向时感觉大腿发紧。队医让你提前结束，顺位预测被媒体往下调了一点。<br><br>效果：状态波动+1；媒体压力+1。',
+          nextDraftReady);
+      } else {
+        nextDraftReady();
+      }
+    });
+}
+
+function computeDraftBand() {
+  var p = STATE._draftPending;
+  var ovr = STATE.finalOVR || 50;
+  var shift = 0;
+  if (p.prep === 'combine') {
+    shift = p.combineHurt ? -2 : Math.floor(Math.random() * 4);
+  } else if (p.prep === 'workouts') {
+    shift = Math.random() < 0.45 ? 1 : 0;
+  } else if (p.prep === 'skip') {
+    shift = -(2 + Math.floor(Math.random() * 4));
+  }
+  var v = ovr + shift;
+  if (v >= 88) { p.type = 'lottery'; p.round = 1; p.pick = 1 + Math.floor(Math.random() * 5); }
+  else if (v >= 84) { p.type = 'lottery'; p.round = 1; p.pick = 6 + Math.floor(Math.random() * 9); }
+  else if (v >= 78) { p.type = 'first'; p.round = 1; p.pick = 15 + Math.floor(Math.random() * 16); }
+  else if (v >= 70) { p.type = 'second'; p.round = 2; p.pick = 31 + Math.floor(Math.random() * 15); }
+  else { p.type = 'undrafted'; p.round = 0; p.pick = 0; }
+  if (p.type === 'lottery') p.contractYears = 4;
+  else if (p.type === 'first') p.contractYears = 3 + Math.floor(Math.random() * 2);
+  else if (p.type === 'second') p.contractYears = 2;
+  else p.contractYears = 1;
+  return p;
+}
+
+function nextDraftReady() {
+  setBranchNode('draft_night', 'draft_ready');
+  computeDraftBand();
+  var p = STATE._draftPending;
+  var scenes = {
+    lottery: '选秀大会开始。前几个名字被念出时，你听见自己的心跳。镜头切到你的方向，现场突然安静了一瞬。',
+    first: '选秀大会进行到一半，你的名字出现在预测板的中间位置。电视镜头偶尔扫到你，你努力让自己看起来镇定。',
+    second: '次轮的等待比首轮长得多。每念出一个名字，你都先看手机，再假装没事。',
+    undrafted: '名字一路念到次轮最后一位。手机没有响。你关掉直播，站起来，把窗推开。'
+  };
+  showDraftSceneModal('选秀大会', scenes[p.type] || scenes.first, '继续', showDraftResultStep);
+}
+
+function showDraftResultStep() {
+  var p = STATE._draftPending;
+  var pickLabel = getDraftPickLabel(p);
+  if (p.type === 'lottery') {
+    setBranchNode('draft_night', 'draft_green_room');
+    showDraftChoiceModal('draft_green_room', '选秀结果 · ' + pickLabel,
+      '你在绿屋里坐着，面前摆着水和手机。念到你的名字时，全场鼓掌。聚光灯亮得看不清台下，但你记得家人的方向。',
+      [
+        { label: '高调庆祝', hint: '自信一点，让镜头记住你', apply: function() {
+          addProfileDelta('fame', 1);
+          addSeasonMod('mediaPressure', 1, -10, 10);
+          return '你站起来和身边的人击掌，镜头跟着你直到落座。今晚的标题已经写好：自信，或者自大。<br><br>效果：人气+1；媒体压力+1。';
+        }},
+        { label: '冷静握手', hint: '话少一点，更稳一点', apply: function() {
+          addProfileDelta('mediaTrust', 1);
+          addProfileDelta('fanSupport', 1);
+          return '你和总经理握手，对镜头点了点头。没有多余动作，反而让人记住了你的名字。<br><br>效果：媒体好感+1；球迷支持+1。';
+        }},
+        { label: '感谢家人', hint: '把第一句话留给最重要的人', apply: function() {
+          addProfileDelta('loyalty', 1);
+          addProfileDelta('fanSupport', 1);
+          return '你在镜头前先看向家人。那句话很短，但全场都听见了。<br><br>效果：忠诚+1；球迷支持+1。';
+        }}
+      ],
+      afterDraftResult);
+  } else if (p.type === 'first') {
+    setBranchNode('draft_night', 'draft_picked_first');
+    showDraftChoiceModal('draft_picked_first', '选秀结果 · ' + pickLabel,
+      '手机在桌上震了三次，你接起来，那头是球队总经理：欢迎来到 NBA。你还没回过神，电视已经打出你的名字。',
+      [
+        { label: '承诺努力训练', hint: '先证明态度', apply: function() {
+          addProfileDelta('coachTrust', 1);
+          addProfileDelta('fanSupport', 1);
+          return '你接过球队球衣，只说了一句：我会第一个到训练馆。<br><br>效果：教练信任+1；球迷支持+1。';
+        }},
+        { label: '直接谈角色', hint: '把定位问清楚', apply: function() {
+          addProfileDelta('coachTrust', -1);
+          addProfileDelta('mediaTrust', 1);
+          return '你直接问了球队准备怎么用你。问题很职业，但教练记住的是你第一天就谈条件。<br><br>效果：教练信任-1；媒体好感+1。';
+        }},
+        { label: '感谢球队', hint: '先表达尊重', apply: function() {
+          addProfileDelta('loyalty', 1);
+          addProfileDelta('mediaTrust', 1);
+          return '你在电话里感谢了总经理和教练。话不多，但每个人都听得出来是真的。<br><br>效果：忠诚+1；媒体好感+1。';
+        }}
+      ],
+      afterDraftResult);
+  } else if (p.type === 'second') {
+    setBranchNode('draft_night', 'draft_picked_second');
+    showDraftChoiceModal('draft_picked_second', '选秀结果 · ' + pickLabel,
+      '次轮的等待比首轮长得多。终于轮到你时，电话里没有恭喜，第一句话是：我们想先谈谈合同。',
+      [
+        { label: '接受双向合同', hint: '先进联盟，再谈位置', apply: function() {
+          p.twoWay = true;
+          p.contractYears = 2;
+          return '你接受了双向合同。没有盛大的发布会，只有一份在联盟和发展联盟之间来回的日程表。<br><br>效果：双向合同。';
+        }},
+        { label: '争全额保障', hint: '把身价谈出来', apply: function() {
+          if (Math.random() < 0.65) {
+            p.contractYears = 2;
+            return '你坚持要一份正式合同。谈判磨了三天，最后球队让步了。<br><br>效果：2年正式合同。';
+          }
+          p.twoWay = true;
+          return '球队没有让步。你争到最后，拿到的还是一份双向合同，但所有人都知道你来过谈判桌。<br><br>效果：双向合同。';
+        }},
+        { label: '沉默等待', hint: '让球队先亮牌', apply: function() {
+          p.contractYears = 2;
+          addProfileDelta('mediaTrust', 1);
+          return '你没有催，只是每天准时训练。两天后，球队打来电话：合同准备好了。<br><br>效果：2年正式合同；媒体好感+1。';
+        }}
+      ],
+      afterDraftResult);
+  } else {
+    setBranchNode('draft_night', 'draft_undrafted');
+    showDraftChoiceModal('draft_undrafted', '落选',
+      '名字念完了。电视切走，经纪人发来一条消息：还有路。你关掉电视，没有立刻回，先站起来投了一组球。',
+      [
+        { label: '接受训练营合同', hint: '从最底层开始拼', apply: function() {
+          p.contractYears = 2;
+          return '你把行李搬进训练营，床位号写在最后一排。教练说：这里所有人都在抢同一个名额。<br><br>效果：2年非保障合同。';
+        }},
+        { label: '去海外历练', hint: '晚一年回来，但更硬', apply: function() {
+          p.contractYears = 1;
+          STATE.career.currentAge++;
+          addAttrDelta('FIN', 1);
+          addAttrDelta('PAS', 1);
+          STATE.finalOVR = calcOVR(STATE.attrs);
+          return '你登上飞往海外的航班。那里的对抗更脏、更挤，也让你更快学会保护球。<br><br>效果：一年后回归；终结+1，传球+1；年龄+1。';
+        }},
+        { label: '休整一年', hint: '把身体修好，晚点再来', apply: function() {
+          p.contractYears = 1;
+          STATE.career.currentAge++;
+          addSeasonMod('formVariance', -1, -10, 10);
+          return '你给自己放了一年假。没有球探，没有试训，只有恢复、力量和重新想明白为什么打球。<br><br>效果：年龄+1；状态波动-1。';
+        }}
+      ],
+      afterDraftResult);
+  }
+}
+
+function afterDraftResult() {
+  setBranchNode('draft_night', 'draft_contract');
+  renderCareerSpin();
+}
+
+function runPostDraftContractFlow(team, done) {
+  var p = STATE._draftPending;
+  if (!p) { done(); return; }
+  if (p.selfPicked) {
+    setBranchNode('draft_night', 'draft_forced_trade');
+    p.contractYears = Math.max(1, (p.contractYears || 1) - 1);
+    addProfileDelta('coachTrust', -2);
+    addProfileDelta('fanSupport', -3);
+    addSeasonMod('mediaPressure', 1, -10, 10);
+    var tn = getTeamName ? getTeamName(team) : team;
+    var msg = '你被选中的消息刚上新闻，交易流言就跟着到了。第二天，球队官宣：你最终加盟 ' + tn + '。评论区有人说你聪明，有人说你不够忠诚。<br><br>效果：教练信任-2；球迷支持-3；媒体压力+1；合同年限缩短。';
+    recordDraftChoice('draft_forced_trade', '交易官宣', '接受交易', msg);
+    showDraftResultModal('交易官宣', msg, function() { showDraftContractStep(team, done); });
+  } else {
+    showDraftContractStep(team, done);
+  }
+}
+
+function showDraftContractStep(team, done) {
+  showDraftSceneModal('签下第一份合同',
+    '合同摆在桌上，第一页是数字，后面几十页都是话。经纪人逐条念给你听：保障金额、激励条款、球队选项。你签下名字时，突然意识到这就是你从小打球的终点和起点。',
+    '签下名字',
+    function() {
+      var p = STATE._draftPending;
+      var years = (p && p.contractYears) || 4;
+      showDraftResultModal('签下第一份合同',
+        '你签下一份' + years + '年合同。笔尖落下去的那一刻，第一页的数字忽然变得具体。<br><br>效果：初始合同' + years + '年。',
+        function() { finalizeDraft(team, done); });
+    });
+}
+
+function showDraftPressStep(team, done) {
+  showDraftChoiceModal('draft_press', '新秀发布会',
+    '发布会上，话筒从你面前一个个传过来。有人问你最想证明什么，有人问你对交易流言的看法，还有人问：你觉得自己是新秀里的第几名？',
+    [
+      { label: '谦逊回应', hint: '把期待放低一点', apply: function() {
+        addProfileDelta('mediaTrust', 1);
+        addSeasonMod('mediaPressure', -1, -10, 10);
+        return '你说：我想先证明自己能留在这个联盟。台下有人点头，也有人觉得你太保守。<br><br>效果：媒体好感+1；媒体压力-1。';
+      }},
+      { label: '自信回应', hint: '把目标说出来', apply: function() {
+        addProfileDelta('fame', 1);
+        addProfileDelta('controversy', 1);
+        return '你说：我不只是来打球的，我是来被记住的。第二天，这句话被剪进所有选秀集锦。<br><br>效果：人气+1；争议+1。';
+      }},
+      { label: '沉默寡言', hint: '让表现替你说话', apply: function() {
+        addProfileDelta('fanSupport', 1);
+        addProfileDelta('mediaTrust', -1);
+        return '你回答了每一个问题，但每一句都很短。记者们开始讨论：他是内向，还是高傲？<br><br>效果：球迷支持+1；媒体好感-1。';
+      }}
+    ],
+    function() { showDraftFirstPracticeStep(team, done); });
+}
+
+function showDraftFirstPracticeStep(team, done) {
+  showDraftChoiceModal('draft_first_practice', '教练角色谈话',
+    '教练把你叫进办公室，桌上没有战术板，只有一张轮换表。他说：你想成为谁我知道，但现在球队需要你先做好另一件事。',
+    [
+      { label: '接受定位', hint: '先赢得教练信任', apply: function() {
+        addProfileDelta('coachTrust', 2);
+        return '你说：教练安排什么，我就做好什么。他看了你两秒，在轮换表上写下了你的名字。<br><br>效果：教练信任+2。';
+      }},
+      { label: '争取更多球权', hint: '把野心说清楚', apply: function() {
+        addProfileDelta('coachTrust', -1);
+        addSeasonMod('formVariance', 1, -10, 10);
+        return '你当面说出了自己的想法。教练没有拒绝，只是提醒你：机会要自己挣。<br><br>效果：教练信任-1；状态波动+1。';
+      }},
+      { label: '用表现说话', hint: '少说多做', apply: function() {
+        addProfileDelta('coachTrust', 1);
+        addSeasonMod('formVariance', -1, -10, 10);
+        return '你没有多说，只是提前半小时到训练馆。教练路过时，没有说话，但记住了你的号码。<br><br>效果：教练信任+1；状态波动-1。';
+      }}
+    ],
+    function() { finalizeDraft(team, done); });
+}
+
+function finalizeDraft(team, done) {
+  var p = STATE._draftPending;
+  var c = STATE.career;
+  c.draft = {
+    year: 2026,
+    round: p.round,
+    pick: p.pick,
+    team: team,
+    type: p.type,
+    twoWay: !!p.twoWay,
+    guaranteed: !p.twoWay,
+    prep: p.prep,
+    agent: p.agent,
+    contractYears: p.contractYears,
+    selfPicked: !!p.selfPicked
+  };
+  c.flags = c.flags || {};
+  c.flags.draftDone = true;
+  if (p.selfPicked) c.flags.draftTrade = true;
+  c.contract = p.contractYears;
+  setBranchNode('draft_night', 'draft_done');
+  STATE._draftPending = null;
+  STATE._draftSelfPick = false;
+  if (done) done();
+}
+
+function renderCareerTeamReveal(team, cnName, role, rosterHtml) {
+  var isBench = !!(STATE.career && STATE.career.flags && STATE.career.flags.startBench);
+  var finalRole = isBench ? '替补' : role;
+  STATE.season.isUserStarter = !isBench && role === '首发';
+  var draftLine = '';
+  var d = STATE.career && STATE.career.draft;
+  if (d && d.type !== 'undrafted') {
+    draftLine = ' · ' + (d.round === 2 ? '次轮第' + d.pick + '顺位' : '首轮第' + d.pick + '顺位');
+  }
+  html('career-area').innerHTML = `
+    <div style="padding:0 12px;" id="career-scroll">
+      <div class="reveal-card" style="position:relative;">
+        <div style="position:absolute;top:8px;left:8px;">${getTeamLogo(team, 32)}</div>
+        <div style="font-size:13px;color:var(--text-dim);">${getCurrentSeasonLabel()} · 我的生涯球队${draftLine}</div>
+        <div style="font-size:24px;font-weight:800;margin:6px 0;font-family:var(--font-display);letter-spacing:2px;">${cnName}</div>
+        <div style="font-size:12px;color:var(--text-dim);">我担任的角色为${finalRole}${SIM_CONFIG.POSITIONS[STATE.position]}</div>
+        <div style="margin-top:12px;">
+          <button class="btn btn-primary" onclick="trackEvent({act:'click',blk:'BMC098',pos:'TC7',label:'开始赛季'});startSeason()">🏀 开始赛季</button>
+        </div>
+      </div>
+      <div style="margin-top:8px;background:var(--bg-card);border:2px solid var(--border);border-radius:var(--radius-sm);padding:8px 4px;">
+        ${rosterHtml}
+      </div>
+    </div>
+  `;
+}
+
+// ==================== 5. 生涯球队分配 ====================
+function renderCareerSpin() {
+  var pool = STATE._teamsVisited.length > 0 ? STATE._teamsVisited : [...NBA2K_TEAMS].sort();
+  const sorted = pool.slice().sort();
+  const copies = 5;
+  const allItems = [];
+  for (let c = 0; c < copies; c++) {
+    sorted.forEach(t => allItems.push(t));
+  }
+  
+  let itemsHtml = '';
+  allItems.forEach(t => {
+    const cn = SIM_CONFIG.TEAM_NAMES[t] || t;
+    itemsHtml += `<div class="br-slot-item" data-team="${t}">${cn}</div>`;
+  });
+  
+  html('career-area').innerHTML = `
+    <div style="display:flex;flex-direction:column;align-items:center;justify-content:center;min-height:calc(100vh - 100px);padding:12px 12px;">
+      <div class="br-slot-area" style="max-width:320px;width:100%;">
+        <div class="br-slot-label">🎰 选择我的生涯球队</div>
+      <div class="br-slot-wrapper">
+        <div class="br-slot-machine career-slot">
+          <div class="br-slot-reel" id="career-slot-reel">
+            ${itemsHtml}
+          </div>
+        </div>
+      </div>
+      <div class="br-slot-actions" style="margin-top:12px;">
+        <button class="btn btn-sm slot-btn" onclick="pullCareerHandle()" style="background:var(--orange);color:#fff;">
+          🎲 随机球队
+        </button>
+        <button class="btn btn-sm slot-btn" onclick="showCareerTeamPicker()" style="background:var(--bg-card);color:var(--text);">
+          🎯 自选球队
+        </button>
+      </div>
+    </div>
+  `;
+  
+  if (typeof fetchAdTeamTask === 'function') fetchAdTeamTask();
+  
+  const reel = document.getElementById('career-slot-reel');
+  if (reel) {
+    const offset = sorted.length * 38 + 38; // 初始偏移到第2复制块，留出上方2项缓冲
+    reel.style.transition = 'none';
+    reel.style.transform = `translateY(-${offset}px)`;
+    void reel.offsetHeight;
+    reel.style.transition = '';
+  }
+}
+
+function pullCareerHandle() {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC5",label:"随机球队-生涯"});
+  setTimeout(spinCareerSlot, 200);
+}
+
+function spinCareerSlot() {
+  const reel = document.getElementById('career-slot-reel');
+  if (!reel) return;
+  
+  var pool = STATE._teamsVisited.length > 0 ? STATE._teamsVisited : [...NBA2K_TEAMS].sort();
+  var sorted = pool.slice().sort();
+  var teamCount = sorted.length;
+  const itemH = 38;
+  const copyLen = teamCount * itemH;
+  
+  const targetIdx = Math.floor(Math.random() * teamCount);
+  const targetTeam = sorted[targetIdx];
+  
+  // 窗口显示5项，中间项索引=2，所以偏移到 targetIdx-2
+  const snapIdx = (targetIdx - 2 + teamCount) % teamCount;
+  const targetY = copyLen * 2 + snapIdx * itemH;
+  
+  const curMatch = reel.style.transform.match(/([\d.]+)/);
+  const curY = curMatch ? parseFloat(curMatch[0]) : copyLen + 38;
+  
+  let finalY = targetY;
+  while (finalY <= curY + copyLen * 0.5) {
+    finalY += copyLen;
+  }
+  
+  const maxY = copyLen * 4 - itemH * 4;
+  if (finalY > maxY) {
+    reel.style.transition = 'none';
+    reel.style.transform = `translateY(-${copyLen}px)`;
+    void reel.offsetHeight;
+    reel.style.transition = '';
+    finalY = targetY + copyLen;
+  }
+  
+  reel.classList.add('spinning');
+  reel.style.transform = `translateY(-${finalY}px)`;
+  
+  setTimeout(() => {
+    reel.classList.remove('spinning');
+    
+    // ★ 精确回正
+    const exactY = copyLen * 3 + snapIdx * itemH;
+    reel.style.transition = 'none';
+    reel.style.transform = `translateY(-${exactY}px)`;
+    void reel.offsetHeight;
+    reel.style.transition = '';
+    
+    // ★ 高亮中间项（窗口5项，snapIdx为顶部，中间=snapIdx+2）
+    var middleIdx = teamCount * 3 + snapIdx + 2;
+    highlightSlotItem('career-slot-reel', middleIdx);
+    
+    STATE._draftSelfPick = false;
+    selectCareerTeam(targetTeam);
+  }, 3300);
+}
+
+function selectCareerTeam(team) {
+  STATE.careerTeam = team;
+  const teamPlayers = NBA2K_DATA[team];
+  const cnName = getTeamName(team);
+
+  var pos = STATE.position;
+  var myOvr = STATE.finalOVR;
+  var isLogin = isHupuLoggedIn();
+  var displayName = getHupuDisplayName();
+
+  STATE._lineupCache = {};
+  var lineup = calcTeamLineup(team);
+  var posOrder = ['PG', 'SG', 'SF', 'PF', 'C'];
+  var starters = posOrder.map(function(p) { return lineup.starters[p]; }).filter(Boolean);
+  var bench = lineup.bench || [];
+  var startBench = !!(STATE.career && STATE.career.flags && STATE.career.flags.startBench);
+  var role = (!startBench && lineup.isUserStarter) ? '首发' : '替补';
+  STATE.season.isUserStarter = !startBench && !!lineup.isUserStarter;
+  
+  // 自建球员头像：虎扑用户头像 / 默认虎扑logo
+  var defaultAvatar = 'https://i3.hoopchina.com.cn/newsPost/de00f9a83014c2b3196d831d4be1adb9_w_300_h_300_.png';
+  if (!HUPU_USER.loaded || !HUPU_USER.isLogin) { ensureHupuUser(true); }
+  var avatarUrl = getHupuAvatarUrl() || defaultAvatar;
+  
+  function renderRosterPlayer(p, isUser, idx) {
+    var pOvr = parseInt(p.ovr) || 0;
+    var pPos = p.posCn || p.pos || '—';
+    var pName = p.cname || p.name;
+    var imgHtml;
+    if (isUser) {
+      imgHtml = '<img class="bp-headshot" style="border-radius:50%;border:2px solid var(--border);width:28px;height:28px;object-fit:cover;" src="' + avatarUrl + '" onerror="this.onerror=null;this.src=\'' + defaultAvatar + '\'">';
+    } else {
+      var hs = getPlayerHeadshotStyle(p.name, 28);
+      imgHtml = hs ? '<div class="bp-headshot" style="' + hs + ';border-radius:50%;border:2px solid var(--border);width:28px;height:28px;"></div>' : '<div style="width:28px;height:28px;border-radius:50%;background:var(--border);"></div>';
+    }
+    var starBadge = isUser ? '<span style="font-size:10px;margin-left:2px;">⭐</span>' : '';
+    return '<div style="display:flex;align-items:center;gap:5px;padding:4px 6px;border-bottom:1px solid var(--border-light);font-size:12px;' + (isUser ? 'background:var(--orange-bg);border-radius:6px;margin:1px 0;border:1.5px solid var(--orange);' : '') + '">'
+      + imgHtml
+      + '<span style="width:40px;font-size:10px;color:var(--text-dim);">' + pPos + '</span>'
+      + '<span style="flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-weight:' + (isUser ? '700' : '400') + ';color:' + (isUser ? 'var(--orange)' : 'var(--text)') + ';">' + pName + starBadge + '</span>'
+      + '<span style="font-family:var(--font-display);font-weight:700;font-size:13px;color:' + (isUser ? 'var(--orange)' : 'var(--text)') + ';">' + pOvr + '</span>'
+      + '</div>';
+  }
+  
+  var rosterHtml = '<div style="font-family:var(--font-display);font-size:11px;color:var(--orange);padding:2px 4px 4px;letter-spacing:0.5px;">🏀 首发阵容</div>';
+  starters.forEach(function(p) { rosterHtml += renderRosterPlayer(p, p._isUser); });
+  rosterHtml += '<div style="font-family:var(--font-display);font-size:11px;color:var(--text-dim);padding:6px 4px 4px;letter-spacing:0.5px;border-top:1px solid var(--border);margin-top:2px;">🔄 替补阵容</div>';
+  bench.forEach(function(p, i) { rosterHtml += renderRosterPlayer(p, p._isUser, i); });
+  
+  // ★ 保存本次建球员数据到 storage
+  saveBuildPlayerData(team);
+
+  if (STATE._draftPending) {
+    STATE._draftPending.selfPicked = !!STATE._draftSelfPick;
+    STATE._draftSelfPick = false;
+    runPostDraftContractFlow(team, function() {
+      renderCareerTeamReveal(team, cnName, role, rosterHtml);
+    });
+  } else {
+    STATE._draftSelfPick = false;
+    renderCareerTeamReveal(team, cnName, role, rosterHtml);
+  }
+}
+
+// ==================== 5.5 自选球队弹窗 ====================
+function showCareerTeamPicker(teamList) {
+  var isFull = Array.isArray(teamList);
+  
+  // 计算可选球队数量：3(x+1)，x = 建球员阶段全局剩余的换人次数
+  var x = STATE._rerollsLeft || 0;
+  var pickCount = Math.min(30, 3 * (x + 1));
+  
+  if (!isFull && pickCount === 0) {
+    return;
+  }
+  
+  // 如果已有弹窗则移除
+  var old = document.getElementById('team-picker-overlay');
+  if (old) old.remove();
+  
+  var allTeams;
+  var subLine;
+  if (isFull) {
+    // 看视频奖励：全 30 队任选
+    allTeams = teamList.slice();
+    subLine = '🎉 看视频获得 · 全 ' + allTeams.length + ' 队任选';
+  } else {
+    // 从已访问球队中随机选 pickCount 支
+    allTeams = STATE._teamsVisited.length > 0 ? STATE._teamsVisited.slice() : [...NBA2K_TEAMS];
+    for (var i = allTeams.length - 1; i > 0; i--) {
+      var j = Math.floor(Math.random() * (i + 1));
+      var tmp = allTeams[i]; allTeams[i] = allTeams[j]; allTeams[j] = tmp;
+    }
+    allTeams = allTeams.slice(0, pickCount);
+    subLine = '剩余换人' + x + '次 · 可选' + pickCount + '队';
+  }
+  var picked = allTeams;
+  
+  var gridHtml = '';
+  picked.forEach(function(t) {
+    var cn = SIM_CONFIG.TEAM_NAMES[t] || t;
+    var city = window.TEAM_CITY[t] || '';
+    var logo = getTeamLogo(t, 36);
+    gridHtml += '<div class="team-pick-card" data-team="' + t + '" onclick="selectCareerTeamFromPicker(\'' + t + '\')">' +
+      logo +
+      '<span class="tpc-abbr">' + cn + '</span>' +
+      '<span class="tpc-name">' + city + '</span>' +
+    '</div>';
+  });
+  
+  var overlay = document.createElement('div');
+  overlay.className = 'team-picker-overlay';
+  overlay.id = 'team-picker-overlay';
+  overlay.innerHTML = 
+    '<div class="team-picker-modal">' +
+      '<div class="team-picker-header">' +
+        '<span>' + (isFull ? '🎉 自选喜欢的球队' : '🎯 选择生涯球队') + '</span>' +
+        '<button id="adTeamPickBtn" onclick="watchAdToPickTeam()" style="min-height:30px;padding:5px 10px;border:none;border-radius:8px;background:linear-gradient(135deg,#ff6b35,#ff8a5c);color:#fff;font-family:var(--font-display);font-size:11px;font-weight:600;cursor:pointer;box-shadow:0 2px 0 #c94d1e;">📺 看视频自选球队</button>' +
+        '<button class="team-picker-close" onclick="closeCareerTeamPicker()">✕</button>' +
+      '</div>' +
+      '<div class="team-picker-header" style="border-bottom:none;padding:4px 14px 8px;justify-content:center;">' +
+        '<span style="' + (isFull ? '' : 'display:none;') + 'font-size:11px;color:var(--text-dim);font-weight:400;">' + subLine + '</span>' +
+      '</div>' +
+      '<div class="team-picker-grid">' + gridHtml + '</div>' +
+    '</div>';
+  
+  // 点击遮罩关闭
+  overlay.addEventListener('click', function(e) {
+    if (e.target === overlay) closeCareerTeamPicker();
+  });
+  
+  document.body.appendChild(overlay);
+  if (typeof renderAdTeamStatus === 'function') renderAdTeamStatus();
+}
+
+function closeCareerTeamPicker() {
+  
+  var el = document.getElementById('team-picker-overlay');
+  if (el) el.remove();
+}
+
+function selectCareerTeamFromPicker(team) {
+  trackEvent({act:"click",blk:"BMC098",pos:"TC6",label:"自选球队-生涯"});
+  closeCareerTeamPicker();
+  STATE._draftSelfPick = true;
+  selectCareerTeam(team);
+}
+
+/** 保存本次建球员数据到 Storage（球队、位置、13项属性、总评） */
+function saveBuildPlayerData(team) {
+  var playerData = {
+    team: team,
+    position: STATE.position,
+    finalOVR: STATE.finalOVR,
+    attrs: {},
+  };
+  SIM_CONFIG.ATTR_LIST.forEach(function(k) { playerData.attrs[k] = STATE.attrs[k] || null; });
+  Storage.savePlayer(playerData);
+}
+
+// ==================== 工具函数 ====================
+function shuffleArr(arr) {
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
+}
+
+/** 老虎机高亮中间可见项（替换静态 nth-child，随滚动位置正确对齐） */
+function highlightSlotItem(reelId, middleIndex) {
+  var reel = document.getElementById(reelId);
+  if (!reel) return;
+  reel.querySelectorAll('.br-slot-item.highlight').forEach(function(el) { el.classList.remove('highlight'); });
+  var items = reel.querySelectorAll('.br-slot-item');
+  if (items[middleIndex]) items[middleIndex].classList.add('highlight');
+}
+
+function getConference(team) {
+  if (SIM_CONFIG.CONFERENCE.EAST.includes(team)) return 'EAST';
+  if (SIM_CONFIG.CONFERENCE.WEST.includes(team)) return 'WEST';
+  return 'EAST';
+}
+
+function getDivision(team) {
+  for (const [div, teams] of Object.entries(SIM_CONFIG.DIVISIONS)) {
+    if (teams.includes(team)) return div;
+  }
+  return null;
+}
+
+function getTeamName(team) { return SIM_CONFIG.TEAM_NAMES[team] || team; }
+
+/** 查找球员所属球队缩写 */
+function getPlayerTeam(player) {
+  for (const team of NBA2K_TEAMS) {
+    if (NBA2K_DATA[team] && NBA2K_DATA[team].includes(player)) return team;
+  }
+  return null;
+}
+
+/** 获取球员显示名：优先中文名（取-后部分），无中文名则取逗号后的名 */
+function getPlayerDisplayName(playerName) {
+  // 先找中文名
+  for (const team of NBA2K_TEAMS) {
+    const players = NBA2K_DATA[team];
+    if (!players) continue;
+    const p = players.find(p => p.name === playerName);
+    if (p) {
+      const cn = p.cname || '';
+      const dashIdx = cn.indexOf('-');
+      return dashIdx >= 0 ? cn.slice(dashIdx + 1) : (cn || playerName);
+    }
+  }
+  // 无中文名 → 取逗号后（如 "Brunson, Jalen" → "Jalen"）
+  const commaIdx = playerName.indexOf(', ');
+  return commaIdx >= 0 ? playerName.slice(commaIdx + 2) : playerName;
+}
+
+if (!window.TEAM_LOGOS) window.TEAM_LOGOS = {
+  'ATL':'https://activity-static.hoopchina.com.cn/files/26612-t5b21erc-upload-1781237739326-44.png',
+  'BKN':'https://activity-static.hoopchina.com.cn/files/26612-xptpjtrc-upload-1781237796378-12.png',
+  'BOS':'https://activity-static.hoopchina.com.cn/files/26612-ccjancrc-upload-1781237796378-15.png',
+  'CHA':'https://activity-static.hoopchina.com.cn/files/26612-4los1nrc-upload-1781237796378-18.png',
+  'CHI':'https://activity-static.hoopchina.com.cn/files/26612-248zl7rc-upload-1781237796378-21.png',
+  'CLE':'https://activity-static.hoopchina.com.cn/files/26612-9373nkrc-upload-1781237796378-24.png',
+  'DAL':'https://activity-static.hoopchina.com.cn/files/26612-ye2ck7rc-upload-1781237796378-27.png',
+  'DEN':'https://activity-static.hoopchina.com.cn/files/26612-v4su4prc-upload-1781237796378-30.png',
+  'DET':'https://activity-static.hoopchina.com.cn/files/26612-ce809crc-upload-1781237796378-33.png',
+  'GSW':'https://activity-static.hoopchina.com.cn/files/26612-jytyisrc-upload-1781237796378-36.png',
+  'HOU':'https://activity-static.hoopchina.com.cn/files/26612-8x92ebrc-upload-1781237796378-39.png',
+  'IND':'https://activity-static.hoopchina.com.cn/files/26612-q4jolqrc-upload-1781237796378-42.png',
+  'LAC':'https://activity-static.hoopchina.com.cn/files/26612-y0fgwlrc-upload-1781237796378-45.png',
+  'LAL':'https://activity-static.hoopchina.com.cn/files/26614-lqhvdqrc-upload-1781423262777-12.png',
+  'MEM':'https://activity-static.hoopchina.com.cn/files/26612-hkjdthrc-upload-1781237796378-51.png',
+  'MIA':'https://activity-static.hoopchina.com.cn/files/26612-wrdmc9rc-upload-1781237796378-54.png',
+  'MIL':'https://activity-static.hoopchina.com.cn/files/26612-47m8grrc-upload-1781237796378-57.png',
+  'MIN':'https://activity-static.hoopchina.com.cn/files/26612-6y471frc-upload-1781237796378-60.png',
+  'NOP':'https://activity-static.hoopchina.com.cn/files/26612-q64i2mrc-upload-1781237796378-63.png',
+  'NYK':'https://activity-static.hoopchina.com.cn/files/26612-ltjvjerc-upload-1781237796378-66.png',
+  'OKC':'https://activity-static.hoopchina.com.cn/files/26612-103adgrc-upload-1781237796378-69.png',
+  'ORL':'https://activity-static.hoopchina.com.cn/files/26612-0i4175rc-upload-1781237796378-72.png',
+  'PHI':'https://activity-static.hoopchina.com.cn/files/26612-s2kbz8rc-upload-1781237796378-75.png',
+  'PHX':'https://activity-static.hoopchina.com.cn/files/26612-iffq4vrc-upload-1781237796378-78.png',
+  'POR':'https://activity-static.hoopchina.com.cn/files/26612-v2vg2xrc-upload-1781237796378-81.png',
+  'SAC':'https://activity-static.hoopchina.com.cn/files/26612-9g4x3qrc-upload-1781237796378-84.png',
+  'SAS':'https://activity-static.hoopchina.com.cn/files/26612-op4gosrc-upload-1781237796378-87.png',
+  'TOR':'https://activity-static.hoopchina.com.cn/files/26612-yowkavrc-upload-1781237796378-90.png',
+  'UTA':'https://activity-static.hoopchina.com.cn/files/26612-rb5rxsrc-upload-1781237796378-93.png',
+  'WAS':'https://activity-static.hoopchina.com.cn/files/26612-7t2yj4rc-upload-1781237796378-96.png',
+};
+if (!window.TEAM_CITY) window.TEAM_CITY = {
+  'ATL':'亚特兰大','BKN':'布鲁克林','BOS':'波士顿','CHA':'夏洛特','CHI':'芝加哥',
+  'CLE':'克里夫兰','DAL':'达拉斯','DEN':'丹佛','DET':'底特律','GSW':'金州',
+  'HOU':'休斯顿','IND':'印第安纳','LAC':'洛杉矶','LAL':'洛杉矶','MEM':'孟菲斯',
+  'MIA':'迈阿密','MIL':'密尔沃基','MIN':'明尼苏达','NOP':'新奥尔良','NYK':'纽约',
+  'OKC':'俄克拉荷马城','ORL':'奥兰多','PHI':'费城','PHX':'菲尼克斯','POR':'波特兰',
+  'SAC':'萨克拉门托','SAS':'圣安东尼奥','TOR':'多伦多','UTA':'犹他','WAS':'华盛顿',
+};
+window._HIDE_TEAM_LOGOS = true;
+function getTeamLogo(team, size) {
+  if (window._HIDE_TEAM_LOGOS) return '';
+  if (!window.TEAM_LOGOS || !window.TEAM_LOGOS[team]) return '';
+  const s = size || 20;
+  return `<img class="team-logo" src="${window.TEAM_LOGOS[team]}" style="width:${s}px;height:${s}px;vertical-align:middle;border-radius:4px;" alt="${team}">`;
+}
+
+function toggleTeamLogos() {
+  window._HIDE_TEAM_LOGOS = !window._HIDE_TEAM_LOGOS;
+  var cur = document.querySelector('.screen.active');
+  if (!cur) return;
+  var id = cur.id;
+  if (id === 'screen-season') { if (typeof quickSimAllGames === 'function') quickSimAllGames(); }
+  else if (id === 'screen-playoffs' && typeof renderPlayoffs === 'function') renderPlayoffs();
+  else if (id === 'screen-results' && typeof showSeasonResults === 'function') showSeasonResults();
+  else if (id === 'screen-awards' && typeof showAwardsScreen === 'function') showAwardsScreen();
+  else if (id === 'screen-achievements' && window.CONQUEST_API && typeof CONQUEST_API.show === 'function') CONQUEST_API.show();
+}
+
+/** 获取球队在联盟中的种子排名（1-15） */
+function getConferenceSeed(team) {
+  const conf = getConference(team);
+  const teams = conf === 'EAST' ? SIM_CONFIG.CONFERENCE.EAST : SIM_CONFIG.CONFERENCE.WEST;
+  const standings = STATE.season.standings;
+  if (!standings) return 99;
+  const sorted = teams
+    .map(t => ({ team: t, ...standings[t] }))
+    .sort((a, b) => {
+      const apct = a.wins + a.losses > 0 ? a.wins / (a.wins + a.losses) : 0;
+      const bpct = b.wins + b.losses > 0 ? b.wins / (b.wins + b.losses) : 0;
+      return bpct - apct || b.wins - a.wins;
+    });
+  const idx = sorted.findIndex(s => s.team === team);
+  return idx >= 0 ? idx + 1 : 99;
+}
+
+/** 获取同分区所有球队按种子排序的列表 */
+function getConferenceSorted(conf) {
+  const teams = conf === 'EAST' ? SIM_CONFIG.CONFERENCE.EAST : SIM_CONFIG.CONFERENCE.WEST;
+  const standings = STATE.season.standings;
+  if (!standings) return [];
+  return teams
+    .map(t => ({ team: t, wins: standings[t]?.wins || 0, losses: standings[t]?.losses || 0 }))
+    .sort((a, b) => {
+      const apct = a.wins + a.losses > 0 ? a.wins / (a.wins + a.losses) : 0;
+      const bpct = b.wins + b.losses > 0 ? b.wins / (b.wins + b.losses) : 0;
+      return bpct - apct || b.wins - a.wins;
+    });
+}
+
+// ==================== 6. 赛季模拟（新引擎）====================
+function startSeason() {
+  showScreen('screen-season');
+  clearLineupCache();
+  var currentStarterStatus = STATE.careerTeam && STATE.finalOVR ? !!calcTeamLineup(STATE.careerTeam).isUserStarter : true;
+  if (STATE.career && STATE.career.flags && STATE.career.flags.startBench) currentStarterStatus = false;
+  STATE.season = {
+    wins: 0, losses: 0,
+    games: [],
+    playerStats: { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, fgm: 0, fga: 0, ftm: 0, fta: 0, threeM: 0, threeA: 0, ga
