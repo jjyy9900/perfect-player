@@ -1,4 +1,4 @@
-poAvg.ast}</span><span class="sr-stat-lbl">助攻</span></div>
+n class="sr-stat-val">${poAvg.ast}</span><span class="sr-stat-lbl">助攻</span></div>
         <div class="sr-stat"><span class="sr-stat-val">${poAvg.stl}</span><span class="sr-stat-lbl">抢断</span></div>
         <div class="sr-stat"><span class="sr-stat-val">${poAvg.blk}</span><span class="sr-stat-lbl">盖帽</span></div>
         <div class="sr-stat"><span class="sr-stat-val">${poAvg.tov}</span><span class="sr-stat-lbl">失误</span></div>
@@ -3904,4 +3904,4 @@ const STAGED_BRANCH_EVENTS = [
       }},
       { label: '空降直播', hint: '互动最高，风险也高', apply: function() {
         setBranchNode('fan_culture', 'community_live', { action: 'live' });
-        addProfileDelta('fame
+     
