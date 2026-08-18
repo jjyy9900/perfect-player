@@ -1,0 +1,11085 @@
+85,
+      "PAS": 73,
+      "PDEF": 63,
+      "IDEF": 45,
+      "BLK": 35,
+      "REB": 52,
+      "ATH": 76,
+      "STR": 52,
+      "CLU": 90
+    },
+
+    {
+      "name": "Jaylin Williams",
+      "cname": "杰林-威廉姆斯",
+      "pos": "C",
+      "height": "6'9'",
+      "type": "Stretch Five Cleaner",
+      "ovr": 79,
+      "threePT": 82,
+      "MID": 85,
+      "FIN": 83,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 70,
+      "PDEF": 54,
+      "IDEF": 68,
+      "BLK": 72,
+      "REB": 87,
+      "ATH": 57,
+      "STR": 60,
+      "CLU": 85
+    },
+
+    {
+      "name": "Kenrich Williams",
+      "cname": "肯里奇-威廉姆斯",
+      "pos": "PF / C",
+      "height": "6'7'",
+      "type": "2-Way Stretch Four",
+      "ovr": 78,
+      "threePT": 84,
+      "MID": 90,
+      "FIN": 84,
+      "DNK": 65,
+      "HAN": 90,
+      "PAS": 69,
+      "PDEF": 75,
+      "IDEF": 68,
+      "BLK": 42,
+      "REB": 63,
+      "ATH": 75,
+      "STR": 63,
+      "CLU": 85
+    },
+
+    {
+      "name": "Aaron Wiggins",
+      "cname": "阿龙-威金斯",
+      "pos": "SF / PF",
+      "height": "6'5'",
+      "type": "Iso Sniper",
+      "ovr": 78,
+      "threePT": 79,
+      "MID": 87,
+      "FIN": 82,
+      "DNK": 70,
+      "HAN": 76,
+      "PAS": 68,
+      "PDEF": 59,
+      "IDEF": 48,
+      "BLK": 58,
+      "REB": 54,
+      "ATH": 84,
+      "STR": 45,
+      "CLU": 40
+    },
+
+    {
+      "name": "Nikola Topic",
+      "cname": "尼古拉-托皮奇",
+      "pos": "PG / SG",
+      "height": "6'6'",
+      "type": "Table Setter",
+      "ovr": 73,
+      "threePT": 75,
+      "MID": 69,
+      "FIN": 81,
+      "DNK": 65,
+      "HAN": 85,
+      "PAS": 81,
+      "PDEF": 63,
+      "IDEF": 45,
+      "BLK": 47,
+      "REB": 47,
+      "ATH": 76,
+      "STR": 59,
+      "CLU": 60
+    },
+
+    {
+      "name": "Thomas Sorber",
+      "cname": "托马斯-索伯",
+      "pos": "C / PF",
+      "height": "6'9'",
+      "type": "Slashing Point Center",
+      "ovr": 71,
+      "threePT": 60,
+      "MID": 70,
+      "FIN": 75,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 69,
+      "PDEF": 58,
+      "IDEF": 69,
+      "BLK": 75,
+      "REB": 69,
+      "ATH": 66,
+      "STR": 72,
+      "CLU": 45
+    },
+
+    {
+      "name": "Brooks Barnhizer",
+      "cname": "布鲁克斯-巴恩希泽",
+      "pos": "SF / SG",
+      "height": "6'5'",
+      "type": "Physical Middy Maestro",
+      "ovr": 69,
+      "threePT": 72,
+      "MID": 79,
+      "FIN": 74,
+      "DNK": 70,
+      "HAN": 70,
+      "PAS": 70,
+      "PDEF": 70,
+      "IDEF": 59,
+      "BLK": 50,
+      "REB": 60,
+      "ATH": 79,
+      "STR": 67,
+      "CLU": 30
+    }
+
+  ],
+
+  "ORL": [
+    {
+      "name": "Paolo Banchero",
+      "cname": "保罗-班凯罗",
+      "pos": "PF / SF",
+      "height": "6'10'",
+      "type": "Glass-Cleaning Rim Runner",
+      "ovr": 88,
+      "threePT": 78,
+      "MID": 75,
+      "FIN": 88,
+      "DNK": 85,
+      "HAN": 95,
+      "PAS": 74,
+      "PDEF": 66,
+      "IDEF": 68,
+      "BLK": 55,
+      "REB": 83,
+      "ATH": 80,
+      "STR": 77,
+      "CLU": 90
+    },
+
+    {
+      "name": "Franz Wagner",
+      "cname": "弗朗茨-瓦格纳",
+      "pos": "SF / PF",
+      "height": "6'10'",
+      "type": "Crafty Mid-Paint Point Forward",
+      "ovr": 87,
+      "threePT": 80,
+      "MID": 90,
+      "FIN": 85,
+      "DNK": 80,
+      "HAN": 95,
+      "PAS": 80,
+      "PDEF": 73,
+      "IDEF": 56,
+      "BLK": 50,
+      "REB": 64,
+      "ATH": 73,
+      "STR": 65,
+      "CLU": 75
+    },
+
+    {
+      "name": "Desmond Bane",
+      "cname": "德斯蒙德-贝恩",
+      "pos": "SG / SF",
+      "height": "6'6'",
+      "type": "Crafty 3PT Sniper",
+      "ovr": 86,
+      "threePT": 86,
+      "MID": 83,
+      "FIN": 93,
+      "DNK": 75,
+      "HAN": 84,
+      "PAS": 74,
+      "PDEF": 79,
+      "IDEF": 59,
+      "BLK": 51,
+      "REB": 49,
+      "ATH": 80,
+      "STR": 56,
+      "CLU": 90
+    },
+
+    {
+      "name": "Anthony Black",
+      "cname": "安东尼-布莱克",
+      "pos": "PG / SG",
+      "height": "6'7'",
+      "type": "2-Way Crafty Laymaker",
+      "ovr": 82,
+      "threePT": 77,
+      "MID": 75,
+      "FIN": 82,
+      "DNK": 75,
+      "HAN": 90,
+      "PAS": 80,
+      "PDEF": 84,
+      "IDEF": 63,
+      "BLK": 60,
+      "REB": 53,
+      "ATH": 85,
+      "STR": 58,
+      "CLU": 90
+    },
+
+    {
+      "name": "Jalen Suggs",
+      "cname": "杰伦-萨格斯",
+      "pos": "PG / SG",
+      "height": "6'5'",
+      "type": "2-Way Mid-Range Slasher",
+      "ovr": 81,
+      "threePT": 76,
+      "MID": 90,
+      "FIN": 87,
+      "DNK": 80,
+      "HAN": 84,
+      "PAS": 75,
+      "PDEF": 91,
+      "IDEF": 55,
+      "BLK": 63,
+      "REB": 60,
+      "ATH": 92,
+      "STR": 59,
+      "CLU": 50
+    },
+
+    {
+      "name": "Wendell Carter Jr.",
+      "cname": "小温德尔-卡特",
+      "pos": "C / PF",
+      "height": "6'10'",
+      "type": "Post-Scoring Stretch",
+      "ovr": 80,
+      "threePT": 75,
+      "MID": 86,
+      "FIN": 86,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 56,
+      "PDEF": 47,
+      "IDEF": 78,
+      "BLK": 58,
+      "REB": 78,
+      "ATH": 55,
+      "STR": 82,
+      "CLU": 60
+    },
+
+    {
+      "name": "Nikola Vucevic",
+      "cname": "尼古拉-武切维奇",
+      "pos": "C",
+      "height": "6'9'",
+      "type": "Triple-Double Threat",
+      "ovr": 79,
+      "threePT": 79,
+      "MID": 83,
+      "FIN": 97,
+      "DNK": 65,
+      "HAN": 80,
+      "PAS": 77,
+      "PDEF": 41,
+      "IDEF": 68,
+      "BLK": 60,
+      "REB": 85,
+      "ATH": 49,
+      "STR": 87,
+      "CLU": 70
+    },
+
+    {
+      "name": "Tristan da Silva",
+      "cname": "特里斯坦-达席尔瓦",
+      "pos": "SF / PF",
+      "height": "6'8'",
+      "type": "3PT Sniper",
+      "ovr": 78,
+      "threePT": 80,
+      "MID": 49,
+      "FIN": 90,
+      "DNK": 65,
+      "HAN": 90,
+      "PAS": 64,
+      "PDEF": 64,
+      "IDEF": 64,
+      "BLK": 51,
+      "REB": 59,
+      "ATH": 67,
+      "STR": 62,
+      "CLU": 95
+    },
+
+    {
+      "name": "Goga Bitadze",
+      "cname": "戈加-比塔泽",
+      "pos": "C",
+      "height": "6'11'",
+      "type": "Putback Power-Finishing Eraser",
+      "ovr": 77,
+      "threePT": 69,
+      "MID": 72,
+      "FIN": 98,
+      "DNK": 65,
+      "HAN": 70,
+      "PAS": 54,
+      "PDEF": 25,
+      "IDEF": 78,
+      "BLK": 86,
+      "REB": 76,
+      "ATH": 37,
+      "STR": 88,
+      "CLU": 60
+    },
+
+    {
+      "name": "Jevon Carter",
+      "cname": "杰文-卡特",
+      "pos": "PG / SG",
+      "height": "6'0'",
+      "type": "2-Way Sharpshooter",
+      "ovr": 75,
+      "threePT": 79,
+      "MID": 93,
+      "FIN": 66,
+      "DNK": 35,
+      "HAN": 80,
+      "PAS": 75,
+      "PDEF": 79,
+      "IDEF": 34,
+      "BLK": 50,
+      "REB": 47,
+      "ATH": 83,
+      "STR": 60,
+      "CLU": 85
+    },
+
+    {
+      "name": "Noah Penda",
+      "cname": "诺亚-彭达",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "Stretch Four Crasher",
+      "ovr": 75,
+      "threePT": 76,
+      "MID": 68,
+      "FIN": 63,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 67,
+      "PDEF": 73,
+      "IDEF": 73,
+      "BLK": 62,
+      "REB": 71,
+      "ATH": 84,
+      "STR": 70,
+      "CLU": 85
+    },
+
+    {
+      "name": "Jamal Cain",
+      "cname": "贾马尔-凯恩",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "Crafty 3PT Sniper",
+      "ovr": 74,
+      "threePT": 83,
+      "MID": 59,
+      "FIN": 87,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 44,
+      "PDEF": 68,
+      "IDEF": 60,
+      "BLK": 37,
+      "REB": 53,
+      "ATH": 68,
+      "STR": 60,
+      "CLU": 80
+    },
+
+    {
+      "name": "Jett Howard",
+      "cname": "杰特-霍华德",
+      "pos": "SG / SF",
+      "height": "6'8'",
+      "type": "3PT-Creating Combo Guard",
+      "ovr": 74,
+      "threePT": 81,
+      "MID": 68,
+      "FIN": 81,
+      "DNK": 65,
+      "HAN": 85,
+      "PAS": 69,
+      "PDEF": 67,
+      "IDEF": 55,
+      "BLK": 53,
+      "REB": 51,
+      "ATH": 69,
+      "STR": 58,
+      "CLU": 80
+    },
+
+    {
+      "name": "Jonathan Isaac",
+      "cname": "乔纳森-艾萨克",
+      "pos": "PF / C",
+      "height": "6'10'",
+      "type": "Lockdown Defender",
+      "ovr": 73,
+      "threePT": 59,
+      "MID": 44,
+      "FIN": 89,
+      "DNK": 70,
+      "HAN": 68,
+      "PAS": 54,
+      "PDEF": 83,
+      "IDEF": 83,
+      "BLK": 91,
+      "REB": 74,
+      "ATH": 80,
+      "STR": 70,
+      "CLU": 25
+    },
+
+    {
+      "name": "Jase Richardson",
+      "cname": "杰斯-理查德森",
+      "pos": "SG / PG",
+      "height": "6'1'",
+      "type": "Crafty 3-Level Scorer",
+      "ovr": 73,
+      "threePT": 82,
+      "MID": 84,
+      "FIN": 93,
+      "DNK": 87,
+      "HAN": 80,
+      "PAS": 70,
+      "PDEF": 67,
+      "IDEF": 33,
+      "BLK": 37,
+      "REB": 46,
+      "ATH": 84,
+      "STR": 57,
+      "CLU": 50
+    },
+
+    {
+      "name": "Colin Castleton",
+      "cname": "科林-卡斯尔顿",
+      "pos": "PF / C",
+      "height": "6'10'",
+      "type": "Stretch Four Crasher",
+      "ovr": 70,
+      "threePT": 69,
+      "MID": 70,
+      "FIN": 78,
+      "DNK": 65,
+      "HAN": 80,
+      "PAS": 50,
+      "PDEF": 32,
+      "IDEF": 62,
+      "BLK": 65,
+      "REB": 69,
+      "ATH": 54,
+      "STR": 63,
+      "CLU": 55
+    },
+
+    {
+      "name": "Alex Morales",
+      "cname": "亚历克斯-莫拉莱斯",
+      "pos": "SG / SF",
+      "height": "6'6'",
+      "type": "3PT High-Flying Ball Hawk",
+      "ovr": 68,
+      "threePT": 76,
+      "MID": 69,
+      "FIN": 70,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 69,
+      "PDEF": 73,
+      "IDEF": 64,
+      "BLK": 32,
+      "REB": 64,
+      "ATH": 75,
+      "STR": 60,
+      "CLU": 30
+    }
+
+  ],
+
+  "PHI": [
+    {
+      "name": "LeBron James",
+      "cname": "勒布朗-詹姆斯",
+      "pos": "PF / SF",
+      "height": "6'9'",
+      "type": "PlaySlash Bully",
+      "ovr": 92,
+      "threePT": 76,
+      "MID": 76,
+      "FIN": 97,
+      "DNK": 85,
+      "HAN": 84,
+      "PAS": 90,
+      "PDEF": 74,
+      "IDEF": 74,
+      "BLK": 57,
+      "REB": 69,
+      "ATH": 86,
+      "STR": 89,
+      "CLU": 90
+    },
+
+    {
+      "name": "Jaylen Brown",
+      "cname": "杰伦-布朗",
+      "pos": "SG / SF",
+      "height": "6'6'",
+      "type": "Physical 2-Way Middy Slasher",
+      "ovr": 95,
+      "threePT": 80,
+      "MID": 90,
+      "FIN": 94,
+      "DNK": 94,
+      "HAN": 98,
+      "PAS": 78,
+      "PDEF": 89,
+      "IDEF": 78,
+      "BLK": 51,
+      "REB": 70,
+      "ATH": 88,
+      "STR": 72,
+      "CLU": 98
+    },
+
+    {
+      "name": "Tyrese Maxey",
+      "cname": "泰雷塞-马克西",
+      "pos": "PG / SG",
+      "height": "6'2'",
+      "type": "Ankle Taker",
+      "ovr": 93,
+      "threePT": 86,
+      "MID": 87,
+      "FIN": 84,
+      "DNK": 70,
+      "HAN": 98,
+      "PAS": 80,
+      "PDEF": 79,
+      "IDEF": 54,
+      "BLK": 60,
+      "REB": 52,
+      "ATH": 90,
+      "STR": 44,
+      "CLU": 98
+    },
+
+    {
+      "name": "Joel Embiid",
+      "cname": "乔尔-恩比德",
+      "pos": "C",
+      "height": "7'0'",
+      "type": "Physical 2-Way 3-Level Cleaner",
+      "ovr": 92,
+      "threePT": 79,
+      "MID": 91,
+      "FIN": 94,
+      "DNK": 80,
+      "HAN": 90,
+      "PAS": 74,
+      "PDEF": 68,
+      "IDEF": 84,
+      "BLK": 73,
+      "REB": 90,
+      "ATH": 59,
+      "STR": 96,
+      "CLU": 60
+    },
+
+    {
+      "name": "VJ Edgecombe",
+      "cname": "VJ-埃奇库姆",
+      "pos": "SG / PG",
+      "height": "6'4'",
+      "type": "Mid-Range High Flyer",
+      "ovr": 83,
+      "threePT": 81,
+      "MID": 86,
+      "FIN": 81,
+      "DNK": 89,
+      "HAN": 85,
+      "PAS": 75,
+      "PDEF": 77,
+      "IDEF": 53,
+      "BLK": 53,
+      "REB": 56,
+      "ATH": 91,
+      "STR": 57,
+      "CLU": 75
+    },
+
+    {
+      "name": "Anfernee Simons",
+      "cname": "安芬尼-西蒙斯",
+      "pos": "SG / PG",
+      "height": "6'3'",
+      "type": "Inside-Out Creator",
+      "ovr": 80,
+      "threePT": 82,
+      "MID": 79,
+      "FIN": 97,
+      "DNK": 89,
+      "HAN": 95,
+      "PAS": 75,
+      "PDEF": 59,
+      "IDEF": 49,
+      "BLK": 37,
+      "REB": 45,
+      "ATH": 89,
+      "STR": 41,
+      "CLU": 60
+    },
+
+    {
+      "name": "Dean Wade",
+      "cname": "迪恩-韦德",
+      "pos": "PF / SF",
+      "height": "6'9'",
+      "type": "2-Way Masher",
+      "ovr": 78,
+      "threePT": 79,
+      "MID": 70,
+      "FIN": 93,
+      "DNK": 75,
+      "HAN": 70,
+      "PAS": 38,
+      "PDEF": 84,
+      "IDEF": 80,
+      "BLK": 56,
+      "REB": 66,
+      "ATH": 84,
+      "STR": 60,
+      "CLU": 75
+    },
+
+    {
+      "name": "Trendon Watford",
+      "cname": "特伦登-沃特福德",
+      "pos": "PF / PG",
+      "height": "6'8'",
+      "type": "Versatile Paint Finisher",
+      "ovr": 76,
+      "threePT": 68,
+      "MID": 68,
+      "FIN": 96,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 69,
+      "PDEF": 52,
+      "IDEF": 66,
+      "BLK": 62,
+      "REB": 69,
+      "ATH": 63,
+      "STR": 79,
+      "CLU": 60
+    },
+
+    {
+      "name": "Justin Edwards",
+      "cname": "贾斯汀-爱德华兹",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "Ball-Hawking 3PT Shot Hunter",
+      "ovr": 76,
+      "threePT": 80,
+      "MID": 79,
+      "FIN": 89,
+      "DNK": 80,
+      "HAN": 75,
+      "PAS": 65,
+      "PDEF": 68,
+      "IDEF": 50,
+      "BLK": 51,
+      "REB": 45,
+      "ATH": 82,
+      "STR": 59,
+      "CLU": 70
+    },
+
+    {
+      "name": "Dominick Barlow",
+      "cname": "多米尼克-巴洛",
+      "pos": "PF / C",
+      "height": "6'9'",
+      "type": "Crafty Putback Pro",
+      "ovr": 76,
+      "threePT": 70,
+      "MID": 44,
+      "FIN": 87,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 51,
+      "PDEF": 55,
+      "IDEF": 59,
+      "BLK": 67,
+      "REB": 59,
+      "ATH": 68,
+      "STR": 62,
+      "CLU": 85
+    },
+
+    {
+      "name": "Caleb Love",
+      "cname": "凯莱布-乐福",
+      "pos": "PG / SG",
+      "height": "6'3'",
+      "type": "Iso Sniper",
+      "ovr": 75,
+      "threePT": 76,
+      "MID": 91,
+      "FIN": 75,
+      "DNK": 65,
+      "HAN": 85,
+      "PAS": 74,
+      "PDEF": 65,
+      "IDEF": 34,
+      "BLK": 35,
+      "REB": 51,
+      "ATH": 75,
+      "STR": 51,
+      "CLU": 70
+    },
+
+    {
+      "name": "Adem Bona",
+      "cname": "阿代姆-博纳",
+      "pos": "C",
+      "height": "6'10'",
+      "type": "Shot Eraser",
+      "ovr": 75,
+      "threePT": 54,
+      "MID": 57,
+      "FIN": 77,
+      "DNK": 80,
+      "HAN": 70,
+      "PAS": 40,
+      "PDEF": 37,
+      "IDEF": 70,
+      "BLK": 90,
+      "REB": 66,
+      "ATH": 68,
+      "STR": 73,
+      "CLU": 80
+    },
+
+    {
+      "name": "Rayan Rupert",
+      "cname": "拉扬-吕佩尔",
+      "pos": "SF / SG",
+      "height": "6'6'",
+      "type": "Crafty 3PT-Sniping Creator",
+      "ovr": 74,
+      "threePT": 77,
+      "MID": 63,
+      "FIN": 75,
+      "DNK": 70,
+      "HAN": 70,
+      "PAS": 68,
+      "PDEF": 70,
+      "IDEF": 53,
+      "BLK": 40,
+      "REB": 60,
+      "ATH": 72,
+      "STR": 52,
+      "CLU": 80
+    },
+
+    {
+      "name": "Ariel Hukporti",
+      "cname": "阿里埃尔-胡克波尔蒂",
+      "pos": "C / PF",
+      "height": "7'0'",
+      "type": "Putback Rim-Rocking Eraser",
+      "ovr": 73,
+      "threePT": 47,
+      "MID": 57,
+      "FIN": 41,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 43,
+      "PDEF": 37,
+      "IDEF": 74,
+      "BLK": 90,
+      "REB": 75,
+      "ATH": 37,
+      "STR": 68,
+      "CLU": 85
+    },
+
+    {
+      "name": "Tyrese Martin",
+      "cname": "泰雷斯-马丁",
+      "pos": "SG / PG",
+      "height": "6'6'",
+      "type": "3PT-Creating Combo Guard",
+      "ovr": 73,
+      "threePT": 75,
+      "MID": 76,
+      "FIN": 68,
+      "DNK": 60,
+      "HAN": 69,
+      "PAS": 75,
+      "PDEF": 66,
+      "IDEF": 54,
+      "BLK": 37,
+      "REB": 55,
+      "ATH": 72,
+      "STR": 59,
+      "CLU": 75
+    },
+
+    {
+      "name": "Dalen Terry",
+      "cname": "达伦-特里",
+      "pos": "SG / SF",
+      "height": "6'6'",
+      "type": "Ball-Hawking PlaySlash",
+      "ovr": 73,
+      "threePT": 79,
+      "MID": 72,
+      "FIN": 62,
+      "DNK": 80,
+      "HAN": 85,
+      "PAS": 76,
+      "PDEF": 69,
+      "IDEF": 43,
+      "BLK": 67,
+      "REB": 56,
+      "ATH": 76,
+      "STR": 58,
+      "CLU": 75
+    },
+
+    {
+      "name": "Jabari Walker",
+      "cname": "贾巴里-沃克",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "Skilled Stretch Crasher",
+      "ovr": 72,
+      "threePT": 76,
+      "MID": 70,
+      "FIN": 60,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 52,
+      "PDEF": 60,
+      "IDEF": 68,
+      "BLK": 56,
+      "REB": 69,
+      "ATH": 75,
+      "STR": 46,
+      "CLU": 60
+    },
+
+    {
+      "name": "Johni Broome",
+      "cname": "约翰尼-布鲁姆",
+      "pos": "PF / C",
+      "height": "6'10'",
+      "type": "Shot-Erasing Middy Crasher",
+      "ovr": 70,
+      "threePT": 69,
+      "MID": 75,
+      "FIN": 75,
+      "DNK": 60,
+      "HAN": 90,
+      "PAS": 69,
+      "PDEF": 60,
+      "IDEF": 70,
+      "BLK": 72,
+      "REB": 69,
+      "ATH": 62,
+      "STR": 71,
+      "CLU": 40
+    },
+
+    {
+      "name": "MarJon Beauchamp",
+      "cname": "马乔恩-博尚",
+      "pos": "SF / SG",
+      "height": "6'7'",
+      "type": "Crafty 3-Level Scorer",
+      "ovr": 70,
+      "threePT": 78,
+      "MID": 80,
+      "FIN": 86,
+      "DNK": 70,
+      "HAN": 74,
+      "PAS": 65,
+      "PDEF": 69,
+      "IDEF": 54,
+      "BLK": 58,
+      "REB": 62,
+      "ATH": 76,
+      "STR": 52,
+      "CLU": 50
+    }
+
+  ],
+
+  "PHX": [
+    {
+      "name": "Devin Booker",
+      "cname": "德文-布克",
+      "pos": "SG / PG",
+      "height": "6'5'",
+      "type": "Crafty Offensive Engine",
+      "ovr": 93,
+      "threePT": 86,
+      "MID": 86,
+      "FIN": 96,
+      "DNK": 75,
+      "HAN": 98,
+      "PAS": 80,
+      "PDEF": 75,
+      "IDEF": 58,
+      "BLK": 45,
+      "REB": 52,
+      "ATH": 80,
+      "STR": 59,
+      "CLU": 85
+    },
+
+    {
+      "name": "Dillon Brooks",
+      "cname": "狄龙-布鲁克斯",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "2-Way Finisher",
+      "ovr": 84,
+      "threePT": 78,
+      "MID": 80,
+      "FIN": 97,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 59,
+      "PDEF": 90,
+      "IDEF": 77,
+      "BLK": 37,
+      "REB": 51,
+      "ATH": 88,
+      "STR": 65,
+      "CLU": 75
+    },
+
+    {
+      "name": "Jalen Green",
+      "cname": "杰伦-格林",
+      "pos": "SG / SF",
+      "height": "6'4'",
+      "type": "Mid-Range High Flyer",
+      "ovr": 82,
+      "threePT": 79,
+      "MID": 94,
+      "FIN": 76,
+      "DNK": 91,
+      "HAN": 95,
+      "PAS": 77,
+      "PDEF": 64,
+      "IDEF": 45,
+      "BLK": 37,
+      "REB": 61,
+      "ATH": 88,
+      "STR": 55,
+      "CLU": 60
+    },
+
+    {
+      "name": "Mark Williams",
+      "cname": "马克-威廉姆斯",
+      "pos": "C",
+      "height": "7'1'",
+      "type": "Bullmashing Putback Pro",
+      "ovr": 82,
+      "threePT": 36,
+      "MID": 60,
+      "FIN": 97,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 44,
+      "PDEF": 44,
+      "IDEF": 75,
+      "BLK": 76,
+      "REB": 84,
+      "ATH": 64,
+      "STR": 86,
+      "CLU": 80
+    },
+
+    {
+      "name": "Miles Bridges",
+      "cname": "迈尔斯-布里奇斯",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "Versatile Post Bully",
+      "ovr": 81,
+      "threePT": 76,
+      "MID": 57,
+      "FIN": 89,
+      "DNK": 88,
+      "HAN": 95,
+      "PAS": 69,
+      "PDEF": 59,
+      "IDEF": 60,
+      "BLK": 52,
+      "REB": 68,
+      "ATH": 76,
+      "STR": 84,
+      "CLU": 25
+    },
+
+    {
+      "name": "Collin Gillespie",
+      "cname": "科林-吉莱斯皮",
+      "pos": "PG",
+      "height": "6'1'",
+      "type": "3PT-Sniping Creator",
+      "ovr": 81,
+      "threePT": 84,
+      "MID": 76,
+      "FIN": 93,
+      "DNK": 54,
+      "HAN": 75,
+      "PAS": 82,
+      "PDEF": 62,
+      "IDEF": 33,
+      "BLK": 42,
+      "REB": 55,
+      "ATH": 82,
+      "STR": 33,
+      "CLU": 90
+    },
+
+    {
+      "name": "Luke Kennard",
+      "cname": "卢克-肯纳德",
+      "pos": "SG / PG",
+      "height": "6'5'",
+      "type": "Crafty Sharpshooter",
+      "ovr": 78,
+      "threePT": 93,
+      "MID": 98,
+      "FIN": 98,
+      "DNK": 60,
+      "HAN": 80,
+      "PAS": 74,
+      "PDEF": 51,
+      "IDEF": 35,
+      "BLK": 37,
+      "REB": 48,
+      "ATH": 68,
+      "STR": 40,
+      "CLU": 70
+    },
+
+    {
+      "name": "Jordan Goodwin",
+      "cname": "乔丹-古德温",
+      "pos": "PG / SG",
+      "height": "6'3'",
+      "type": "3 & D Crasher",
+      "ovr": 77,
+      "threePT": 79,
+      "MID": 75,
+      "FIN": 79,
+      "DNK": 35,
+      "HAN": 90,
+      "PAS": 78,
+      "PDEF": 76,
+      "IDEF": 57,
+      "BLK": 47,
+      "REB": 63,
+      "ATH": 84,
+      "STR": 49,
+      "CLU": 85
+    },
+
+    {
+      "name": "Oso Ighodaro",
+      "cname": "奥索-伊戈达罗",
+      "pos": "C / PF",
+      "height": "6'11'",
+      "type": "Rim-Running Finisher",
+      "ovr": 77,
+      "threePT": 35,
+      "MID": 60,
+      "FIN": 97,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 58,
+      "PDEF": 47,
+      "IDEF": 62,
+      "BLK": 67,
+      "REB": 69,
+      "ATH": 74,
+      "STR": 64,
+      "CLU": 90
+    },
+
+    {
+      "name": "Pat Spencer",
+      "cname": "帕特-斯潘塞",
+      "pos": "PG / SG",
+      "height": "6'3'",
+      "type": "High-Flying 3PT Sniper",
+      "ovr": 76,
+      "threePT": 80,
+      "MID": 76,
+      "FIN": 86,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 79,
+      "PDEF": 55,
+      "IDEF": 44,
+      "BLK": 35,
+      "REB": 50,
+      "ATH": 75,
+      "STR": 54,
+      "CLU": 90
+    },
+
+    {
+      "name": "Rasheer Fleming",
+      "cname": "拉希尔-弗莱明",
+      "pos": "PF / C",
+      "height": "6'9'",
+      "type": "Skilled Stretch Crasher",
+      "ovr": 76,
+      "threePT": 78,
+      "MID": 74,
+      "FIN": 71,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 55,
+      "PDEF": 40,
+      "IDEF": 67,
+      "BLK": 71,
+      "REB": 53,
+      "ATH": 70,
+      "STR": 75,
+      "CLU": 85
+    },
+
+    {
+      "name": "Ryan Dunn",
+      "cname": "瑞安-邓恩",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "Perimeter Lock",
+      "ovr": 75,
+      "threePT": 76,
+      "MID": 70,
+      "FIN": 77,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 60,
+      "PDEF": 80,
+      "IDEF": 76,
+      "BLK": 60,
+      "REB": 66,
+      "ATH": 88,
+      "STR": 65,
+      "CLU": 70
+    },
+
+    {
+      "name": "Khaman Maluach",
+      "cname": "卡曼-马卢阿奇",
+      "pos": "C",
+      "height": "7'1'",
+      "type": "Shot-Erasing Rim Wrecker",
+      "ovr": 75,
+      "threePT": 50,
+      "MID": 66,
+      "FIN": 70,
+      "DNK": 80,
+      "HAN": 85,
+      "PAS": 51,
+      "PDEF": 63,
+      "IDEF": 81,
+      "BLK": 94,
+      "REB": 80,
+      "ATH": 63,
+      "STR": 70,
+      "CLU": 50
+    },
+
+    {
+      "name": "Jamaree Bouyea",
+      "cname": "贾马里-布耶",
+      "pos": "PG / SG",
+      "height": "6'2'",
+      "type": "Disruptive Blow-By Ace",
+      "ovr": 74,
+      "threePT": 72,
+      "MID": 67,
+      "FIN": 85,
+      "DNK": 45,
+      "HAN": 75,
+      "PAS": 75,
+      "PDEF": 68,
+      "IDEF": 42,
+      "BLK": 66,
+      "REB": 52,
+      "ATH": 83,
+      "STR": 41,
+      "CLU": 90
+    },
+
+    {
+      "name": "Amir Coffey",
+      "cname": "阿米尔-科菲",
+      "pos": "SF / SG",
+      "height": "6'7'",
+      "type": "Crafty Mid-Range Menace",
+      "ovr": 74,
+      "threePT": 74,
+      "MID": 94,
+      "FIN": 74,
+      "DNK": 75,
+      "HAN": 81,
+      "PAS": 72,
+      "PDEF": 64,
+      "IDEF": 47,
+      "BLK": 51,
+      "REB": 46,
+      "ATH": 75,
+      "STR": 52,
+      "CLU": 60
+    },
+
+    {
+      "name": "Haywood Highsmith",
+      "cname": "海伍德-海史密斯",
+      "pos": "SF / PF",
+      "height": "6'5'",
+      "type": "Crafty 3 & D Wing",
+      "ovr": 73,
+      "threePT": 81,
+      "MID": 70,
+      "FIN": 86,
+      "DNK": 45,
+      "HAN": 70,
+      "PAS": 55,
+      "PDEF": 79,
+      "IDEF": 70,
+      "BLK": 61,
+      "REB": 52,
+      "ATH": 81,
+      "STR": 50,
+      "CLU": 40
+    },
+
+    {
+      "name": "Isaiah Livers",
+      "cname": "以赛亚-利弗斯",
+      "pos": "SF / PF",
+      "height": "6'6'",
+      "type": "Iso Sniper",
+      "ovr": 71,
+      "threePT": 77,
+      "MID": 86,
+      "FIN": 78,
+      "DNK": 65,
+      "HAN": 80,
+      "PAS": 68,
+      "PDEF": 65,
+      "IDEF": 37,
+      "BLK": 40,
+      "REB": 46,
+      "ATH": 74,
+      "STR": 55,
+      "CLU": 50
+    },
+
+    {
+      "name": "Koby Brea",
+      "cname": "科比-布雷亚",
+      "pos": "SG / SF",
+      "height": "6'5'",
+      "type": "Diming Sharpshooter",
+      "ovr": 68,
+      "threePT": 84,
+      "MID": 74,
+      "FIN": 72,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 68,
+      "PDEF": 59,
+      "IDEF": 48,
+      "BLK": 45,
+      "REB": 57,
+      "ATH": 66,
+      "STR": 51,
+      "CLU": 50
+    },
+
+    {
+      "name": "CJ Huntley",
+      "cname": "CJ-亨特利",
+      "pos": "PF / C",
+      "height": "6'9'",
+      "type": "Rim-Wrecking Putback Pro",
+      "ovr": 68,
+      "threePT": 72,
+      "MID": 73,
+      "FIN": 74,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 48,
+      "PDEF": 51,
+      "IDEF": 63,
+      "BLK": 59,
+      "REB": 70,
+      "ATH": 57,
+      "STR": 50,
+      "CLU": 40
+    }
+
+  ],
+
+  "POR": [
+    {
+      "name": "Deni Avdija",
+      "cname": "德尼-阿夫迪亚",
+      "pos": "SF / SG",
+      "height": "6'8'",
+      "type": "Crafty Mid-Paint Maestro",
+      "ovr": 88,
+      "threePT": 75,
+      "MID": 89,
+      "FIN": 85,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 79,
+      "PDEF": 80,
+      "IDEF": 62,
+      "BLK": 56,
+      "REB": 74,
+      "ATH": 81,
+      "STR": 65,
+      "CLU": 80
+    },
+
+    {
+      "name": "Damian Lillard",
+      "cname": "达米安-利拉德",
+      "pos": "PG",
+      "height": "6'2'",
+      "type": "Versatile Paint Bully",
+      "ovr": 88,
+      "threePT": 86,
+      "MID": 95,
+      "FIN": 82,
+      "DNK": 85,
+      "HAN": 98,
+      "PAS": 84,
+      "PDEF": 69,
+      "IDEF": 31,
+      "BLK": 37,
+      "REB": 54,
+      "ATH": 87,
+      "STR": 63,
+      "CLU": 75
+    },
+
+    {
+      "name": "Ja Morant",
+      "cname": "贾-莫兰特",
+      "pos": "PG / SG",
+      "height": "6'2'",
+      "type": "Blow-By Dual Finisher",
+      "ovr": 87,
+      "threePT": 72,
+      "MID": 73,
+      "FIN": 81,
+      "DNK": 96,
+      "HAN": 98,
+      "PAS": 87,
+      "PDEF": 72,
+      "IDEF": 49,
+      "BLK": 40,
+      "REB": 51,
+      "ATH": 95,
+      "STR": 52,
+      "CLU": 50
+    },
+
+    {
+      "name": "Shaedon Sharpe",
+      "cname": "谢登-夏普",
+      "pos": "SG / PG",
+      "height": "6'5'",
+      "type": "Blow-By Dual Finisher",
+      "ovr": 83,
+      "threePT": 76,
+      "MID": 72,
+      "FIN": 83,
+      "DNK": 95,
+      "HAN": 88,
+      "PAS": 67,
+      "PDEF": 69,
+      "IDEF": 49,
+      "BLK": 32,
+      "REB": 57,
+      "ATH": 89,
+      "STR": 50,
+      "CLU": 85
+    },
+
+    {
+      "name": "Donovan Clingan",
+      "cname": "多诺万-克林根",
+      "pos": "C",
+      "height": "7'2'",
+      "type": "Glass Guardian Lob Threat",
+      "ovr": 83,
+      "threePT": 75,
+      "MID": 78,
+      "FIN": 94,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 55,
+      "PDEF": 49,
+      "IDEF": 82,
+      "BLK": 86,
+      "REB": 90,
+      "ATH": 45,
+      "STR": 78,
+      "CLU": 90
+    },
+
+    {
+      "name": "Jrue Holiday",
+      "cname": "朱-霍勒迪",
+      "pos": "PG / SG",
+      "height": "6'4'",
+      "type": "Ball-Hawking 3 & D Point",
+      "ovr": 82,
+      "threePT": 84,
+      "MID": 81,
+      "FIN": 91,
+      "DNK": 65,
+      "HAN": 98,
+      "PAS": 80,
+      "PDEF": 90,
+      "IDEF": 66,
+      "BLK": 32,
+      "REB": 55,
+      "ATH": 90,
+      "STR": 49,
+      "CLU": 35
+    },
+
+    {
+      "name": "Scoot Henderson",
+      "cname": "斯库特-亨德森",
+      "pos": "PG / SG",
+      "height": "6'3'",
+      "type": "Mid-Range High Flyer",
+      "ovr": 81,
+      "threePT": 79,
+      "MID": 97,
+      "FIN": 74,
+      "DNK": 88,
+      "HAN": 95,
+      "PAS": 79,
+      "PDEF": 66,
+      "IDEF": 41,
+      "BLK": 50,
+      "REB": 49,
+      "ATH": 89,
+      "STR": 53,
+      "CLU": 85
+    },
+
+    {
+      "name": "Toumani Camara",
+      "cname": "图马尼-卡马拉",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "2-Way Stretch Four",
+      "ovr": 81,
+      "threePT": 81,
+      "MID": 60,
+      "FIN": 86,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 68,
+      "PDEF": 90,
+      "IDEF": 87,
+      "BLK": 51,
+      "REB": 55,
+      "ATH": 89,
+      "STR": 78,
+      "CLU": 60
+    },
+
+    {
+      "name": "Robert Williams III",
+      "cname": "罗伯特-威廉姆斯三世",
+      "pos": "C / PF",
+      "height": "6'9'",
+      "type": "Paint-Finishing Board Enforcer",
+      "ovr": 80,
+      "threePT": 74,
+      "MID": 69,
+      "FIN": 98,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 57,
+      "PDEF": 40,
+      "IDEF": 83,
+      "BLK": 95,
+      "REB": 91,
+      "ATH": 64,
+      "STR": 83,
+      "CLU": 40
+    },
+
+    {
+      "name": "Matisse Thybulle",
+      "cname": "马蒂斯-赛布尔",
+      "pos": "SG / SF",
+      "height": "6'5'",
+      "type": "Ball-Hawking 3 & D Two Guard",
+      "ovr": 76,
+      "threePT": 83,
+      "MID": 48,
+      "FIN": 62,
+      "DNK": 70,
+      "HAN": 70,
+      "PAS": 55,
+      "PDEF": 85,
+      "IDEF": 60,
+      "BLK": 68,
+      "REB": 52,
+      "ATH": 85,
+      "STR": 59,
+      "CLU": 80
+    },
+
+    {
+      "name": "Vit Krejci",
+      "cname": "维特-克雷伊奇",
+      "pos": "SF / PG",
+      "height": "6'8'",
+      "type": "3PT-Sniping Creator",
+      "ovr": 75,
+      "threePT": 83,
+      "MID": 74,
+      "FIN": 97,
+      "DNK": 70,
+      "HAN": 75,
+      "PAS": 69,
+      "PDEF": 60,
+      "IDEF": 50,
+      "BLK": 51,
+      "REB": 47,
+      "ATH": 75,
+      "STR": 40,
+      "CLU": 60
+    },
+
+    {
+      "name": "Sidy Cissoko",
+      "cname": "西迪-西索科",
+      "pos": "SF / SG",
+      "height": "6'6'",
+      "type": "Crafty Inside-Out Scorer",
+      "ovr": 74,
+      "threePT": 72,
+      "MID": 67,
+      "FIN": 72,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 61,
+      "PDEF": 66,
+      "IDEF": 59,
+      "BLK": 56,
+      "REB": 45,
+      "ATH": 75,
+      "STR": 58,
+      "CLU": 75
+    },
+
+    {
+      "name": "Blake Wesley",
+      "cname": "布莱克-韦斯利",
+      "pos": "PG / SG",
+      "height": "6'4'",
+      "type": "Ball-Hawking High Flyer",
+      "ovr": 73,
+      "threePT": 70,
+      "MID": 42,
+      "FIN": 71,
+      "DNK": 86,
+      "HAN": 80,
+      "PAS": 78,
+      "PDEF": 73,
+      "IDEF": 49,
+      "BLK": 40,
+      "REB": 48,
+      "ATH": 78,
+      "STR": 40,
+      "CLU": 80
+    },
+
+    {
+      "name": "Branden Carlson",
+      "cname": "布兰登-卡尔森",
+      "pos": "C",
+      "height": "7'0'",
+      "type": "Shot-Erasing Stretch Five",
+      "ovr": 73,
+      "threePT": 78,
+      "MID": 72,
+      "FIN": 82,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 47,
+      "PDEF": 30,
+      "IDEF": 52,
+      "BLK": 82,
+      "REB": 72,
+      "ATH": 30,
+      "STR": 60,
+      "CLU": 85
+    },
+
+    {
+      "name": "Yang Hansen",
+      "cname": "杨瀚森",
+      "pos": "C",
+      "height": "7'1'",
+      "type": "Rim-Wrecking Distributor",
+      "ovr": 70,
+      "threePT": 63,
+      "MID": 66,
+      "FIN": 62,
+      "DNK": 70,
+      "HAN": 68,
+      "PAS": 67,
+      "PDEF": 40,
+      "IDEF": 69,
+      "BLK": 66,
+      "REB": 67,
+      "ATH": 37,
+      "STR": 65,
+      "CLU": 70
+    },
+
+    {
+      "name": "Chris Youngblood",
+      "cname": "克里斯-扬布拉德",
+      "pos": "SG / SF",
+      "height": "6'4'",
+      "type": "Sharpshooting Cleaner",
+      "ovr": 68,
+      "threePT": 80,
+      "MID": 74,
+      "FIN": 67,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 57,
+      "PDEF": 64,
+      "IDEF": 42,
+      "BLK": 32,
+      "REB": 65,
+      "ATH": 73,
+      "STR": 52,
+      "CLU": 50
+    },
+
+    {
+      "name": "Jayson Kent",
+      "cname": "杰森-肯特",
+      "pos": "SF / SG",
+      "height": "6'8'",
+      "type": "High-Flying 3PT Sniper",
+      "ovr": 68,
+      "threePT": 80,
+      "MID": 72,
+      "FIN": 74,
+      "DNK": 80,
+      "HAN": 78,
+      "PAS": 59,
+      "PDEF": 56,
+      "IDEF": 40,
+      "BLK": 30,
+      "REB": 38,
+      "ATH": 69,
+      "STR": 55,
+      "CLU": 50
+    }
+
+  ],
+
+  "SAC": [
+    {
+      "name": "Domantas Sabonis",
+      "cname": "多曼塔斯-萨博尼斯",
+      "pos": "C",
+      "height": "6'10'",
+      "type": "Crafty Mid-Post Break Starter",
+      "ovr": 86,
+      "threePT": 70,
+      "MID": 86,
+      "FIN": 91,
+      "DNK": 75,
+      "HAN": 98,
+      "PAS": 82,
+      "PDEF": 49,
+      "IDEF": 70,
+      "BLK": 40,
+      "REB": 93,
+      "ATH": 49,
+      "STR": 82,
+      "CLU": 70
+    },
+
+    {
+      "name": "Zach LaVine",
+      "cname": "扎克-拉文",
+      "pos": "SG / SF",
+      "height": "6'5'",
+      "type": "Inside-Out Creator",
+      "ovr": 83,
+      "threePT": 86,
+      "MID": 79,
+      "FIN": 97,
+      "DNK": 94,
+      "HAN": 80,
+      "PAS": 70,
+      "PDEF": 61,
+      "IDEF": 47,
+      "BLK": 42,
+      "REB": 47,
+      "ATH": 82,
+      "STR": 49,
+      "CLU": 60
+    },
+
+    {
+      "name": "Russell Westbrook",
+      "cname": "拉塞尔-威斯布鲁克",
+      "pos": "PG / SG",
+      "height": "6'4'",
+      "type": "Explosive Blow-By High Flyer",
+      "ovr": 81,
+      "threePT": 77,
+      "MID": 70,
+      "FIN": 93,
+      "DNK": 80,
+      "HAN": 85,
+      "PAS": 80,
+      "PDEF": 74,
+      "IDEF": 42,
+      "BLK": 37,
+      "REB": 67,
+      "ATH": 89,
+      "STR": 75,
+      "CLU": 80
+    },
+
+    {
+      "name": "Maxime Raynaud",
+      "cname": "马克西姆-雷诺",
+      "pos": "C",
+      "height": "7'1'",
+      "type": "Mid-Range Scoring Cleaner",
+      "ovr": 81,
+      "threePT": 72,
+      "MID": 85,
+      "FIN": 98,
+      "DNK": 75,
+      "HAN": 90,
+      "PAS": 50,
+      "PDEF": 32,
+      "IDEF": 59,
+      "BLK": 57,
+      "REB": 85,
+      "ATH": 52,
+      "STR": 69,
+      "CLU": 85
+    },
+
+    {
+      "name": "Malik Monk",
+      "cname": "马利克-蒙克",
+      "pos": "SG / PG",
+      "height": "6'3'",
+      "type": "Inside-Out Combo Guard",
+      "ovr": 80,
+      "threePT": 83,
+      "MID": 79,
+      "FIN": 83,
+      "DNK": 75,
+      "HAN": 95,
+      "PAS": 75,
+      "PDEF": 60,
+      "IDEF": 45,
+      "BLK": 55,
+      "REB": 46,
+      "ATH": 80,
+      "STR": 48,
+      "CLU": 75
+    },
+
+    {
+      "name": "Keegan Murray",
+      "cname": "基根-默里",
+      "pos": "PF / SF",
+      "height": "6'8'",
+      "type": "2-Way Crafty Finisher",
+      "ovr": 79,
+      "threePT": 76,
+      "MID": 73,
+      "FIN": 97,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 65,
+      "PDEF": 78,
+      "IDEF": 68,
+      "BLK": 80,
+      "REB": 62,
+      "ATH": 79,
+      "STR": 60,
+      "CLU": 60
+    },
+
+    {
+      "name": "De’Andre Hunter",
+      "cname": "德安德烈-亨特",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "Crafty 2-Way Middy Scorer",
+      "ovr": 79,
+      "threePT": 73,
+      "MID": 92,
+      "FIN": 94,
+      "DNK": 70,
+      "HAN": 85,
+      "PAS": 67,
+      "PDEF": 82,
+      "IDEF": 63,
+      "BLK": 37,
+      "REB": 63,
+      "ATH": 83,
+      "STR": 65,
+      "CLU": 60
+    },
+
+    {
+      "name": "Precious Achiuwa",
+      "cname": "普雷舍斯-阿丘瓦",
+      "pos": "PF / C",
+      "height": "6'8'",
+      "type": "Crafty Putback Masher",
+      "ovr": 79,
+      "threePT": 73,
+      "MID": 60,
+      "FIN": 94,
+      "DNK": 80,
+      "HAN": 75,
+      "PAS": 36,
+      "PDEF": 56,
+      "IDEF": 79,
+      "BLK": 66,
+      "REB": 78,
+      "ATH": 74,
+      "STR": 78,
+      "CLU": 75
+    },
+
+    {
+      "name": "Nique Clifford",
+      "cname": "尼克-克利福德",
+      "pos": "SF / SG",
+      "height": "6'5'",
+      "type": "3PT-Sniping Creator",
+      "ovr": 77,
+      "threePT": 77,
+      "MID": 74,
+      "FIN": 83,
+      "DNK": 70,
+      "HAN": 80,
+      "PAS": 65,
+      "PDEF": 66,
+      "IDEF": 55,
+      "BLK": 51,
+      "REB": 58,
+      "ATH": 82,
+      "STR": 62,
+      "CLU": 75
+    },
+
+    {
+      "name": "Dylan Cardwell",
+      "cname": "迪伦-卡德韦尔",
+      "pos": "C / PF",
+      "height": "6'10'",
+      "type": "Glass Guardian Lob Threat",
+      "ovr": 77,
+      "threePT": 37,
+      "MID": 60,
+      "FIN": 90,
+      "DNK": 80,
+      "HAN": 70,
+      "PAS": 58,
+      "PDEF": 44,
+      "IDEF": 79,
+      "BLK": 89,
+      "REB": 85,
+      "ATH": 62,
+      "STR": 82,
+      "CLU": 55
+    },
+
+    {
+      "name": "Drew Eubanks",
+      "cname": "德鲁-尤班克斯",
+      "pos": "C",
+      "height": "6'10'",
+      "type": "Shot-Erasing Crafty Stretch",
+      "ovr": 75,
+      "threePT": 77,
+      "MID": 73,
+      "FIN": 97,
+      "DNK": 70,
+      "HAN": 75,
+      "PAS": 42,
+      "PDEF": 47,
+      "IDEF": 74,
+      "BLK": 89,
+      "REB": 78,
+      "ATH": 62,
+      "STR": 68,
+      "CLU": 60
+    },
+
+    {
+      "name": "Jonathan Mogbo",
+      "cname": "乔纳森-莫格博",
+      "pos": "PF / C",
+      "height": "6'9'",
+      "type": "Board-Hunting Rim Runner",
+      "ovr": 74,
+      "threePT": 70,
+      "MID": 53,
+      "FIN": 89,
+      "DNK": 80,
+      "HAN": 64,
+      "PAS": 66,
+      "PDEF": 64,
+      "IDEF": 64,
+      "BLK": 66,
+      "REB": 78,
+      "ATH": 79,
+      "STR": 68,
+      "CLU": 70
+    },
+
+    {
+      "name": "Daeqwon Plowden",
+      "cname": "戴克万-普洛登",
+      "pos": "SF / SG",
+      "height": "6'4'",
+      "type": "Blow-By High Flyer",
+      "ovr": 73,
+      "threePT": 78,
+      "MID": 68,
+      "FIN": 85,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 60,
+      "PDEF": 66,
+      "IDEF": 46,
+      "BLK": 37,
+      "REB": 47,
+      "ATH": 82,
+      "STR": 62,
+      "CLU": 70
+    },
+
+    {
+      "name": "Killian Hayes",
+      "cname": "基利安-海斯",
+      "pos": "PG / SG",
+      "height": "6'5'",
+      "type": "2-Way Playmaker",
+      "ovr": 72,
+      "threePT": 72,
+      "MID": 65,
+      "FIN": 65,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 82,
+      "PDEF": 73,
+      "IDEF": 49,
+      "BLK": 51,
+      "REB": 64,
+      "ATH": 79,
+      "STR": 56,
+      "CLU": 60
+    },
+
+    {
+      "name": "Patrick Baldwin Jr.",
+      "cname": "小帕特里克-鲍德温",
+      "pos": "PF / SF",
+      "height": "6'9'",
+      "type": "Stretch Four Cleaner",
+      "ovr": 71,
+      "threePT": 77,
+      "MID": 72,
+      "FIN": 70,
+      "DNK": 70,
+      "HAN": 80,
+      "PAS": 55,
+      "PDEF": 59,
+      "IDEF": 56,
+      "BLK": 65,
+      "REB": 84,
+      "ATH": 64,
+      "STR": 69,
+      "CLU": 60
+    },
+
+    {
+      "name": "Doug McDermott",
+      "cname": "道格-麦克德莫特",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "Crafty 3-Level Scorer",
+      "ovr": 71,
+      "threePT": 85,
+      "MID": 78,
+      "FIN": 85,
+      "DNK": 65,
+      "HAN": 75,
+      "PAS": 65,
+      "PDEF": 58,
+      "IDEF": 52,
+      "BLK": 45,
+      "REB": 43,
+      "ATH": 60,
+      "STR": 60,
+      "CLU": 30
+    },
+
+    {
+      "name": "Isaiah Stevens",
+      "cname": "以赛亚-史蒂文斯",
+      "pos": "PG / SG",
+      "height": "5'11'",
+      "type": "Speedy Blow-By Ace",
+      "ovr": 68,
+      "threePT": 74,
+      "MID": 74,
+      "FIN": 70,
+      "DNK": 35,
+      "HAN": 70,
+      "PAS": 78,
+      "PDEF": 58,
+      "IDEF": 44,
+      "BLK": 25,
+      "REB": 39,
+      "ATH": 87,
+      "STR": 48,
+      "CLU": 40
+    },
+
+    {
+      "name": "Adam Flagler",
+      "cname": "Adam Flagler",
+      "pos": "PG / SG",
+      "height": "6'3\"",
+      "type": "Sharpshooter",
+      "ovr": 67,
+      "threePT": 70,
+      "MID": 70,
+      "FIN": 70,
+      "DNK": 45,
+      "HAN": 70,
+      "PAS": 70,
+      "PDEF": 70,
+      "IDEF": 70,
+      "BLK": 70,
+      "REB": 70,
+      "ATH": 70,
+      "STR": 70,
+      "CLU": 70
+    }
+
+  ],
+
+  "SAS": [
+    {
+      "name": "Victor Wembanyama",
+      "cname": "维克托-文班亚马",
+      "pos": "C / PF",
+      "height": "7'4'",
+      "type": "Backline Stretch Post Scorer",
+      "ovr": 97,
+      "threePT": 83,
+      "MID": 78,
+      "FIN": 92,
+      "DNK": 85,
+      "HAN": 98,
+      "PAS": 72,
+      "PDEF": 80,
+      "IDEF": 96,
+      "BLK": 99,
+      "REB": 98,
+      "ATH": 69,
+      "STR": 69,
+      "CLU": 95
+    },
+
+    {
+      "name": "Stephon Castle",
+      "cname": "斯蒂芬-卡斯尔",
+      "pos": "SG / PG",
+      "height": "6'6'",
+      "type": "2-Way Slashing Combo Guard",
+      "ovr": 88,
+      "threePT": 79,
+      "MID": 77,
+      "FIN": 91,
+      "DNK": 88,
+      "HAN": 85,
+      "PAS": 84,
+      "PDEF": 83,
+      "IDEF": 64,
+      "BLK": 47,
+      "REB": 58,
+      "ATH": 93,
+      "STR": 59,
+      "CLU": 95
+    },
+
+    {
+      "name": "De’Aaron Fox",
+      "cname": "达龙-福克斯",
+      "pos": "PG / SG",
+      "height": "6'3'",
+      "type": "2-Way Mid-Range Menace",
+      "ovr": 86,
+      "threePT": 77,
+      "MID": 91,
+      "FIN": 98,
+      "DNK": 80,
+      "HAN": 90,
+      "PAS": 85,
+      "PDEF": 84,
+      "IDEF": 34,
+      "BLK": 42,
+      "REB": 52,
+      "ATH": 93,
+      "STR": 46,
+      "CLU": 70
+    },
+
+    {
+      "name": "Dylan Harper",
+      "cname": "迪伦-哈珀",
+      "pos": "PG / SG",
+      "height": "6'5'",
+      "type": "Mid-Range Slasher",
+      "ovr": 85,
+      "threePT": 81,
+      "MID": 93,
+      "FIN": 93,
+      "DNK": 86,
+      "HAN": 95,
+      "PAS": 75,
+      "PDEF": 70,
+      "IDEF": 52,
+      "BLK": 52,
+      "REB": 55,
+      "ATH": 89,
+      "STR": 52,
+      "CLU": 70
+    },
+
+    {
+      "name": "Tobias Harris",
+      "cname": "托拜厄斯-哈里斯",
+      "pos": "PF / SF",
+      "height": "6'8'",
+      "type": "Crafty Mid-Post Point Four",
+      "ovr": 83,
+      "threePT": 79,
+      "MID": 84,
+      "FIN": 97,
+      "DNK": 75,
+      "HAN": 95,
+      "PAS": 77,
+      "PDEF": 68,
+      "IDEF": 67,
+      "BLK": 55,
+      "REB": 68,
+      "ATH": 67,
+      "STR": 73,
+      "CLU": 70
+    },
+
+    {
+      "name": "Julian Champagnie",
+      "cname": "朱利安-尚帕尼",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "2-Way Stretch Four",
+      "ovr": 82,
+      "threePT": 87,
+      "MID": 79,
+      "FIN": 81,
+      "DNK": 60,
+      "HAN": 90,
+      "PAS": 66,
+      "PDEF": 75,
+      "IDEF": 45,
+      "BLK": 53,
+      "REB": 71,
+      "ATH": 75,
+      "STR": 37,
+      "CLU": 90
+    },
+
+    {
+      "name": "Devin Vassell",
+      "cname": "德文-瓦塞尔",
+      "pos": "SF / SG",
+      "height": "6'5'",
+      "type": "Shot-Creating Point Forward",
+      "ovr": 82,
+      "threePT": 86,
+      "MID": 97,
+      "FIN": 80,
+      "DNK": 60,
+      "HAN": 80,
+      "PAS": 76,
+      "PDEF": 80,
+      "IDEF": 62,
+      "BLK": 51,
+      "REB": 54,
+      "ATH": 80,
+      "STR": 60,
+      "CLU": 60
+    },
+
+    {
+      "name": "Keldon Johnson",
+      "cname": "凯尔登-约翰逊",
+      "pos": "SG / SF",
+      "height": "6'6'",
+      "type": "Power Finisher",
+      "ovr": 81,
+      "threePT": 81,
+      "MID": 83,
+      "FIN": 97,
+      "DNK": 75,
+      "HAN": 95,
+      "PAS": 74,
+      "PDEF": 73,
+      "IDEF": 67,
+      "BLK": 35,
+      "REB": 67,
+      "ATH": 78,
+      "STR": 70,
+      "CLU": 70
+    },
+
+    {
+      "name": "Luke Kornet",
+      "cname": "卢克-科内特",
+      "pos": "C",
+      "height": "7'1'",
+      "type": "Shot-Erasing Post Crasher",
+      "ovr": 78,
+      "threePT": 70,
+      "MID": 66,
+      "FIN": 85,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 50,
+      "PDEF": 32,
+      "IDEF": 74,
+      "BLK": 81,
+      "REB": 68,
+      "ATH": 37,
+      "STR": 66,
+      "CLU": 65
+    },
+
+    {
+      "name": "Harrison Barnes",
+      "cname": "哈里森-巴恩斯",
+      "pos": "PF / SF",
+      "height": "6'7'",
+      "type": "Skilled Stretch Four",
+      "ovr": 77,
+      "threePT": 81,
+      "MID": 63,
+      "FIN": 85,
+      "DNK": 80,
+      "HAN": 75,
+      "PAS": 62,
+      "PDEF": 72,
+      "IDEF": 67,
+      "BLK": 40,
+      "REB": 45,
+      "ATH": 75,
+      "STR": 70,
+      "CLU": 85
+    },
+
+    {
+      "name": "Carter Bryant",
+      "cname": "卡特-布赖恩特",
+      "pos": "SF / PF",
+      "height": "6'6'",
+      "type": "High-Flying Wing Runner",
+      "ovr": 77,
+      "threePT": 77,
+      "MID": 74,
+      "FIN": 60,
+      "DNK": 88,
+      "HAN": 80,
+      "PAS": 62,
+      "PDEF": 82,
+      "IDEF": 60,
+      "BLK": 62,
+      "REB": 72,
+      "ATH": 88,
+      "STR": 60,
+      "CLU": 75
+    },
+
+    {
+      "name": "Mason Plumlee",
+      "cname": "梅森-普拉姆利",
+      "pos": "C",
+      "height": "7'0'",
+      "type": "Break-Starting Paint Finisher",
+      "ovr": 76,
+      "threePT": 58,
+      "MID": 60,
+      "FIN": 85,
+      "DNK": 80,
+      "HAN": 81,
+      "PAS": 75,
+      "PDEF": 46,
+      "IDEF": 74,
+      "BLK": 75,
+      "REB": 89,
+      "ATH": 48,
+      "STR": 80,
+      "CLU": 35
+    },
+
+    {
+      "name": "Kelly Olynyk",
+      "cname": "凯利-奥利尼克",
+      "pos": "C / PF",
+      "height": "7'0'",
+      "type": "Crafty Stretch Five Dimer",
+      "ovr": 75,
+      "threePT": 74,
+      "MID": 70,
+      "FIN": 93,
+      "DNK": 60,
+      "HAN": 78,
+      "PAS": 70,
+      "PDEF": 50,
+      "IDEF": 70,
+      "BLK": 60,
+      "REB": 71,
+      "ATH": 35,
+      "STR": 70,
+      "CLU": 40
+    },
+
+    {
+      "name": "Lindy Waters III",
+      "cname": "林迪-沃特斯三世",
+      "pos": "SG / SF",
+      "height": "6'5'",
+      "type": "Crafty Sharpshooter",
+      "ovr": 73,
+      "threePT": 77,
+      "MID": 85,
+      "FIN": 90,
+      "DNK": 65,
+      "HAN": 70,
+      "PAS": 69,
+      "PDEF": 67,
+      "IDEF": 53,
+      "BLK": 55,
+      "REB": 60,
+      "ATH": 69,
+      "STR": 33,
+      "CLU": 60
+    },
+
+    {
+      "name": "Jordan McLaughlin",
+      "cname": "乔丹-麦克劳克林",
+      "pos": "PG",
+      "height": "5'11'",
+      "type": "Ball-Hawking 3PT Shot Hunter",
+      "ovr": 72,
+      "threePT": 86,
+      "MID": 74,
+      "FIN": 69,
+      "DNK": 65,
+      "HAN": 70,
+      "PAS": 83,
+      "PDEF": 73,
+      "IDEF": 25,
+      "BLK": 25,
+      "REB": 46,
+      "ATH": 74,
+      "STR": 52,
+      "CLU": 60
+    },
+
+    {
+      "name": "David Jones Garcia",
+      "cname": "戴维-琼斯-加西亚",
+      "pos": "SG / PG",
+      "height": "6'4'",
+      "type": "Diming Inside-Out Scorer",
+      "ovr": 71,
+      "threePT": 76,
+      "MID": 70,
+      "FIN": 76,
+      "DNK": 75,
+      "HAN": 70,
+      "PAS": 74,
+      "PDEF": 65,
+      "IDEF": 48,
+      "BLK": 52,
+      "REB": 59,
+      "ATH": 76,
+      "STR": 59,
+      "CLU": 85
+    },
+
+    {
+      "name": "Bismack Biyombo",
+      "cname": "俾斯麦-比永博",
+      "pos": "C",
+      "height": "6'8'",
+      "type": "2-Way Crafty Finisher",
+      "ovr": 70,
+      "threePT": 25,
+      "MID": 62,
+      "FIN": 92,
+      "DNK": 68,
+      "HAN": 75,
+      "PAS": 25,
+      "PDEF": 50,
+      "IDEF": 82,
+      "BLK": 82,
+      "REB": 81,
+      "ATH": 55,
+      "STR": 80,
+      "CLU": 35
+    },
+
+    {
+      "name": "Harrison Ingram",
+      "cname": "哈里森-英格拉姆",
+      "pos": "SF / SG",
+      "height": "6'5'",
+      "type": "Blow-By Bully",
+      "ovr": 69,
+      "threePT": 74,
+      "MID": 73,
+      "FIN": 73,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 62,
+      "PDEF": 62,
+      "IDEF": 60,
+      "BLK": 39,
+      "REB": 60,
+      "ATH": 75,
+      "STR": 73,
+      "CLU": 30
+    },
+
+    {
+      "name": "Emanuel Miller",
+      "cname": "伊曼纽尔-米勒",
+      "pos": "SF / SG",
+      "height": "6'5'",
+      "type": "High-Flying Wing Runner",
+      "ovr": 68,
+      "threePT": 74,
+      "MID": 70,
+      "FIN": 67,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 56,
+      "PDEF": 58,
+      "IDEF": 55,
+      "BLK": 47,
+      "REB": 60,
+      "ATH": 79,
+      "STR": 60,
+      "CLU": 40
+    }
+
+  ],
+
+  "TOR": [
+    {
+      "name": "Kawhi Leonard",
+      "cname": "科怀-伦纳德",
+      "pos": "SF / SG",
+      "height": "6'7'",
+      "type": "2-Way Mid-Range Menace",
+      "ovr": 95,
+      "threePT": 85,
+      "MID": 88,
+      "FIN": 98,
+      "DNK": 80,
+      "HAN": 98,
+      "PAS": 79,
+      "PDEF": 89,
+      "IDEF": 81,
+      "BLK": 52,
+      "REB": 72,
+      "ATH": 89,
+      "STR": 79,
+      "CLU": 98
+    },
+
+    {
+      "name": "Scottie Barnes",
+      "cname": "斯科蒂-巴恩斯",
+      "pos": "PF / PG",
+      "height": "6'8'",
+      "type": "Mid-Paint Playmaking Eraser",
+      "ovr": 89,
+      "threePT": 77,
+      "MID": 87,
+      "FIN": 97,
+      "DNK": 80,
+      "HAN": 95,
+      "PAS": 82,
+      "PDEF": 80,
+      "IDEF": 80,
+      "BLK": 81,
+      "REB": 73,
+      "ATH": 82,
+      "STR": 74,
+      "CLU": 80
+    },
+
+    {
+      "name": "Immanuel Quickley",
+      "cname": "伊曼纽尔-奎克利",
+      "pos": "PG / SG",
+      "height": "6'2'",
+      "type": "2-Way Mid-Range Menace",
+      "ovr": 84,
+      "threePT": 81,
+      "MID": 94,
+      "FIN": 91,
+      "DNK": 55,
+      "HAN": 98,
+      "PAS": 80,
+      "PDEF": 80,
+      "IDEF": 37,
+      "BLK": 30,
+      "REB": 56,
+      "ATH": 82,
+      "STR": 54,
+      "CLU": 70
+    },
+
+    {
+      "name": "RJ Barrett",
+      "cname": "RJ-巴雷特",
+      "pos": "SG / SF",
+      "height": "6'6'",
+      "type": "2-Way Bullmaker",
+      "ovr": 83,
+      "threePT": 78,
+      "MID": 79,
+      "FIN": 89,
+      "DNK": 80,
+      "HAN": 85,
+      "PAS": 79,
+      "PDEF": 81,
+      "IDEF": 58,
+      "BLK": 50,
+      "REB": 67,
+      "ATH": 84,
+      "STR": 76,
+      "CLU": 75
+    },
+
+    {
+      "name": "Collin Murray-Boyles",
+      "cname": "科林-默里-博伊尔斯",
+      "pos": "C / PF",
+      "height": "6'7'",
+      "type": "Ball-Hawking Blow-By Laymaker",
+      "ovr": 81,
+      "threePT": 77,
+      "MID": 70,
+      "FIN": 94,
+      "DNK": 75,
+      "HAN": 85,
+      "PAS": 67,
+      "PDEF": 74,
+      "IDEF": 72,
+      "BLK": 80,
+      "REB": 58,
+      "ATH": 86,
+      "STR": 70,
+      "CLU": 95
+    },
+
+    {
+      "name": "Jakob Poeltl",
+      "cname": "雅各布-珀尔特尔",
+      "pos": "C",
+      "height": "7'0'",
+      "type": "Crafty Mid-Post Scorer",
+      "ovr": 80,
+      "threePT": 45,
+      "MID": 79,
+      "FIN": 97,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 69,
+      "PDEF": 45,
+      "IDEF": 81,
+      "BLK": 67,
+      "REB": 80,
+      "ATH": 37,
+      "STR": 80,
+      "CLU": 75
+    },
+
+    {
+      "name": "Ja’Kobe Walter",
+      "cname": "贾科比-沃尔特",
+      "pos": "SG / SF",
+      "height": "6'4'",
+      "type": "Ball-Hawking 3PT Sniper",
+      "ovr": 78,
+      "threePT": 83,
+      "MID": 78,
+      "FIN": 84,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 69,
+      "PDEF": 66,
+      "IDEF": 47,
+      "BLK": 47,
+      "REB": 50,
+      "ATH": 82,
+      "STR": 57,
+      "CLU": 90
+    },
+
+    {
+      "name": "Jamal Shead",
+      "cname": "贾马尔-谢德",
+      "pos": "PG / SG",
+      "height": "6'1'",
+      "type": "Speedy Blow-By Ace",
+      "ovr": 78,
+      "threePT": 74,
+      "MID": 51,
+      "FIN": 72,
+      "DNK": 50,
+      "HAN": 80,
+      "PAS": 84,
+      "PDEF": 77,
+      "IDEF": 34,
+      "BLK": 45,
+      "REB": 43,
+      "ATH": 94,
+      "STR": 49,
+      "CLU": 85
+    },
+
+    {
+      "name": "Jamison Battle",
+      "cname": "贾米森-巴特尔",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "Crafty Sharpshooter",
+      "ovr": 76,
+      "threePT": 88,
+      "MID": 85,
+      "FIN": 94,
+      "DNK": 65,
+      "HAN": 80,
+      "PAS": 52,
+      "PDEF": 58,
+      "IDEF": 58,
+      "BLK": 42,
+      "REB": 65,
+      "ATH": 58,
+      "STR": 55,
+      "CLU": 55
+    },
+
+    {
+      "name": "Kyle Anderson",
+      "cname": "凯尔-安德森",
+      "pos": "PF / C",
+      "height": "6'8'",
+      "type": "Defensive Playmaker",
+      "ovr": 75,
+      "threePT": 79,
+      "MID": 48,
+      "FIN": 97,
+      "DNK": 45,
+      "HAN": 70,
+      "PAS": 78,
+      "PDEF": 79,
+      "IDEF": 60,
+      "BLK": 67,
+      "REB": 61,
+      "ATH": 80,
+      "STR": 62,
+      "CLU": 60
+    },
+
+    {
+      "name": "A.J. Lawson",
+      "cname": "A.J.-劳森",
+      "pos": "SF / SG",
+      "height": "6'6'",
+      "type": "Crafty 3PT-Sniping Dimer",
+      "ovr": 74,
+      "threePT": 82,
+      "MID": 68,
+      "FIN": 75,
+      "DNK": 75,
+      "HAN": 75,
+      "PAS": 69,
+      "PDEF": 60,
+      "IDEF": 48,
+      "BLK": 53,
+      "REB": 68,
+      "ATH": 79,
+      "STR": 34,
+      "CLU": 50
+    },
+
+    {
+      "name": "Kyle Lowry",
+      "cname": "凯尔-洛瑞",
+      "pos": "PG / SG",
+      "height": "6'0'",
+      "type": "2-Way Mid-Range Menace",
+      "ovr": 73,
+      "threePT": 75,
+      "MID": 85,
+      "FIN": 67,
+      "DNK": 25,
+      "HAN": 95,
+      "PAS": 75,
+      "PDEF": 80,
+      "IDEF": 60,
+      "BLK": 56,
+      "REB": 48,
+      "ATH": 84,
+      "STR": 67,
+      "CLU": 40
+    },
+
+    {
+      "name": "Trayce Jackson-Davis",
+      "cname": "特雷斯-杰克逊-戴维斯",
+      "pos": "C / PF",
+      "height": "6'9'",
+      "type": "Rim-Running Rim Rocker",
+      "ovr": 73,
+      "threePT": 44,
+      "MID": 70,
+      "FIN": 61,
+      "DNK": 85,
+      "HAN": 75,
+      "PAS": 62,
+      "PDEF": 58,
+      "IDEF": 63,
+      "BLK": 83,
+      "REB": 73,
+      "ATH": 74,
+      "STR": 63,
+      "CLU": 40
+    },
+
+    {
+      "name": "Alijah Martin",
+      "cname": "阿利雅-马丁",
+      "pos": "SG / PG",
+      "height": "6'2'",
+      "type": "Ball-Hawking Wing Runner",
+      "ovr": 71,
+      "threePT": 76,
+      "MID": 76,
+      "FIN": 77,
+      "DNK": 85,
+      "HAN": 80,
+      "PAS": 67,
+      "PDEF": 74,
+      "IDEF": 48,
+      "BLK": 56,
+      "REB": 44,
+      "ATH": 88,
+      "STR": 62,
+      "CLU": 50
+    },
+
+    {
+      "name": "Garrett Temple",
+      "cname": "加勒特-坦普尔",
+      "pos": "SG / SF",
+      "height": "6'5'",
+      "type": "2-Way Combo Guard",
+      "ovr": 70,
+      "threePT": 72,
+      "MID": 55,
+      "FIN": 82,
+      "DNK": 30,
+      "HAN": 85,
+      "PAS": 75,
+      "PDEF": 78,
+      "IDEF": 46,
+      "BLK": 47,
+      "REB": 51,
+      "ATH": 76,
+      "STR": 44,
+      "CLU": 70
+    },
+
+    {
+      "name": "Chucky Hepburn",
+      "cname": "查基-赫普伯恩",
+      "pos": "PG",
+      "height": "6'0'",
+      "type": "Clamp Thief",
+      "ovr": 68,
+      "threePT": 73,
+      "MID": 71,
+      "FIN": 70,
+      "DNK": 40,
+      "HAN": 70,
+      "PAS": 77,
+      "PDEF": 79,
+      "IDEF": 30,
+      "BLK": 32,
+      "REB": 43,
+      "ATH": 90,
+      "STR": 43,
+      "CLU": 25
+    }
+
+  ],
+
+  "UTA": [
+    {
+      "name": "Lauri Markkanen",
+      "cname": "劳里-马尔卡宁",
+      "pos": "SF / PF",
+      "height": "7'1'",
+      "type": "Crafty Post-Scoring 3PT Sniper",
+      "ovr": 87,
+      "threePT": 82,
+      "MID": 72,
+      "FIN": 96,
+      "DNK": 80,
+      "HAN": 95,
+      "PAS": 67,
+      "PDEF": 65,
+      "IDEF": 66,
+      "BLK": 52,
+      "REB": 66,
+      "ATH": 65,
+      "STR": 61,
+      "CLU": 80
+    },
+
+    {
+      "name": "Keyonte George",
+      "cname": "基扬特-乔治",
+      "pos": "PG / SG",
+      "height": "6'4'",
+      "type": "Crafty Laymaker",
+      "ovr": 87,
+      "threePT": 81,
+      "MID": 83,
+      "FIN": 94,
+      "DNK": 65,
+      "HAN": 90,
+      "PAS": 85,
+      "PDEF": 65,
+      "IDEF": 34,
+      "BLK": 45,
+      "REB": 52,
+      "ATH": 78,
+      "STR": 55,
+      "CLU": 95
+    },
+
+    {
+      "name": "Jaren Jackson Jr.",
+      "cname": "小贾伦-杰克逊",
+      "pos": "PF / C",
+      "height": "6'10'",
+      "type": "2-Way Paint Pounder",
+      "ovr": 86,
+      "threePT": 79,
+      "MID": 57,
+      "FIN": 97,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 45,
+      "PDEF": 80,
+      "IDEF": 93,
+      "BLK": 83,
+      "REB": 67,
+      "ATH": 80,
+      "STR": 82,
+      "CLU": 75
+    },
+
+    {
+      "name": "Isaiah Collier",
+      "cname": "以赛亚-科利尔",
+      "pos": "PG / SG",
+      "height": "6'4'",
+      "type": "Playmaker",
+      "ovr": 82,
+      "threePT": 73,
+      "MID": 68,
+      "FIN": 94,
+      "DNK": 75,
+      "HAN": 95,
+      "PAS": 90,
+      "PDEF": 62,
+      "IDEF": 30,
+      "BLK": 52,
+      "REB": 48,
+      "ATH": 88,
+      "STR": 60,
+      "CLU": 80
+    },
+
+    {
+      "name": "Jusuf Nurkic",
+      "cname": "优素福-努尔基奇",
+      "pos": "C",
+      "height": "6'11'",
+      "type": "Ball-Snatching Popper",
+      "ovr": 82,
+      "threePT": 79,
+      "MID": 88,
+      "FIN": 97,
+      "DNK": 65,
+      "HAN": 85,
+      "PAS": 70,
+      "PDEF": 45,
+      "IDEF": 71,
+      "BLK": 56,
+      "REB": 93,
+      "ATH": 49,
+      "STR": 90,
+      "CLU": 85
+    },
+
+    {
+      "name": "Ace Bailey",
+      "cname": "埃斯-贝利",
+      "pos": "SG / SF",
+      "height": "6'9'",
+      "type": "Crafty Blow-By High Flyer",
+      "ovr": 81,
+      "threePT": 78,
+      "MID": 74,
+      "FIN": 97,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 66,
+      "PDEF": 68,
+      "IDEF": 59,
+      "BLK": 62,
+      "REB": 52,
+      "ATH": 84,
+      "STR": 61,
+      "CLU": 95
+    },
+
+    {
+      "name": "Brice Sensabaugh",
+      "cname": "布赖斯-森萨博",
+      "pos": "SF / SG",
+      "height": "6'6'",
+      "type": "Crafty 3PT Sniper",
+      "ovr": 81,
+      "threePT": 80,
+      "MID": 79,
+      "FIN": 98,
+      "DNK": 60,
+      "HAN": 95,
+      "PAS": 65,
+      "PDEF": 55,
+      "IDEF": 50,
+      "BLK": 42,
+      "REB": 52,
+      "ATH": 67,
+      "STR": 64,
+      "CLU": 90
+    },
+
+    {
+      "name": "Kyle Filipowski",
+      "cname": "凯尔-菲利波夫斯基",
+      "pos": "C / PF",
+      "height": "6'11'",
+      "type": "Glass-Cleaning Rim Runner",
+      "ovr": 79,
+      "threePT": 76,
+      "MID": 70,
+      "FIN": 97,
+      "DNK": 70,
+      "HAN": 85,
+      "PAS": 60,
+      "PDEF": 55,
+      "IDEF": 60,
+      "BLK": 61,
+      "REB": 86,
+      "ATH": 57,
+      "STR": 68,
+      "CLU": 80
+    },
+
+    {
+      "name": "Jaxson Hayes",
+      "cname": "贾克森-海斯",
+      "pos": "C / PF",
+      "height": "7'0'",
+      "type": "Crafty Rim Wrecker",
+      "ovr": 79,
+      "threePT": 60,
+      "MID": 68,
+      "FIN": 98,
+      "DNK": 88,
+      "HAN": 90,
+      "PAS": 29,
+      "PDEF": 48,
+      "IDEF": 78,
+      "BLK": 80,
+      "REB": 67,
+      "ATH": 64,
+      "STR": 72,
+      "CLU": 70
+    },
+
+    {
+      "name": "Kevin Love",
+      "cname": "凯文-乐福",
+      "pos": "C / PF",
+      "height": "6'8'",
+      "type": "Crafty Stretch Five Cleaner",
+      "ovr": 76,
+      "threePT": 80,
+      "MID": 79,
+      "FIN": 98,
+      "DNK": 50,
+      "HAN": 80,
+      "PAS": 65,
+      "PDEF": 50,
+      "IDEF": 69,
+      "BLK": 57,
+      "REB": 89,
+      "ATH": 54,
+      "STR": 80,
+      "CLU": 70
+    },
+
+    {
+      "name": "Cody Williams",
+      "cname": "科迪-威廉姆斯",
+      "pos": "PF / SF",
+      "height": "6'8'",
+      "type": "Mid-Range Menace",
+      "ovr": 76,
+      "threePT": 70,
+      "MID": 80,
+      "FIN": 97,
+      "DNK": 80,
+      "HAN": 95,
+      "PAS": 63,
+      "PDEF": 73,
+      "IDEF": 68,
+      "BLK": 56,
+      "REB": 47,
+      "ATH": 86,
+      "STR": 57,
+      "CLU": 95
+    },
+
+    {
+      "name": "John Konchar",
+      "cname": "约翰-康查尔",
+      "pos": "SF / PF",
+      "height": "6'5'",
+      "type": "Disruptive Crafty Finisher",
+      "ovr": 76,
+      "threePT": 69,
+      "MID": 73,
+      "FIN": 97,
+      "DNK": 55,
+      "HAN": 85,
+      "PAS": 74,
+      "PDEF": 62,
+      "IDEF": 54,
+      "BLK": 72,
+      "REB": 65,
+      "ATH": 69,
+      "STR": 40,
+      "CLU": 95
+    },
+
+    {
+      "name": "Svi Mykhailiuk",
+      "cname": "斯维亚托斯拉夫-米哈伊柳克",
+      "pos": "SG / SF",
+      "height": "6'7'",
+      "type": "Crafty Sharpshooter",
+      "ovr": 76,
+      "threePT": 84,
+      "MID": 83,
+      "FIN": 92,
+      "DNK": 55,
+      "HAN": 94,
+      "PAS": 69,
+      "PDEF": 55,
+      "IDEF": 37,
+      "BLK": 32,
+      "REB": 45,
+      "ATH": 82,
+      "STR": 54,
+      "CLU": 80
+    },
+
+    {
+      "name": "Josh Okogie",
+      "cname": "乔什-奥科吉",
+      "pos": "SG / SF",
+      "height": "6'4'",
+      "type": "Catch & Shoot 3PT Sniper",
+      "ovr": 75,
+      "threePT": 83,
+      "MID": 70,
+      "FIN": 78,
+      "DNK": 75,
+      "HAN": 70,
+      "PAS": 69,
+      "PDEF": 77,
+      "IDEF": 50,
+      "BLK": 50,
+      "REB": 48,
+      "ATH": 84,
+      "STR": 58,
+      "CLU": 70
+    },
+
+    {
+      "name": "Oscar Tshiebwe",
+      "cname": "奥斯卡-奇布韦",
+      "pos": "C / PF",
+      "height": "6'8'",
+      "type": "Rim-Running Putback Pro",
+      "ovr": 73,
+      "threePT": 37,
+      "MID": 69,
+      "FIN": 97,
+      "DNK": 75,
+      "HAN": 95,
+      "PAS": 42,
+      "PDEF": 48,
+      "IDEF": 69,
+      "BLK": 45,
+      "REB": 80,
+      "ATH": 67,
+      "STR": 69,
+      "CLU": 40
+    },
+
+    {
+      "name": "Blake Hinson",
+      "cname": "布莱克-欣森",
+      "pos": "PF / SF",
+      "height": "6'8'",
+      "type": "Skilled Stretch Four",
+      "ovr": 73,
+      "threePT": 85,
+      "MID": 75,
+      "FIN": 70,
+      "DNK": 55,
+      "HAN": 85,
+      "PAS": 62,
+      "PDEF": 57,
+      "IDEF": 51,
+      "BLK": 37,
+      "REB": 46,
+      "ATH": 63,
+      "STR": 50,
+      "CLU": 80
+    },
+
+    {
+      "name": "Elijah Harkless",
+      "cname": "伊莱贾-哈克利斯",
+      "pos": "PG / SG",
+      "height": "6'3'",
+      "type": "2-Way Blow-By Ace",
+      "ovr": 72,
+      "threePT": 75,
+      "MID": 74,
+      "FIN": 74,
+      "DNK": 50,
+      "HAN": 75,
+      "PAS": 74,
+      "PDEF": 76,
+      "IDEF": 42,
+      "BLK": 47,
+      "REB": 57,
+      "ATH": 85,
+      "STR": 57,
+      "CLU": 65
+    },
+
+    {
+      "name": "Mo Bamba",
+      "cname": "Mo Bamba",
+      "pos": "C",
+      "height": "6'5'",
+      "type": "Rim-Reaping Stretch Five",
+      "ovr": 71,
+      "threePT": 74,
+      "MID": 70,
+      "FIN": 70,
+      "DNK": 70,
+      "HAN": 70,
+      "PAS": 70,
+      "PDEF": 70,
+      "IDEF": 70,
+      "BLK": 70,
+      "REB": 70,
+      "ATH": 70,
+      "STR": 70,
+      "CLU": 70
+    },
+
+    {
+      "name": "Bez Mbeng",
+      "cname": "贝兹-姆本格",
+      "pos": "SG / PG",
+      "height": "6'4'",
+      "type": "2-Way Blow-By Ace",
+      "ovr": 69,
+      "threePT": 67,
+      "MID": 66,
+      "FIN": 78,
+      "DNK": 65,
+      "HAN": 80,
+      "PAS": 67,
+      "PDEF": 73,
+      "IDEF": 55,
+      "BLK": 53,
+      "REB": 45,
+      "ATH": 78,
+      "STR": 56,
+      "CLU": 60
+    },
+
+    {
+      "name": "Trey Alexander",
+      "cname": "特雷-亚历山大",
+      "pos": "PG / SG",
+      "height": "6'5'",
+      "type": "Iso Sniper",
+      "ovr": 68,
+      "threePT": 70,
+      "MID": 81,
+      "FIN": 73,
+      "DNK": 30,
+      "HAN": 74,
+      "PAS": 70,
+      "PDEF": 59,
+      "IDEF": 30,
+      "BLK": 30,
+      "REB": 46,
+      "ATH": 75,
+      "STR": 34,
+      "CLU": 70
+    },
+
+    {
+      "name": "Tamar Bates",
+      "cname": "Tamar Bates",
+      "pos": "SG / SF",
+      "height": "6'5\"",
+      "type": "Iso Sniper",
+      "ovr": 68,
+      "threePT": 82,
+      "MID": 70,
+      "FIN": 70,
+      "DNK": 65,
+      "HAN": 70,
+      "PAS": 70,
+      "PDEF": 70,
+      "IDEF": 70,
+      "BLK": 70,
+      "REB": 70,
+      "ATH": 70,
+      "STR": 70,
+      "CLU": 70
+    },
+
+    {
+      "name": "Hayden Gray",
+      "cname": "海登-格雷",
+      "pos": "SG / PG",
+      "height": "6'4'",
+      "type": "Ball-Hawking Table Setter",
+      "ovr": 68,
+      "threePT": 74,
+      "MID": 72,
+      "FIN": 73,
+      "DNK": 55,
+      "HAN": 85,
+      "PAS": 74,
+      "PDEF": 70,
+      "IDEF": 50,
+      "BLK": 40,
+      "REB": 44,
+      "ATH": 78,
+      "STR": 62,
+      "CLU": 50
+    }
+
+  ],
+
+  "WAS": [
+    {
+      "name": "Anthony Davis",
+      "cname": "安东尼-戴维斯",
+      "pos": "PF / C",
+      "height": "6'10'",
+      "type": "Backline Post Bully",
+      "ovr": 92,
+      "threePT": 71,
+      "MID": 70,
+      "FIN": 91,
+      "DNK": 85,
+      "HAN": 85,
+      "PAS": 60,
+      "PDEF": 80,
+      "IDEF": 90,
+      "BLK": 82,
+      "REB": 87,
+      "ATH": 78,
+      "STR": 92,
+      "CLU": 80
+    },
+
+    {
+      "name": "Trae Young",
+      "cname": "特雷-杨",
+      "pos": "PG",
+      "height": "6'2'",
+      "type": "Crafty Offensive Engine",
+      "ovr": 89,
+      "threePT": 83,
+      "MID": 97,
+      "FIN": 94,
+      "DNK": 30,
+      "HAN": 80,
+      "PAS": 92,
+      "PDEF": 55,
+      "IDEF": 31,
+      "BLK": 32,
+      "REB": 43,
+      "ATH": 84,
+      "STR": 50,
+      "CLU": 75
+    },
+
+    {
+      "name": "Alex Sarr",
+      "cname": "亚历克斯-萨尔",
+      "pos": "C / PF",
+      "height": "7'0'",
+      "type": "Shot-Erasing Versatile Slasher",
+      "ovr": 84,
+      "threePT": 76,
+      "MID": 71,
+      "FIN": 84,
+      "DNK": 85,
+      "HAN": 80,
+      "PAS": 65,
+      "PDEF": 72,
+      "IDEF": 78,
+      "BLK": 96,
+      "REB": 77,
+      "ATH": 72,
+      "STR": 67,
+      "CLU": 95
+    },
+
+    {
+      "name": "KyShawn George",
+      "cname": "凯肖恩-乔治",
+      "pos": "PF / SF",
+      "height": "6'8'",
+      "type": "Crafty 3-Level Scorer",
+      "ovr": 82,
+      "threePT": 82,
+      "MID": 79,
+      "FIN": 83,
+      "DNK": 60,
+      "HAN": 95,
+      "PAS": 66,
+      "PDEF": 70,
+      "IDEF": 70,
+      "BLK": 67,
+      "REB": 65,
+      "ATH": 74,
+      "STR": 60,
+      "CLU": 95
+    },
+
+    {
+      "name": "Will Riley",
+      "cname": "威尔-莱利",
+      "pos": "PF / SF",
+      "height": "6'9'",
+      "type": "Blow-By Laymaking Four",
+      "ovr": 81,
+      "threePT": 76,
+      "MID": 68,
+      "FIN": 88,
+      "DNK": 70,
+      "HAN": 95,
+      "PAS": 66,
+      "PDEF": 62,
+      "IDEF": 60,
+      "BLK": 35,
+      "REB": 49,
+      "ATH": 65,
+      "STR": 45,
+      "CLU": 95
+    },
+
+    {
+      "name": "Deandre Ayton",
+      "cname": "德安德烈-艾顿",
+      "pos": "C",
+      "height": "7'0'",
+      "type": "Physical Mid-Range Lob Threat",
+      "ovr": 79,
+      "threePT": 63,
+      "MID": 85,
+      "FIN": 98,
+      "DNK": 75,
+      "HAN": 82,
+      "PAS": 53,
+      "PDEF": 49,
+      "IDEF": 76,
+      "BLK": 72,
+      "REB": 83,
+      "ATH": 65,
+      "STR": 85,
+      "CLU": 45
+    },
+
+    {
+      "name": "Bilal Coulibaly",
+      "cname": "比拉勒-库利巴利",
+      "pos": "SF / SG",
+      "height": "6'7'",
+      "type": "High Flyer",
+      "ovr": 79,
+      "threePT": 73,
+      "MID": 70,
+      "FIN": 65,
+      "DNK": 85,
+      "HAN": 80,
+      "PAS": 69,
+      "PDEF": 80,
+      "IDEF": 67,
+      "BLK": 71,
+      "REB": 62,
+      "ATH": 85,
+      "STR": 63,
+      "CLU": 75
+    },
+
+    {
+      "name": "Justin Champagnie",
+      "cname": "贾斯廷-尚帕尼",
+      "pos": "PF / SF",
+      "height": "6'6'",
+      "type": "Crafty 3-Level Scoring Crasher",
+      "ovr": 78,
+      "threePT": 75,
+      "MID": 79,
+      "FIN": 71,
+      "DNK": 75,
+      "HAN": 80,
+      "PAS": 62,
+      "PDEF": 73,
+      "IDEF": 49,
+      "BLK": 67,
+      "REB": 72,
+      "ATH": 73,
+      "STR": 40,
+      "CLU": 85
+    },
+
+    {
+      "name": "Tre Johnson",
+      "cname": "特雷-约翰逊",
+      "pos": "SG / PG",
+      "height": "6'5'",
+      "type": "Mid-Range Menace",
+      "ovr": 78,
+      "threePT": 80,
+      "MID": 98,
+      "FIN": 81,
+      "DNK": 75,
+      "HAN": 95,
+      "PAS": 66,
+      "PDEF": 62,
+      "IDEF": 41,
+      "BLK": 51,
+      "REB": 51,
+      "ATH": 82,
+      "STR": 54,
+      "CLU": 80
+    },
+
+    {
+      "name": "Bub Carrington",
+      "cname": "巴布-卡林顿",
+      "pos": "PG / SG",
+      "height": "6'4'",
+      "type": "Iso Sniper",
+      "ovr": 78,
+      "threePT": 83,
+      "MID": 91,
+      "FIN": 69,
+      "DNK": 60,
+      "HAN": 85,
+      "PAS": 79,
+      "PDEF": 55,
+      "IDEF": 40,
+      "BLK": 42,
+      "REB": 54,
+      "ATH": 72,
+      "STR": 54,
+      "CLU": 95
+    },
+
+    {
+      "name": "Tristan Vukcevic",
+      "cname": "特里斯坦-武克切维奇",
+      "pos": "C / PF",
+      "height": "7'0'",
+      "type": "Crafty Stretch Five",
+      "ovr": 77,
+      "threePT": 78,
+      "MID": 74,
+      "FIN": 98,
+      "DNK": 65,
+      "HAN": 78,
+      "PAS": 45,
+      "PDEF": 44,
+      "IDEF": 59,
+      "BLK": 81,
+      "REB": 72,
+      "ATH": 55,
+      "STR": 72,
+      "CLU": 75
+    },
+
+    {
+      "name": "Julian Reese",
+      "cname": "朱利安-里斯",
+      "pos": "C / PF",
+      "height": "6'9'",
+      "type": "Board-Hunting Crafty Finisher",
+      "ovr": 76,
+      "threePT": 30,
+      "MID": 66,
+      "FIN": 73,
+      "DNK": 70,
+      "HAN": 60,
+      "PAS": 47,
+      "PDEF": 59,
+      "IDEF": 67,
+      "BLK": 51,
+      "REB": 87,
+      "ATH": 64,
+      "STR": 76,
+      "CLU": 60
+    },
+
+    {
+      "name": "Jamir Watkins",
+      "cname": "贾米尔-沃特金斯",
+      "pos": "SF / PF",
+      "height": "6'6'",
+      "type": "Ball-Hawking Slasher",
+      "ovr": 76,
+      "threePT": 71,
+      "MID": 78,
+      "FIN": 80,
+      "DNK": 85,
+      "HAN": 80,
+      "PAS": 68,
+      "PDEF": 69,
+      "IDEF": 67,
+      "BLK": 62,
+      "REB": 63,
+      "ATH": 85,
+      "STR": 59,
+      "CLU": 50
+    },
+
+    {
+      "name": "Khris Middleton",
+      "cname": "克里斯-米德尔顿",
+      "pos": "SF / PF",
+      "height": "6'7'",
+      "type": "Physical Middy Maestro",
+      "ovr": 76,
+      "threePT": 78,
+      "MID": 87,
+      "FIN": 81,
+      "DNK": 65,
+      "HAN": 80,
+      "PAS": 74,
+      "PDEF": 74,
+      "IDEF": 67,
+      "BLK": 40,
+      "REB": 60,
+      "ATH": 74,
+      "STR": 73,
+      "CLU": 35
+    },
+
+    {
+      "name": "Cam Whitmore",
+      "cname": "卡姆-惠特莫尔",
+      "pos": "SF / PF",
+      "height": "6'6'",
+      "type": "Athletic Blow-By Ace",
+      "ovr": 75,
+      "threePT": 70,
+      "MID": 76,
+      "FIN": 61,
+      "DNK": 80,
+      "HAN": 80,
+      "PAS": 68,
+      "PDEF": 67,
+      "IDEF": 57,
+      "BLK": 53,
+      "REB": 54,
+      "ATH": 84,
+      "STR": 68,
+      "CLU": 50
+    },
+
+    {
+      "name": "Sharife Cooper",
+      "cname": "谢里夫-库珀",
+      "pos": "PG",
+      "height": "6'0'",
+      "type": "Mid-Range Menace",
+      "ovr": 74,
+      "threePT": 79,
+      "MID": 94,
+      "FIN": 77,
+      "DNK": 40,
+      "HAN": 81,
+      "PAS": 75,
+      "PDEF": 70,
+      "IDEF": 25,
+      "BLK": 40,
+      "REB": 54,
+      "ATH": 88,
+      "STR": 39,
+      "CLU": 60
+    },
+
+    {
+      "name": "Anthony Gill",
+      "cname": "安东尼-吉尔",
+      "pos": "PF / C",
+      "height": "6'7'",
+      "type": "Crafty Paint-Mashing Popper",
+      "ovr": 74,
+      "threePT": 75,
+      "MID": 72,
+      "FIN": 98,
+      "DNK": 75,
+      "HAN": 74,
+      "PAS": 38,
+      "PDEF": 60,
+      "IDEF": 66,
+      "BLK": 60,
+      "REB": 55,
+      "ATH": 67,
+      "STR": 60,
+      "CLU": 70
+    }
+
+  ],
+
+};
+
+const NBA2K_TEAMS = Object.keys(NBA2K_DATA);
+</script>
+<script>
+// Inlined public dependency: https://activity-static.hoopchina.com.cn/files/2678-gd4jvxrc-upload-1783494754597-15.js
+// Auto-generated from schedule.txt
+const NBA2K_SCHEDULE = {
+  "ATL": [
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 1,
+      "gameNum": 7
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 3,
+      "gameNum": 18
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 4,
+      "gameNum": 30
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 6,
+      "gameNum": 45
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 8,
+      "gameNum": 62
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 10,
+      "gameNum": 73
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 12,
+      "gameNum": 90
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 14,
+      "gameNum": 105
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 17,
+      "gameNum": 124
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 18,
+      "gameNum": 135
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 20,
+      "gameNum": 156
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 22,
+      "gameNum": 173
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 23,
+      "gameNum": 177
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 26,
+      "gameNum": 198
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 28,
+      "gameNum": 209
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 30,
+      "gameNum": 226
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 32,
+      "gameNum": 238
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 33,
+      "gameNum": 244
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 35,
+      "gameNum": 261
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 38,
+      "gameNum": 273
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 40,
+      "gameNum": 295
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 41,
+      "gameNum": 300
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 43,
+      "gameNum": 318
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 45,
+      "gameNum": 331
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 46,
+      "gameNum": 342
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 52,
+      "gameNum": 367
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 54,
+      "gameNum": 377
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 58,
+      "gameNum": 390
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 59,
+      "gameNum": 404
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 61,
+      "gameNum": 417
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 63,
+      "gameNum": 432
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 66,
+      "gameNum": 449
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 67,
+      "gameNum": 461
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 69,
+      "gameNum": 481
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 71,
+      "gameNum": 489
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 73,
+      "gameNum": 505
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 74,
+      "gameNum": 514
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 76,
+      "gameNum": 530
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 78,
+      "gameNum": 546
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 80,
+      "gameNum": 562
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 82,
+      "gameNum": 581
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 84,
+      "gameNum": 594
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 86,
+      "gameNum": 610
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 88,
+      "gameNum": 619
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 90,
+      "gameNum": 633
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 92,
+      "gameNum": 652
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 94,
+      "gameNum": 665
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 97,
+      "gameNum": 684
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 99,
+      "gameNum": 700
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 100,
+      "gameNum": 709
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 102,
+      "gameNum": 725
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 105,
+      "gameNum": 748
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 107,
+      "gameNum": 763
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 109,
+      "gameNum": 779
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 111,
+      "gameNum": 793
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 113,
+      "gameNum": 803
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 121,
+      "gameNum": 822
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 122,
+      "gameNum": 833
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 124,
+      "gameNum": 846
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 126,
+      "gameNum": 860
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 128,
+      "gameNum": 878
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 131,
+      "gameNum": 901
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 134,
+      "gameNum": 925
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 137,
+      "gameNum": 944
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 140,
+      "gameNum": 965
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 142,
+      "gameNum": 984
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 144,
+      "gameNum": 999
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 146,
+      "gameNum": 1012
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 148,
+      "gameNum": 1034
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 150,
+      "gameNum": 1047
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 151,
+      "gameNum": 1055
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 153,
+      "gameNum": 1070
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 155,
+      "gameNum": 1080
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 157,
+      "gameNum": 1096
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 158,
+      "gameNum": 1108
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 160,
+      "gameNum": 1121
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 162,
+      "gameNum": 1135
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 164,
+      "gameNum": 1152
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 167,
+      "gameNum": 1173
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 169,
+      "gameNum": 1188
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 171,
+      "gameNum": 1201
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 173,
+      "gameNum": 1219
+    }
+  ],
+  "BOS": [
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 1,
+      "gameNum": 6
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 3,
+      "gameNum": 20
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 5,
+      "gameNum": 35
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 6,
+      "gameNum": 47
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 8,
+      "gameNum": 60
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 10,
+      "gameNum": 74
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 11,
+      "gameNum": 85
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 13,
+      "gameNum": 97
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 15,
+      "gameNum": 113
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 17,
+      "gameNum": 122
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 19,
+      "gameNum": 144
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 21,
+      "gameNum": 160
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 22,
+      "gameNum": 166
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 26,
+      "gameNum": 192
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 28,
+      "gameNum": 210
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 31,
+      "gameNum": 228
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 33,
+      "gameNum": 245
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 36,
+      "gameNum": 264
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 39,
+      "gameNum": 284
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 40,
+      "gameNum": 293
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 42,
+      "gameNum": 311
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 44,
+      "gameNum": 325
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 45,
+      "gameNum": 329
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 47,
+      "gameNum": 349
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 51,
+      "gameNum": 363
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 55,
+      "gameNum": 383
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 59,
+      "gameNum": 402
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 60,
+      "gameNum": 410
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 62,
+      "gameNum": 424
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 66,
+      "gameNum": 450
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 68,
+      "gameNum": 469
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 70,
+      "gameNum": 485
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 72,
+      "gameNum": 500
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 74,
+      "gameNum": 519
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 76,
+      "gameNum": 529
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 78,
+      "gameNum": 542
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 80,
+      "gameNum": 557
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 81,
+      "gameNum": 570
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 83,
+      "gameNum": 584
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 86,
+      "gameNum": 606
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 88,
+      "gameNum": 619
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 90,
+      "gameNum": 640
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 92,
+      "gameNum": 650
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 94,
+      "gameNum": 666
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 95,
+      "gameNum": 675
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 97,
+      "gameNum": 687
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 99,
+      "gameNum": 700
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 101,
+      "gameNum": 716
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 103,
+      "gameNum": 730
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 105,
+      "gameNum": 749
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 106,
+      "gameNum": 756
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 108,
+      "gameNum": 769
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 110,
+      "gameNum": 785
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 113,
+      "gameNum": 806
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 121,
+      "gameNum": 827
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 124,
+      "gameNum": 851
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 126,
+      "gameNum": 867
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 127,
+      "gameNum": 875
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 129,
+      "gameNum": 887
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 131,
+      "gameNum": 903
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 132,
+      "gameNum": 908
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 134,
+      "gameNum": 922
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 136,
+      "gameNum": 936
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 138,
+      "gameNum": 949
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 140,
+      "gameNum": 970
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 142,
+      "gameNum": 988
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 144,
+      "gameNum": 1001
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 146,
+      "gameNum": 1014
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 148,
+      "gameNum": 1028
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 150,
+      "gameNum": 1048
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 152,
+      "gameNum": 1064
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 155,
+      "gameNum": 1083
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 157,
+      "gameNum": 1096
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 159,
+      "gameNum": 1114
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 160,
+      "gameNum": 1121
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 162,
+      "gameNum": 1137
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 164,
+      "gameNum": 1156
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 166,
+      "gameNum": 1162
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 168,
+      "gameNum": 1182
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 170,
+      "gameNum": 1198
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 171,
+      "gameNum": 1204
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 173,
+      "gameNum": 1216
+    }
+  ],
+  "BKN": [
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 1,
+      "gameNum": 3
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 3,
+      "gameNum": 19
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 5,
+      "gameNum": 34
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 6,
+      "gameNum": 46
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 8,
+      "gameNum": 62
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 12,
+      "gameNum": 88
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 13,
+      "gameNum": 95
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 15,
+      "gameNum": 112
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 17,
+      "gameNum": 125
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 19,
+      "gameNum": 143
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 21,
+      "gameNum": 157
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 24,
+      "gameNum": 179
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 26,
+      "gameNum": 194
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 28,
+      "gameNum": 210
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 31,
+      "gameNum": 228
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 33,
+      "gameNum": 247
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 34,
+      "gameNum": 253
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 38,
+      "gameNum": 274
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 39,
+      "gameNum": 288
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 41,
+      "gameNum": 303
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 43,
+      "gameNum": 320
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 44,
+      "gameNum": 326
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 46,
+      "gameNum": 341
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 52,
+      "gameNum": 371
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 54,
+      "gameNum": 378
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 58,
+      "gameNum": 392
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 61,
+      "gameNum": 418
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 63,
+      "gameNum": 431
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 67,
+      "gameNum": 465
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 69,
+      "gameNum": 475
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 72,
+      "gameNum": 497
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 73,
+      "gameNum": 503
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 75,
+      "gameNum": 522
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 78,
+      "gameNum": 547
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 80,
+      "gameNum": 560
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 82,
+      "gameNum": 574
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 83,
+      "gameNum": 586
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 85,
+      "gameNum": 599
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 87,
+      "gameNum": 614
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 89,
+      "gameNum": 628
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 90,
+      "gameNum": 639
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 92,
+      "gameNum": 651
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 94,
+      "gameNum": 666
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 96,
+      "gameNum": 683
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 98,
+      "gameNum": 696
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 100,
+      "gameNum": 712
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 101,
+      "gameNum": 722
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 103,
+      "gameNum": 731
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 105,
+      "gameNum": 747
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 107,
+      "gameNum": 762
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 109,
+      "gameNum": 775
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 111,
+      "gameNum": 790
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 113,
+      "gameNum": 807
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 121,
+      "gameNum": 821
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 122,
+      "gameNum": 836
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 124,
+      "gameNum": 846
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 126,
+      "gameNum": 861
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 128,
+      "gameNum": 879
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 129,
+      "gameNum": 887
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 131,
+      "gameNum": 897
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 133,
+      "gameNum": 914
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 135,
+      "gameNum": 930
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 137,
+      "gameNum": 945
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 139,
+      "gameNum": 960
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 140,
+      "gameNum": 966
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 142,
+      "gameNum": 984
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 144,
+      "gameNum": 998
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 146,
+      "gameNum": 1015
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 148,
+      "gameNum": 1029
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 150,
+      "gameNum": 1045
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 152,
+      "gameNum": 1062
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 153,
+      "gameNum": 1074
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 155,
+      "gameNum": 1089
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 157,
+      "gameNum": 1104
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 159,
+      "gameNum": 1113
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 161,
+      "gameNum": 1129
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 164,
+      "gameNum": 1152
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 166,
+      "gameNum": 1163
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 168,
+      "gameNum": 1180
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 170,
+      "gameNum": 1197
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 171,
+      "gameNum": 1208
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 173,
+      "gameNum": 1222
+    }
+  ],
+  "CHA": [
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 1,
+      "gameNum": 3
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 4,
+      "gameNum": 31
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 5,
+      "gameNum": 36
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 7,
+      "gameNum": 55
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 9,
+      "gameNum": 69
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 11,
+      "gameNum": 82
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 12,
+      "gameNum": 89
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 14,
+      "gameNum": 107
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 17,
+      "gameNum": 128
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 20,
+      "gameNum": 148
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 22,
+      "gameNum": 163
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 24,
+      "gameNum": 182
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 25,
+      "gameNum": 188
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 27,
+      "gameNum": 204
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 29,
+      "gameNum": 215
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 32,
+      "gameNum": 236
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 33,
+      "gameNum": 244
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 36,
+      "gameNum": 265
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 38,
+      "gameNum": 275
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 39,
+      "gameNum": 285
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 41,
+      "gameNum": 303
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 43,
+      "gameNum": 319
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 45,
+      "gameNum": 335
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 47,
+      "gameNum": 350
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 52,
+      "gameNum": 366
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 54,
+      "gameNum": 376
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 58,
+      "gameNum": 390
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 60,
+      "gameNum": 411
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 62,
+      "gameNum": 423
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 63,
+      "gameNum": 430
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 66,
+      "gameNum": 451
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 69,
+      "gameNum": 473
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 71,
+      "gameNum": 488
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 73,
+      "gameNum": 507
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 74,
+      "gameNum": 515
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 76,
+      "gameNum": 532
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 78,
+      "gameNum": 543
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 79,
+      "gameNum": 554
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 81,
+      "gameNum": 572
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 83,
+      "gameNum": 588
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 86,
+      "gameNum": 611
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 88,
+      "gameNum": 624
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 89,
+      "gameNum": 630
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 92,
+      "gameNum": 649
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 93,
+      "gameNum": 656
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 95,
+      "gameNum": 672
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 97,
+      "gameNum": 685
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 99,
+      "gameNum": 703
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 100,
+      "gameNum": 711
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 102,
+      "gameNum": 724
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 104,
+      "gameNum": 740
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 107,
+      "gameNum": 765
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 109,
+      "gameNum": 779
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 111,
+      "gameNum": 789
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 113,
+      "gameNum": 803
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 121,
+      "gameNum": 820
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 122,
+      "gameNum": 830
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 124,
+      "gameNum": 850
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 126,
+      "gameNum": 864
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 128,
+      "gameNum": 876
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 130,
+      "gameNum": 891
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 133,
+      "gameNum": 911
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 134,
+      "gameNum": 922
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 136,
+      "gameNum": 937
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 138,
+      "gameNum": 958
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 140,
+      "gameNum": 972
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 141,
+      "gameNum": 979
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 144,
+      "gameNum": 1000
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 147,
+      "gameNum": 1020
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 149,
+      "gameNum": 1037
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 151,
+      "gameNum": 1052
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 154,
+      "gameNum": 1076
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 156,
+      "gameNum": 1092
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 158,
+      "gameNum": 1107
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 159,
+      "gameNum": 1114
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 161,
+      "gameNum": 1129
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 163,
+      "gameNum": 1144
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 164,
+      "gameNum": 1150
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 166,
+      "gameNum": 1167
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 168,
+      "gameNum": 1182
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 171,
+      "gameNum": 1202
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 173,
+      "gameNum": 1220
+    }
+  ],
+  "CHI": [
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 1,
+      "gameNum": 8
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 4,
+      "gameNum": 29
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 6,
+      "gameNum": 45
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 8,
+      "gameNum": 63
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 10,
+      "gameNum": 76
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 12,
+      "gameNum": 92
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 14,
+      "gameNum": 106
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 17,
+      "gameNum": 129
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 18,
+      "gameNum": 136
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 20,
+      "gameNum": 152
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 22,
+      "gameNum": 164
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 26,
+      "gameNum": 199
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 27,
+      "gameNum": 207
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 29,
+      "gameNum": 222
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 31,
+      "gameNum": 230
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 32,
+      "gameNum": 239
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 34,
+      "gameNum": 257
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 38,
+      "gameNum": 275
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 39,
+      "gameNum": 286
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 41,
+      "gameNum": 305
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 43,
+      "gameNum": 320
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 45,
+      "gameNum": 336
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 47,
+      "gameNum": 352
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 52,
+      "gameNum": 366
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 54,
+      "gameNum": 379
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 57,
+      "gameNum": 388
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 59,
+      "gameNum": 405
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 61,
+      "gameNum": 417
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 63,
+      "gameNum": 432
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 66,
+      "gameNum": 453
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 67,
+      "gameNum": 462
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 69,
+      "gameNum": 478
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 71,
+      "gameNum": 492
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 73,
+      "gameNum": 506
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 74,
+      "gameNum": 515
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 76,
+      "gameNum": 529
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 78,
+      "gameNum": 544
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 81,
+      "gameNum": 571
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 84,
+      "gameNum": 590
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 85,
+      "gameNum": 598
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 87,
+      "gameNum": 614
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 89,
+      "gameNum": 628
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 91,
+      "gameNum": 643
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 93,
+      "gameNum": 660
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 95,
+      "gameNum": 675
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 97,
+      "gameNum": 688
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 99,
+      "gameNum": 699
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 100,
+      "gameNum": 710
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 102,
+      "gameNum": 728
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 103,
+      "gameNum": 732
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 105,
+      "gameNum": 750
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 107,
+      "gameNum": 764
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 109,
+      "gameNum": 780
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 111,
+      "gameNum": 790
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 113,
+      "gameNum": 806
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 121,
+      "gameNum": 825
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 123,
+      "gameNum": 841
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 124,
+      "gameNum": 853
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 126,
+      "gameNum": 864
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 128,
+      "gameNum": 881
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 131,
+      "gameNum": 898
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 133,
+      "gameNum": 916
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 135,
+      "gameNum": 933
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 138,
+      "gameNum": 957
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 140,
+      "gameNum": 971
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 142,
+      "gameNum": 989
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 143,
+      "gameNum": 997
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 146,
+      "gameNum": 1016
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 148,
+      "gameNum": 1031
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 149,
+      "gameNum": 1039
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 153,
+      "gameNum": 1071
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 155,
+      "gameNum": 1082
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 157,
+      "gameNum": 1099
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 158,
+      "gameNum": 1109
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 160,
+      "gameNum": 1123
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 162,
+      "gameNum": 1138
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 164,
+      "gameNum": 1153
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 166,
+      "gameNum": 1164
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 168,
+      "gameNum": 1179
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 170,
+      "gameNum": 1196
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 171,
+      "gameNum": 1207
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 173,
+      "gameNum": 1223
+    }
+  ],
+  "CLE": [
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 1,
+      "gameNum": 4
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 3,
+      "gameNum": 19
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 5,
+      "gameNum": 38
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 6,
+      "gameNum": 43
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 8,
+      "gameNum": 60
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 10,
+      "gameNum": 75
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 12,
+      "gameNum": 90
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 15,
+      "gameNum": 110
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 17,
+      "gameNum": 123
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 18,
+      "gameNum": 136
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 20,
+      "gameNum": 151
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 22,
+      "gameNum": 167
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 23,
+      "gameNum": 175
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 25,
+      "gameNum": 187
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 27,
+      "gameNum": 200
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 29,
+      "gameNum": 214
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 31,
+      "gameNum": 227
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 33,
+      "gameNum": 246
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 34,
+      "gameNum": 252
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 38,
+      "gameNum": 273
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 40,
+      "gameNum": 293
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 41,
+      "gameNum": 301
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 43,
+      "gameNum": 315
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 45,
+      "gameNum": 332
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 46,
+      "gameNum": 343
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 52,
+      "gameNum": 369
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 54,
+      "gameNum": 376
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 57,
+      "gameNum": 388
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 59,
+      "gameNum": 405
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 62,
+      "gameNum": 423
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 63,
+      "gameNum": 433
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 65,
+      "gameNum": 444
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 67,
+      "gameNum": 463
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 69,
+      "gameNum": 482
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 71,
+      "gameNum": 491
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 73,
+      "gameNum": 504
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 75,
+      "gameNum": 520
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 77,
+      "gameNum": 536
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 79,
+      "gameNum": 555
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 81,
+      "gameNum": 567
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 83,
+      "gameNum": 583
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 85,
+      "gameNum": 597
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 87,
+      "gameNum": 613
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 90,
+      "gameNum": 634
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 92,
+      "gameNum": 649
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 94,
+      "gameNum": 667
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 95,
+      "gameNum": 674
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 97,
+      "gameNum": 686
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 99,
+      "gameNum": 698
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 101,
+      "gameNum": 721
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 103,
+      "gameNum": 737
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 106,
+      "gameNum": 760
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 109,
+      "gameNum": 784
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 111,
+      "gameNum": 795
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 113,
+      "gameNum": 804
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 121,
+      "gameNum": 821
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 122,
+      "gameNum": 830
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 124,
+      "gameNum": 845
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 126,
+      "gameNum": 862
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 127,
+      "gameNum": 874
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 129,
+      "gameNum": 886
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 131,
+      "gameNum": 897
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 133,
+      "gameNum": 912
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 138,
+      "gameNum": 949
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 139,
+      "gameNum": 959
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 141,
+      "gameNum": 975
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 143,
+      "gameNum": 990
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 145,
+      "gameNum": 1006
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 147,
+      "gameNum": 1024
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 149,
+      "gameNum": 1039
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 151,
+      "gameNum": 1053
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 154,
+      "gameNum": 1078
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 155,
+      "gameNum": 1084
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 157,
+      "gameNum": 1097
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 160,
+      "gameNum": 1125
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 161,
+      "gameNum": 1133
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 163,
+      "gameNum": 1147
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 166,
+      "gameNum": 1166
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 167,
+      "gameNum": 1175
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 169,
+      "gameNum": 1188
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 171,
+      "gameNum": 1201
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 173,
+      "gameNum": 1217
+    }
+  ],
+  "DAL": [
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 1,
+      "gameNum": 12
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 3,
+      "gameNum": 24
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 5,
+      "gameNum": 40
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 6,
+      "gameNum": 49
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 8,
+      "gameNum": 64
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 11,
+      "gameNum": 86
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 13,
+      "gameNum": 99
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 15,
+      "gameNum": 116
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 17,
+      "gameNum": 127
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 18,
+      "gameNum": 133
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 20,
+      "gameNum": 153
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 22,
+      "gameNum": 171
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 24,
+      "gameNum": 185
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 26,
+      "gameNum": 197
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 27,
+      "gameNum": 205
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 29,
+      "gameNum": 221
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 31,
+      "gameNum": 231
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 32,
+      "gameNum": 241
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 34,
+      "gameNum": 254
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 38,
+      "gameNum": 283
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 39,
+      "gameNum": 291
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 41,
+      "gameNum": 306
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 43,
+      "gameNum": 323
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 45,
+      "gameNum": 340
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 46,
+      "gameNum": 347
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 52,
+      "gameNum": 371
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 55,
+      "gameNum": 385
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 58,
+      "gameNum": 397
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 60,
+      "gameNum": 409
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 62,
+      "gameNum": 425
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 63,
+      "gameNum": 436
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 65,
+      "gameNum": 446
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 67,
+      "gameNum": 458
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 69,
+      "gameNum": 483
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 72,
+      "gameNum": 499
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 74,
+      "gameNum": 517
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 77,
+      "gameNum": 541
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 79,
+      "gameNum": 556
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 81,
+      "gameNum": 571
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 83,
+      "gameNum": 586
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 85,
+      "gameNum": 600
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 86,
+      "gameNum": 608
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 88,
+      "gameNum": 618
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 90,
+      "gameNum": 636
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 93,
+      "gameNum": 659
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 95,
+      "gameNum": 676
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 99,
+      "gameNum": 704
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 100,
+      "gameNum": 711
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 102,
+      "gameNum": 729
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 105,
+      "gameNum": 749
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 107,
+      "gameNum": 766
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 109,
+      "gameNum": 777
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 112,
+      "gameNum": 801
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 114,
+      "gameNum": 819
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 122,
+      "gameNum": 834
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 124,
+      "gameNum": 849
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 126,
+      "gameNum": 861
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 128,
+      "gameNum": 882
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 129,
+      "gameNum": 889
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 131,
+      "gameNum": 904
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 133,
+      "gameNum": 911
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 135,
+      "gameNum": 927
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 136,
+      "gameNum": 936
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 138,
+      "gameNum": 952
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 140,
+      "gameNum": 965
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 142,
+      "gameNum": 986
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 143,
+      "gameNum": 990
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 145,
+      "gameNum": 1006
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 146,
+      "gameNum": 1017
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 148,
+      "gameNum": 1034
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 151,
+      "gameNum": 1058
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 153,
+      "gameNum": 1073
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 155,
+      "gameNum": 1088
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 157,
+      "gameNum": 1103
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 160,
+      "gameNum": 1124
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 161,
+      "gameNum": 1132
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 164,
+      "gameNum": 1157
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 166,
+      "gameNum": 1170
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 168,
+      "gameNum": 1185
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 169,
+      "gameNum": 1194
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 171,
+      "gameNum": 1209
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 173,
+      "gameNum": 1223
+    }
+  ],
+  "DEN": [
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 2,
+      "gameNum": 16
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 4,
+      "gameNum": 33
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 6,
+      "gameNum": 51
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 8,
+      "gameNum": 66
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 10,
+      "gameNum": 79
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 13,
+      "gameNum": 101
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 15,
+      "gameNum": 117
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 17,
+      "gameNum": 131
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 18,
+      "gameNum": 139
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 21,
+      "gameNum": 162
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 22,
+      "gameNum": 174
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 25,
+      "gameNum": 191
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 27,
+      "gameNum": 207
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 29,
+      "gameNum": 219
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 31,
+      "gameNum": 233
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 32,
+      "gameNum": 242
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 34,
+      "gameNum": 255
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 38,
+      "gameNum": 279
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 39,
+      "gameNum": 290
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 41,
+      "gameNum": 306
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 43,
+      "gameNum": 316
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 45,
+      "gameNum": 331
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 47,
+      "gameNum": 350
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 51,
+      "gameNum": 365
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 55,
+      "gameNum": 386
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 58,
+      "gameNum": 398
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 60,
+      "gameNum": 407
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 62,
+      "gameNum": 426
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 63,
+      "gameNum": 436
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 65,
+      "gameNum": 448
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 67,
+      "gameNum": 460
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 69,
+      "gameNum": 476
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 71,
+      "gameNum": 494
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 73,
+      "gameNum": 504
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 75,
+      "gameNum": 522
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 76,
+      "gameNum": 533
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 78,
+      "gameNum": 542
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 80,
+      "gameNum": 562
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 82,
+      "gameNum": 579
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 84,
+      "gameNum": 592
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 85,
+      "gameNum": 600
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 88,
+      "gameNum": 625
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 89,
+      "gameNum": 630
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 91,
+      "gameNum": 646
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 93,
+      "gameNum": 658
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 94,
+      "gameNum": 670
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 98,
+      "gameNum": 695
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 100,
+      "gameNum": 712
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 101,
+      "gameNum": 720
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 103,
+      "gameNum": 739
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 105,
+      "gameNum": 744
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 106,
+      "gameNum": 754
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 109,
+      "gameNum": 780
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 111,
+      "gameNum": 795
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 113,
+      "gameNum": 813
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 121,
+      "gameNum": 829
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 122,
+      "gameNum": 838
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 124,
+      "gameNum": 847
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 127,
+      "gameNum": 875
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 129,
+      "gameNum": 890
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 131,
+      "gameNum": 899
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 132,
+      "gameNum": 909
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 135,
+      "gameNum": 934
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 136,
+      "gameNum": 939
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 139,
+      "gameNum": 961
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 141,
+      "gameNum": 978
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 142,
+      "gameNum": 987
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 144,
+      "gameNum": 1003
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 147,
+      "gameNum": 1026
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 148,
+      "gameNum": 1035
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 150,
+      "gameNum": 1050
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 152,
+      "gameNum": 1061
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 154,
+      "gameNum": 1079
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 155,
+      "gameNum": 1088
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 157,
+      "gameNum": 1101
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 159,
+      "gameNum": 1119
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 162,
+      "gameNum": 1142
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 165,
+      "gameNum": 1159
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 167,
+      "gameNum": 1177
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 169,
+      "gameNum": 1191
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 171,
+      "gameNum": 1210
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 173,
+      "gameNum": 1230
+    }
+  ],
+  "DET": [
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 1,
+      "gameNum": 8
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 3,
+      "gameNum": 21
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 5,
+      "gameNum": 35
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 6,
+      "gameNum": 43
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 8,
+      "gameNum": 61
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 11,
+      "gameNum": 86
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 13,
+      "gameNum": 100
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 15,
+      "gameNum": 111
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 17,
+      "gameNum": 125
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 19,
+      "gameNum": 145
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 20,
+      "gameNum": 149
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 22,
+      "gameNum": 164
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 24,
+      "gameNum": 180
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 27,
+      "gameNum": 201
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 28,
+      "gameNum": 209
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 32,
+      "gameNum": 240
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 34,
+      "gameNum": 251
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 36,
+      "gameNum": 264
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 38,
+      "gameNum": 276
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 39,
+      "gameNum": 287
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 41,
+      "gameNum": 300
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 43,
+      "gameNum": 322
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 45,
+      "gameNum": 333
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 46,
+      "gameNum": 344
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 52,
+      "gameNum": 367
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 55,
+      "gameNum": 383
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 58,
+      "gameNum": 397
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 60,
+      "gameNum": 411
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 62,
+      "gameNum": 429
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 63,
+      "gameNum": 442
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 66,
+      "gameNum": 456
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 68,
+      "gameNum": 471
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 70,
+      "gameNum": 486
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 72,
+      "gameNum": 498
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 75,
+      "gameNum": 520
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 76,
+      "gameNum": 528
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 78,
+      "gameNum": 544
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 81,
+      "gameNum": 569
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 86,
+      "gameNum": 604
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 88,
+      "gameNum": 620
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 90,
+      "gameNum": 640
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 92,
+      "gameNum": 653
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 94,
+      "gameNum": 664
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 96,
+      "gameNum": 678
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 98,
+      "gameNum": 695
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 100,
+      "gameNum": 713
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 101,
+      "gameNum": 723
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 103,
+      "gameNum": 731
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 105,
+      "gameNum": 744
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 107,
+      "gameNum": 761
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 108,
+      "gameNum": 770
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 111,
+      "gameNum": 789
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 113,
+      "gameNum": 809
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 121,
+      "gameNum": 824
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 123,
+      "gameNum": 841
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 125,
+      "gameNum": 856
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 127,
+      "gameNum": 870
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 129,
+      "gameNum": 886
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 131,
+      "gameNum": 902
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 133,
+      "gameNum": 912
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 135,
+      "gameNum": 932
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 137,
+      "gameNum": 945
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 138,
+      "gameNum": 951
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 140,
+      "gameNum": 966
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 142,
+      "gameNum": 981
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 143,
+      "gameNum": 991
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 145,
+      "gameNum": 1008
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 147,
+      "gameNum": 1022
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 149,
+      "gameNum": 1038
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 150,
+      "gameNum": 1046
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 153,
+      "gameNum": 1066
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 155,
+      "gameNum": 1080
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 156,
+      "gameNum": 1093
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 158,
+      "gameNum": 1106
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 160,
+      "gameNum": 1126
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 161,
+      "gameNum": 1130
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 163,
+      "gameNum": 1145
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 165,
+      "gameNum": 1161
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 167,
+      "gameNum": 1174
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 169,
+      "gameNum": 1189
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 171,
+      "gameNum": 1202
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 173,
+      "gameNum": 1218
+    }
+  ],
+  "GSW": [
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 0,
+      "gameNum": 2
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 2,
+      "gameNum": 16
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 3,
+      "gameNum": 26
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 6,
+      "gameNum": 52
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 7,
+      "gameNum": 58
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 9,
+      "gameNum": 70
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 11,
+      "gameNum": 83
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 14,
+      "gameNum": 108
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 15,
+      "gameNum": 120
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 17,
+      "gameNum": 131
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 19,
+      "gameNum": 146
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 21,
+      "gameNum": 159
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 22,
+      "gameNum": 170
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 24,
+      "gameNum": 186
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 26,
+      "gameNum": 196
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 28,
+      "gameNum": 208
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 29,
+      "gameNum": 217
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 31,
+      "gameNum": 234
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 34,
+      "gameNum": 259
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 36,
+      "gameNum": 270
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 39,
+      "gameNum": 289
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 42,
+      "gameNum": 314
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 44,
+      "gameNum": 324
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 46,
+      "gameNum": 343
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 47,
+      "gameNum": 352
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 52,
+      "gameNum": 372
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 54,
+      "gameNum": 382
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 58,
+      "gameNum": 399
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 60,
+      "gameNum": 413
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 62,
+      "gameNum": 428
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 65,
+      "gameNum": 446
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 68,
+      "gameNum": 468
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 69,
+      "gameNum": 475
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 71,
+      "gameNum": 488
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 73,
+      "gameNum": 510
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 74,
+      "gameNum": 518
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 76,
+      "gameNum": 534
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 78,
+      "gameNum": 552
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 80,
+      "gameNum": 564
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 82,
+      "gameNum": 581
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 84,
+      "gameNum": 595
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 86,
+      "gameNum": 609
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 88,
+      "gameNum": 624
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 90,
+      "gameNum": 641
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 91,
+      "gameNum": 647
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 93,
+      "gameNum": 659
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 96,
+      "gameNum": 679
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 97,
+      "gameNum": 690
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 99,
+      "gameNum": 705
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 101,
+      "gameNum": 723
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 105,
+      "gameNum": 752
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 107,
+      "gameNum": 768
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 109,
+      "gameNum": 781
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 111,
+      "gameNum": 796
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 113,
+      "gameNum": 816
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 121,
+      "gameNum": 827
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 124,
+      "gameNum": 847
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 126,
+      "gameNum": 866
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 127,
+      "gameNum": 871
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 130,
+      "gameNum": 894
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 132,
+      "gameNum": 910
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 135,
+      "gameNum": 929
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 137,
+      "gameNum": 948
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 139,
+      "gameNum": 962
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 140,
+      "gameNum": 971
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 143,
+      "gameNum": 995
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 145,
+      "gameNum": 1010
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 146,
+      "gameNum": 1013
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 148,
+      "gameNum": 1028
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 150,
+      "gameNum": 1046
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 151,
+      "gameNum": 1055
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 153,
+      "gameNum": 1073
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 155,
+      "gameNum": 1089
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 157,
+      "gameNum": 1102
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 159,
+      "gameNum": 1119
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 162,
+      "gameNum": 1143
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 163,
+      "gameNum": 1147
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 166,
+      "gameNum": 1172
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 168,
+      "gameNum": 1184
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 170,
+      "gameNum": 1200
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 171,
+      "gameNum": 1214
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 173,
+      "gameNum": 1225
+    }
+  ],
+  "HOU": [
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 0,
+      "gameNum": 1
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 3,
+      "gameNum": 21
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 6,
+      "gameNum": 46
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 8,
+      "gameNum": 59
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 11,
+      "gameNum": 85
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 13,
+      "gameNum": 99
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 15,
+      "gameNum": 115
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 17,
+      "gameNum": 126
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 19,
+      "gameNum": 141
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 22,
+      "gameNum": 168
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 24,
+      "gameNum": 181
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 26,
+      "gameNum": 195
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 29,
+      "gameNum": 214
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 31,
+      "gameNum": 233
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 34,
+      "gameNum": 258
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 36,
+      "gameNum": 270
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 40,
+      "gameNum": 292
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 41,
+      "gameNum": 307
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 43,
+      "gameNum": 321
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 45,
+      "gameNum": 337
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 46,
+      "gameNum": 347
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 51,
+      "gameNum": 362
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 55,
+      "gameNum": 386
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 58,
+      "gameNum": 394
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 60,
+      "gameNum": 407
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 61,
+      "gameNum": 422
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 63,
+      "gameNum": 443
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 65,
+      "gameNum": 447
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 67,
+      "gameNum": 463
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 69,
+      "gameNum": 479
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 72,
+      "gameNum": 497
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 74,
+      "gameNum": 517
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 76,
+      "gameNum": 531
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 78,
+      "gameNum": 553
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 80,
+      "gameNum": 565
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 82,
+      "gameNum": 582
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 84,
+      "gameNum": 590
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 86,
+      "gameNum": 605
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 87,
+      "gameNum": 616
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 89,
+      "gameNum": 629
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 91,
+      "gameNum": 644
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 93,
+      "gameNum": 657
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 94,
+      "gameNum": 664
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 97,
+      "gameNum": 689
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 99,
+      "gameNum": 706
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 100,
+      "gameNum": 709
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 102,
+      "gameNum": 729
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 104,
+      "gameNum": 741
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 106,
+      "gameNum": 756
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 107,
+      "gameNum": 765
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 109,
+      "gameNum": 776
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 112,
+      "gameNum": 800
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 113,
+      "gameNum": 810
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 121,
+      "gameNum": 820
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 123,
+      "gameNum": 844
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 125,
+      "gameNum": 858
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 127,
+      "gameNum": 873
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 128,
+      "gameNum": 880
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 130,
+      "gameNum": 892
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 132,
+      "gameNum": 907
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 135,
+      "gameNum": 929
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 136,
+      "gameNum": 938
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 138,
+      "gameNum": 955
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 140,
+      "gameNum": 968
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 141,
+      "gameNum": 978
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 143,
+      "gameNum": 994
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 146,
+      "gameNum": 1018
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 148,
+      "gameNum": 1036
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 150,
+      "gameNum": 1047
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 151,
+      "gameNum": 1056
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 153,
+      "gameNum": 1071
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 155,
+      "gameNum": 1087
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 157,
+      "gameNum": 1098
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 159,
+      "gameNum": 1117
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 161,
+      "gameNum": 1131
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 162,
+      "gameNum": 1139
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 164,
+      "gameNum": 1154
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 166,
+      "gameNum": 1172
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 168,
+      "gameNum": 1187
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 170,
+      "gameNum": 1199
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 171,
+      "gameNum": 1211
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 173,
+      "gameNum": 1224
+    }
+  ],
+  "IND": [
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 2,
+      "gameNum": 15
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 4,
+      "gameNum": 32
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 5,
+      "gameNum": 39
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 8,
+      "gameNum": 64
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 10,
+      "gameNum": 73
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 11,
+      "gameNum": 83
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 13,
+      "gameNum": 96
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 15,
+      "gameNum": 112
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 18,
+      "gameNum": 139
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 19,
+      "gameNum": 146
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 21,
+      "gameNum": 161
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 23,
+      "gameNum": 176
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 25,
+      "gameNum": 189
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 27,
+      "gameNum": 201
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 29,
+      "gameNum": 215
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 31,
+      "gameNum": 227
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 34,
+      "gameNum": 251
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 36,
+      "gameNum": 268
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 38,
+      "gameNum": 277
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 39,
+      "gameNum": 286
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 41,
+      "gameNum": 301
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 43,
+      "gameNum": 316
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 45,
+      "gameNum": 336
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 48,
+      "gameNum": 355
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 52,
+      "gameNum": 368
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 54,
+      "gameNum": 375
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 58,
+      "gameNum": 391
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 60,
+      "gameNum": 408
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 62,
+      "gameNum": 424
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 63,
+      "gameNum": 434
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 66,
+      "gameNum": 450
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 67,
+      "gameNum": 464
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 69,
+      "gameNum": 479
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 71,
+      "gameNum": 490
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 73,
+      "gameNum": 502
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 75,
+      "gameNum": 521
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 77,
+      "gameNum": 536
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 79,
+      "gameNum": 554
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 81,
+      "gameNum": 568
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 83,
+      "gameNum": 584
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 85,
+      "gameNum": 596
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 87,
+      "gameNum": 612
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 88,
+      "gameNum": 620
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 90,
+      "gameNum": 638
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 92,
+      "gameNum": 650
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 94,
+      "gameNum": 669
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 97,
+      "gameNum": 684
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 99,
+      "gameNum": 699
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 102,
+      "gameNum": 725
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 104,
+      "gameNum": 741
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 105,
+      "gameNum": 745
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 108,
+      "gameNum": 771
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 110,
+      "gameNum": 788
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 112,
+      "gameNum": 799
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 113,
+      "gameNum": 807
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 121,
+      "gameNum": 823
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 122,
+      "gameNum": 832
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 124,
+      "gameNum": 849
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 126,
+      "gameNum": 859
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 128,
+      "gameNum": 876
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 131,
+      "gameNum": 900
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 134,
+      "gameNum": 926
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 136,
+      "gameNum": 942
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 138,
+      "gameNum": 956
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 140,
+      "gameNum": 973
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 142,
+      "gameNum": 982
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 143,
+      "gameNum": 992
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 145,
+      "gameNum": 1007
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 147,
+      "gameNum": 1023
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 148,
+      "gameNum": 1030
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 151,
+      "gameNum": 1057
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 153,
+      "gameNum": 1068
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 155,
+      "gameNum": 1081
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 157,
+      "gameNum": 1095
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 159,
+      "gameNum": 1112
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 162,
+      "gameNum": 1138
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 164,
+      "gameNum": 1150
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 166,
+      "gameNum": 1166
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 168,
+      "gameNum": 1178
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 170,
+      "gameNum": 1197
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 171,
+      "gameNum": 1205
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 173,
+      "gameNum": 1218
+    }
+  ],
+  "LAC": [
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 1,
+      "gameNum": 11
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 3,
+      "gameNum": 28
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 5,
+      "gameNum": 42
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 7,
+      "gameNum": 58
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 10,
+      "gameNum": 80
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 13,
+      "gameNum": 103
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 14,
+      "gameNum": 109
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 16,
+      "gameNum": 121
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 18,
+      "gameNum": 140
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 20,
+      "gameNum": 156
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 22,
+      "gameNum": 174
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 24,
+      "gameNum": 185
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 26,
+      "gameNum": 192
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 27,
+      "gameNum": 202
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 30,
+      "gameNum": 223
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 32,
+      "gameNum": 236
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 33,
+      "gameNum": 246
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 35,
+      "gameNum": 263
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 38,
+      "gameNum": 282
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 39,
+      "gameNum": 291
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 41,
+      "gameNum": 304
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 43,
+      "gameNum": 318
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 45,
+      "gameNum": 338
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 46,
+      "gameNum": 346
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 51,
+      "gameNum": 362
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 55,
+      "gameNum": 387
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 58,
+      "gameNum": 395
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 60,
+      "gameNum": 416
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 63,
+      "gameNum": 443
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 66,
+      "gameNum": 457
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 68,
+      "gameNum": 471
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 70,
+      "gameNum": 487
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 72,
+      "gameNum": 501
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 74,
+      "gameNum": 519
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 76,
+      "gameNum": 534
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 78,
+      "gameNum": 548
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 80,
+      "gameNum": 560
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 81,
+      "gameNum": 569
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 83,
+      "gameNum": 588
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 85,
+      "gameNum": 602
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 87,
+      "gameNum": 615
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 90,
+      "gameNum": 635
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 91,
+      "gameNum": 643
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 93,
+      "gameNum": 662
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 96,
+      "gameNum": 683
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 98,
+      "gameNum": 697
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 101,
+      "gameNum": 720
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 103,
+      "gameNum": 736
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 104,
+      "gameNum": 743
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 106,
+      "gameNum": 760
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 108,
+      "gameNum": 774
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 110,
+      "gameNum": 787
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 112,
+      "gameNum": 800
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 113,
+      "gameNum": 810
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 121,
+      "gameNum": 829
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 122,
+      "gameNum": 837
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 124,
+      "gameNum": 855
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 128,
+      "gameNum": 885
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 131,
+      "gameNum": 905
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 132,
+      "gameNum": 910
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 134,
+      "gameNum": 926
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 136,
+      "gameNum": 941
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 137,
+      "gameNum": 946
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 139,
+      "gameNum": 963
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 141,
+      "gameNum": 980
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 143,
+      "gameNum": 997
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 144,
+      "gameNum": 1004
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 146,
+      "gameNum": 1019
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 148,
+      "gameNum": 1033
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 149,
+      "gameNum": 1041
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 151,
+      "gameNum": 1058
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 153,
+      "gameNum": 1075
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 155,
+      "gameNum": 1091
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 157,
+      "gameNum": 1095
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 159,
+      "gameNum": 1111
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 161,
+      "gameNum": 1134
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 163,
+      "gameNum": 1149
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 166,
+      "gameNum": 1171
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 168,
+      "gameNum": 1185
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 169,
+      "gameNum": 1193
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 171,
+      "gameNum": 1213
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 173,
+      "gameNum": 1225
+    }
+  ],
+  "LAL": [
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 0,
+      "gameNum": 2
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 3,
+      "gameNum": 25
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 5,
+      "gameNum": 41
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 6,
+      "gameNum": 53
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 8,
+      "gameNum": 67
+    },
+    {
+      "opponent": "MEM",
+      "home": false,
+      "day": 10,
+      "gameNum": 77
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 12,
+      "gameNum": 94
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 13,
+      "gameNum": 102
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 15,
+      "gameNum": 118
+    },
+    {
+      "opponent": "ATL",
+      "home": false,
+      "day": 18,
+      "gameNum": 135
+    },
+    {
+      "opponent": "CHA",
+      "home": false,
+      "day": 20,
+      "gameNum": 148
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 22,
+      "gameNum": 172
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 24,
+      "gameNum": 184
+    },
+    {
+      "opponent": "MIL",
+      "home": false,
+      "day": 25,
+      "gameNum": 190
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 28,
+      "gameNum": 212
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 33,
+      "gameNum": 250
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 35,
+      "gameNum": 263
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 38,
+      "gameNum": 283
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 40,
+      "gameNum": 299
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 41,
+      "gameNum": 308
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 44,
+      "gameNum": 327
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 45,
+      "gameNum": 329
+    },
+    {
+      "opponent": "PHI",
+      "home": false,
+      "day": 47,
+      "gameNum": 353
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 50,
+      "gameNum": 361
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 54,
+      "gameNum": 381
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 58,
+      "gameNum": 400
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 60,
+      "gameNum": 416
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 63,
+      "gameNum": 439
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 65,
+      "gameNum": 447
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 68,
+      "gameNum": 472
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 70,
+      "gameNum": 486
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 73,
+      "gameNum": 511
+    },
+    {
+      "opponent": "MEM",
+      "home": true,
+      "day": 75,
+      "gameNum": 527
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 77,
+      "gameNum": 540
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 78,
+      "gameNum": 551
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 80,
+      "gameNum": 566
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 83,
+      "gameNum": 587
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 84,
+      "gameNum": 594
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 86,
+      "gameNum": 611
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 88,
+      "gameNum": 626
+    },
+    {
+      "opponent": "TOR",
+      "home": true,
+      "day": 89,
+      "gameNum": 632
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 91,
+      "gameNum": 646
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 93,
+      "gameNum": 662
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 95,
+      "gameNum": 676
+    },
+    {
+      "opponent": "CHI",
+      "home": false,
+      "day": 97,
+      "gameNum": 688
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 99,
+      "gameNum": 698
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 101,
+      "gameNum": 715
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 103,
+      "gameNum": 735
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 105,
+      "gameNum": 747
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 107,
+      "gameNum": 767
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 109,
+      "gameNum": 781
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 111,
+      "gameNum": 797
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 112,
+      "gameNum": 802
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 114,
+      "gameNum": 819
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 122,
+      "gameNum": 837
+    },
+    {
+      "opponent": "BOS",
+      "home": true,
+      "day": 124,
+      "gameNum": 851
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 126,
+      "gameNum": 869
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 128,
+      "gameNum": 883
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 130,
+      "gameNum": 894
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 131,
+      "gameNum": 906
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 133,
+      "gameNum": 919
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 135,
+      "gameNum": 934
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 136,
+      "gameNum": 942
+    },
+    {
+      "opponent": "NYK",
+      "home": true,
+      "day": 138,
+      "gameNum": 950
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 140,
+      "gameNum": 974
+    },
+    {
+      "opponent": "CHI",
+      "home": true,
+      "day": 142,
+      "gameNum": 989
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 144,
+      "gameNum": 1003
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 146,
+      "gameNum": 1018
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 148,
+      "gameNum": 1036
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 149,
+      "gameNum": 1040
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 151,
+      "gameNum": 1054
+    },
+    {
+      "opponent": "DET",
+      "home": false,
+      "day": 153,
+      "gameNum": 1066
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 155,
+      "gameNum": 1081
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 157,
+      "gameNum": 1104
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 160,
+      "gameNum": 1127
+    },
+    {
+      "opponent": "CLE",
+      "home": true,
+      "day": 161,
+      "gameNum": 1133
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 163,
+      "gameNum": 1146
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 166,
+      "gameNum": 1170
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 168,
+      "gameNum": 1186
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 170,
+      "gameNum": 1200
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 171,
+      "gameNum": 1215
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 173,
+      "gameNum": 1226
+    }
+  ],
+  "MEM": [
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 1,
+      "gameNum": 9
+    },
+    {
+      "opponent": "MIA",
+      "home": true,
+      "day": 3,
+      "gameNum": 23
+    },
+    {
+      "opponent": "IND",
+      "home": true,
+      "day": 4,
+      "gameNum": 32
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 6,
+      "gameNum": 52
+    },
+    {
+      "opponent": "PHX",
+      "home": false,
+      "day": 8,
+      "gameNum": 68
+    },
+    {
+      "opponent": "LAL",
+      "home": true,
+      "day": 10,
+      "gameNum": 77
+    },
+    {
+      "opponent": "TOR",
+      "home": false,
+      "day": 12,
+      "gameNum": 91
+    },
+    {
+      "opponent": "DET",
+      "home": true,
+      "day": 13,
+      "gameNum": 100
+    },
+    {
+      "opponent": "HOU",
+      "home": true,
+      "day": 15,
+      "gameNum": 115
+    },
+    {
+      "opponent": "DAL",
+      "home": true,
+      "day": 17,
+      "gameNum": 127
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 19,
+      "gameNum": 142
+    },
+    {
+      "opponent": "NYK",
+      "home": false,
+      "day": 21,
+      "gameNum": 158
+    },
+    {
+      "opponent": "BOS",
+      "home": false,
+      "day": 22,
+      "gameNum": 166
+    },
+    {
+      "opponent": "CLE",
+      "home": false,
+      "day": 25,
+      "gameNum": 187
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 28,
+      "gameNum": 211
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 30,
+      "gameNum": 224
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 32,
+      "gameNum": 241
+    },
+    {
+      "opponent": "DEN",
+      "home": true,
+      "day": 34,
+      "gameNum": 255
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 36,
+      "gameNum": 269
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 38,
+      "gameNum": 282
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 40,
+      "gameNum": 298
+    },
+    {
+      "opponent": "SAS",
+      "home": false,
+      "day": 42,
+      "gameNum": 313
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 45,
+      "gameNum": 338
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 47,
+      "gameNum": 351
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 52,
+      "gameNum": 370
+    },
+    {
+      "opponent": "LAC",
+      "home": false,
+      "day": 55,
+      "gameNum": 387
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 57,
+      "gameNum": 389
+    },
+    {
+      "opponent": "WAS",
+      "home": true,
+      "day": 60,
+      "gameNum": 412
+    },
+    {
+      "opponent": "OKC",
+      "home": false,
+      "day": 62,
+      "gameNum": 427
+    },
+    {
+      "opponent": "UTA",
+      "home": false,
+      "day": 63,
+      "gameNum": 440
+    },
+    {
+      "opponent": "MIL",
+      "home": true,
+      "day": 66,
+      "gameNum": 454
+    },
+    {
+      "opponent": "WAS",
+      "home": false,
+      "day": 68,
+      "gameNum": 470
+    },
+    {
+      "opponent": "PHI",
+      "home": true,
+      "day": 70,
+      "gameNum": 484
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 73,
+      "gameNum": 511
+    },
+    {
+      "opponent": "LAL",
+      "home": false,
+      "day": 75,
+      "gameNum": 527
+    },
+    {
+      "opponent": "SAS",
+      "home": true,
+      "day": 77,
+      "gameNum": 538
+    },
+    {
+      "opponent": "PHX",
+      "home": true,
+      "day": 78,
+      "gameNum": 549
+    },
+    {
+      "opponent": "OKC",
+      "home": true,
+      "day": 80,
+      "gameNum": 561
+    },
+    {
+      "opponent": "BKN",
+      "home": true,
+      "day": 82,
+      "gameNum": 574
+    },
+    {
+      "opponent": "ORL",
+      "home": false,
+      "day": 86,
+      "gameNum": 603
+    },
+    {
+      "opponent": "ORL",
+      "home": true,
+      "day": 89,
+      "gameNum": 627
+    },
+    {
+      "opponent": "ATL",
+      "home": true,
+      "day": 92,
+      "gameNum": 652
+    },
+    {
+      "opponent": "NOP",
+      "home": true,
+      "day": 94,
+      "gameNum": 668
+    },
+    {
+      "opponent": "HOU",
+      "home": false,
+      "day": 97,
+      "gameNum": 689
+    },
+    {
+      "opponent": "CHA",
+      "home": true,
+      "day": 99,
+      "gameNum": 703
+    },
+    {
+      "opponent": "NOP",
+      "home": false,
+      "day": 101,
+      "gameNum": 717
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 102,
+      "gameNum": 727
+    },
+    {
+      "opponent": "MIN",
+      "home": true,
+      "day": 104,
+      "gameNum": 742
+    },
+    {
+      "opponent": "SAC",
+      "home": false,
+      "day": 106,
+      "gameNum": 759
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 108,
+      "gameNum": 773
+    },
+    {
+      "opponent": "POR",
+      "home": false,
+      "day": 109,
+      "gameNum": 783
+    },
+    {
+      "opponent": "GSW",
+      "home": false,
+      "day": 111,
+      "gameNum": 796
+    },
+    {
+      "opponent": "DEN",
+      "home": false,
+      "day": 113,
+      "gameNum": 813
+    },
+    {
+      "opponent": "UTA",
+      "home": true,
+      "day": 122,
+      "gameNum": 831
+    },
+    {
+      "opponent": "MIA",
+      "home": false,
+      "day": 123,
+      "gameNum": 842
+    },
+    {
+      "opponent": "SAC",
+      "home": true,
+      "day": 125,
+      "gameNum": 857
+    },
+    {
+      "opponent": "GSW",
+      "home": true,
+      "day": 127,
+      "gameNum": 871
+    },
+    {
+      "opponent": "DAL",
+      "home": false,
+      "day": 129,
+      "gameNum": 889
+    },
+    {
+      "opponent": "IND",
+      "home": false,
+      "day": 131,
+      "gameNum": 900
+    },
+    {
+      "opponent": "MIN",
+      "home": false,
+      "day": 133,
+      "gameNum": 917
+    },
+    {
+      "opponent": "POR",
+      "home": true,
+      "day": 134,
+      "gameNum": 924
+    },
+    {
+      "opponent": "LAC",
+      "home": true,
+      "day": 137,
+      "gameNum": 946
+    },
+    {
+      "opponent": "BKN",
+      "home": false,
+      "day": 139,
+      "gameNum": 960
+    },
+    {
+      "opponent
