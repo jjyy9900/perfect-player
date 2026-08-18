@@ -1,4 +1,12 @@
- currentStarterStatus = STATE.careerTeam && STATE.finalOVR ? !!calcTeamLineup(STATE.careerTeam).isUserStarter : true;
+b.wins - a.wins;
+    });
+}
+
+// ==================== 6. 赛季模拟（新引擎）====================
+function startSeason() {
+  showScreen('screen-season');
+  clearLineupCache();
+  var currentStarterStatus = STATE.careerTeam && STATE.finalOVR ? !!calcTeamLineup(STATE.careerTeam).isUserStarter : true;
   if (STATE.career && STATE.career.flags && STATE.career.flags.startBench) currentStarterStatus = false;
   STATE.season = {
     wins: 0, losses: 0,
@@ -4335,7 +4343,4 @@ function showSeasonResults() {
       ftm: Math.round(po.ftm / poG * 10) / 10,
       fta: Math.round(po.fta / poG * 10) / 10,
     };
-    const poPct = poAvg.fga > 0 ? (poAvg.fgm / poAvg.fga * 100).toFixed(1) : '—';
-    const poThreePct = poAvg.threeA > 0 ? (poAvg.threeM / poAvg.threeA * 100).toFixed(1) : '—';
-    
-    p
+    const poPct
