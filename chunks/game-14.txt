@@ -1,4 +1,4 @@
-', 3);
+   addProfileDelta('fame', 3);
         addProfileDelta('controversy', 1);
         return '你在虎扑直播间聊了一个小时，从训练聊到夜宵。弹幕从“黑”变“真性情”只用了十分钟。<br><br>效果：人气+3；争议+1。';
       }},
@@ -3751,4 +3751,4 @@ var TOP100_COPY = [
     "百大名单是给后来人看的索引。{achievement}。翻到你的名字，就能读到{teamList}，读到 {teamCount} 段旅程，读到很长的一段热爱。",
     "你被写进历史百大。{achievement}。有人问你排第几，你回答：重要的是，我让很多人第一次明白，篮球可以这样打。",
     "历史百大公布，你的名字出现在中段。{achievement}。你把手机放下，去训练馆投了一组篮。历史不会等你，但你一直没停。",
-    "{achievement}。你打了 {games} 场，走过{teamList}，在{lastTeam}谢幕。百大名单把你放进去，是因为你把篮球这件事，认真做了
+    "{achievement}。你打了 {games} 场，走过{teamList}，在{lastTeam}谢幕。百
